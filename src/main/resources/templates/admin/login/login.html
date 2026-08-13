@@ -7,7 +7,7 @@
     <!-- Titulo da página !-->
     <title>Login administrador</title>
 
-    <link rel="stylesheet" href="../../../static/css/login.css">
+    <link rel="stylesheet" href="../../../static/css/admin/login.css">
 </head>
 
 <body>
@@ -33,11 +33,24 @@
 
                 <div class="input-grupo">
                     <label for="senha">Senha</label>
-                    <input type="password"
-                           id="senha"
-                           name="senha"
-                           placeholder="Digite sua senha"
-                           required >
+
+                    <div class="senha-container">
+                        <input
+                                type="password"
+                                id="senha"
+                                name="senha"
+                                placeholder="Digite sua senha"
+                                required
+                        >
+
+                        <button type="button" class="mostrar-senha" onclick="mostrarSenha()">
+                            <img
+                                    id="icone-senha"
+                                    src="../../../static/icons/eye.svg"
+                                    alt="Mostrar senha"
+                            >
+                        </button>
+                    </div>
                 </div>
 
                 <button type="submit"> Entrar </button>
@@ -50,6 +63,7 @@
         <img src="../../../static/images/login-lado-direito.png" alt="ilustração">
     </div>
 
+    <script src="../../../static/js/admin/login.js"></script>
 </div>
 </body>
 </html>
