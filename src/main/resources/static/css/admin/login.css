@@ -168,12 +168,7 @@ button[type="submit"]:hover {
     .lado-direito {
         width: 55%;
     }
-
-    .logo {
-        left: 40px;
-    }
 }
-
 
 @media (max-width: 700px) {
     .conteudo {
@@ -187,11 +182,6 @@ button[type="submit"]:hover {
 
     .lado-direito {
         display: none;
-    }
-
-    .logo {
-        top: 40px;
-        left: 35px;
     }
 
     .container-principal {

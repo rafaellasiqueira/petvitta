@@ -4,11 +4,16 @@ function mostrarSenha() {
 
     if (senha.type === "password") {
         senha.type = "text";
-        icone.src = "../../../static/images/eye.svg";
+        icone.src = "/icons/eye.svg";
         icone.alt = "Ocultar senha";
     } else {
         senha.type = "password";
-        icone.src = "../../../static/images/eye-off.svg";
+        icone.src = "/icons/eye-off.svg";
         icone.alt = "Mostrar senha";
     }
 }
+
+document.getElementById("btnEntrar").addEventListener("click", function (event) {
+    event.preventDefault();
+    window.location.href = "/admin/dashboard";
+});
