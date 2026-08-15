@@ -1,66 +1,80 @@
 <!DOCTYPE html>
-<html lang="pt-BR" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" th:href="@{/css/admin/sidebar.css}">
 </head>
 
 <body>
-
-<aside class="sidebar">
-
-    <div class="logo">
-        <img class="logo" th:src="@{/images/logo-horizontal-escura.svg}" alt="Logo">
+<aside class="sidebar" th:fragment="sidebar">
+    <div class="logo-container">
+        <img class="logo" th:src="@{/images/logo-horizontal-escura.svg}" alt="Petvitta Club">
     </div>
 
-    <div class="divider"></div>
-
+    <div class="linha"></div>
     <nav class="menu">
-
-        <a href="#" class="menu-item active">
-            <span>◕</span> Dashboard
+        <a th:href="@{/admin/dashboard}"
+           class="menu-item"
+           th:classappend="${paginaAtual == 'dashboard'} ? ' ativo' : ''">
+            <i class="fa-solid fa-chart-column"></i>
+            <span>Dashboard</span>
         </a>
 
-        <a href="#" class="menu-item">
-            <span>⚒</span> Produtos
+        <a th:href="@{/admin/produtos}"
+           class="menu-item">
+            <i class="fa-solid fa-bone"></i>
+            <span>Produtos</span>
         </a>
 
-        <a href="#" class="menu-item">
-            <span>▣</span> Pedidos
+        <a th:href="@{/admin/pedidos}"
+           class="menu-item">
+            <i class="fa-solid fa-box"></i>
+            <span>Pedidos</span>
         </a>
 
-        <a href="#" class="menu-item">
-            <span>♟</span> Clientes
+        <a th:href="@{/admin/clientes}"
+           class="menu-item">
+            <i class="fa-solid fa-user"></i>
+            <span>Clientes</span>
         </a>
 
-        <a href="#" class="menu-item">
-            <span>⚒</span> Estoque
+        <a th:href="@{/admin/estoque}"
+           class="menu-item">
+            <i class="fa-solid fa-warehouse"></i>
+            <span>Estoque</span>
         </a>
 
-        <a href="#" class="menu-item">
-            <span>✿</span> Cupons
+        <a th:href="@{/admin/cupons}"
+           class="menu-item"
+           th:classappend="${paginaAtual == 'cupons'} ? ' ativo' : ''">
+            <i class="fa-solid fa-percent"></i>
+            <span>Cupons</span>
         </a>
 
-        <a href="#" class="menu-item">
-            <span>⟳</span> Trocas
+        <a th:href="@{/admin/trocas}"
+            class="menu-item"
+            th:classappend="${paginaAtual == 'trocas'} ? ' ativo' : ''">
+            <i class="fa-solid fa-right-left"></i>
+            <span>Trocas</span>
         </a>
 
-        <a href="#" class="menu-item">
-            <span>▤</span> Auditoria
+        <a th:href="@{/admin/auditoria}"
+           class="menu-item"
+           th:classappend="${paginaAtual == 'auditoria'} ? ' ativo' : ''">
+            <i class="fa-solid fa-book"></i>
+            <span>Auditoria</span>
         </a>
 
     </nav>
 
-    <div class="menu-space"></div>
+    <div class="menu-espaco"></div>
+    <div class="linha"></div>
 
-    <div class="divider"></div>
-
-    <a href="#" class="menu-item logout">
-        <span>↪</span> Sair
+    <a th:href="@{/admin/sair}" class="menu-item">
+        <i class="fa-solid fa-right-from-bracket"></i>
+        <span>Sair</span>
     </a>
 
 </aside>
-
 </body>
 </html>

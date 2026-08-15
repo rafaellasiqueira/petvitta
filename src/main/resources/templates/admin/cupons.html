@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Cupons</title>
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+    <!-- Sidebar CSS -->
+    <link rel="stylesheet" th:href="@{/css/admin/sidebar.css}">
+
+    <!-- Cupons CSS -->
+    <link rel="stylesheet" th:href="@{/css/admin/cupons.css}">
+</head>
+
+<body>
+
+<div class="container">
+
+    <!-- Sidebar -->
+    <div th:replace="~{admin/sidebar :: sidebar}"></div>
+
+    <!-- Conteúdo -->
+    <div class="conteudo">
+        <!-- Cabeçalho -->
+        <header class="cabecalho">
+            <h1>Cupons</h1>
+        </header>
+
+        <main class="card">
+            <!-- Filtros -->
+            <div class="filtros">
+                <!-- Lado esquerdo -->
+                <div class="botoes">
+                    <button class="btn-filtro active">Todas</button>
+                    <button class="btn-filtro">Promocionais</button>
+                    <button class="btn-filtro">Trocas</button>
+                </div>
+
+                <!-- Lado direito -->
+                <div class="direito">
+                    <div class="pesquisa"><i class="fa-solid fa-magnifying-glass"></i>
+                        <input
+                                type="text"
+                                id="inputPesquisa"
+                                placeholder="Buscar pelo código..."></div>
+                    <button type="button" class="btn-cadastrar" id="btnCadastrar">Cadastrar cupom</button>
+                </div>
+            </div>
+
+            <!-- Tabela -->
+            <table>
+                <thead>
+                <tr>
+                    <th>Código</th>
+                    <th>Tipo</th>
+                    <th>Desconto</th>
+                    <th>Cliente</th>
+                    <th>Criado em</th>
+                    <th>Validade</th>
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>CUPOM01</td>
+                    <td>Promocional</td>
+                    <td>10%</td>
+                    <td>-</td>
+                    <td>15/08/2026</td>
+                    <td>31/12/2026</td>
+                    <td>
+                        <i class="fa-solid fa-pen btn-editar"
+                           data-codigo="CUPOM01"
+                           data-tipo="percentual"
+                           data-desconto="10"
+                           data-cliente="-"
+                           data-validade="2026-08-31"></i>
+                        <button type="button" class="btn-desativar">Desativar</button>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+
+            <!-- Paginação -->
+            <div class="paginacao">
+                <button type="button" class="btn-paginacao" disabled><i class="fa-solid fa-chevron-left"></i></button>
+                <span class="paginacao-item active">1</span>
+                <span class="paginacao-item">2</span>
+                <span class="paginacao-item">3</span>
+                <button type="button" class="btn-paginacao"><i class="fa-solid fa-chevron-right"></i></button>
+            </div>
+
+            <!-- Modal Cadastro / Edição -->
+            <div id="modalCupom" class="modal">
+                <div class="modalConteudo">
+                    <!-- Cabeçalho do modal -->
+                    <div class="modalCabecalho">
+                        <h2 id="tituloModal">Cadastrar cupom</h2>
+                        <button type="button" class="btn-fechar" id="btnFecharModal">&times;</button>
+                    </div>
+
+                    <!-- Corpo do modal -->
+                    <div class="modal-body">
+                        <!-- Código -->
+                        <div class="input-grupo">
+                            <label for="codigo">Código</label>
+                            <input type="text" id="codigo" placeholder="Digite o código do cupom">
+                        </div>
+
+                        <!-- Tipo e desconto -->
+                        <div class="linha-inputs">
+                            <!-- Tipo de desconto -->
+                            <div class="input-grupo">
+                                <label for="tipoDesconto">Tipo de desconto</label>
+                                <select id="tipoDesconto">
+                                    <option value="percentual">Percentual</option>
+                                    <option value="valor">Valor</option>
+                                </select>
+                            </div>
+
+                            <!-- Desconto -->
+                            <div class="input-grupo">
+                                <label id="labelDesconto" for="desconto">Percentual</label>
+                                <input type="number" id="desconto" placeholder="Digite o percentual">
+                            </div>
+                        </div>
+
+                        <!-- Validade -->
+                        <div class="input-grupo">
+                            <label for="validade">Validade</label>
+                            <input type="date" id="validade">
+                        </div>
+
+                        <!-- Botões -->
+                        <div class="modalBotoes">
+                            <button type="button" class="btn-cancelar" id="btnCancelar">Cancelar</button>
+                            <button type="button" class="btn-salvar" id="btnSalvar">Salvar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+</div>
+
+<!-- JavaScript -->
+<script th:src="@{/js/admin/cupons.js}"></script>
+
+</body>
+</html>

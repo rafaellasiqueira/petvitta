@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trocas</title>
+
+    <!-- font awesome (icones) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+    <!-- sidebar css -->
+    <link rel="stylesheet" th:href="@{/css/admin/sidebar.css}">
+
+    <!-- trocas css -->
+    <link rel="stylesheet" th:href="@{/css/admin/trocas.css}">
+
+</head>
+<body>
+
+<div class="container">
+    <!-- sidebar -->
+    <div th:replace="~{admin/sidebar :: sidebar}"></div>
+
+    <div class="conteudo">
+        <header class="cabecalho">
+            <h1>Trocas</h1>
+        </header>
+        <main class="card">
+            <!-- filtros -->
+            <div class="filtros">
+                <div class="botoes">
+                    <button class="btn-filtro active">Todas</button>
+                    <button class="btn-filtro">Solicitadas</button>
+                    <button class="btn-filtro">Trocas autorizadas</button>
+                    <button class="btn-filtro">Trocados</button>
+                    <button class="btn-filtro">Recusados</button>
+                </div>
+
+                <div class="pesquisa">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <input type="text" id="inputPesquisa" placeholder="Buscar por cliente ou código...">
+                </div>
+            </div>
+
+            <table>
+                <thead>
+                <tr>
+                    <th>Código</th>
+                    <th>Cliente</th>
+                    <th>Produto</th>
+                    <th>Motivo</th>
+                    <th>Solicitado em</th>
+                    <th>Ação</th>
+                    <th> </th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>PED001</td>
+                    <td>Larissa Lima</td>
+                    <td>4x Ração Golden Cães Adultos 15kg..</td>
+                    <td>Produto vencido</td>
+                    <td>18/08/2026</td>
+                    <td><select class="dropdown">
+                            <option value="Solicitada" selected>Solicitada</option>
+                            <option value="Troca autorizada">Troca autorizada</option>
+                            <option value="Itens recebidos">Itens recebidos</option>
+                            <option value="Trocado">Trocado</option>
+                            <option value="Recusado">Recusado</option>
+                        </select>
+                    </td>
+                    <td><i class="fa-solid fa-eye btn-detalhes"
+                           data-codigo="PED001"
+                           data-cliente="Larissa Lima"
+                           data-produto="4x Ração Golden Cães Adultos 15kg, 5kg Ração Golden Gatos"
+                           data-motivo="Produto vencido"
+                           data-solicitado="18/08/2026"></i></td>
+                </tr>
+
+                <tr>
+                    <td>PED001</td>
+                    <td>Larissa Lima</td>
+                    <td>4x Ração Golden Cães Adultos 15kg..</td>
+                    <td>Produto vencido</td>
+                    <td>18/08/2026</td>
+                    <td><select class="dropdown">
+                        <option value="Solicitada" selected>Solicitada</option>
+                        <option value="Troca autorizada">Troca autorizada</option>
+                        <option value="Itens recebidos">Itens recebidos</option>
+                        <option value="Trocado">Trocado</option>
+                        <option value="Recusado">Recusado</option>
+                    </select>
+                    </td>
+                    <td><i class="fa-solid fa-eye btn-detalhes"
+                           data-codigo="PED001"
+                           data-cliente="Larissa Lima"
+                           data-produto="4x Ração Golden Cães Adultos 15kg, 5kg Ração Golden Gatos"
+                           data-motivo="Produto vencido"
+                           data-solicitado="18/08/2026"></i></td>
+                </tr>
+
+                <tr>
+                    <td>PED001</td>
+                    <td>Larissa Lima</td>
+                    <td>4x Ração Golden Cães Adultos 15kg..</td>
+                    <td>Produto vencido</td>
+                    <td>18/08/2026</td>
+                    <td><select class="dropdown">
+                        <option value="Solicitada" selected>Solicitada</option>
+                        <option value="Troca autorizada">Troca autorizada</option>
+                        <option value="Itens recebidos">Itens recebidos</option>
+                        <option value="Trocado">Trocado</option>
+                        <option value="Recusado">Recusado</option>
+                    </select>
+                    </td>
+                    <td><i class="fa-solid fa-eye btn-detalhes"
+                           data-codigo="PED001"
+                           data-cliente="Larissa Lima"
+                           data-produto="4x Ração Golden Cães Adultos 15kg, 5kg Ração Golden Gatos"
+                           data-motivo="Produto vencido"
+                           data-solicitado="18/08/2026"></i></td>
+                </tr>
+
+                <tr>
+                    <td>PED001</td>
+                    <td>Larissa Lima</td>
+                    <td>4x Ração Golden Cães Adultos 15kg..</td>
+                    <td>Produto vencido</td>
+                    <td>18/08/2026</td>
+                    <td><select class="dropdown">
+                        <option value="Solicitada" selected>Solicitada</option>
+                        <option value="Troca autorizada">Troca autorizada</option>
+                        <option value="Itens recebidos">Itens recebidos</option>
+                        <option value="Trocado">Trocado</option>
+                        <option value="Recusado">Recusado</option>
+                    </select>
+                    </td>
+                    <td><i class="fa-solid fa-eye btn-detalhes"
+                           data-codigo="PED001"
+                           data-cliente="Larissa Lima"
+                           data-produto="4x Ração Golden Cães Adultos 15kg, 5kg Ração Golden Gatos"
+                           data-motivo="Produto vencido"
+                           data-solicitado="18/08/2026"></i></td>
+                </tr>
+
+                <tr>
+                    <td>PED001</td>
+                    <td>Larissa Lima</td>
+                    <td>4x Ração Golden Cães Adultos 15kg..</td>
+                    <td>Produto vencido</td>
+                    <td>18/08/2026</td>
+                    <td><select class="dropdown">
+                        <option value="Solicitada" selected>Solicitada</option>
+                        <option value="Troca autorizada">Troca autorizada</option>
+                        <option value="Itens recebidos">Itens recebidos</option>
+                        <option value="Trocado">Trocado</option>
+                        <option value="Recusado">Recusado</option>
+                    </select>
+                    </td>
+                    <td><i class="fa-solid fa-eye btn-detalhes"
+                           data-codigo="PED001"
+                           data-cliente="Larissa Lima"
+                           data-produto="4x Ração Golden Cães Adultos 15kg, 5kg Ração Golden Gatos"
+                           data-motivo="Produto vencido"
+                           data-solicitado="18/08/2026"></i></td>
+                </tr>
+
+                <tr>
+                    <td>PED001</td>
+                    <td>Larissa Lima</td>
+                    <td>4x Ração Golden Cães Adultos 15kg..</td>
+                    <td>Produto vencido</td>
+                    <td>18/08/2026</td>
+                    <td><select class="dropdown">
+                        <option value="Solicitada" selected>Solicitada</option>
+                        <option value="Troca autorizada">Troca autorizada</option>
+                        <option value="Itens recebidos">Itens recebidos</option>
+                        <option value="Trocado">Trocado</option>
+                        <option value="Recusado">Recusado</option>
+                    </select>
+                    </td>
+                    <td><i class="fa-solid fa-eye btn-detalhes"
+                           data-codigo="PED001"
+                           data-cliente="Larissa Lima"
+                           data-produto="4x Ração Golden Cães Adultos 15kg, 5kg Ração Golden Gatos"
+                           data-motivo="Produto vencido"
+                           data-solicitado="18/08/2026"></i></td>
+                </tr>
+
+                <tr>
+                    <td>PED001</td>
+                    <td>Larissa Lima</td>
+                    <td>4x Ração Golden Cães Adultos 15kg..</td>
+                    <td>Produto vencido</td>
+                    <td>18/08/2026</td>
+                    <td><select class="dropdown">
+                        <option value="Solicitada" selected>Solicitada</option>
+                        <option value="Troca autorizada">Troca autorizada</option>
+                        <option value="Itens recebidos">Itens recebidos</option>
+                        <option value="Trocado">Trocado</option>
+                        <option value="Recusado">Recusado</option>
+                    </select>
+                    </td>
+                    <td><i class="fa-solid fa-eye btn-detalhes"
+                           data-codigo="PED001"
+                           data-cliente="Larissa Lima"
+                           data-produto="4x Ração Golden Cães Adultos 15kg, 5kg Ração Golden Gatos"
+                           data-motivo="Produto vencido"
+                           data-solicitado="18/08/2026"></i></td>
+                </tr>
+
+                <tr>
+                    <td>PED001</td>
+                    <td>Larissa Lima</td>
+                    <td>4x Ração Golden Cães Adultos 15kg..</td>
+                    <td>Produto vencido</td>
+                    <td>18/08/2026</td>
+                    <td><select class="dropdown">
+                        <option value="Solicitada" selected>Solicitada</option>
+                        <option value="Troca autorizada">Troca autorizada</option>
+                        <option value="Itens recebidos">Itens recebidos</option>
+                        <option value="Trocado">Trocado</option>
+                        <option value="Recusado">Recusado</option>
+                    </select>
+                    </td>
+                    <td><i class="fa-solid fa-eye btn-detalhes"
+                           data-codigo="PED001"
+                           data-cliente="Larissa Lima"
+                           data-produto="4x Ração Golden Cães Adultos 15kg, 5kg Ração Golden Gatos"
+                           data-motivo="Produto vencido"
+                           data-solicitado="18/08/2026"></i></td>
+                </tr>
+
+                <tr>
+                    <td>PED001</td>
+                    <td>Larissa Lima</td>
+                    <td>4x Ração Golden Cães Adultos 15kg..</td>
+                    <td>Produto vencido</td>
+                    <td>18/08/2026</td>
+                    <td><select class="dropdown">
+                        <option value="Solicitada" selected>Solicitada</option>
+                        <option value="Troca autorizada">Troca autorizada</option>
+                        <option value="Itens recebidos">Itens recebidos</option>
+                        <option value="Trocado">Trocado</option>
+                        <option value="Recusado">Recusado</option>
+                    </select>
+                    </td>
+                    <td><i class="fa-solid fa-eye btn-detalhes"
+                           data-codigo="PED001"
+                           data-cliente="Larissa Lima"
+                           data-produto="4x Ração Golden Cães Adultos 15kg, 5kg Ração Golden Gatos"
+                           data-motivo="Produto vencido"
+                           data-solicitado="18/08/2026"></i></td>
+                </tr>
+
+                <tr>
+                    <td>PED001</td>
+                    <td>Larissa Lima</td>
+                    <td>4x Ração Golden Cães Adultos 15kg..</td>
+                    <td>Produto vencido</td>
+                    <td>18/08/2026</td>
+                    <td><select class="dropdown">
+                        <option value="Solicitada" selected>Solicitada</option>
+                        <option value="Troca autorizada">Troca autorizada</option>
+                        <option value="Itens recebidos">Itens recebidos</option>
+                        <option value="Trocado">Trocado</option>
+                        <option value="Recusado">Recusado</option>
+                    </select>
+                    </td>
+                    <td><i class="fa-solid fa-eye btn-detalhes"
+                           data-codigo="PED001"
+                           data-cliente="Larissa Lima"
+                           data-produto="4x Ração Golden Cães Adultos 15kg, 5kg Ração Golden Gatos"
+                           data-motivo="Produto vencido"
+                           data-solicitado="18/08/2026"></i></td>
+                </tr>
+
+                <tr>
+                    <td>PED001</td>
+                    <td>Larissa Lima</td>
+                    <td>4x Ração Golden Cães Adultos 15kg..</td>
+                    <td>Produto vencido</td>
+                    <td>18/08/2026</td>
+                    <td><select class="dropdown">
+                        <option value="Solicitada" selected>Solicitada</option>
+                        <option value="Troca autorizada">Troca autorizada</option>
+                        <option value="Itens recebidos">Itens recebidos</option>
+                        <option value="Trocado">Trocado</option>
+                        <option value="Recusado">Recusado</option>
+                    </select>
+                    </td>
+                    <td><i class="fa-solid fa-eye btn-detalhes"
+                           data-codigo="PED001"
+                           data-cliente="Larissa Lima"
+                           data-produto="4x Ração Golden Cães Adultos 15kg, 5kg Ração Golden Gatos"
+                           data-motivo="Produto vencido"
+                           data-solicitado="18/08/2026"></i></td>
+                </tr>
+
+                <tr>
+                    <td>PED001</td>
+                    <td>Larissa Lima</td>
+                    <td>4x Ração Golden Cães Adultos 15kg..</td>
+                    <td>Produto vencido</td>
+                    <td>18/08/2026</td>
+                    <td><select class="dropdown">
+                        <option value="Solicitada" selected>Solicitada</option>
+                        <option value="Troca autorizada">Troca autorizada</option>
+                        <option value="Itens recebidos">Itens recebidos</option>
+                        <option value="Trocado">Trocado</option>
+                        <option value="Recusado">Recusado</option>
+                    </select>
+                    </td>
+                    <td><i class="fa-solid fa-eye btn-detalhes"
+                           data-codigo="PED001"
+                           data-cliente="Larissa Lima"
+                           data-produto="4x Ração Golden Cães Adultos 15kg, 5kg Ração Golden Gatos"
+                           data-motivo="Produto vencido"
+                           data-solicitado="18/08/2026"></i></td>
+                </tr>
+                </tbody>
+            </table>
+
+            <!-- paginacao -->
+            <div class="paginacao">
+                <button class="btn-paginacao"disabled>
+                    <i class="fa-solid fa-chevron-left"></i>
+                </button>
+                <span class="paginacao-item active">1</span>
+                <span class="paginacao-item">2</span>
+                <span class="paginacao-item">3</span>
+                <button class="btn-paginacao">
+                    <i class="fa-solid fa-chevron-right"></i>
+                </button>
+            </div>
+
+            <!-- modal de Detalhes -->
+            <div id="modalTrocas" class="modal">
+                <div class="modalConteudo">
+                    <div class="modalCabecalho">
+                        <h2>Detalhes</h2>
+                        <button class="btn-fechar" id="btnFecharModal">&times;</button> <!-- Exibe o simbolo x -->
+                    </div>
+                    <div class="modal-body">
+                        <p><strong>Codigo:</strong> <span id="modalCodigo"></span></p>
+                        <p><strong>Cliente:</strong> <span id="modalCliente"></span></p>
+                        <p><strong>Produto:</strong> <span id="modalProduto"></span></p>
+                        <p><strong>Motivo:</strong> <span id="modalMotivo"></span></p>
+                        <p><strong>Solicitado em:</strong> <span id="modalSolicitado"></span></p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- modal estoque -->
+            <div id="modalEstoque" class="modal">
+                <div class="modalConteudo">
+                    <div class="modalCabecalho">
+                        <h2>Retorno ao Estoque</h2>
+                        <button class="btn-fechar" id="btnFecharEstoque">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <p>Selecione os itens que devem retornar ao estoque:</p>
+                        <div id="listaItensEstoque" style="margin-bottom: 20px;"></div>
+                        <button id="btnConfirmarEstoque" class="btn-confirmar">Confirmar</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- modal itens cupons -->
+            <div id="modalResumo" class="modal">
+                <div class="modalConteudo">
+                    <div class="modalCabecalho">
+                        <h2>Resumo da Troca</h2>
+                        <button class="btn-fechar" id="btnFecharResumo">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <p><strong>Status dos Itens:</strong></p>
+                        <ul id="resumoItens" style="margin-left: 20px; margin-bottom: 15px;"></ul>
+                        <p><strong>Cupom Gerado:</strong></p>
+                        <p id="resumoCupom" style="font-size: 18px; font-weight: bold; color: #2e7d32;"></p>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+    </div>
+</div>
+
+</body>
+<script th:src="@{/js/admin/trocas.js}"></script>
+</html>

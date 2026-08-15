@@ -1,11 +1,80 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-BR" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard</title>
-    <link rel="stylesheet" href="../../../static/css/admin/login.css">
+
+    <!-- font awesome (icones) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+    <!-- sidebar css -->
+    <link rel="stylesheet" th:href="@{/css/admin/sidebar.css}">
+
+    <!-- dashboard css -->
+    <link rel="stylesheet" th:href="@{/css/admin/dashboard.css}">
+
 </head>
 <body>
-hello
+
+<div class="container">
+    <!-- sidebar -->
+    <div th:replace="~{admin/sidebar :: sidebar}"></div>
+
+    <div class="conteudo">
+        <header class="cabecalho">
+            <h1>Dashboard</h1>
+        </header>
+
+        <main class="card">
+
+            <div class="cabecalho-grafico">
+
+                <h2>Histórico de vendas</h2>
+
+                <div class="filtros">
+
+                    <label class="checkbox">
+                        <input type="checkbox" checked>
+                        <h6>Petisco</h6>
+                    </label>
+
+                    <span class="separador">-</span>
+
+                    <label class="checkbox">
+                        <input type="checkbox" checked>
+                        <h6>Ração</h6>
+                    </label>
+
+                    <span class="separador">-</span>
+
+                    <label class="checkbox">
+                        <input type="checkbox" checked>
+                        <h6>Suplemento</h6>
+                    </label>
+
+                    <div class="data">
+                        <input type="date">
+                        <span class="separador">-</span>
+                        <input type="date">
+                    </div>
+
+                    <button type="button" class="btn-exportar">
+                        Exportar CSV
+                    </button>
+
+                </div>
+
+            </div>
+
+            <div class="grafico">
+                <!-- gráfico aqui -->
+            </div>
+
+        </main>
+    </div>
+
+</div>
+
 </body>
+</html>

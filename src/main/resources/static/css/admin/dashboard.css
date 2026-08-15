@@ -1,0 +1,142 @@
+/* Resetar */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background: #E8EFEE;
+    font-family: 'Nunito', sans-serif;
+}
+
+.container {
+    display: flex;
+    width: 100%;
+}
+
+.conteudo {
+    flex: 1;
+    margin-left: 260px;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.cabecalho {
+    padding: 16px;
+    width: 100%;
+    background: #FFFFFF;
+    display: flex;
+    align-items: center;
+}
+
+h1 {
+    font-family: 'Fredoka', sans-serif;
+    font-size: 24px;
+    font-weight: 500;
+    color: #1F2A29;
+}
+
+/* Card principal */
+.card {
+    margin: 12px 16px;
+    flex: 1;
+    background-color: #FFFFFF;
+    border-radius: 8px;
+    padding: 12px;
+}
+
+/* cabecalho do grafico */
+.cabecalho-grafico {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    margin-bottom: 24px;
+}
+
+/* titulo */
+.cabecalho-grafico h2 {
+    font-family: 'Fredoka', sans-serif;
+    font-size: 20px;
+    color: #1C9B86;
+    font-weight: 500;
+    white-space: nowrap;
+}
+
+/* filtros do lado direito */
+.filtros {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 4px;
+    flex-wrap: nowrap;
+}
+
+/* checkbox */
+.checkbox {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 10px;
+}
+
+.checkbox h6 {
+    font-size: 16px;
+    font-weight: 500;
+    font-family: 'Fredoka', sans-serif;
+    color: #2D3A38;
+    white-space: nowrap;
+}
+
+.checkbox input {
+    accent-color: #1C9B86;
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+}
+
+/* separadores */
+.separador {
+    color: #B8C7C3;
+}
+
+/* datas */
+.data {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-left: 8px;
+}
+
+.data input {
+    border: 1px solid #D9E2E0;
+    border-radius: 8px;
+    outline: none;
+    padding: 0 12px;
+    height: 32px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 16px;
+    color: #1F2A29;
+    background: #FFFFFF;
+}
+
+/* botao */
+button {
+    width: 132px;
+    height: 32px;
+    margin-left: 8px;
+    border: none;
+    border-radius: 8px;
+    background: #0E1413;
+    color: #FFFFFF;
+    font-size: 14px;
+    font-family: 'Fredoka', sans-serif;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #262B2A;
+}
