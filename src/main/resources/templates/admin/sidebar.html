@@ -13,54 +13,129 @@
 
     <div class="linha"></div>
     <nav class="menu">
-        <a th:href="@{/admin/dashboard}"
-           class="menu-item"
-           th:classappend="${paginaAtual == 'dashboard'} ? ' ativo' : ''">
+        <!-- Dashboard -->
+        <a th:if="${paginaAtual == 'dashboard'}"
+           th:href="@{/admin/dashboard}"
+           class="menu-item ativo">
             <i class="fa-solid fa-chart-column"></i>
             <span>Dashboard</span>
         </a>
 
-        <a th:href="@{/admin/produtos}"
+        <a th:unless="${paginaAtual == 'dashboard'}"
+           th:href="@{/admin/dashboard}"
+           class="menu-item">
+            <i class="fa-solid fa-chart-column"></i>
+            <span>Dashboard</span>
+        </a>
+
+
+        <!-- Produtos -->
+        <a th:if="${paginaAtual == 'produtos'}"
+           th:href="@{/admin/produtos}"
+           class="menu-item ativo">
+            <i class="fa-solid fa-bone"></i>
+            <span>Produtos</span>
+        </a>
+
+        <a th:unless="${paginaAtual == 'produtos'}"
+           th:href="@{/admin/produtos}"
            class="menu-item">
             <i class="fa-solid fa-bone"></i>
             <span>Produtos</span>
         </a>
 
-        <a th:href="@{/admin/pedidos}"
+
+        <!-- Pedidos -->
+        <a th:if="${paginaAtual == 'pedidos'}"
+           th:href="@{/admin/pedidos}"
+           class="menu-item ativo">
+            <i class="fa-solid fa-box"></i>
+            <span>Pedidos</span>
+        </a>
+
+        <a th:unless="${paginaAtual == 'pedidos'}"
+           th:href="@{/admin/pedidos}"
            class="menu-item">
             <i class="fa-solid fa-box"></i>
             <span>Pedidos</span>
         </a>
 
-        <a th:href="@{/admin/clientes}"
+
+        <!-- Clientes -->
+        <a th:if="${paginaAtual == 'clientes'}"
+           th:href="@{/admin/clientes}"
+           class="menu-item ativo">
+            <i class="fa-solid fa-user"></i>
+            <span>Clientes</span>
+        </a>
+
+        <a th:unless="${paginaAtual == 'clientes'}"
+           th:href="@{/admin/clientes}"
            class="menu-item">
             <i class="fa-solid fa-user"></i>
             <span>Clientes</span>
         </a>
 
-        <a th:href="@{/admin/estoque}"
+
+        <!-- Estoque -->
+        <a th:if="${paginaAtual == 'estoque'}"
+           th:href="@{/admin/estoque}"
+           class="menu-item ativo">
+            <i class="fa-solid fa-warehouse"></i>
+            <span>Estoque</span>
+        </a>
+
+        <a th:unless="${paginaAtual == 'estoque'}"
+           th:href="@{/admin/estoque}"
            class="menu-item">
             <i class="fa-solid fa-warehouse"></i>
             <span>Estoque</span>
         </a>
 
-        <a th:href="@{/admin/cupons}"
-           class="menu-item"
-           th:classappend="${paginaAtual == 'cupons'} ? ' ativo' : ''">
+
+        <!-- Cupons -->
+        <a th:if="${paginaAtual == 'cupons'}"
+           th:href="@{/admin/cupons}"
+           class="menu-item ativo">
             <i class="fa-solid fa-percent"></i>
             <span>Cupons</span>
         </a>
 
-        <a th:href="@{/admin/trocas}"
-            class="menu-item"
-            th:classappend="${paginaAtual == 'trocas'} ? ' ativo' : ''">
+        <a th:unless="${paginaAtual == 'cupons'}"
+           th:href="@{/admin/cupons}"
+           class="menu-item">
+            <i class="fa-solid fa-percent"></i>
+            <span>Cupons</span>
+        </a>
+
+
+        <!-- Trocas -->
+        <a th:if="${paginaAtual == 'trocas'}"
+           th:href="@{/admin/trocas}"
+           class="menu-item ativo">
             <i class="fa-solid fa-right-left"></i>
             <span>Trocas</span>
         </a>
 
-        <a th:href="@{/admin/auditoria}"
-           class="menu-item"
-           th:classappend="${paginaAtual == 'auditoria'} ? ' ativo' : ''">
+        <a th:unless="${paginaAtual == 'trocas'}"
+           th:href="@{/admin/trocas}"
+           class="menu-item">
+            <i class="fa-solid fa-right-left"></i>
+            <span>Trocas</span>
+        </a>
+
+
+        <!-- Auditoria -->
+        <a th:if="${paginaAtual == 'auditoria'}"
+           th:href="@{/admin/auditoria}"
+           class="menu-item ativo">
+            <i class="fa-solid fa-book"></i>
+            <span>Auditoria</span>
+        </a>
+
+        <a th:unless="${paginaAtual == 'auditoria'}"
+           th:href="@{/admin/auditoria}"
+           class="menu-item">
             <i class="fa-solid fa-book"></i>
             <span>Auditoria</span>
         </a>
@@ -70,6 +145,7 @@
     <div class="menu-espaco"></div>
     <div class="linha"></div>
 
+    <!-- Sair -->
     <a th:href="@{/admin/sair}" class="menu-item">
         <i class="fa-solid fa-right-from-bracket"></i>
         <span>Sair</span>

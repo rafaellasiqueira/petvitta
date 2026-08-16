@@ -119,10 +119,12 @@ button[type="submit"] {
     font-size: 18px;
     font-family: 'Fredoka', sans-serif;
     font-weight: 500;
+    cursor: pointer;
 }
 
 button[type="submit"]:hover {
     background: #37937F;
+    cursor: pointer;
 }
 
 /* Lado direito */

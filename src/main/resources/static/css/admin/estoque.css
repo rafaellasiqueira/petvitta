@@ -169,32 +169,23 @@ td {
     padding: 0 16px;
 }
 
-td:last-child {
-    text-align: center;
+.estoque-baixo {
+    color: #F4AC2D;
+}
+
+.estoque-esgotado {
+    color: #EA2B41;
+    font-weight: 600;
 }
 
 .fa-pen {
-    color: #E1CE8A;
+    color: #B8C7C3;
     height: 24px;
     weight: 24px;
     cursor: pointer;
     margin-right: 12px;
 }
 
-.btn-inativar {
-    width: auto;
-    height: 32px;
-    padding: 0 16px;
-    border: none;
-    border-radius: 8px;
-    background: #0E1413;
-    color: #FFFFFF;
-    font-size: 14px;
-    font-family: 'Fredoka', sans-serif;
-    font-weight: 500;
-    cursor: pointer;
-    vertical-align: middle;
-}
 
 /* Paginacao */
 .paginacao {
@@ -324,8 +315,12 @@ h2 {
     background: #ffffff;
 }
 
+.input-grupo input:focus,
+.input-grupo select:focus {
+    border-color: #B8C7C3;
+}
 
-/* Tipo de desconto + desconto */
+/* Quando dois inputs fica na mesma linha */
 .linha-inputs {
     display: flex;
     gap: 12px;
@@ -373,4 +368,3 @@ h2 {
 .btn-salvar:hover {
     opacity: 0.9;
 }
-

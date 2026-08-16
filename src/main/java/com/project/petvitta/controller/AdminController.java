@@ -18,6 +18,24 @@ public class AdminController {
         return "admin/dashboard";
     }
 
+    @GetMapping("/admin/pedidos")
+    public String pedidos(Model model) {
+        model.addAttribute("paginaAtual", "pedidos");
+        return "admin/pedidos";
+    }
+
+    @GetMapping("/admin/clientes")
+    public String clientes(Model model) {
+        model.addAttribute("paginaAtual", "clientes");
+        return "admin/clientes";
+    }
+
+    @GetMapping("/admin/estoque")
+    public String estoque(Model model) {
+        model.addAttribute("paginaAtual", "estoque");
+        return "admin/estoque";
+    }
+
     @GetMapping("/admin/cupons")
     public String cupons(Model model) {
         model.addAttribute("paginaAtual", "cupons");

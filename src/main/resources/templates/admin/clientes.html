@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Clientes</title>
+
+    <!-- font awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+    <!-- sidebar css -->
+    <link rel="stylesheet" th:href="@{/css/admin/sidebar.css}">
+
+    <!-- cliente css -->
+    <link rel="stylesheet" th:href="@{/css/admin/clientes.css}">
+</head>
+
+<body>
+
+<div class="container">
+
+    <!-- sidebar -->
+    <div th:replace="~{admin/sidebar :: sidebar}"></div>
+
+    <!-- conteudo -->
+    <div class="conteudo">
+        <!-- cabecalho -->
+        <header class="cabecalho">
+            <h1>Clientes</h1>
+        </header>
+
+        <main class="card">
+            <!-- filtros -->
+            <!-- lado direito -->
+            <div class="direito">
+                <div class="pesquisa"><i class="fa-solid fa-magnifying-glass"></i>
+                    <input type="text"
+                           id="inputPesquisa"
+                           placeholder="Buscar pelo nome do produto"></div>
+                <button type="button" class="btn-filtro" id="btnfiltro"><i class="fa-solid fa-filter"></i>Filtrar</button>
+                <button type="button" class="btn-cadastrar" id="btnCadastrar">Cadastrar cliente</button>
+            </div>
+
+            <!-- Painel filtros -->
+            <form id="painelFiltro" class="painel-filtro hidden" th:action="@{/admin/clientes}" method="GET">
+                <div class="grid-filtros">
+                    <div class="campo-filtro">
+                        <label for="filtroCpf">CPF</label>
+                        <input type="text" id="filtroCpf" name="cpf" placeholder="000.000.000-00">
+                    </div>
+
+                    <div class="campo-filtro">
+                        <label for="filtroEmail">E-mail</label>
+                        <input type="email" id="filtroEmail" name="email" placeholder="cliente@email.com">
+                    </div>
+
+                    <div class="campo-filtro">
+                        <label for="filtroTelefone">Telefone</label>
+                        <input type="text" id="filtroTelefone" name="telefone" placeholder="(00) 00000-0000">
+                    </div>
+
+                    <div class="campo-filtro">
+                        <label for="filtroDataNascimento">Data de Nascimento</label>
+                        <input type="date" id="filtroDataNascimento" name="dataNascimento">
+                    </div>
+
+                    <div class="campo-filtro">
+                        <label for="filtroGenero">Gênero</label>
+                        <select id="filtroGenero" name="genero">
+                            <option value="">Selecione o gênero</option>
+                            <option value="Feminino">Feminino</option>
+                            <option value="Masculino">Masculino</option>
+                            <option value="Outros">Outros</option>
+                        </select>
+                    </div>
+
+                    <div class="campo-filtro">
+                        <label for="filtroStatus">Status</label>
+                        <select id="filtroStatus" name="status">
+                            <option value="">Selecione o status</option>
+                            <option value="Ativo">Ativo</option>
+                            <option value="Inativo">Inativo</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="acoes-filtro">
+                    <button type="button" class="btn-limpar" id="btnLimparFiltro">Limpar Filtros</button>
+                    <button type="submit" class="btn-aplicar">Aplicar Filtros</button>
+                </div>
+            </form>
+
+            <!-- tabela -->
+            <table>
+                <thead>
+                <tr>
+                    <th>Código</th>
+                    <th>Cliente</th>
+                    <th>CPF</th>
+                    <th>E-mail</th>
+                    <th>Ranking</th>
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>CL-001</td>
+                    <td>Letícia Gomes de Souza</td>
+                    <td>123.456.789-00</td>
+                    <td>leticia@gmail.com</td>
+                    <td>0</td>
+                    <td>
+                        <i class="fa-solid fa-eye btn-detalhes"></i>
+                        <i class="fa-solid fa-pen btn-editar"></i>
+                        <button type="button" class="btn-inativar">Inativar</button>
+                    </td>
+                </tr>
+                <tr class="inativo">
+                    <td>CL-002</td>
+                    <td>Marcos Oliveira</td>
+                    <td>223.456.789-00</td>
+                    <td>marcos@gmail.com</td>
+                    <td>0</td>
+                    <td>
+                        <i class="fa-solid fa-eye btn-detalhes"></i>
+                        <i class="fa-solid fa-pen btn-editar"></i>
+                        <button type="button" class="btn-ativar">Ativar</button>
+                    </td>
+                </tr>
+
+                </tbody>
+            </table>
+
+            <!-- paginacao -->
+            <div class="paginacao">
+                <button type="button" class="btn-paginacao" disabled><i class="fa-solid fa-chevron-left"></i></button>
+                <span class="paginacao-item active">1</span>
+                <span class="paginacao-item">2</span>
+                <span class="paginacao-item">3</span>
+                <button type="button" class="btn-paginacao"><i class="fa-solid fa-chevron-right"></i></button>
+            </div>
+
+            <!-- modal cadastro -->
+
+
+        </main>
+    </div>
+</div>
+
+<!-- JavaScript -->
+<script th:src="@{/js/admin/clientes.js}"></script>
+
+</body>
+</html>

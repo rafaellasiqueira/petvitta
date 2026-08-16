@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Estoque</title>
+
+    <!-- font awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+    <!-- sidebar css -->
+    <link rel="stylesheet" th:href="@{/css/admin/sidebar.css}">
+
+    <!-- estoque css -->
+    <link rel="stylesheet" th:href="@{/css/admin/estoque.css}">
+</head>
+
+<body>
+
+<div class="container">
+
+    <!-- sidebar -->
+    <div th:replace="~{admin/sidebar :: sidebar}"></div>
+
+    <!-- conteudo -->
+    <div class="conteudo">
+        <!-- cabecalho -->
+        <header class="cabecalho">
+            <h1>Estoque</h1>
+        </header>
+
+        <main class="card">
+            <!-- filtros -->
+            <div class="filtros">
+                <!-- lado esquerdo -->
+                <div class="botoes">
+                    <button class="btn-filtro active">Todos</button>
+                    <button class="btn-filtro">Normal</button>
+                    <button class="btn-filtro">Baixo</button>
+                    <button class="btn-filtro">Esgotado</button>
+                </div>
+
+                <!-- lado direito -->
+                <div class="direito">
+                    <div class="pesquisa"><i class="fa-solid fa-magnifying-glass"></i>
+                        <input type="text"
+                               id="inputPesquisa"
+                               placeholder="Buscar pelo nome do produto"></div>
+                    <button type="button" class="btn-cadastrar" id="btnCadastrar">Registrar entrada</button>
+                </div>
+            </div>
+
+            <!-- tabela -->
+            <table>
+                <thead>
+                <tr>
+                    <th>Produto</th>
+                    <th>Fornecedor</th>
+                    <th>Quantidade</th>
+                    <th>Valor custo</th>
+                    <th>Valor venda</th>
+                    <th>Data de entrada</th>
+                    <th>Status</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>Ração Golden Cães Adultos 10kg</td>
+                    <td>PetMais Distribuidora Ltda</td>
+                    <td>100</td>
+                    <td>R$ 10,00</td>
+                    <td>R$ 25,00</td>
+                    <td>16/08/2026</td>
+                    <td>Normal</td>
+                </tr>
+                <tr>
+                    <td>Ração Golden Cães Adultos 10kg</td>
+                    <td>PetMais Distribuidora Ltda</td>
+                    <td>3</td>
+                    <td>R$ 10,00</td>
+                    <td>R$ 25,00</td>
+                    <td>16/08/2026</td>
+                    <td class="estoque-baixo">Baixo</td>
+                </tr>
+                <tr>
+                    <td>Ração Golden Cães Adultos 10kg</td>
+                    <td>PetMais Distribuidora Ltda</td>
+                    <td>0</td>
+                    <td>R$ 10,00</td>
+                    <td>R$ 25,00</td>
+                    <td>16/08/2026</td>
+                    <td class="estoque-esgotado">Esgostado</td>
+                </tr>
+                <tr>
+                    <td>Ração Golden Cães Adultos 10kg</td>
+                    <td>PetMais Distribuidora Ltda</td>
+                    <td>100</td>
+                    <td>R$ 10,00</td>
+                    <td>R$ 25,00</td>
+                    <td>16/08/2026</td>
+                    <td>Normal</td>
+                </tr>
+                <tr>
+                    <td>Ração Golden Cães Adultos 10kg</td>
+                    <td>PetMais Distribuidora Ltda</td>
+                    <td>3</td>
+                    <td>R$ 10,00</td>
+                    <td>R$ 25,00</td>
+                    <td>16/08/2026</td>
+                    <td class="estoque-baixo">Baixo</td>
+                </tr>
+                <tr>
+                    <td>Ração Golden Cães Adultos 10kg</td>
+                    <td>PetMais Distribuidora Ltda</td>
+                    <td>0</td>
+                    <td>R$ 10,00</td>
+                    <td>R$ 25,00</td>
+                    <td>16/08/2026</td>
+                    <td class="estoque-esgotado">Esgostado</td>
+                </tr>
+                <tr>
+                    <td>Ração Golden Cães Adultos 10kg</td>
+                    <td>PetMais Distribuidora Ltda</td>
+                    <td>100</td>
+                    <td>R$ 10,00</td>
+                    <td>R$ 25,00</td>
+                    <td>16/08/2026</td>
+                    <td>Normal</td>
+                </tr>
+                <tr>
+                    <td>Ração Golden Cães Adultos 10kg</td>
+                    <td>PetMais Distribuidora Ltda</td>
+                    <td>3</td>
+                    <td>R$ 10,00</td>
+                    <td>R$ 25,00</td>
+                    <td>16/08/2026</td>
+                    <td class="estoque-baixo">Baixo</td>
+                </tr>
+                <tr>
+                    <td>Ração Golden Cães Adultos 10kg</td>
+                    <td>PetMais Distribuidora Ltda</td>
+                    <td>0</td>
+                    <td>R$ 10,00</td>
+                    <td>R$ 25,00</td>
+                    <td>16/08/2026</td>
+                    <td class="estoque-esgotado">Esgostado</td>
+                </tr>
+                <tr>
+                    <td>Ração Golden Cães Adultos 10kg</td>
+                    <td>PetMais Distribuidora Ltda</td>
+                    <td>100</td>
+                    <td>R$ 10,00</td>
+                    <td>R$ 25,00</td>
+                    <td>16/08/2026</td>
+                    <td>Normal</td>
+                </tr>
+                <tr>
+                    <td>Ração Golden Cães Adultos 10kg</td>
+                    <td>PetMais Distribuidora Ltda</td>
+                    <td>3</td>
+                    <td>R$ 10,00</td>
+                    <td>R$ 25,00</td>
+                    <td>16/08/2026</td>
+                    <td class="estoque-baixo">Baixo</td>
+                </tr>
+                <tr>
+                    <td>Ração Golden Cães Adultos 10kg</td>
+                    <td>PetMais Distribuidora Ltda</td>
+                    <td>0</td>
+                    <td>R$ 10,00</td>
+                    <td>R$ 25,00</td>
+                    <td>16/08/2026</td>
+                    <td class="estoque-esgotado">Esgostado</td>
+                </tr>
+                </tbody>
+            </table>
+
+            <!-- paginacao -->
+            <div class="paginacao">
+                <button type="button" class="btn-paginacao" disabled><i class="fa-solid fa-chevron-left"></i></button>
+                <span class="paginacao-item active">1</span>
+                <span class="paginacao-item">2</span>
+                <span class="paginacao-item">3</span>
+                <button type="button" class="btn-paginacao"><i class="fa-solid fa-chevron-right"></i></button>
+            </div>
+
+            <!-- modal cadastro -->
+            <div id="modalEstoque" class="modal">
+                <div class="modalConteudo">
+
+                    <!-- cabeçalho -->
+                    <div class="modalCabecalho">
+                        <h2 id="tituloModal">Registrar entrada</h2>
+                        <button type="button" class="btn-fechar" id="btnFecharModal">&times;</button>
+                    </div>
+
+                    <div class="modal-body">
+
+                        <!-- produto -->
+                        <div class="input-grupo">
+                            <label for="produto">Produto</label>
+
+                            <select id="produto">
+                                <option value="">Selecione um produto</option>
+                                <option value="1">Ração Premium para Cães 10kg</option>
+                                <option value="2">Ração para Gatos 10kg</option>
+                                <option value="3">Petisco de Carne 500g</option>
+                                <option value="4">Suplemento Vitaminas 120g</option>
+                            </select>
+                        </div>
+
+                        <!-- fornecedor -->
+                        <div class="input-grupo">
+                            <label for="fornecedor">Fornecedor</label>
+
+                            <select id="fornecedor">
+                                <option value="">Selecione um fornecedor</option>
+                                <option value="1">PetMais Distribuidora Ltda.</option>
+                                <option value="2">Mundo Pet Distribuidora</option>
+                                <option value="3">Animal Mix Produtos Pet</option>
+                            </select>
+                        </div>
+
+                        <!-- quantidade e data -->
+                        <div class="linha-inputs">
+                            <!-- quantidade -->
+                            <div class="input-grupo">
+                                <label for="quantidade">Quantidade</label>
+                                <input type="number" id="quantidade" placeholder="Digite a quantidade" min="1">
+                            </div>
+
+                            <!-- data -->
+                            <div class="input-grupo">
+                                <label for="dataEntrada">Data de entrada</label>
+                                <input type="date" id="dataEntrada">
+                            </div>
+
+                        </div>
+
+                        <!-- valores -->
+                        <div class="linha-inputs">
+                            <!-- valor de custo -->
+                            <div class="input-grupo">
+                                <label for="valorCusto">Valor de custo</label>
+                                <input type="number" id="valorCusto" placeholder="R$ 0,00" step="0.01" min="1">
+                            </div>
+
+                            <!-- valor de venda -->
+                            <div class="input-grupo">
+                                <label for="valorVenda">Valor de venda</label>
+                                <input type="number" id="valorVenda" placeholder="R$ 0,00" step="0.01" min="0">
+                            </div>
+
+                        </div>
+
+                        <!-- botões -->
+                        <div class="modalBotoes">
+                            <button type="button" class="btn-cancelar" id="btnCancelar">Cancelar</button>
+                            <button type="button" class="btn-salvar" id="btnSalvar">Salvar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+    </div>
+</div>
+
+<!-- JavaScript -->
+<script th:src="@{/js/admin/estoque.js}"></script>
+
+</body>
+</html>
