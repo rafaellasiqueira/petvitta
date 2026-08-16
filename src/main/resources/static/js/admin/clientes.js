@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const btnFiltro = document.getElementById('btnfiltro');
+    const btnFiltro = document.getElementById('btnfiltrar');
     const painelFiltro = document.getElementById('painelFiltro');
     const btnLimpar = document.getElementById('btnLimparFiltro');
 

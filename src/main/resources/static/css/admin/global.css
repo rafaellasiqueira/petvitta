@@ -1,0 +1,288 @@
+/* Resetar */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background: #E8EFEE;
+    font-family: 'Nunito', sans-serif;
+}
+
+.container {
+    display: flex;
+    width: 100%;
+}
+
+/* Conteudo */
+.conteudo {
+    flex: 1;
+    margin-left: 260px;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+/* Cabecalho */
+.cabecalho {
+    padding: 16px;
+    width: 100%;
+    background: #FFFFFF;
+    display: flex;
+    align-items: center;
+}
+
+h1 {
+    font-family: 'Fredoka', sans-serif;
+    font-size: 24px;
+    font-weight: 500;
+    color: #1F2A29;
+}
+
+/* Card */
+.card {
+    margin: 12px 16px;
+    background-color: #FFFFFF;
+    border-radius: 8px;
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    height: auto;
+}
+
+/* Filtros */
+.btn-filtro {
+    background: #D9E2E0;
+    border: none;
+    font-family: 'Fredoka', sans-serif;
+    font-size: 16px;
+    font-weight: 500;
+    padding: 4px 8px;
+    cursor: pointer;
+}
+
+.btn-filtro.active {
+    background: white;
+    border-radius: 6px;
+    padding: 4px 8px;
+}
+
+/* Pesquisar */
+.pesquisa {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 280px;
+    height: 36px;
+    border: 1px solid #D9E2E0;
+    border-radius: 8px;
+    background: #FFFFFF;
+    padding: 0 12px;
+}
+
+.pesquisa i {
+    color: #B8C7C3;
+}
+
+.pesquisa input {
+    width: 100%;
+    border: none;
+    outline: none;
+    background: transparent;
+    font-family: 'Nunito', sans-serif;
+    font-size: 14px;
+    color: #1F2A29;
+}
+
+.pesquisa input::placeholder {
+    color: #B8C7C3;
+}
+
+/* Tabela */
+table{
+    border: 1px solid #E8EFEE;
+    border-radius: 12px;
+    width: 100%;
+    border-spacing: 0;
+    color: #1F2A29;
+    text-align: left;
+}
+
+th {
+    background: #E8EFEE;
+    height: 40px;
+    font-family: 'Fredoka', sans-serif;
+    font-size: 16px;
+    font-weight:500;
+    padding: 0 16px;
+}
+
+th:first-child {
+    border-top-left-radius: 12px;
+}
+
+th:last-child {
+    border-top-right-radius: 12px;
+}
+
+tr {
+    height: 40px;
+    border: 1px solid #E8EFEE;
+}
+
+td {
+    padding: 0 16px;
+}
+
+/* Icones */
+.fa-eye {
+    color: #B8C7C3;
+    height: 24px;
+    weight: 24px;
+    cursor: pointer;
+}
+
+.fa-pen {
+    color: #E1CE8A;
+    height: 24px;
+    weight: 24px;
+    cursor: pointer;
+    margin-right: 12px;
+}
+
+.fa-filter {
+    color: #3A4A48;
+    margin-right: 8px;
+}
+
+/* Botões inativar e ativar */
+.btn-inativar {
+    width: auto;
+    height: 32px;
+    padding: 0 16px;
+    border: none;
+    border-radius: 8px;
+    background: #0E1413;
+    color: #FFFFFF;
+    font-size: 14px;
+    font-family: 'Fredoka', sans-serif;
+    font-weight: 500;
+    cursor: pointer;
+    vertical-align: middle;
+}
+
+.btn-ativar {
+    width: 80.66px;
+    height: 32px;
+    padding: 0 16px;
+    border: none;
+    border-radius: 8px;
+    background: #1C9B86;
+    color: #FFFFFF;
+    font-size: 14px;
+    font-family: 'Fredoka', sans-serif;
+    font-weight: 500;
+    cursor: pointer;
+    vertical-align: middle;
+}
+
+/* Paginacao */
+.paginacao {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+    margin-top: 20px;
+}
+
+.paginacao-item, .btn-paginacao {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 28px;
+    height: 28px;
+    padding: 0 6px;
+    background-color: #ffffff;
+    color: #5F7370;
+    font-size: 14px;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+.btn-paginacao {
+    border: none;
+}
+
+.paginacao-item.active {
+    background-color: #D4DDDB;
+    color: #1F2A29;
+    border: none;
+}
+
+.btn-paginacao:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    border: none;
+}
+
+/* Modal */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.4);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    visibility: hidden; /* o fundo fica desabilitado */
+}
+
+.modal.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.modalConteudo {
+    background-color: #ffffff;
+    width: 100%;
+    max-width: 480px;
+    border-radius: 12px;
+    padding: 20px 24px;
+}
+
+.modalCabecalho {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #E8EFEE;
+    padding-bottom: 12px;
+    margin-bottom: 16px;
+}
+
+h2 {
+    font-size: 20px;
+    font-weight: 600;
+    color: #3A4A48;
+    font-family: 'Fredoka', sans-serif;
+    font-weight: 500;
+}
+
+.btn-fechar {
+    background: none;
+    border: none;
+    font-size: 24px;
+    color: #B8C7C3;
+    cursor: pointer;
+}
+
+.modal-body p {
+    font-size: 16px;
+    color: #3A4A48;
+    margin-bottom: 10px;
+    font-family: 'Nunito', sans-serif;
+}
