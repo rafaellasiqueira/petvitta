@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Font awesome (icones) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+    <!-- Cabecalho CSS -->
+    <link rel="stylesheet" th:href="@{/css/cliente/cabecalho.css}">
+
+    <!-- Detalhes produto CSS -->
+    <link rel="stylesheet" th:href="@{/css/cliente/detalhes-produto.css}">
+</head>
+
+<body>
+<div class="container">
+    <!-- Cabecalho -->
+    <div th:replace="~{cliente/cabecalho :: cabecalho}"></div>
+
+    <!-- Detalhes -->
+    <main class="conteudo">
+        <div class="produto-detalhes">
+
+            <!-- Paginas -->
+            <div class="paginas">
+                <a th:href="@{/cliente/produtos}">Produtos</a>
+                <i class="fa-solid fa-chevron-right"></i>
+                <span>Detalhes</span>
+            </div>
+
+            <!-- Apresentação do Produto -->
+            <div class="produto-apresentacao">
+                <div class="imagem-container">
+                    <img th:src="@{/images/produtos/racao-1.png}" alt="GranPlus Choice Adulto">
+                </div>
+
+                <div class="info-principal">
+                        <h1>Ração Cães Adultos Frango e Carne Choice</h1>
+
+                    <div class="secao-descricao">
+                        <h2>Descrição</h2>
+                        <p>
+                            A ração GranPlus Choice Cães Adultos Frango e Carne é um alimento seco desenvolvido para cães adultos de todos os portes. Ela possui uma fórmula equilibrada, com proteínas de frango e carne que ajudam na manutenção da massa muscular e fornecem energia para o dia a dia. Além disso, contém vitaminas e minerais importantes para a saúde dos ossos, dentes e sistema imunológico, contribuindo também para uma boa digestão e fezes mais firmes. É uma opção considerada premium, sem corantes artificiais, indicada para garantir uma alimentação completa e nutritiva para o pet.
+                        </p>
+                    </div>
+
+                    <div class="secao-tamanhos">
+                        <h2>Tamanhos</h2>
+                        <div class="opcoes-tamanho">
+                            <button type="button" class="tamanho-opcao active">10.1 KG</button>
+                            <button type="button" class="tamanho-opcao">15 KG</button>
+                            <button type="button" class="tamanho-opcao">20 KG</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <span class="linha"></span>
+
+            <!-- Especificações -->
+            <div class="secao-especificacoes">
+                <h3>Especificação</h3>
+
+                <table class="tabela-especificacoes">
+                    <tbody>
+                    <tr>
+                        <th>Marca</th>
+                        <td>GranPlus</td>
+                    </tr>
+                    <tr>
+                        <th>Espécie</th>
+                        <td>Cachorro</td>
+                    </tr>
+                    <tr>
+                        <th>Idade</th>
+                        <td>Adulto</td>
+                    </tr>
+                    <tr>
+                        <th>Porte indicado</th>
+                        <td>Médio, Grande</td>
+                    </tr>
+                    <tr>
+                        <th>Categoria</th>
+                        <td>Ração seca</td>
+                    </tr>
+                    <tr>
+                        <th>Sabor</th>
+                        <td>Frango, Carne</td>
+                    </tr>
+                    <tr>
+                        <th>Tamanho do grão</th>
+                        <td>Pequeno</td>
+                    </tr>
+                    <tr>
+                        <th>Composição nutricional</th>
+                        <td>Farinha de Vísceras de Aves, Farinha de Carne e Ossos, Quirera de Arroz, Grão de Milho¹, Farelo de Glúten de Milho-60¹, Grão de Sorgo, Óleo de Vísceras de Aves, Farelo de Trigo, Cloreto de Sódio (Sal Comum), Cloreto de Potássio, Hidrolisado de Fígado Ave e Suíno, Antioxidantes (BHA, BHT), Propionato de Cálcio, Sorbato de Potássio, Aditivo Adsorvente (Parede Celular de Levedura – Glucomananos), Vitaminas (A, D3, E, K3, C, B1, B2, B6, B12, Pantotenato de Cálcio, Ácido Fólico, Ácido Nicotínico, Biotina, Cloreto de Colina), Minerais (Sulfato de Zinco, Sulfato de Ferro, Sulfato de Manganês, Iodato de Cálcio, Selenito de Sódio, Proteinato de Cobre).</td>
+                    </tr>
+                    <tr>
+                        <th>Transgênico</th>
+                        <td>Não</td>
+                    </tr>
+                    <tr>
+                        <th>Glúten</th>
+                        <td>Não</td>
+                    </tr>
+                    </tbody>
+                </table>
+
+                <!-- Tabela de Dosagem Recomendada -->
+                <table class="tabela-dosagem">
+                    <thead>
+                    <tr>
+                        <th>Peso do animal (kg)</th>
+                        <th>Quantidade recomendada (g)</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>1 a 5</td>
+                        <td>30 a 100</td>
+                    </tr>
+                    <tr>
+                        <td>6 a 10</td>
+                        <td>101 a 200</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Card Direita -->
+        <div class="direito">
+            <div class="preco-container">
+                <span class="preco">R$ 156,75</span>
+            </div>
+
+            <div class="quantidade-container">
+                <label>Quantidade</label>
+                <div class="seletor-quantidade">
+                    <button type="button" class="btn-qtd">-</button>
+                    <input type="number" value="1" min="1">
+                    <button type="button" class="btn-qtd">+</button>
+                </div>
+            </div>
+
+            <button type="button" class="btn-adicionar-carrinho">Adicionar ao carrinho</button>
+        </div>
+
+    </main>
+</div>
+</body>
+</html>

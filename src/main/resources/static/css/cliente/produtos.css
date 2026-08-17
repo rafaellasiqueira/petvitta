@@ -1,0 +1,222 @@
+body{
+    background: #E8EFEE;
+}
+
+.conteudo {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    height: auto;
+    padding: 40px;
+    gap: 24px;
+}
+
+.filtro,
+.produtos-container {
+    background: #FFFFFF;
+    border-radius: 8px;
+    padding: 16px 20px;
+    width: auto;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.filtro-cabecalho,
+.produtos-cabecalho {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    font-family: 'Fredoka', sans-serif;
+}
+
+h1 {
+   font-size: 16px;
+   font-weight: 500;
+   color: #1F2A29;
+   margin: 0;
+}
+
+.btn-limpar {
+    font-family: 'Fredoka', sans-serif;
+    background: white;
+    border: none;
+    font-size: 14px;
+    font-weight: 400;
+    color: #5F7370;
+    text-decoration: underline;
+}
+
+.linha {
+    display: block;
+    width: 100%;
+    height: 1px;
+    background-color: #E8EFEE;
+}
+
+
+.filtro h3 {
+    font-family: 'Fredoka', sans-serif;
+    font-size: 16px;
+    font-weight: 500;
+    color: #3A4A48;
+}
+
+.filtro-categoria, .filtro-grupo, .filtro-preco {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.filtro-categoria details {
+    display: flex;
+    flex-direction: column;
+}
+
+.filtro-categoria details[open] summary,
+.filtro-categoria details[open] .ver-todos,
+.filtro-categoria details[open] label {
+    margin-bottom: 8px;
+}
+
+.filtro-categoria summary {
+    font-family: 'Fredoka', sans-serif;
+    font-size: 16px;
+    font-weight: 500;
+    color: #3A4A48;
+    cursor: pointer;
+}
+
+
+.filtro label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 16px;
+    font-weight: 500;
+    color: #3A4A48;
+    cursor: pointer;
+    margin-bottom: 0;
+}
+
+.filtro input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    border: 1px solid #1C9B86;
+    border-radius: 2px;
+    accent-color: #1C9B86;
+    cursor: pointer;
+}
+
+.ver-todos {
+    font-family: 'Nunito', sans-serif;
+    font-size: 16px;
+    font-weight: 500;
+    color: #1C9B86;
+    text-decoration: none;
+}
+
+.ver-todos:hover {
+    text-decoration: underline;
+}
+
+.filtro-preco {
+    gap: 8px;
+}
+
+.precos {
+    display: flex;
+    flex-direction: row;
+    gap: 12px;
+    width: 100%;
+}
+
+.precos label {
+    font-family: 'Nunito', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    color: #3A4A48;
+}
+
+.precos input {
+    width: 120px;
+    height: 36px;
+    padding: 0 8px;
+    border: 1px solid #D9E2E0;
+    border-radius: 8px;
+    outline: none;
+    font-family: 'Nunito', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    color: #3A4A48;
+}
+
+.precos input::placeholder {
+    color: #B8C7C3;
+}
+
+/* Produtos */
+.produtos-linha {
+    display: flex;
+    width: 100%;
+    height: auto;
+    gap: 12px;
+}
+
+.produto {
+    display: flex;
+    flex-direction: column;
+    width: 160px;
+    height: auto;
+    border: 1px solid #D9E2E0;
+    border-radius: 12px;
+    padding: 12px;
+    gap: 12px;
+}
+
+.produto img{
+    width: 100%;
+    height: 140px;
+    object-fit: contain;
+}
+
+.produto-info p {
+    font-family: 'Nunito', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: 8px;
+}
+
+.produto-info h3 {
+    font-family: 'Nunito', sans-serif;
+    font-size: 20px;
+    font-weight: 600;
+}
+
+
+.btn-adicionar {
+    width: 100%;
+    height: 36px;
+    font-family: 'Fredoka', sans-serif;
+    background: #4FD1B5;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 400;
+    color: white;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.btn-adicionar:hover {
+    background: #37937F;
+}
+
+.produto-link {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+}

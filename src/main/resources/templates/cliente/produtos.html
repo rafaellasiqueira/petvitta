@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- font awesome (icones) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+    <!-- Cabecalho CSS -->
+    <link rel="stylesheet" th:href="@{/css/cliente/cabecalho.css}">
+
+    <!-- Produtos CSS -->
+    <link rel="stylesheet" th:href="@{/css/cliente/produtos.css}">
+</head>
+
+<body>
+<div class="container">
+    <!-- Cabecalho -->
+    <div th:replace="~{cliente/cabecalho :: cabecalho}"></div>
+
+    <!-- Produtos -->
+    <main class="conteudo">
+
+        <div class="filtro">
+            <div class="filtro-cabecalho">
+                <h1>Filtro</h1>
+                <button type="button" class="btn-limpar">Limpar</button>
+            </div>
+
+            <span class="linha"></span>
+
+            <!-- Categoria -->
+            <div class="filtro-categoria">
+                <h3>Categoria</h3>
+
+                <!-- Ração -->
+                <details>
+                    <summary>Ração</summary>
+
+                    <a href="#" class="ver-todos">Ver todas as rações</a>
+
+                    <label>
+                        <input type="checkbox" name="tipoRacao" value="seca">
+                        <span>Seca</span>
+                    </label>
+
+                    <label>
+                        <input type="checkbox" name="tipoRacao" value="natural">
+                        <span>Natural</span>
+                    </label>
+
+                    <label>
+                        <input type="checkbox" name="tipoRacao" value="umida">
+                        <span>Úmida</span>
+                    </label>
+
+                    <label>
+                        <input type="checkbox" name="tipoRacao" value="medicamentosa">
+                        <span>Medicamentosa</span>
+                    </label>
+                </details>
+
+                <!-- Petisco -->
+                <details>
+                    <summary>Petisco</summary>
+
+                    <a href="#" class="ver-todos">Ver todos os petiscos</a>
+
+                    <label>
+                        <input type="checkbox" name="tipoPetisco" value="bifinhos">
+                        <span>Bifinhos</span>
+                    </label>
+
+                    <label>
+                        <input type="checkbox" name="tipoPetisco" value="biscoitos">
+                        <span>Biscoitos e snacks</span>
+                    </label>
+
+                    <label>
+                        <input type="checkbox" name="tipoPetisco" value="molho">
+                        <span>Molho</span>
+                    </label>
+
+                    <label>
+                        <input type="checkbox" name="tipoPetisco" value="cremoso">
+                        <span>Petisco cremoso</span>
+                    </label>
+
+                    <label>
+                        <input type="checkbox" name="tipoPetisco" value="natural">
+                        <span>Petisco natural</span>
+                    </label>
+
+                    <label>
+                        <input type="checkbox" name="tipoPetisco" value="osso">
+                        <span>Osso</span>
+                    </label>
+                </details>
+
+                <!-- Suplemento -->
+                <details>
+                    <summary>Suplemento</summary>
+
+                    <a href="#" class="ver-todos">Ver todos os suplementos</a>
+
+                    <label>
+                        <input type="checkbox" name="tipoSuplemento" value="comprimidos">
+                        <span>Comprimidos e cápsulas</span>
+                    </label>
+
+                    <label>
+                        <input type="checkbox" name="tipoSuplemento" value="mastigaveis">
+                        <span>Tabletes mastigáveis</span>
+                    </label>
+
+                    <label>
+                        <input type="checkbox" name="tipoSuplemento" value="po">
+                        <span>Pó e líquidos</span>
+                    </label>
+                </details>
+
+            </div>
+
+            <!-- Espécie -->
+            <div class="filtro-grupo">
+                <h3>Espécie</h3>
+
+                <label>
+                    <input type="checkbox" name="especie" value="cachorro">
+                    <span>Cachorro</span>
+                </label>
+
+                <label>
+                    <input type="checkbox" name="especie" value="gato">
+                    <span>Gato</span>
+                </label>
+
+            </div>
+
+            <!-- Idade -->
+            <div class="filtro-grupo">
+                <h3>Idade</h3>
+
+                <label>
+                    <input type="checkbox" name="idade" value="adulto">
+                    <span>Adulto</span>
+                </label>
+
+                <label>
+                    <input type="checkbox" name="idade" value="idoso">
+                    <span>Idoso</span>
+                </label>
+
+            </div>
+
+            <!-- Porte -->
+            <div class="filtro-grupo">
+                <h3>Porte indicado</h3>
+
+                <label>
+                    <input type="checkbox" name="porte" value="pequeno">
+                    <span>Pequeno</span>
+                </label>
+
+                <label>
+                    <input type="checkbox" name="porte" value="medio">
+                    <span>Médio</span>
+                </label>
+
+                <label>
+                    <input type="checkbox" name="porte" value="grande">
+                    <span>Grande</span>
+                </label>
+            </div>
+
+
+            <!-- Características -->
+            <div class="filtro-grupo">
+                <h3>Característica do produto</h3>
+
+                <label>
+                    <input type="checkbox" name="caracteristica" value="transgenico">
+                    <span>Transgênico</span>
+                </label>
+
+                <label>
+                    <input type="checkbox" name="caracteristica" value="gluten">
+                    <span>Contém glúten</span>
+                </label>
+
+            </div>
+
+            <!-- Preço -->
+            <div class="filtro-preco">
+                <h3>Preço</h3>
+                <div class="precos">
+                    <div>
+                        <label for="precoMinimo">Mínimo</label>
+                        <input type="number"
+                                id="precoMinimo"
+                                name="precoMinimo"
+                                min="0.01"
+                                placeholder="R$ 0,00">
+                    </div>
+
+                    <div>
+                        <label for="precoMaximo">Máximo</label>
+                        <input type="number"
+                                id="precoMaximo"
+                                name="precoMaximo"
+                                min="0.01"
+                                placeholder="R$ 0,00">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="produtos-container">
+            <div class="produtos-cabecalho">
+                <h1>Produtos</h1>
+            </div>
+
+            <div class="produtos-linha">
+                <div class="produto">
+                    <a th:href="@{/cliente/detalhes-produto}" class="produto-link">
+                        <img class="produto-imagem" th:src="@{/images/produtos/racao-1.png}" alt="Produto 1">
+
+                        <div class="produto-info">
+                            <p class="produto-titulo">Ração Cães Adultos Frango e Carne Choice</p>
+                            <h3 class="produto-preco">R$ 156,75</h3>
+                        </div>
+                    </a>
+
+                    <button type="button" class="btn-adicionar">Adicionar</button>
+                </div>
+
+                <div class="produto">
+                    <img class="produto-imagem" th:src="@{/images/produtos/racao-1.png}" alt="Produto 1">
+
+                    <div class="produto-info">
+                        <p class="produto-titulo">Ração Cães Adultos Frango e Carne Choice</p>
+                        <h3 class="produto-preco">R$ 25,00</h3>
+                    </div>
+
+                    <button type="button" class="btn-adicionar">Adicionar</button>
+                </div>
+
+                <div class="produto">
+                    <img class="produto-imagem" th:src="@{/images/produtos/racao-1.png}" alt="Produto 1">
+
+                    <div class="produto-info">
+                        <p class="produto-titulo">Ração Cães Adultos Frango e Carne Choice</p>
+                        <h3 class="produto-preco">R$ 25,00</h3>
+                    </div>
+
+                    <button type="button" class="btn-adicionar">Adicionar</button>
+                </div>
+
+                <div class="produto">
+                    <img class="produto-imagem" th:src="@{/images/produtos/racao-1.png}" alt="Produto 1">
+
+                    <div class="produto-info">
+                        <p class="produto-titulo">Ração Cães Adultos Frango e Carne Choice</p>
+                        <h3 class="produto-preco">R$ 25,00</h3>
+                    </div>
+
+                    <button type="button" class="btn-adicionar">Adicionar</button>
+                </div>
+            </div>
+
+            <div class="produtos-linha">
+                <div class="produto">
+                    <img class="produto-imagem" th:src="@{/images/produtos/racao-1.png}" alt="Produto 1">
+
+                    <div class="produto-info">
+                        <p class="produto-titulo">Ração Cães Adultos Frango e Carne Choice</p>
+                        <h3 class="produto-preco">R$ 25,00</h3>
+                    </div>
+
+                    <button type="button" class="btn-adicionar">Adicionar</button>
+                </div>
+
+                <div class="produto">
+                    <img class="produto-imagem" th:src="@{/images/produtos/racao-1.png}" alt="Produto 1">
+
+                    <div class="produto-info">
+                        <p class="produto-titulo">Ração Cães Adultos Frango e Carne Choice</p>
+                        <h3 class="produto-preco">R$ 25,00</h3>
+                    </div>
+
+                    <button type="button" class="btn-adicionar">Adicionar</button>
+                </div>
+
+                <div class="produto">
+                    <img class="produto-imagem" th:src="@{/images/produtos/racao-1.png}" alt="Produto 1">
+
+                    <div class="produto-info">
+                        <p class="produto-titulo">Ração Cães Adultos Frango e Carne Choice</p>
+                        <h3 class="produto-preco">R$ 25,00</h3>
+                    </div>
+
+                    <button type="button" class="btn-adicionar">Adicionar</button>
+                </div>
+
+                <div class="produto">
+                    <img class="produto-imagem" th:src="@{/images/produtos/racao-1.png}" alt="Produto 1">
+
+                    <div class="produto-info">
+                        <p class="produto-titulo">Ração Cães Adultos Frango e Carne Choice</p>
+                        <h3 class="produto-preco">R$ 25,00</h3>
+                    </div>
+
+                    <button type="button" class="btn-adicionar">Adicionar</button>
+                </div>
+            </div>
+
+            <div class="produtos-linha">
+                <div class="produto">
+                    <img class="produto-imagem" th:src="@{/images/produtos/racao-1.png}" alt="Produto 1">
+
+                    <div class="produto-info">
+                        <p class="produto-titulo">Ração Cães Adultos Frango e Carne Choice</p>
+                        <h3 class="produto-preco">R$ 25,00</h3>
+                    </div>
+
+                    <button type="button" class="btn-adicionar">Adicionar</button>
+                </div>
+
+                <div class="produto">
+                    <img class="produto-imagem" th:src="@{/images/produtos/racao-1.png}" alt="Produto 1">
+
+                    <div class="produto-info">
+                        <p class="produto-titulo">Ração Cães Adultos Frango e Carne Choice</p>
+                        <h3 class="produto-preco">R$ 25,00</h3>
+                    </div>
+
+                    <button type="button" class="btn-adicionar">Adicionar</button>
+                </div>
+
+                <div class="produto">
+                    <img class="produto-imagem" th:src="@{/images/produtos/racao-1.png}" alt="Produto 1">
+
+                    <div class="produto-info">
+                        <p class="produto-titulo">Ração Cães Adultos Frango e Carne Choice</p>
+                        <h3 class="produto-preco">R$ 25,00</h3>
+                    </div>
+
+                    <button type="button" class="btn-adicionar">Adicionar</button>
+                </div>
+
+                <div class="produto">
+                    <img class="produto-imagem" th:src="@{/images/produtos/racao-1.png}" alt="Produto 1">
+
+                    <div class="produto-info">
+                        <p class="produto-titulo">Ração Cães Adultos Frango e Carne Choice</p>
+                        <h3 class="produto-preco">R$ 25,00</h3>
+                    </div>
+
+                    <button type="button" class="btn-adicionar">Adicionar</button>
+                </div>
+            </div>
+
+            <div class="produtos-linha">
+                <div class="produto">
+                    <img class="produto-imagem" th:src="@{/images/produtos/racao-1.png}" alt="Produto 1">
+
+                    <div class="produto-info">
+                        <p class="produto-titulo">Ração Cães Adultos Frango e Carne Choice</p>
+                        <h3 class="produto-preco">R$ 25,00</h3>
+                    </div>
+
+                    <button type="button" class="btn-adicionar">Adicionar</button>
+                </div>
+
+                <div class="produto">
+                    <img class="produto-imagem" th:src="@{/images/produtos/racao-1.png}" alt="Produto 1">
+
+                    <div class="produto-info">
+                        <p class="produto-titulo">Ração Cães Adultos Frango e Carne Choice</p>
+                        <h3 class="produto-preco">R$ 25,00</h3>
+                    </div>
+
+                    <button type="button" class="btn-adicionar">Adicionar</button>
+                </div>
+
+                <div class="produto">
+                    <img class="produto-imagem" th:src="@{/images/produtos/racao-1.png}" alt="Produto 1">
+
+                    <div class="produto-info">
+                        <p class="produto-titulo">Ração Cães Adultos Frango e Carne Choice</p>
+                        <h3 class="produto-preco">R$ 25,00</h3>
+                    </div>
+
+                    <button type="button" class="btn-adicionar">Adicionar</button>
+                </div>
+
+                <div class="produto">
+                    <img class="produto-imagem" th:src="@{/images/produtos/racao-1.png}" alt="Produto 1">
+
+                    <div class="produto-info">
+                        <p class="produto-titulo">Ração Cães Adultos Frango e Carne Choice</p>
+                        <h3 class="produto-preco">R$ 25,00</h3>
+                    </div>
+
+                    <button type="button" class="btn-adicionar">Adicionar</button>
+                </div>
+            </div>
+        </div>
+
+    </main>
+</div>
+</body>
