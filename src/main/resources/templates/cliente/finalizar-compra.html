@@ -94,10 +94,13 @@
             <div class="card">
                 <div class="titulo-com-link">
                     <h2>Cupons</h2>
-                    <a href="#">Meus cupons</a>
+                    <a href="#" id="btnMeusCupons">Meus cupons</a>
                 </div>
 
                 <input type="text" class="campo-cupom" placeholder="Digite o código do cupom">
+
+                <!-- Cupons selecionados -->
+                <div id="cuponsSelecionados" class="cupons-selecionados"></div>
 
                 <div class="aviso">
                     <span>Apenas um cupom promocional pode ser utilizado por compra.</span>
@@ -106,59 +109,85 @@
 
 
             <!-- Pagamento -->
+            <!-- Pagamento -->
             <div class="card">
                 <div class="titulo-com-link">
                     <h2>Pagamento</h2>
-                    <a href="#">Adicionar cartão</a>
+                    <a href="#" id="btnAbrirCartao">Adicionar cartão</a>
                 </div>
 
                 <div class="aviso">
                     <span>O valor mínimo por cartão é de R$ 10,00</span>
                 </div>
 
-                <!-- Cartao 1 -->
-                <label class="cartao">
+                <!-- Cartão 1 -->
+                <div class="cartao-container">
+                    <label class="cartao">
 
-                    <input type="radio"
-                           name="cartao"
-                           value="visa">
+                        <input type="checkbox"
+                               name="cartao"
+                               value="visa"
+                               class="checkbox-cartao">
 
-                    <div class="radio-custom"></div>
+                        <div class="dados-cartao">
+                            <h3>Visa</h3>
+                            <span>**** **** **** 1234</span>
+                            <span>Letícia Souza</span>
+                            <span>Vencimento: 08/2029</span>
+                        </div>
+                    </label>
 
-                    <div class="dados-cartao">
-                        <h3>Visa</h3>
-                        <span>**** **** **** 1234</span>
-                        <span>Letícia Souza</span>
-                        <span>Vencimento: 08/2029</span>
+                    <!-- Valor do cartão -->
+                    <div class="campo-valor-cartao">
+                        <label for="valorVisa">Valor a pagar com este cartão</label>
+
+                        <div class="input-valor">
+                            <span>R$</span>
+                            <input type="number"
+                                   id="valorVisa"
+                                   name="valorVisa"
+                                   min="10"
+                                   step="0.01"
+                                   placeholder="Digite o valor">
+                        </div>
                     </div>
-
-                    <button type="button"
-                            class="editar-cartao">
-                        <i class="fa-solid fa-pen"></i>
-                    </button>
-                </label>
+                </div>
 
 
                 <!-- Cartão 2 -->
-                <label class="cartao">
-                    <input type="radio"
-                           name="cartao"
-                           value="mastercard">
+                <div class="cartao-container">
+                    <label class="cartao">
 
-                    <div class="radio-custom"></div>
-                    <div class="dados-cartao">
-                        <h3>Mastercard</h3>
-                        <span>**** **** **** 1234</span>
-                        <span>Letícia Souza</span>
-                        <span>Vencimento: 08/2029</span>
+                        <input type="checkbox"
+                               name="cartao"
+                               value="mastercard"
+                               class="checkbox-cartao">
+
+                        <div class="dados-cartao">
+                            <h3>Mastercard</h3>
+                            <span>**** **** **** 1234</span>
+                            <span>Letícia Souza</span>
+                            <span>Vencimento: 08/2029</span>
+                        </div>
+                    </label>
+
+                    <!-- Valor do cartão -->
+                    <div class="campo-valor-cartao">
+                        <label for="valorMastercard">Valor a pagar com este cartão</label>
+
+                        <div class="input-valor">
+                            <span>R$</span>
+                            <input type="number"
+                                   id="valorMastercard"
+                                   name="valorMastercard"
+                                   min="10"
+                                   step="0.01"
+                                   placeholder="Digite o valor">
+                        </div>
                     </div>
-
-                    <button type="button"
-                            class="editar-cartao">
-                        <i class="fa-solid fa-pen"></i>
-                    </button>
-                </label>
+                </div>
             </div>
+
         </div>
 
         <!-- Coluna direita -->
@@ -185,15 +214,26 @@
                 <h3>R$ 85,00</h3>
             </div>
 
-            <button type="button" class="btn-finalizar-a-compra">Finalizar a compra</button>
+            <button type="button" id="btnFinalizarCompra" class="btn-finalizar-a-compra">Finalizar a compra</button>
         </div>
     </main>
+
+    <div id="toast" class="toast">
+        <span class="toast-icone">✓</span>
+        <span>Pedido feito com sucesso!</span>
+    </div>
 
     <!-- Modal de alterar endereço -->
     <div th:replace="~{fragments/cliente/modais :: modal-alterar-endereco}"></div>
 
     <!-- Modal de adicionar/editar endereço -->
     <div th:replace="~{fragments/cliente/modais :: modal-adicionar-endereco}"></div>
+
+    <!-- Modal de cupons -->
+    <div th:replace="~{fragments/cliente/modais :: modal-cupons}"></div>
+
+    <!-- Modal de cadastrar cartão -->
+    <div th:replace="~{fragments/cliente/modais :: modal-cadastrar-cartao}"></div>
 </div>
 
 <script th:src="@{/js/cliente/finalizar-compra.js}"></script>

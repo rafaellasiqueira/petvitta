@@ -25,4 +25,14 @@ public class ClienteController {
     public String finalizarCompra() {
         return "cliente/finalizar-compra";
     }
+
+    @GetMapping("/cliente/pedido")
+    public String pedido() {
+        return "cliente/pedido";
+    }
+
+    @GetMapping("/cliente/perfil")
+    public String perfil() {
+        return "cliente/perfil";
+    }
 }

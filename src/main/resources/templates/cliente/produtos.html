@@ -6,24 +6,32 @@
 
     <title>Produtos</title>
 
-    <!-- font awesome (icones) -->
+    <!-- Font Awesome (Ícones) -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 
-    <!-- Cabecalho CSS -->
+    <!-- Cabeçalho CSS -->
     <link rel="stylesheet" th:href="@{/css/cliente/cabecalho.css}">
+
+    <!-- Global CSS -->
+    <link rel="stylesheet" th:href="@{/css/cliente/global.css}">
 
     <!-- Produtos CSS -->
     <link rel="stylesheet" th:href="@{/css/cliente/produtos.css}">
+
+    <!-- Chatbot -->
+    <link rel="stylesheet" th:href="@{/css/cliente/chatbot.css}">
+
 </head>
 
 <body>
 <div class="container">
-    <!-- Cabecalho -->
-    <div th:replace="~{cliente/cabecalho :: cabecalho}"></div>
 
-    <!-- Produtos -->
+    <!-- Cabeçalho -->
+    <div th:replace="~{fragments/cliente/cabecalho :: cabecalho}"></div>
+
     <main class="conteudo">
 
+        <!-- Filtro -->
         <div class="filtro">
             <div class="filtro-cabecalho">
                 <h1>Filtro</h1>
@@ -39,7 +47,6 @@
                 <!-- Ração -->
                 <details>
                     <summary>Ração</summary>
-
                     <a href="#" class="ver-todos">Ver todas as rações</a>
 
                     <label>
@@ -66,7 +73,6 @@
                 <!-- Petisco -->
                 <details>
                     <summary>Petisco</summary>
-
                     <a href="#" class="ver-todos">Ver todos os petiscos</a>
 
                     <label>
@@ -103,7 +109,6 @@
                 <!-- Suplemento -->
                 <details>
                     <summary>Suplemento</summary>
-
                     <a href="#" class="ver-todos">Ver todos os suplementos</a>
 
                     <label>
@@ -121,7 +126,6 @@
                         <span>Pó e líquidos</span>
                     </label>
                 </details>
-
             </div>
 
             <!-- Espécie -->
@@ -147,6 +151,11 @@
                 <label>
                     <input type="checkbox" name="idade" value="adulto">
                     <span>Adulto</span>
+                </label>
+
+                <label>
+                    <input type="checkbox" name="idade" value="filhote">
+                    <span>Filhote</span>
                 </label>
 
                 <label>
@@ -190,7 +199,6 @@
                     <input type="checkbox" name="caracteristica" value="gluten">
                     <span>Contém glúten</span>
                 </label>
-
             </div>
 
             <!-- Preço -->
@@ -219,9 +227,7 @@
         </div>
 
         <div class="produtos-container">
-            <div class="produtos-cabecalho">
-                <h1>Produtos</h1>
-            </div>
+            <h1>Produtos</h1>
 
             <div class="produtos-linha">
                 <div class="produto">
@@ -238,80 +244,40 @@
                 </div>
 
                 <div class="produto">
-                    <img class="produto-imagem" th:src="@{/images/produtos/racao-1.png}" alt="Produto 1">
+                    <a th:href="@{/cliente/detalhes-produto}" class="produto-link">
+                        <img class="produto-imagem" th:src="@{/images/produtos/racao-2.png}" alt="Produto 1">
 
-                    <div class="produto-info">
-                        <p class="produto-titulo">Ração Cães Adultos Frango e Carne Choice</p>
-                        <h3 class="produto-preco">R$ 25,00</h3>
-                    </div>
-
-                    <button type="button" class="btn-adicionar">Adicionar</button>
-                </div>
-
-                <div class="produto">
-                    <img class="produto-imagem" th:src="@{/images/produtos/racao-1.png}" alt="Produto 1">
-
-                    <div class="produto-info">
-                        <p class="produto-titulo">Ração Cães Adultos Frango e Carne Choice</p>
-                        <h3 class="produto-preco">R$ 25,00</h3>
-                    </div>
+                        <div class="produto-info">
+                            <p class="produto-titulo">Pedigree Ração Cães Carne Adulto</p>
+                            <h3 class="produto-preco">R$ 80,90</h3>
+                        </div>
+                    </a>
 
                     <button type="button" class="btn-adicionar">Adicionar</button>
                 </div>
 
                 <div class="produto">
-                    <img class="produto-imagem" th:src="@{/images/produtos/racao-1.png}" alt="Produto 1">
+                    <a th:href="@{/cliente/detalhes-produto}" class="produto-link">
+                        <img class="produto-imagem" th:src="@{/images/produtos/racao-3.png}" alt="Produto 1">
 
-                    <div class="produto-info">
-                        <p class="produto-titulo">Ração Cães Adultos Frango e Carne Choice</p>
-                        <h3 class="produto-preco">R$ 25,00</h3>
-                    </div>
-
-                    <button type="button" class="btn-adicionar">Adicionar</button>
-                </div>
-            </div>
-
-            <div class="produtos-linha">
-                <div class="produto">
-                    <img class="produto-imagem" th:src="@{/images/produtos/racao-1.png}" alt="Produto 1">
-
-                    <div class="produto-info">
-                        <p class="produto-titulo">Ração Cães Adultos Frango e Carne Choice</p>
-                        <h3 class="produto-preco">R$ 25,00</h3>
-                    </div>
+                        <div class="produto-info">
+                            <p class="produto-titulo">Ração GoldeN Special Gatos Adultos Sabor Frango e Carne</p>
+                            <h3 class="produto-preco">R$ 59,90</h3>
+                        </div>
+                    </a>
 
                     <button type="button" class="btn-adicionar">Adicionar</button>
                 </div>
 
                 <div class="produto">
-                    <img class="produto-imagem" th:src="@{/images/produtos/racao-1.png}" alt="Produto 1">
+                    <a th:href="@{/cliente/detalhes-produto}" class="produto-link">
+                        <img class="produto-imagem" th:src="@{/images/produtos/racao-4.png}" alt="Produto 1">
 
-                    <div class="produto-info">
-                        <p class="produto-titulo">Ração Cães Adultos Frango e Carne Choice</p>
-                        <h3 class="produto-preco">R$ 25,00</h3>
-                    </div>
-
-                    <button type="button" class="btn-adicionar">Adicionar</button>
-                </div>
-
-                <div class="produto">
-                    <img class="produto-imagem" th:src="@{/images/produtos/racao-1.png}" alt="Produto 1">
-
-                    <div class="produto-info">
-                        <p class="produto-titulo">Ração Cães Adultos Frango e Carne Choice</p>
-                        <h3 class="produto-preco">R$ 25,00</h3>
-                    </div>
-
-                    <button type="button" class="btn-adicionar">Adicionar</button>
-                </div>
-
-                <div class="produto">
-                    <img class="produto-imagem" th:src="@{/images/produtos/racao-1.png}" alt="Produto 1">
-
-                    <div class="produto-info">
-                        <p class="produto-titulo">Ração Cães Adultos Frango e Carne Choice</p>
-                        <h3 class="produto-preco">R$ 25,00</h3>
-                    </div>
+                        <div class="produto-info">
+                            <p class="produto-titulo">Ração Suprema Sabor Carne para Gatos Adultos</p>
+                            <h3 class="produto-preco">R$ 122,32</h3>
+                        </div>
+                    </a>
 
                     <button type="button" class="btn-adicionar">Adicionar</button>
                 </div>
@@ -319,97 +285,64 @@
 
             <div class="produtos-linha">
                 <div class="produto">
-                    <img class="produto-imagem" th:src="@{/images/produtos/racao-1.png}" alt="Produto 1">
+                    <a th:href="@{/cliente/detalhes-produto}" class="produto-link">
+                        <img class="produto-imagem" th:src="@{/images/produtos/petisco-1.png}" alt="Produto 1">
 
-                    <div class="produto-info">
-                        <p class="produto-titulo">Ração Cães Adultos Frango e Carne Choice</p>
-                        <h3 class="produto-preco">R$ 25,00</h3>
-                    </div>
-
-                    <button type="button" class="btn-adicionar">Adicionar</button>
-                </div>
-
-                <div class="produto">
-                    <img class="produto-imagem" th:src="@{/images/produtos/racao-1.png}" alt="Produto 1">
-
-                    <div class="produto-info">
-                        <p class="produto-titulo">Ração Cães Adultos Frango e Carne Choice</p>
-                        <h3 class="produto-preco">R$ 25,00</h3>
-                    </div>
+                        <div class="produto-info">
+                            <p class="produto-titulo">Petisco Cremoso True Creamy Sabor Atum para Gatos</p>
+                            <h3 class="produto-preco">R$ 22,41</h3>
+                        </div>
+                    </a>
 
                     <button type="button" class="btn-adicionar">Adicionar</button>
                 </div>
 
                 <div class="produto">
-                    <img class="produto-imagem" th:src="@{/images/produtos/racao-1.png}" alt="Produto 1">
+                    <a th:href="@{/cliente/detalhes-produto}" class="produto-link">
+                        <img class="produto-imagem" th:src="@{/images/produtos/petisco-2.png}" alt="Produto 1">
 
-                    <div class="produto-info">
-                        <p class="produto-titulo">Ração Cães Adultos Frango e Carne Choice</p>
-                        <h3 class="produto-preco">R$ 25,00</h3>
-                    </div>
-
-                    <button type="button" class="btn-adicionar">Adicionar</button>
-                </div>
-
-                <div class="produto">
-                    <img class="produto-imagem" th:src="@{/images/produtos/racao-1.png}" alt="Produto 1">
-
-                    <div class="produto-info">
-                        <p class="produto-titulo">Ração Cães Adultos Frango e Carne Choice</p>
-                        <h3 class="produto-preco">R$ 25,00</h3>
-                    </div>
-
-                    <button type="button" class="btn-adicionar">Adicionar</button>
-                </div>
-            </div>
-
-            <div class="produtos-linha">
-                <div class="produto">
-                    <img class="produto-imagem" th:src="@{/images/produtos/racao-1.png}" alt="Produto 1">
-
-                    <div class="produto-info">
-                        <p class="produto-titulo">Ração Cães Adultos Frango e Carne Choice</p>
-                        <h3 class="produto-preco">R$ 25,00</h3>
-                    </div>
+                        <div class="produto-info">
+                            <p class="produto-titulo">Petisco Dreamies Sabor Queijo para Gatos Adultos 40g</p>
+                            <h3 class="produto-preco">R$ 7,90</h3>
+                        </div>
+                    </a>
 
                     <button type="button" class="btn-adicionar">Adicionar</button>
                 </div>
 
                 <div class="produto">
-                    <img class="produto-imagem" th:src="@{/images/produtos/racao-1.png}" alt="Produto 1">
+                    <a th:href="@{/cliente/detalhes-produto}" class="produto-link">
+                        <img class="produto-imagem" th:src="@{/images/produtos/suplemento-1.png}" alt="Produto 1">
 
-                    <div class="produto-info">
-                        <p class="produto-titulo">Ração Cães Adultos Frango e Carne Choice</p>
-                        <h3 class="produto-preco">R$ 25,00</h3>
-                    </div>
-
-                    <button type="button" class="btn-adicionar">Adicionar</button>
-                </div>
-
-                <div class="produto">
-                    <img class="produto-imagem" th:src="@{/images/produtos/racao-1.png}" alt="Produto 1">
-
-                    <div class="produto-info">
-                        <p class="produto-titulo">Ração Cães Adultos Frango e Carne Choice</p>
-                        <h3 class="produto-preco">R$ 25,00</h3>
-                    </div>
+                        <div class="produto-info">
+                            <p class="produto-titulo">Suplemento Gatos Nutrifull Organnact 30 ml</p>
+                            <h3 class="produto-preco">R$ 59,08</h3>
+                        </div>
+                    </a>
 
                     <button type="button" class="btn-adicionar">Adicionar</button>
                 </div>
 
                 <div class="produto">
-                    <img class="produto-imagem" th:src="@{/images/produtos/racao-1.png}" alt="Produto 1">
+                    <a th:href="@{/cliente/detalhes-produto}" class="produto-link">
+                        <img class="produto-imagem" th:src="@{/images/produtos/suplemento-2.png}" alt="Produto 1">
 
-                    <div class="produto-info">
-                        <p class="produto-titulo">Ração Cães Adultos Frango e Carne Choice</p>
-                        <h3 class="produto-preco">R$ 25,00</h3>
-                    </div>
+                        <div class="produto-info">
+                            <p class="produto-titulo">Organnact Eritrós Cat Pasta Suplemento para Gatos 27g</p>
+                            <h3 class="produto-preco">R$ 126,90</h3>
+                        </div>
+                    </a>
 
                     <button type="button" class="btn-adicionar">Adicionar</button>
                 </div>
             </div>
         </div>
-
     </main>
 </div>
+
+<!-- ChatBot -->
+<div th:replace="~{fragments/cliente/chatbot :: chatbot}"></div>
+<script th:src="@{/js/cliente/chatbot.js}"></script>
+
 </body>
+</html>

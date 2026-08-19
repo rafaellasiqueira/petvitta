@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Perfil</title>
+
+    <!-- Font awesome (icones) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+    <!-- Cabecalho CSS -->
+    <link rel="stylesheet" th:href="@{/css/cliente/cabecalho.css}">
+
+    <!-- Perfil CSS -->
+    <link rel="stylesheet" th:href="@{/css/cliente/perfil.css}">
+
+    <!-- Chatbot CSS -->
+    <link rel="stylesheet" th:href="@{/css/cliente/chatbot.css}">
+
+</head>
+
+<body>
+<div class="container">
+    <!-- Cabecalho -->
+    <div th:replace="~{cliente/cabecalho :: cabecalho}"></div>
+
+    <!-- Conteúdo Principal -->
+    <main class="conteudo">
+        <div class="container-esquerdo">
+
+            <!-- Card Dados Pessoais -->
+            <div class="card card-dados-pessoais">
+                <!-- Cabeçalho do Card com Ícone e Título -->
+                <div class="titulo-card-icone">
+                    <div class="icone-cabecalho">
+                        <i class="fa-regular fa-user"></i>
+                    </div>
+                    <h2>Dados pessoais</h2>
+                </div>
+
+                <!-- Formulário de Dados Pessoais -->
+                <form class="form-dados-pessoais">
+                    <!-- Nome -->
+                    <div class="campo-grupo largura-total">
+                        <label for="nome">Nome</label>
+                        <input type="text" id="nome" name="nome" value="Letícia Gomes de Souza">
+                    </div>
+
+                    <!-- CPF -->
+                    <div class="campo-grupo largura-total">
+                        <label for="cpf">CPF</label>
+                        <input type="text" id="cpf" name="cpf" value="123.456.789-00">
+                    </div>
+
+                    <!-- Linha Dupla: Tipo de Telefone e Telefone -->
+                    <div class="linha-campos">
+                        <div class="campo-grupo">
+                            <label for="tipoTelefone">Tipo de telefone</label>
+                            <div class="select-wrapper">
+                                <select id="tipoTelefone" name="tipoTelefone">
+                                    <option value="celular" selected>Celular</option>
+                                    <option value="fixo">Fixo</option>
+                                </select>
+                                <i class="fa-solid fa-chevron-down icone-select"></i>
+                            </div>
+                        </div>
+
+                        <div class="campo-grupo">
+                            <label for="telefone">Telefone</label>
+                            <input type="text" id="telefone" name="telefone" value="(11) 91111-1111">
+                        </div>
+                    </div>
+
+                    <!-- Linha Dupla: Gênero e Data de Nascimento -->
+                    <div class="linha-campos">
+                        <div class="campo-grupo">
+                            <label for="genero">Gênero</label>
+                            <div class="select-wrapper">
+                                <select id="genero" name="genero">
+                                    <option value="feminino" selected>Feminino</option>
+                                    <option value="masculino">Masculino</option>
+                                    <option value="outro">Outro</option>
+                                </select>
+                                <i class="fa-solid fa-chevron-down icone-select"></i>
+                            </div>
+                        </div>
+
+                        <div class="campo-grupo">
+                            <label for="dataNascimento">Data de nascimento</label>
+                            <input type="text" id="dataNascimento" name="dataNascimento" value="10/09/1991">
+                        </div>
+                    </div>
+
+                    <!-- Botão Salvar -->
+                    <div class="container-btn-salvar">
+                        <button type="submit" class="btn-salvar">Salvar</button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Card Alterar Senha -->
+            <div class="card card-alterar-senha">
+                <!-- Cabeçalho do Card com Ícone e Título -->
+                <div class="titulo-card-icone">
+                    <div class="icone-cabecalho">
+                        <i class="fa-solid fa-key"></i>
+                    </div>
+                    <h2>Alterar senha</h2>
+                </div>
+
+                <!-- Formulário -->
+                <form class="form-alterar-senha">
+                    <!-- Senha atual -->
+                    <div class="campo-grupo largura-total">
+                        <label for="senhaAtual">Senha atual</label>
+                        <input type="password" id="senhaAtual" name="senhaAtual" placeholder="Digite sua senha">
+                    </div>
+
+                    <!-- Linha Dupla: Nova Senha e Confirmar Nova Senha -->
+                    <div class="linha-campos">
+                        <div class="campo-grupo">
+                            <label for="novaSenha">Nova senha</label>
+                            <input type="password" id="novaSenha" name="novaSenha" placeholder="Digite sua nova senha">
+                        </div>
+
+                        <div class="campo-grupo">
+                            <label for="confirmarSenha">Confirme a nova senha</label>
+                            <input type="password" id="confirmarSenha" name="confirmarSenha" placeholder="Digite sua nova senha novamente">
+                        </div>
+                    </div>
+
+                    <!-- Requisitos da Senha -->
+                    <ul class="requisitos-senha">
+                        <li>- Conter no mínimo 8 caracteres</li>
+                        <li>- Conter pelo menos uma letra maiúscula e uma letra minúscula</li>
+                        <li>- Conter pelo menos um caractere especial</li>
+                    </ul>
+
+                    <!-- Botão Salvar Nova Senha -->
+                    <div class="container-btn-salvar">
+                        <button type="submit" class="btn-salvar-senha">Salvar nova senha</button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Endereco -->
+            <div class="card">
+                <div class="titulo-card">
+                    <h2>Endereço de entrega</h2>
+                </div>
+
+                <div class="endereco">
+                    <h3>Escritório</h3>
+                    <span>Casa</span>
+                    <p>
+                        Rua João Batista, 355 - Jardim Ângela,
+                        Acrelândia - Acre
+                    </p>
+                    <span>CEP: 08888-888, Brasil.</span>
+                    <a href="#" id="btnAlterarEndereco">Alterar endereço</a>
+                </div>
+            </div>
+
+            <!-- Produtos-->
+            <div class="card">
+                <h2>Produtos</h2>
+
+                <div class="produto">
+                    <div class="imagem-produto">
+                        <img th:src="@{/images/produtos/racao-1.png}"
+                             alt="Ração Cães Adultos">
+                    </div>
+
+                    <div class="informacoes-produto">
+                        <h3>Ração Cães Adultos Frango e Carne Choice</h3>
+                        <span>Tamanho: 10.1 KG</span>
+                        <span>Quantidade: 1</span>
+                        <span class="preco">R$ 98,10</span>
+                    </div>
+                </div>
+
+                <div class="linha-produto"></div>
+
+                <div class="produto">
+                    <div class="imagem-produto">
+                        <img th:src="@{/images/produtos/Golden-Special-Frango-Carne-10kg-Frente.png}"
+                             alt="Ração GoldeN Special Gatos Adultos Sabor Frango e Carne">
+                    </div>
+
+                    <div class="informacoes-produto">
+                        <h3>Ração GoldeN Special Gatos Adultos Sabor Frango e Carne</h3>
+                        <span>Tamanho: 10.1 KG</span>
+                        <span>Quantidade: 2</span>
+                        <span class="preco">R$ 100,20</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Cupons -->
+            <div class="card">
+                <div class="titulo-com-link">
+                    <h2>Cupons</h2>
+                    <a href="#" id="btnMeusCupons">Meus cupons</a>
+                </div>
+
+                <input type="text" class="campo-cupom" placeholder="Digite o código do cupom">
+
+                <!-- Cupons selecionados -->
+                <div id="cuponsSelecionados" class="cupons-selecionados"></div>
+
+                <div class="aviso">
+                    <span>Apenas um cupom promocional pode ser utilizado por compra.</span>
+                </div>
+            </div>
+
+            <!-- Pagamento -->
+            <div class="card">
+                <div class="titulo-com-link">
+                    <h2>Pagamento</h2>
+                    <a href="#" id="btnAbrirCartao">Adicionar cartão</a>
+                </div>
+
+                <div class="aviso">
+                    <span>O valor mínimo por cartão é de R$ 10,00</span>
+                </div>
+
+                <!-- Cartão 1 -->
+                <div class="cartao-container">
+                    <label class="cartao">
+                        <input type="checkbox"
+                               name="cartao"
+                               value="visa"
+                               class="checkbox-cartao">
+
+                        <div class="dados-cartao">
+                            <h3>Visa</h3>
+                            <span>**** **** **** 1234</span>
+                            <span>Letícia Souza</span>
+                            <span>Vencimento: 08/2029</span>
+                        </div>
+                    </label>
+
+                    <!-- Valor do cartão -->
+                    <div class="campo-valor-cartao">
+                        <label for="valorVisa">Valor a pagar com este cartão</label>
+
+                        <div class="input-valor">
+                            <span>R$</span>
+                            <input type="number"
+                                   id="valorVisa"
+                                   name="valorVisa"
+                                   min="10"
+                                   step="0.01"
+                                   placeholder="Digite o valor">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Cartão 2 -->
+                <div class="cartao-container">
+                    <label class="cartao">
+                        <input type="checkbox"
+                               name="cartao"
+                               value="mastercard"
+                               class="checkbox-cartao">
+
+                        <div class="dados-cartao">
+                            <h3>Mastercard</h3>
+                            <span>**** **** **** 1234</span>
+                            <span>Letícia Souza</span>
+                            <span>Vencimento: 08/2029</span>
+                        </div>
+                    </label>
+
+                    <!-- Valor do cartão -->
+                    <div class="campo-valor-cartao">
+                        <label for="valorMastercard">Valor a pagar com este cartão</label>
+
+                        <div class="input-valor">
+                            <span>R$</span>
+                            <input type="number"
+                                   id="valorMastercard"
+                                   name="valorMastercard"
+                                   min="10"
+                                   step="0.01"
+                                   placeholder="Digite o valor">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Chatbot Fragment -->
+    <div th:replace="~{fragments/cliente/chatbot :: chatbot}"></div>
+</div>
+
+<!-- Scripts JS -->
+<script th:src="@{/js/cliente/chatbot.js}"></script>
+
+</body>
+</html>

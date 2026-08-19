@@ -1,0 +1,21 @@
+@import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@400;500;600;700&display=swap');
+
+/* Resetar espçamento definido pelo navegador */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body{
+    background: #E8EFEE;
+}
+
+.conteudo {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    height: auto;
+    padding: 40px;
+    gap: 24px;
+}

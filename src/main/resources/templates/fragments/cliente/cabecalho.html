@@ -9,6 +9,7 @@
 <header class="cabecalho" th:fragment="cabecalho">
 
     <!-- Primeira parte -->
+
     <div class="topo">
         <div class="logo-container">
             <img class="logo" th:src="@{/images/logo-horizontal-escura.svg}" alt="Petvitta Club">
@@ -29,19 +30,24 @@
             </a>
 
             <!-- Meus pedidos -->
-            <a href="#" class="menu-container">
+            <a th:href="@{/cliente/pedido}" class="menu-container">
                 <i class="fa-solid fa-box"></i>
                 <span>Meus pedidos</span>
             </a>
 
-            <!-- Notificao -->
+            <!-- Notificacao -->
             <a href="#" class="menu-container">
                 <i class="fa-solid fa-bell"></i>
             </a>
 
             <!-- Perfil -->
-            <a href="#" class="menu-container">
+            <a th:href="@{/cliente/perfil}" class="menu-container">
                 <i class="fa-solid fa-circle-user"></i>
+            </a>
+
+            <!-- Sair -->
+            <a th:href="@{/logout}" class="menu-container menu-sair" title="Sair da conta">
+                <i class="fa-solid fa-right-from-bracket"></i>
             </a>
         </div>
     </div>

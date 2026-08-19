@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Meus Pedidos</title>
+
+    <!-- Font awesome (icones) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+    <!-- Cabecalho CSS -->
+    <link rel="stylesheet" th:href="@{/css/cliente/cabecalho.css}">
+
+    <!-- Carrinho CSS -->
+    <link rel="stylesheet" th:href="@{/css/cliente/pedido.css}">
+
+    <!-- Modal CSS -->
+    <link rel="stylesheet" th:href="@{/css/cliente/modal.css}">
+
+    <!-- Chatbot -->
+    <link rel="stylesheet" th:href="@{/css/cliente/chatbot.css}">
+
+</head>
+
+<body>
+<div class="container">
+    <!-- Cabecalho -->
+    <div th:replace="~{cliente/cabecalho :: cabecalho}"></div>
+
+    <!-- Detalhes -->
+    <main class="conteudo">
+        <div class="container-principal">
+
+            <!-- cabecalho -->
+            <div class="cabecalho-container">
+                <h1>Meus pedidos</h1>
+            </div>
+
+            <!-- Pagamento recusado  -->
+            <div class="card-pedido">
+
+                <!-- Cabeçalho -->
+                <div class="cabecalho-pedido">
+                    <div class="informacoes-pedido">
+                        <h2>PEDIDO01</h2>
+                        <span>Pedido feito em 08/08/2026</span>
+                        <span>Pagamento recusado em 08/08/2026</span>
+                    </div>
+                    <span class="status-pedido pagamento-recusado">Pagamento recusado</span>
+                </div>
+
+                <div class="linha-pedido"></div>
+
+                <!-- Produtos -->
+                <div class="produtos-pedido">
+                    <!-- Produto 1 -->
+                    <div class="produto-pedido">
+                        <div class="imagem-produto-pedido">
+                            <img th:src="@{/images/produtos/racao-1.png}"
+                                 alt="Ração Cães Adultos">
+                        </div>
+
+                        <div class="dados-produto-pedido">
+                            <h3>Ração Cães Adultos Frango e Carne Choice</h3>
+                            <span>Tamanho: 10.1 KG</span>
+                            <span>Quantidade: 1</span>
+                            <span>R$ 98,10</span>
+                        </div>
+                    </div>
+
+                    <!-- Produto 2 -->
+                    <div class="produto-pedido">
+                        <div class="imagem-produto-pedido">
+                            <img th:src="@{/images/produtos/Golden-Special-Frango-Carne-10kg-Frente.png}"
+                                 alt="Ração GoldeN Special Gatos Adultos Sabor Frango e Carne">
+                        </div>
+
+                        <div class="dados-produto-pedido">
+                            <h3>Ração GoldeN Special Gatos Adultos Sabor Frango e Carne</h3>
+                            <span>Tamanho: 10.1 KG</span>
+                            <span>Quantidade: 2</span>
+                            <span>R$ 100,20</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Resumo -->
+                <div class="resumo-pedido">
+                    <div class="linha-resumo-pedido">
+                        <span>Subtotal</span>
+                        <span>R$ 25,00</span>
+                    </div>
+
+                    <div class="linha-resumo-pedido desconto">
+                        <span>Descontos</span>
+                        <span>-R$ 4,00</span>
+                    </div>
+
+                    <div class="linha-resumo-pedido frete">
+                        <span>Frete</span>
+                        <span>-R$ 0,00</span>
+                    </div>
+
+                    <div class="linha-resumo-pedido total">
+                        <span>Total</span>
+                        <span>R$ 21,00</span>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- Entregue  -->
+            <div class="card-pedido" id="cardTrocarPedido">
+
+                <div class="cabecalho-pedido">
+                    <div class="informacoes-pedido">
+                        <h2>PEDIDO02</h2>
+                        <span>Pedido feito em 08/08/2026</span>
+                        <span>Entregue em 20/08/2026</span>
+                    </div>
+
+                    <div class="container-status-troca">
+
+            <span class="status-pedido entregue">
+                Entregue
+            </span>
+
+                        <button type="button"
+                                class="btn-branco btn-solicitar-troca"
+                                id="btnAbrirModalTroca">
+                            Solicitar troca
+                        </button>
+
+                    </div>
+                </div>
+
+                <div class="linha-pedido"></div>
+
+                <!-- Produtos -->
+                <div class="produtos-pedido">
+                    <!-- Produto 1 -->
+                    <div class="produto-pedido">
+                        <div class="imagem-produto-pedido">
+                            <img th:src="@{/images/produtos/racao-1.png}"
+                                 alt="Ração Cães Adultos">
+                        </div>
+
+                        <div class="dados-produto-pedido">
+                            <h3>Ração Cães Adultos Frango e Carne Choice</h3>
+                            <span>Tamanho: 10.1 KG</span>
+                            <span>Quantidade: 1</span>
+                            <span>R$ 98,10</span>
+                        </div>
+                    </div>
+
+                    <!-- Produto 2 -->
+                    <div class="produto-pedido">
+                        <div class="imagem-produto-pedido">
+                            <img th:src="@{/images/produtos/Golden-Special-Frango-Carne-10kg-Frente.png}"
+                                 alt="Ração GoldeN Special Gatos Adultos Sabor Frango e Carne">
+                        </div>
+
+                        <div class="dados-produto-pedido">
+                            <h3>Ração GoldeN Special Gatos Adultos Sabor Frango e Carne</h3>
+                            <span>Tamanho: 10.1 KG</span>
+                            <span>Quantidade: 2</span>
+                            <span>R$ 100,20</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Resumo -->
+                <div class="resumo-pedido">
+                    <div class="linha-resumo-pedido">
+                        <span>Subtotal</span>
+                        <span>R$ 25,00</span>
+                    </div>
+
+                    <div class="linha-resumo-pedido desconto">
+                        <span>Descontos</span>
+                        <span>-R$ 4,00</span>
+                    </div>
+
+                    <div class="linha-resumo-pedido frete">
+                        <span>Frete</span>
+                        <span>-R$ 0,00</span>
+                    </div>
+
+                    <div class="linha-resumo-pedido total">
+                        <span>Total</span>
+                        <span>R$ 21,00</span>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- Itens recebidos  -->
+            <div class="card-pedido">
+
+                <!-- Cabeçalho -->
+                <div class="cabecalho-pedido">
+
+                    <div class="informacoes-pedido">
+                        <h2>PEDIDO03</h2>
+                        <span>Pedido feito em 08/08/2026</span>
+                    </div>
+
+                    <div class="container-status-troca">
+
+                        <button type="button"
+                                class="btn-branco btn-itens-recebidos"
+                                id="btnAbrirModalItensRecebidos">
+                            Itens recebidos
+                        </button>
+
+                    </div>
+
+                </div>
+
+                <div class="linha-pedido"></div>
+
+                <!-- Produtos -->
+                <div class="produtos-pedido">
+                    <!-- Produto 1 -->
+                    <div class="produto-pedido">
+                        <div class="imagem-produto-pedido">
+                            <img th:src="@{/images/produtos/racao-1.png}"
+                                 alt="Ração Cães Adultos">
+                        </div>
+
+                        <div class="dados-produto-pedido">
+                            <h3>Ração Cães Adultos Frango e Carne Choice</h3>
+                            <span>Tamanho: 10.1 KG</span>
+                            <span>Quantidade: 1</span>
+                            <span>R$ 98,10</span>
+                        </div>
+                    </div>
+
+                    <!-- Produto 2 -->
+                    <div class="produto-pedido">
+                        <div class="imagem-produto-pedido">
+                            <img th:src="@{/images/produtos/Golden-Special-Frango-Carne-10kg-Frente.png}"
+                                 alt="Ração GoldeN Special Gatos Adultos Sabor Frango e Carne">
+                        </div>
+
+                        <div class="dados-produto-pedido">
+                            <h3>Ração GoldeN Special Gatos Adultos Sabor Frango e Carne</h3>
+                            <span>Tamanho: 10.1 KG</span>
+                            <span>Quantidade: 2</span>
+                            <span>R$ 100,20</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Resumo -->
+                <div class="resumo-pedido">
+                    <div class="linha-resumo-pedido">
+                        <span>Subtotal</span>
+                        <span>R$ 25,00</span>
+                    </div>
+
+                    <div class="linha-resumo-pedido desconto">
+                        <span>Descontos</span>
+                        <span>-R$ 4,00</span>
+                    </div>
+
+                    <div class="linha-resumo-pedido frete">
+                        <span>Frete</span>
+                        <span>-R$ 0,00</span>
+                    </div>
+
+                    <div class="linha-resumo-pedido total">
+                        <span>Total</span>
+                        <span>R$ 21,00</span>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- Em trânsito  -->
+            <div class="card-pedido">
+
+                <!-- Cabeçalho -->
+                <div class="cabecalho-pedido">
+                    <div class="informacoes-pedido">
+                        <h2>PEDIDO04</h2>
+                        <span>Pedido feito em 08/08/2026</span>
+                        <span>Entrega prevista para dia 20/08/2026</span>
+                    </div>
+                    <span class="status-pedido em-transito">Em trânsito</span>
+                </div>
+
+                <div class="linha-pedido"></div>
+
+                <!-- Produtos -->
+                <div class="produtos-pedido">
+                    <!-- Produto 1 -->
+                    <div class="produto-pedido">
+                        <div class="imagem-produto-pedido">
+                            <img th:src="@{/images/produtos/racao-1.png}"
+                                 alt="Ração Cães Adultos">
+                        </div>
+
+                        <div class="dados-produto-pedido">
+                            <h3>Ração Cães Adultos Frango e Carne Choice</h3>
+                            <span>Tamanho: 10.1 KG</span>
+                            <span>Quantidade: 1</span>
+                            <span>R$ 98,10</span>
+                        </div>
+                    </div>
+
+                    <!-- Produto 2 -->
+                    <div class="produto-pedido">
+                        <div class="imagem-produto-pedido">
+                            <img th:src="@{/images/produtos/Golden-Special-Frango-Carne-10kg-Frente.png}"
+                                 alt="Ração GoldeN Special Gatos Adultos Sabor Frango e Carne">
+                        </div>
+
+                        <div class="dados-produto-pedido">
+                            <h3>Ração GoldeN Special Gatos Adultos Sabor Frango e Carne</h3>
+                            <span>Tamanho: 10.1 KG</span>
+                            <span>Quantidade: 2</span>
+                            <span>R$ 100,20</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Resumo -->
+                <div class="resumo-pedido">
+                    <div class="linha-resumo-pedido">
+                        <span>Subtotal</span>
+                        <span>R$ 25,00</span>
+                    </div>
+
+                    <div class="linha-resumo-pedido desconto">
+                        <span>Descontos</span>
+                        <span>-R$ 4,00</span>
+                    </div>
+
+                    <div class="linha-resumo-pedido frete">
+                        <span>Frete</span>
+                        <span>-R$ 0,00</span>
+                    </div>
+
+                    <div class="linha-resumo-pedido total">
+                        <span>Total</span>
+                        <span>R$ 21,00</span>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- Aprovado  -->
+            <div class="card-pedido">
+
+                <!-- Cabeçalho -->
+                <div class="cabecalho-pedido">
+                    <div class="informacoes-pedido">
+                        <h2>PEDIDO06</h2>
+                        <span>Pedido feito em 08/08/2026</span>
+                        <span>Aprovado em 20/08/2026</span>
+                    </div>
+
+                    <div class="container-status-troca">
+
+    <span class="status-pedido aprovado">
+        Aprovado
+    </span>
+
+                        <button type="button"
+                                class="btn-cancelar-pedido">
+                            Cancelar pedido
+                        </button>
+
+                    </div>
+
+                </div>
+
+                <div class="linha-pedido"></div>
+
+                <!-- Produtos -->
+                <div class="produtos-pedido">
+                    <!-- Produto 1 -->
+                    <div class="produto-pedido">
+                        <div class="imagem-produto-pedido">
+                            <img th:src="@{/images/produtos/racao-1.png}"
+                                 alt="Ração Cães Adultos">
+                        </div>
+
+                        <div class="dados-produto-pedido">
+                            <h3>Ração Cães Adultos Frango e Carne Choice</h3>
+                            <span>Tamanho: 10.1 KG</span>
+                            <span>Quantidade: 1</span>
+                            <span>R$ 98,10</span>
+                        </div>
+                    </div>
+
+                    <!-- Produto 2 -->
+                    <div class="produto-pedido">
+                        <div class="imagem-produto-pedido">
+                            <img th:src="@{/images/produtos/Golden-Special-Frango-Carne-10kg-Frente.png}"
+                                 alt="Ração GoldeN Special Gatos Adultos Sabor Frango e Carne">
+                        </div>
+
+                        <div class="dados-produto-pedido">
+                            <h3>Ração GoldeN Special Gatos Adultos Sabor Frango e Carne</h3>
+                            <span>Tamanho: 10.1 KG</span>
+                            <span>Quantidade: 2</span>
+                            <span>R$ 100,20</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Resumo -->
+                <div class="resumo-pedido">
+                    <div class="linha-resumo-pedido">
+                        <span>Subtotal</span>
+                        <span>R$ 25,00</span>
+                    </div>
+
+                    <div class="linha-resumo-pedido desconto">
+                        <span>Descontos</span>
+                        <span>-R$ 4,00</span>
+                    </div>
+
+                    <div class="linha-resumo-pedido frete">
+                        <span>Frete</span>
+                        <span>-R$ 0,00</span>
+                    </div>
+
+                    <div class="linha-resumo-pedido total">
+                        <span>Total</span>
+                        <span>R$ 21,00</span>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- Em processamento  -->
+            <div class="card-pedido">
+
+                <!-- Cabeçalho -->
+                <div class="cabecalho-pedido">
+                    <div class="informacoes-pedido">
+                        <h2>PEDIDO05</h2>
+                        <span>Pedido feito em 08/08/2026</span>
+                    </div>
+
+                    <div class="container-status-troca">
+                        <span class="status-pedido em-processamento">Em processamento</span>
+                        <button type="button" class="btn-cancelar-pedido">Cancelar pedido</button>
+                    </div>
+
+                </div>
+
+                <div class="linha-pedido"></div>
+
+                <!-- Produtos -->
+                <div class="produtos-pedido">
+                    <!-- Produto 1 -->
+                    <div class="produto-pedido">
+                        <div class="imagem-produto-pedido">
+                            <img th:src="@{/images/produtos/racao-1.png}"
+                                 alt="Ração Cães Adultos">
+                        </div>
+
+                        <div class="dados-produto-pedido">
+                            <h3>Ração Cães Adultos Frango e Carne Choice</h3>
+                            <span>Tamanho: 10.1 KG</span>
+                            <span>Quantidade: 1</span>
+                            <span>R$ 98,10</span>
+                        </div>
+                    </div>
+
+                    <!-- Produto 2 -->
+                    <div class="produto-pedido">
+                        <div class="imagem-produto-pedido">
+                            <img th:src="@{/images/produtos/Golden-Special-Frango-Carne-10kg-Frente.png}"
+                                 alt="Ração GoldeN Special Gatos Adultos Sabor Frango e Carne">
+                        </div>
+
+                        <div class="dados-produto-pedido">
+                            <h3>Ração GoldeN Special Gatos Adultos Sabor Frango e Carne</h3>
+                            <span>Tamanho: 10.1 KG</span>
+                            <span>Quantidade: 2</span>
+                            <span>R$ 100,20</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Resumo -->
+                <div class="resumo-pedido">
+                    <div class="linha-resumo-pedido">
+                        <span>Subtotal</span>
+                        <span>R$ 25,00</span>
+                    </div>
+
+                    <div class="linha-resumo-pedido desconto">
+                        <span>Descontos</span>
+                        <span>-R$ 4,00</span>
+                    </div>
+
+                    <div class="linha-resumo-pedido frete">
+                        <span>Frete</span>
+                        <span>-R$ 0,00</span>
+                    </div>
+
+                    <div class="linha-resumo-pedido total">
+                        <span>Total</span>
+                        <span>R$ 21,00</span>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+
+        <div th:replace="~{fragments/cliente/modais :: modal-solicitar-troca}"></div>
+
+        <div th:replace="~{fragments/cliente/modais :: modal-itens-recebidos}"></div>
+
+        <div th:replace="~{fragments/cliente/modais :: modal-cancelar-pedido}"></div>
+    </main>
+</div>
+
+<div th:replace="~{fragments/cliente/chatbot :: chatbot}"></div>
+
+<script th:src="@{/js/cliente/chatbot.js}"></script>
+</body>
+
+<script th:src="@{/js/cliente/pedido.js}"></script>
+
+
+</html>

@@ -1,12 +1,4 @@
-.conteudo {
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
-    height: auto;
-    padding: 40px;
-    gap: 24px;
-}
-
+/* Filtro */
 .filtro,
 .produtos-container {
     background: #FFFFFF;
@@ -27,31 +19,6 @@
     width: 100%;
     font-family: 'Fredoka', sans-serif;
 }
-
-h1 {
-   font-size: 16px;
-   font-weight: 500;
-   color: #1F2A29;
-   margin: 0;
-}
-
-.btn-limpar {
-    font-family: 'Fredoka', sans-serif;
-    background: white;
-    border: none;
-    font-size: 14px;
-    font-weight: 400;
-    color: #5F7370;
-    text-decoration: underline;
-}
-
-.linha {
-    display: block;
-    width: 100%;
-    height: 1px;
-    background-color: #E8EFEE;
-}
-
 
 .filtro h3 {
     font-family: 'Fredoka', sans-serif;
@@ -84,7 +51,6 @@ h1 {
     color: #3A4A48;
     cursor: pointer;
 }
-
 
 .filtro label {
     display: flex;
@@ -154,6 +120,31 @@ h1 {
     color: #B8C7C3;
 }
 
+h1 {
+   font-family: 'Fredoka', sans-serif;
+   font-size: 16px;
+   font-weight: 500;
+   color: #1F2A29;
+   margin: 0;
+}
+
+.btn-limpar {
+    font-family: 'Fredoka', sans-serif;
+    background: white;
+    border: none;
+    font-size: 14px;
+    font-weight: 400;
+    color: #5F7370;
+    text-decoration: underline;
+}
+
+.linha {
+    display: block;
+    width: 100%;
+    height: 1px;
+    background-color: #E8EFEE;
+}
+
 /* Produtos */
 .produtos-linha {
     display: flex;
@@ -166,17 +157,31 @@ h1 {
     display: flex;
     flex-direction: column;
     width: 160px;
-    height: auto;
+    height: 340px;
     border: 1px solid #D9E2E0;
     border-radius: 12px;
     padding: 12px;
     gap: 12px;
 }
 
+.produto-link {
+    text-decoration: none;
+    color: inherit;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
 .produto img{
     width: 100%;
     height: 140px;
     object-fit: contain;
+}
+
+.produto-info {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
 }
 
 .produto-info p {
@@ -190,9 +195,16 @@ h1 {
     font-family: 'Nunito', sans-serif;
     font-size: 20px;
     font-weight: 600;
+    margin-top: auto;
 }
 
+.produto-link {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+}
 
+/* Botão adicionar */
 .btn-adicionar {
     width: 100%;
     height: 36px;
@@ -209,10 +221,4 @@ h1 {
 
 .btn-adicionar:hover {
     background: #37937F;
-}
-
-.produto-link {
-    text-decoration: none;
-    color: inherit;
-    display: block;
 }

@@ -37,15 +37,36 @@
                 <div class="dados-endereco">
                     <h3>Escritório</h3>
                     <span class="tipo-residencia">Casa</span>
-                    <span class="logradouro">Rua João Batista</span>
-                    <span class="numero">355</span>
-                    <span class="bairro">Jardim Ângela</span>
-                    <span class="cidade">Acrelândia</span>
-                    <span class="estado">Acre</span>
+                    <div class="linha-endereco">
+                        <span class="logradouro">Rua João Batista</span>
+                        <span>,</span>
+                        <span class="numero">355</span>
+                        <span>-</span>
+                        <span class="bairro">Jardim Ângela</span>
+                        <span>,</span>
+                        <span class="cidade">Acrelândia</span>
+                        <span>-</span>
+                        <span class="estado">Acre</span>
+                    </div>
                     <span class="cep">08888-888</span>
                 </div>
 
-                <button type="button" class="editar-endereco"><i class="fa-solid fa-pen"></i></button>
+                <button type="button"
+                        class="editar-endereco"
+                        data-nome="Escritório"
+                        data-tipo-endereco="entrega"
+                        data-tipo-residencia="casa"
+                        data-tipo-logradouro="rua"
+                        data-cep="08888-888"
+                        data-logradouro="Rua João Batista"
+                        data-bairro="Jardim Ângela"
+                        data-numero="355"
+                        data-estado="AC"
+                        data-cidade="Acrelândia"
+                        data-pais="Brasil"
+                        data-observacoes="">
+                    <i class="fa-solid fa-pen"></i>
+                </button>
             </label>
 
             <!-- Endereço 2 -->
@@ -61,15 +82,33 @@
 
                     <h3>Minha casa</h3>
                     <span class="tipo-residencia">Casa</span>
-                    <span class="logradouro">Avenida dos Ipês</span>
-                    <span class="numero">128</span>
-                    <span class="bairro">Jardim Primavera</span>
-                    <span class="cidade">Sorocaba</span>
-                    <span class="estado">São Paulo</span>
-                    <span class="cep">18046-310</span>
+                    <div class="linha-endereco">
+                        <span class="logradouro">Avenida dos Ipês</span>
+                        <span>,</span>
+                        <span class="numero">128</span>
+                        <span>-</span>
+                        <span class="bairro">Jardim Primavera</span>
+                        <span>,</span>
+                        <span class="cidade">Sorocaba</span>
+                        <span>-</span>
+                        <span class="estado">São Paulo</span>
+                    </div>
                 </div>
 
-                <button type="button" class="editar-endereco">
+                <button type="button"
+                        class="editar-endereco"
+                        data-nome="Minha casa"
+                        data-tipo-endereco="entrega"
+                        data-tipo-residencia="casa"
+                        data-tipo-logradouro="avenida"
+                        data-cep="18046-310"
+                        data-logradouro="Avenida dos Ipês"
+                        data-bairro="Jardim Primavera"
+                        data-numero="128"
+                        data-estado="SP"
+                        data-cidade="Sorocaba"
+                        data-pais="Brasil"
+                        data-observacoes="">
                     <i class="fa-solid fa-pen"></i>
                 </button>
 
@@ -80,195 +119,792 @@
                 <button type="button" class="btn-adicionar-endereco" id="btnAdicionarEndereco">Adicionar endereço</button>
                 <button type="button" class="btn-confirmar" id="btnConfirmarEndereco">Confirmar</button>
             </div>
-
         </div>
     </div>
 </div>
 
 <!-- Modal adicionar/editar endereço -->
 <div th:fragment="modal-adicionar-endereco"
-     id="modalAdicionarEndereco"
+     id="modalAdicionarEditarEndereco"
+     class="modal">
+
+    <form id="formEndereco">
+
+        <div class="modalConteudo">
+
+            <!-- Cabeçalho -->
+            <div class="modalCabecalho">
+                <h2 id="tituloModalEndereco">Adicionar endereço</h2>
+                <button type="button" class="btn-fechar" id="btnFecharModalEndereco">&times;</button>
+            </div>
+
+            <!-- Corpo -->
+            <div class="modal-body">
+
+                <!-- Nome de identificação -->
+                <div class="campo-formulario">
+                    <label for="nomeIdentificacao">Nome de identificação</label>
+
+                    <input type="text"
+                           id="nomeIdentificacao"
+                           placeholder="Digite um nome de identificação do endereço"
+                           required>
+                </div>
+
+                <!-- Tipo de endereço -->
+                <div class="campo-formulario">
+                    <label for="tipoEndereco">Tipo de endereço</label>
+
+                    <select id="tipoEndereco" required>
+                        <option value="" disabled selected hidden>
+                            Selecione o tipo de endereço
+                        </option>
+                        <option value="cobranca">Cobrança</option>
+                        <option value="entrega">Entrega</option>
+                        <option value="cobranca-entrega">Cobrança e entrega</option>
+                    </select>
+                </div>
+
+                <!-- Tipo de residência -->
+                <div class="campo-formulario">
+                    <label for="tipoResidencia">Tipo de residência</label>
+
+                    <select id="tipoResidencia" required>
+                        <option value="" disabled selected hidden>Selecione</option>
+                        <option value="casa">Casa</option>
+                        <option value="apartamento">Apartamento</option>
+                        <option value="sobrado">Sobrado</option>
+                        <option value="outro">Outro</option>
+                    </select>
+                </div>
+
+                <!-- Tipo de logradouro -->
+                <div class="campo-formulario">
+                    <label for="tipoLogradouro">Tipo de logradouro</label>
+
+                    <select id="tipoLogradouro" required>
+                        <option value="" disabled selected hidden>Selecione</option>
+                        <option value="rua">Rua</option>
+                        <option value="avenida">Avenida</option>
+                        <option value="praca">Praça</option>
+                        <option value="alameda">Alameda</option>
+                        <option value="travessa">Travessa</option>
+                        <option value="estrada">Estrada</option>
+                        <option value="rodovia">Rodovia</option>
+                        <option value="outro">Outro</option>
+                    </select>
+                </div>
+
+                <!-- CEP -->
+                <div class="campo-formulario">
+                    <label for="cep">CEP</label>
+                    <input type="text"
+                           id="cep"
+                           placeholder="00000-000"
+                           maxlength="9"
+                           required>
+                </div>
+
+
+                <!-- Logradouro -->
+                <div class="campo-formulario">
+                    <label for="logradouro">Logradouro</label>
+                    <input type="text"
+                           id="logradouro"
+                           placeholder="Digite o nome do logradouro"
+                           required>
+                </div>
+
+                <!-- Bairro -->
+                <div class="campo-formulario">
+                    <label for="bairro">Bairro</label>
+                    <input type="text"
+                           id="bairro"
+                           placeholder="Digite o bairro"
+                           required>
+                </div>
+
+                <!-- Número -->
+                <div class="campo-formulario">
+                    <label for="numero">Número</label>
+                    <input type="text"
+                           id="numero"
+                           placeholder="Digite o número"
+                           required>
+                </div>
+
+                <!-- Estado -->
+                <div class="campo-formulario">
+                    <label for="estado">Estado</label>
+
+                    <select id="estado" required>
+                        <option value="" disabled selected hidden>Selecione o estado</option>
+                        <option value="AC">Acre</option>
+                        <option value="AL">Alagoas</option>
+                        <option value="AP">Amapá</option>
+                        <option value="AM">Amazonas</option>
+                        <option value="BA">Bahia</option>
+                        <option value="CE">Ceará</option>
+                        <option value="DF">Distrito Federal</option>
+                        <option value="ES">Espírito Santo</option>
+                        <option value="GO">Goiás</option>
+                        <option value="MA">Maranhão</option>
+                        <option value="MT">Mato Grosso</option>
+                        <option value="MS">Mato Grosso do Sul</option>
+                        <option value="MG">Minas Gerais</option>
+                        <option value="PA">Pará</option>
+                        <option value="PB">Paraíba</option>
+                        <option value="PR">Paraná</option>
+                        <option value="PE">Pernambuco</option>
+                        <option value="PI">Piauí</option>
+                        <option value="RJ">Rio de Janeiro</option>
+                        <option value="RN">Rio Grande do Norte</option>
+                        <option value="RS">Rio Grande do Sul</option>
+                        <option value="RO">Rondônia</option>
+                        <option value="RR">Roraima</option>
+                        <option value="SC">Santa Catarina</option>
+                        <option value="SP">São Paulo</option>
+                        <option value="SE">Sergipe</option>
+                        <option value="TO">Tocantins</option>
+                    </select>
+                </div>
+
+                <!-- Cidade -->
+                <div class="campo-formulario">
+                    <label for="cidade">Cidade</label>
+
+                    <input type="text"
+                           id="cidade"
+                           placeholder="Digite a cidade"
+                           required>
+                </div>
+
+
+                <!-- País -->
+                <div class="campo-formulario">
+                    <label for="pais">País</label>
+
+                    <input type="text"
+                           id="pais"
+                           value="Brasil"
+                           placeholder="Digite o país"
+                           required>
+                </div>
+
+
+                <!-- Observações -->
+                <div class="campo-formulario">
+                    <label for="observacoes">Observações <span>(Opcional)</span></label>
+
+                    <textarea id="observacoes"
+                              placeholder="Digite alguma observação sobre o endereço"></textarea>
+                </div>
+
+                <!-- Salvar no perfil -->
+                <label class="checkbox-endereco" id="campoSalvarPerfil">
+                    <input type="checkbox"
+                           id="salvarPerfil">
+
+                    <span class="checkbox-custom"></span>
+
+                    <span>Salvar este endereço no meu perfil</span>
+                </label>
+
+                <!-- Botões -->
+                <div class="modalBotoes">
+                    <button type="button" class="btn-cancelar" id="btnCancelarEndereco">Cancelar</button>
+                    <button type="submit" class="btn-adicionar" id="btnSalvarEndereco">Adicionar</button>
+                </div>
+
+            </div>
+        </div>
+    </form>
+</div>
+
+<!-- Modal cupons-->
+<div th:fragment="modal-cupons"
+     id="modalCupons"
+     class="modal">
+
+    <div class="modalConteudo">
+        <!-- Cabeçalho -->
+        <div class="modalCabecalho">
+            <h2>Cupons</h2>
+            <button type="button" class="btn-fechar" id="btnFecharModalCupom">&times;</button>
+        </div>
+
+        <!-- Corpo -->
+        <div class="modal-body">
+            <!-- Cupom 1 -->
+            <label class="modalCupom">
+
+                <input type="checkbox"
+                       class="checkbox-cupom"
+                       data-tipo="promocional"
+                       data-codigo="PROMO80"
+                       data-valor="80.00">
+
+                <div class="dados-cupom">
+                    <h3>PROMO80</h3>
+                    <span>Promocional</span>
+                    <span>R$ 80,00</span>
+                </div>
+            </label>
+
+            <!-- Cupom 2 -->
+            <label class="modalCupom">
+
+                <input type="checkbox"
+                       class="checkbox-cupom"
+                       data-tipo="troca"
+                       data-codigo="TROCA50"
+                       data-valor="80.00">
+
+                <div class="dados-cupom">
+                    <h3>TROCA50</h3>
+                    <span>Troca</span>
+                    <span>R$ 50,00</span>
+                </div>
+            </label>
+
+            <!-- Cupom 3 -->
+            <label class="modalCupom">
+
+                <input type="checkbox"
+                       class="checkbox-cupom"
+                       data-tipo="promocional"
+                       data-codigo="PROMO10"
+                       data-valor="10.00">
+
+                <div class="dados-cupom">
+                    <h3>PROMO10</h3>
+                    <span>Promocional</span>
+                    <span>10%</span>
+                </div>
+            </label>
+        </div>
+    </div>
+</div>
+
+<!-- Modal cadastrar cartão -->
+<div th:fragment="modal-cadastrar-cartao"
+     id="modalCadastrarCartao"
+     class="modal">
+
+    <form id="formCartao">
+
+        <div class="modalConteudo">
+
+            <!-- Cabeçalho -->
+            <div class="modalCabecalho">
+                <h2 id="tituloModalCartao">Cadastrar cartão</h2>
+
+                <button type="button"
+                        class="btn-fechar"
+                        id="btnFecharModalCartao">
+                    &times;
+                </button>
+            </div>
+
+            <!-- Corpo -->
+            <div class="modal-body">
+
+                <!-- Número do cartão -->
+                <div class="campo-formulario">
+                    <label for="numeroCartao">Número do cartão</label>
+
+                    <input type="text"
+                           id="numeroCartao"
+                           placeholder="0000 0000 0000 0000"
+                           maxlength="19"
+                           inputmode="numeric"
+                           required>
+                </div>
+
+                <!-- Nome impresso no cartão -->
+                <div class="campo-formulario">
+                    <label for="nomeCartao">Nome impresso no cartão</label>
+
+                    <input type="text"
+                           id="nomeCartao"
+                           placeholder="Digite o nome impresso no cartão"
+                           maxlength="50"
+                           required>
+                </div>
+
+                <!-- Bandeira -->
+                <div class="campo-formulario">
+                    <label for="bandeiraCartao">Bandeira</label>
+
+                    <select id="bandeiraCartao" required>
+                        <option value="" disabled selected hidden>
+                            Selecione a bandeira
+                        </option>
+
+                        <option value="visa">Visa</option>
+                        <option value="mastercard">Mastercard</option>
+                        <option value="elo">Elo</option>
+                        <option value="american-express">American Express</option>
+                        <option value="hipercard">Hipercard</option>
+                        <option value="discover">Discover</option>
+                        <option value="diners-club">Diners Club</option>
+                        <option value="jcb">JCB</option>
+                    </select>
+                </div>
+
+                <!-- CVV -->
+                <div class="campo-formulario">
+                    <label for="cvvCartao">CVV</label>
+
+                    <input type="text"
+                           id="cvvCartao"
+                           placeholder="000"
+                           maxlength="4"
+                           inputmode="numeric"
+                           required>
+                </div>
+
+                <!-- Validade -->
+                <div class="campo-formulario">
+                    <label for="validadeCartao">Validade</label>
+
+                    <input type="text"
+                           id="validadeCartao"
+                           placeholder="MM/AA"
+                           maxlength="5"
+                           inputmode="numeric"
+                           required>
+                </div>
+
+                <!-- Salvar no perfil -->
+                <label class="checkbox-endereco" id="campoSalvarCartao">
+
+                    <input type="checkbox"
+                           id="salvarCartao">
+
+                    <span class="checkbox-custom"></span>
+
+                    <span>Salvar este cartão no meu perfil</span>
+
+                </label>
+
+                <!-- Botões -->
+                <div class="modalBotoes">
+
+                    <button type="button"
+                            class="btn-cancelar"
+                            id="btnCancelarCartao">
+                        Cancelar
+                    </button>
+
+                    <button type="submit"
+                            class="btn-adicionar"
+                            id="btnSalvarCartao">
+                        Cadastrar
+                    </button>
+
+                </div>
+
+            </div>
+        </div>
+    </form>
+</div>
+
+<!-- Modal solicitar troca -->
+<div th:fragment="modal-solicitar-troca"
+     id="modalSolicitarTroca"
+     class="modal">
+
+    <form id="formSolicitarTroca">
+
+        <div class="modalConteudo">
+
+            <!-- Cabeçalho -->
+            <div class="modalCabecalho">
+                <h2>Solicitar troca</h2>
+
+                <button type="button"
+                        class="btn-fechar"
+                        id="btnFecharModalTroca">
+                    &times;
+                </button>
+            </div>
+
+            <!-- Corpo -->
+            <div class="modal-body">
+
+                <!-- Produtos -->
+                <div class="campo-formulario">
+                    <label>Itens para troca</label>
+
+                    <!-- Produto 1 -->
+                    <label class="item-troca">
+
+                        <input type="checkbox"
+                               class="checkbox-troca"
+                               name="produtos"
+                               value="racao-choice">
+
+                        <span class="checkbox-custom"></span>
+
+                        <div class="dados-item-troca">
+
+                            <div class="informacoes-item">
+                                <h3>Ração Cães Adultos Frango e Carne Choice</h3>
+                                <span>Tamanho: 10.1 KG</span>
+                            </div>
+
+                            <div class="quantidade-troca">
+                                <label for="quantidadeChoice">
+                                    Quantidade
+                                </label>
+
+                                <input type="number"
+                                       id="quantidadeChoice"
+                                       name="quantidadeChoice"
+                                       min="1"
+                                       max="1"
+                                       value="1">
+                            </div>
+
+                        </div>
+
+                    </label>
+
+
+                    <!-- Produto 2 -->
+                    <label class="item-troca">
+
+                        <input type="checkbox"
+                               class="checkbox-troca"
+                               name="produtos"
+                               value="racao-golden">
+
+                        <span class="checkbox-custom"></span>
+
+                        <div class="dados-item-troca">
+
+                            <div class="informacoes-item">
+                                <h3>Ração GoldeN Special Gatos Adultos Sabor Frango e Carne</h3>
+                                <span>Tamanho: 10.1 KG</span>
+                            </div>
+
+                            <div class="quantidade-troca">
+                                <label for="quantidadeGolden">
+                                    Quantidade
+                                </label>
+
+                                <input type="number"
+                                       id="quantidadeGolden"
+                                       name="quantidadeGolden"
+                                       min="1"
+                                       max="2"
+                                       value="1">
+                            </div>
+
+                        </div>
+
+                    </label>
+
+                </div>
+
+
+                <!-- Motivo da troca -->
+                <div class="campo-formulario">
+
+                    <label for="motivoTroca">
+                        Motivo da troca
+                    </label>
+
+                    <select id="motivoTroca"
+                            name="motivoTroca"
+                            required>
+
+                        <option value=""
+                                disabled
+                                selected
+                                hidden>
+                            Selecione o motivo
+                        </option>
+
+                        <option value="produto-incorreto">
+                            Produto enviado incorretamente
+                        </option>
+
+                        <option value="produto-vencido">
+                            Produto vencido ou próximo do vencimento
+                        </option>
+
+                        <option value="embalagem-violada">
+                            Embalagem violada
+                        </option>
+
+                        <option value="produto-diferente">
+                            Produto diferente do enunciado
+                        </option>
+
+                        <option value="outro">
+                            Outro
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <!-- Justificativa -->
+                <div class="campo-formulario">
+
+                    <label for="justificativaTroca">
+                        Justificativa
+                    </label>
+
+                    <textarea id="justificativaTroca"
+                              name="justificativaTroca"
+                              placeholder="Descreva o motivo da solicitação de troca"
+                              maxlength="500"
+                              required></textarea>
+
+                </div>
+
+
+                <!-- Botões -->
+                <div class="modalBotoes">
+
+                    <button type="button"
+                            class="btn-cancelar"
+                            id="btnCancelarTroca">
+                        Cancelar
+                    </button>
+
+                    <button type="submit"
+                            class="btn-adicionar"
+                            id="btnSolicitarTroca">
+                        Solicitar troca
+                    </button>
+
+                </div>
+
+            </div>
+        </div>
+
+    </form>
+</div>
+
+<!-- Modal cancelar pedido -->
+<div th:fragment="modal-cancelar-pedido"
+     id="modalCancelarPedido"
      class="modal">
 
     <div class="modalConteudo">
 
         <!-- Cabeçalho -->
         <div class="modalCabecalho">
-            <h2 id="tituloModalEndereco">Adicionar endereço</h2>
-            <button type="button" class="btn-fechar" id="btnFecharModalEndereco">&times;</button>
+            <h2>Cancelar pedido</h2>
+
+            <button type="button"
+                    class="btn-fechar"
+                    id="btnFecharModalCancelarPedido">
+                &times;
+            </button>
         </div>
 
         <!-- Corpo -->
         <div class="modal-body">
 
-            <!-- Nome de identificação -->
-            <div class="campo-formulario">
-                <label for="nomeIdentificacao">Nome de identificação</label>
+            <div class="mensagem-cancelar-pedido">
 
-                <input type="text"
-                       id="nomeIdentificacao"
-                       placeholder="Digite um nome de identificação do endereço">
+                <i class="fa-solid fa-circle-exclamation"></i>
+
+                <p>
+                    Tem certeza de que deseja cancelar este pedido?
+                </p>
+
+                <span>
+                    Essa ação não poderá ser desfeita.
+                </span>
+
             </div>
 
-            <!-- Tipo de endereço -->
-            <div class="campo-formulario">
-                <label for="tipoEndereco">Tipo de endereço</label>
-
-                <select id="tipoEndereco">
-                    <option value="">Selecione o tipo de endereço</option>
-                    <option value="cobranca">Cobrança</option>
-                    <option value="entrega">Entrega</option>
-                    <option value="cobranca-entrega">Cobrança e entrega</option>
-                </select>
-            </div>
-
-            <!-- Tipo de residência -->
-            <div class="campo-formulario">
-                <label for="tipoResidencia">Tipo de residência</label>
-
-                <select id="tipoResidencia">
-                    <option value="">Selecione</option>
-                    <option value="casa">Casa</option>
-                    <option value="apartamento">Apartamento</option>
-                    <option value="sobrado">Sobrado</option>
-                    <option value="outro">Outro</option>
-                </select>
-            </div>
-
-            <!-- Tipo de logradouro -->
-            <div class="campo-formulario">
-                <label for="tipoLogradouro">Tipo de logradouro</label>
-
-                <select id="tipoLogradouro">
-                    <option value="">Selecione</option>
-                    <option value="rua">Rua</option>
-                    <option value="avenida">Avenida</option>
-                    <option value="praca">Praça</option>
-                    <option value="alameda">Alameda</option>
-                    <option value="travessa">Travessa</option>
-                    <option value="estrada">Estrada</option>
-                    <option value="rodovia">Rodovia</option>
-                    <option value="outro">Outro</option>
-                </select>
-            </div>
-
-            <!-- CEP -->
-            <div class="campo-formulario">
-                <label for="cep">CEP</label>
-                <input type="text"
-                       id="cep"
-                       placeholder="00000-000"
-                       maxlength="9">
-            </div>
-
-
-            <!-- Logradouro -->
-            <div class="campo-formulario">
-                <label for="logradouro">Logradouro</label>
-                <input type="text"
-                       id="logradouro"
-                       placeholder="Digite o nome do logradouro">
-            </div>
-
-            <!-- Bairro -->
-            <div class="campo-formulario">
-                <label for="bairro">Bairro</label>
-                <input type="text"
-                       id="bairro"
-                       placeholder="Digite o bairro">
-            </div>
-
-            <!-- Número -->
-            <div class="campo-formulario">
-                <label for="numero">Número</label>
-                <input type="text"
-                       id="numero"
-                       placeholder="Digite o número">
-            </div>
-
-            <!-- Estado -->
-            <div class="campo-formulario">
-                <label for="estado">Estado</label>
-
-                <select id="estado">
-                    <option value="">Selecione o estado</option>
-                    <option value="AC">Acre</option>
-                    <option value="AL">Alagoas</option>
-                    <option value="AP">Amapá</option>
-                    <option value="AM">Amazonas</option>
-                    <option value="BA">Bahia</option>
-                    <option value="CE">Ceará</option>
-                    <option value="DF">Distrito Federal</option>
-                    <option value="ES">Espírito Santo</option>
-                    <option value="GO">Goiás</option>
-                    <option value="MA">Maranhão</option>
-                    <option value="MT">Mato Grosso</option>
-                    <option value="MS">Mato Grosso do Sul</option>
-                    <option value="MG">Minas Gerais</option>
-                    <option value="PA">Pará</option>
-                    <option value="PB">Paraíba</option>
-                    <option value="PR">Paraná</option>
-                    <option value="PE">Pernambuco</option>
-                    <option value="PI">Piauí</option>
-                    <option value="RJ">Rio de Janeiro</option>
-                    <option value="RN">Rio Grande do Norte</option>
-                    <option value="RS">Rio Grande do Sul</option>
-                    <option value="RO">Rondônia</option>
-                    <option value="RR">Roraima</option>
-                    <option value="SC">Santa Catarina</option>
-                    <option value="SP">São Paulo</option>
-                    <option value="SE">Sergipe</option>
-                    <option value="TO">Tocantins</option>
-                </select>
-            </div>
-
-            <!-- Cidade -->
-            <div class="campo-formulario">
-                <label for="cidade">Cidade</label>
-
-                <input type="text"
-                       id="cidade"
-                       placeholder="Digite a cidade">
-            </div>
-
-
-            <!-- País -->
-            <div class="campo-formulario">
-                <label for="pais">País</label>
-
-                <input type="text"
-                       id="pais"
-                       value="Brasil"
-                       placeholder="Digite o país">
-            </div>
-
-
-            <!-- Observações -->
-            <div class="campo-formulario">
-                <label for="observacoes">Observações <span>(Opcional)</span></label>
-
-                <textarea id="observacoes"
-                          placeholder="Digite alguma observação sobre o endereço"></textarea>
-            </div>
-
-            <!-- Salvar no perfil -->
-            <label class="checkbox-endereco">
-                <input type="checkbox"
-                       id="salvarPerfil">
-
-                <span class="checkbox-custom"></span>
-
-                <span>Salvar este endereço no meu perfil</span>
-            </label>
 
             <!-- Botões -->
             <div class="modalBotoes">
-                <button type="button" class="btn-cancelar" id="btnCancelarEndereco">Cancelar</button>
-                <button type="button" class="btn-adicionar" id="btnSalvarEndereco">Adicionar</button>
+
+                <button type="button"
+                        class="btn-cancelar"
+                        id="btnNaoCancelarPedido">
+                    Não cancelar
+                </button>
+
+                <button type="button"
+                        class="btn-confirmar-cancelamento"
+                        id="btnConfirmarCancelamento">
+                    Cancelar pedido
+                </button>
+
             </div>
 
         </div>
     </div>
+</div>
+
+<!-- Modal itens recebidos -->
+<div th:fragment="modal-itens-recebidos"
+     id="modalItensRecebidos"
+     class="modal">
+
+    <form id="formItensRecebidos">
+
+        <div class="modalConteudo">
+
+            <!-- Cabeçalho -->
+            <div class="modalCabecalho">
+
+                <h2>Itens recebidos</h2>
+
+                <button type="button"
+                        class="btn-fechar"
+                        id="btnFecharModalItensRecebidos">
+                    &times;
+                </button>
+
+            </div>
+
+            <!-- Corpo -->
+            <div class="modal-body">
+
+                <p class="texto-confirmacao-recebimento">
+                    Confira os produtos e as quantidades recebidas.
+                    Confirme se todos os itens chegaram corretamente.
+                </p>
+
+                <!-- Produto 1 -->
+                <div class="item-recebido">
+
+                    <div class="imagem-item-recebido">
+                        <img th:src="@{/images/produtos/racao-1.png}"
+                             alt="Ração Cães Adultos">
+                    </div>
+
+                    <div class="dados-item-recebido">
+
+                        <h3>
+                            Ração Cães Adultos Frango e Carne Choice
+                        </h3>
+
+                        <span>
+                            Tamanho: 10.1 KG
+                        </span>
+
+                        <div class="quantidade-recebida">
+
+                            <label for="quantidadeRecebidaChoice">
+                                Quantidade recebida
+                            </label>
+
+                            <input type="number"
+                                   id="quantidadeRecebidaChoice"
+                                   name="quantidadeRecebidaChoice"
+                                   min="0"
+                                   max="1"
+                                   value="1"
+                                   required>
+
+                            <span class="quantidade-esperada">
+                                de 1
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Produto 2 -->
+                <div class="item-recebido">
+
+                    <div class="imagem-item-recebido">
+                        <img th:src="@{/images/produtos/Golden-Special-Frango-Carne-10kg-Frente.png}"
+                             alt="Ração GoldeN Special">
+                    </div>
+
+                    <div class="dados-item-recebido">
+
+                        <h3>
+                            Ração GoldeN Special Gatos Adultos
+                            Sabor Frango e Carne
+                        </h3>
+
+                        <span>
+                            Tamanho: 10.1 KG
+                        </span>
+
+                        <div class="quantidade-recebida">
+
+                            <label for="quantidadeRecebidaGolden">
+                                Quantidade recebida
+                            </label>
+
+                            <input type="number"
+                                   id="quantidadeRecebidaGolden"
+                                   name="quantidadeRecebidaGolden"
+                                   min="0"
+                                   max="2"
+                                   value="2"
+                                   required>
+
+                            <span class="quantidade-esperada">
+                                de 2
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Confirmação -->
+                <label class="checkbox-confirmacao-recebimento">
+
+                    <input type="checkbox"
+                           id="confirmarRecebimento"
+                           required>
+
+                    <span class="checkbox-custom"></span>
+
+                    <span>
+                        Confirmo que recebi todos os itens e as
+                        quantidades informadas acima.
+                    </span>
+
+                </label>
+
+
+                <!-- Botões -->
+                <div class="modalBotoes">
+
+                    <button type="button"
+                            class="btn-cancelar"
+                            id="btnCancelarItensRecebidos">
+                        Cancelar
+                    </button>
+
+                    <button type="submit"
+                            class="btn-adicionar"
+                            id="btnConfirmarItensRecebidos">
+                        Confirmar recebimento
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </form>
+
 </div>
 
 </body>

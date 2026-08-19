@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="pt-BR"
+      xmlns:th="http://www.thymeleaf.org">
+
+<body>
+
+<!-- ==============================
+     CHATBOT
+================================ -->
+
+<div th:fragment="chatbot">
+
+    <!-- Janela do chatbot -->
+    <div class="chatbot" id="chatbot">
+
+        <!-- Cabeçalho -->
+        <div class="chatbot-cabecalho">
+
+            <div class="chatbot-titulo">
+
+                <div class="chatbot-logo">
+                    <img th:src="@{/images/logo-icone-chatbot.svg}"
+                         src="/images/logo-icone-chatbot.svg"
+                         alt="PetVitta">
+                </div>
+
+                <span>Assistente virtual</span>
+
+            </div>
+
+            <button type="button"
+                    class="chatbot-fechar"
+                    id="btnFecharChatbot">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+
+        </div>
+
+
+        <!-- Corpo da conversa -->
+        <div class="chatbot-mensagens"
+             id="chatbotMensagens">
+
+            <!-- Mensagem do chatbot -->
+            <div class="mensagem mensagem-bot">
+
+                <p>
+                    Olá! Seja bem-vindo(a) à PetVitta Club!
+                    Sou sua assistente virtual e estou pronta
+                    para ajudar com recomendações de rações,
+                    petiscos, suplementos e muito mais.
+                    É só me dizer o que você precisa!
+                </p>
+
+            </div>
+
+
+            <!-- Mensagem do usuário -->
+            <div class="mensagem mensagem-usuario">
+
+                <p>
+                    Olá! Gostaria de recomendações de rações
+                    do tipo seca.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <!-- Campo de mensagem -->
+        <form class="chatbot-form"
+              id="formChatbot">
+
+            <input type="text"
+                   id="inputChatbot"
+                   placeholder="Digite sua mensagem"
+                   autocomplete="off">
+
+            <button type="submit"
+                    id="btnEnviarChatbot">
+
+                <i class="fa-solid fa-paper-plane"></i>
+
+            </button>
+
+        </form>
+
+    </div>
+
+
+    <!-- Botão flutuante -->
+    <button type="button"
+            class="chatbot-botao"
+            id="btnAbrirChatbot">
+
+        <!-- NOVA ESTRUTURA COM IMAGEM -->
+        <div class="chatbot-botao-icon">
+            <img th:src="@{/images/logo-icone-chatbot.svg}"
+                 src="/images/logo-icone-chatbot.svg"
+                 alt="PetVitta">
+        </div>
+
+    </button>
+
+</div>
+
+</body>
+</html>

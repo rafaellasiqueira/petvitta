@@ -1,217 +1,607 @@
-// Modal de alterar endereço
-const modalAlterar = document.getElementById('modalAlterarEndereco');
-const btnAlterarEndereco = document.getElementById('btnAlterarEndereco');
-const btnFecharAlterar = document.getElementById('btnFecharModalAlterarEndereco');
-const btnConfirmarEndereco = document.getElementById('btnConfirmarEndereco');
+document.addEventListener('DOMContentLoaded', () => {
+
+    // =====================================================
+    // MODAIS DE ENDEREÇO
+    // =====================================================
+
+    const modalListar =
+        document.getElementById('modalAlterarEndereco');
+
+    const modalForm =
+        document.getElementById('modalAdicionarEditarEndereco');
 
 
-// Modal de adicionar/editar endereço
-const modalAdicionar = document.getElementById('modalAdicionarEndereco');
-const btnAdicionarEndereco = document.getElementById('btnAdicionarEndereco');
-const btnFecharAdicionar = document.getElementById('btnFecharModalEndereco');
-const btnCancelarEndereco = document.getElementById('btnCancelarEndereco');
-const btnSalvarEndereco = document.getElementById('btnSalvarEndereco');
+    // =====================================================
+    // BOTÕES DE ENDEREÇO
+    // =====================================================
 
-const tituloModalEndereco = document.getElementById('tituloModalEndereco');
+    const btnAlterarEndereco =
+        document.getElementById('btnAlterarEndereco');
 
+    const btnFecharListar =
+        document.getElementById('btnFecharModalAlterarEndereco');
 
-// Campos do formulário
-const nomeIdentificacao = document.getElementById('nomeIdentificacao');
-const tipoEndereco = document.getElementById('tipoEndereco');
-const tipoResidencia = document.getElementById('tipoResidencia');
-const tipoLogradouro = document.getElementById('tipoLogradouro');
-const cep = document.getElementById('cep');
-const logradouro = document.getElementById('logradouro');
-const bairro = document.getElementById('bairro');
-const numero = document.getElementById('numero');
-const estado = document.getElementById('estado');
-const cidade = document.getElementById('cidade');
-const pais = document.getElementById('pais');
-const observacoes = document.getElementById('observacoes');
-const salvarPerfil = document.getElementById('salvarPerfil');
+    const btnFecharForm =
+        document.getElementById('btnFecharModalEndereco');
+
+    const btnAdicionar =
+        document.getElementById('btnAdicionarEndereco');
+
+    const btnCancelarForm =
+        document.getElementById('btnCancelarEndereco');
+
+    const btnsEditar =
+        document.querySelectorAll('.editar-endereco');
 
 
-// ================================
-// ABRIR MODAL DE ALTERAR ENDEREÇO
-// ================================
+    // =====================================================
+    // CAMPOS DE ENDEREÇO
+    // =====================================================
 
-btnAlterarEndereco.addEventListener('click', function (event) {
-    event.preventDefault();
+    const formEndereco =
+        document.getElementById('formEndereco');
 
-    modalAlterar.classList.add('active');
-});
+    const tituloModal =
+        document.getElementById('tituloModalEndereco');
+
+    const nomeIdentificacao =
+        document.getElementById('nomeIdentificacao');
+
+    const tipoEndereco =
+        document.getElementById('tipoEndereco');
+
+    const tipoResidencia =
+        document.getElementById('tipoResidencia');
+
+    const tipoLogradouro =
+        document.getElementById('tipoLogradouro');
+
+    const cep =
+        document.getElementById('cep');
+
+    const logradouro =
+        document.getElementById('logradouro');
+
+    const bairro =
+        document.getElementById('bairro');
+
+    const numero =
+        document.getElementById('numero');
+
+    const estado =
+        document.getElementById('estado');
+
+    const cidade =
+        document.getElementById('cidade');
+
+    const pais =
+        document.getElementById('pais');
+
+    const observacoes =
+        document.getElementById('observacoes');
+
+    const salvarPerfil =
+        document.getElementById('salvarPerfil');
+
+    const campoSalvarPerfil =
+        document.getElementById('campoSalvarPerfil');
 
 
-// ================================
-// FECHAR MODAL DE ALTERAR ENDEREÇO
-// ================================
+    // =====================================================
+    // LIMPAR FORMULÁRIO DE ENDEREÇO
+    // =====================================================
 
-btnFecharAlterar.addEventListener('click', function () {
-    modalAlterar.classList.remove('active');
-});
+    function limparFormulario() {
 
+        if (!formEndereco) return;
 
-// ================================
-// CONFIRMAR ENDEREÇO SELECIONADO
-// ================================
+        formEndereco.reset();
 
-btnConfirmarEndereco.addEventListener('click', function () {
+        nomeIdentificacao.value = '';
 
-    const enderecoSelecionado = document.querySelector(
-        'input[name="endereco"]:checked'
-    );
+        tipoEndereco.value = '';
+        tipoResidencia.value = '';
+        tipoLogradouro.value = '';
 
-    if (enderecoSelecionado) {
-        modalAlterar.classList.remove('active');
-    } else {
-        alert('Selecione um endereço.');
+        cep.value = '';
+        logradouro.value = '';
+        bairro.value = '';
+        numero.value = '';
+
+        estado.value = '';
+        cidade.value = '';
+
+        pais.value = 'Brasil';
+
+        observacoes.value = '';
+
+        salvarPerfil.checked = false;
     }
-});
 
 
-// ================================
-// ABRIR MODAL PARA ADICIONAR
-// ================================
+    // =====================================================
+    // ABRIR FORMULÁRIO DE ENDEREÇO
+    // =====================================================
 
-btnAdicionarEndereco.addEventListener('click', function () {
+    function abrirModalForm(titulo) {
 
-    // Muda o título
-    tituloModalEndereco.textContent = 'Adicionar endereço';
+        tituloModal.textContent = titulo;
 
-    // Muda o texto do botão
-    btnSalvarEndereco.textContent = 'Adicionar';
+        modalListar.classList.remove('active');
 
-    // Limpa os campos
-    limparFormulario();
-
-    // Fecha o modal de seleção
-    modalAlterar.classList.remove('active');
-
-    // Abre o modal de cadastro
-    modalAdicionar.classList.add('active');
-});
+        modalForm.classList.add('active');
+    }
 
 
-// ================================
-// FECHAR MODAL
-// ================================
+    // =====================================================
+    // FECHAR FORMULÁRIO DE ENDEREÇO
+    // =====================================================
 
-btnFecharAdicionar.addEventListener('click', function () {
-    modalAdicionar.classList.remove('active');
-});
+    function fecharModalForm() {
 
+        modalForm.classList.remove('active');
 
-// ================================
-// BOTÃO CANCELAR
-// ================================
-
-btnCancelarEndereco.addEventListener('click', function () {
-    modalAdicionar.classList.remove('active');
-});
+        modalListar.classList.add('active');
+    }
 
 
-// ================================
-// BOTÃO ADICIONAR / SALVAR
-// ================================
+    // =====================================================
+    // ALTERAR ENDEREÇO
+    // =====================================================
 
-btnSalvarEndereco.addEventListener('click', function () {
+    if (btnAlterarEndereco) {
 
-    // Aqui futuramente você pode enviar os dados para o Spring Boot
+        btnAlterarEndereco.addEventListener('click', (e) => {
 
-    console.log('Nome:', nomeIdentificacao.value);
-    console.log('Tipo de endereço:', tipoEndereco.value);
-    console.log('Tipo de residência:', tipoResidencia.value);
-    console.log('Tipo de logradouro:', tipoLogradouro.value);
-    console.log('CEP:', cep.value);
-    console.log('Logradouro:', logradouro.value);
-    console.log('Bairro:', bairro.value);
-    console.log('Número:', numero.value);
-    console.log('Estado:', estado.value);
-    console.log('Cidade:', cidade.value);
-    console.log('País:', pais.value);
-    console.log('Observações:', observacoes.value);
-    console.log('Salvar no perfil:', salvarPerfil.checked);
+            e.preventDefault();
 
-    modalAdicionar.classList.remove('active');
-});
+            modalListar.classList.add('active');
+
+        });
+
+    }
 
 
-// ================================
-// LIMPAR FORMULÁRIO
-// ================================
+    // =====================================================
+    // ADICIONAR ENDEREÇO
+    // =====================================================
 
-function limparFormulario() {
+    if (btnAdicionar) {
 
-    nomeIdentificacao.value = '';
-    tipoEndereco.value = '';
-    tipoResidencia.value = '';
-    tipoLogradouro.value = '';
-    cep.value = '';
-    logradouro.value = '';
-    bairro.value = '';
-    numero.value = '';
-    estado.value = '';
-    cidade.value = '';
-    pais.value = 'Brasil';
-    observacoes.value = '';
-    salvarPerfil.checked = false;
-}
+        btnAdicionar.addEventListener('click', () => {
 
-// ================================
-// EDITAR ENDEREÇO
-// ================================
+            limparFormulario();
 
-const botoesEditarEndereco = document.querySelectorAll('.editar-endereco');
+            tituloModal.textContent = 'Adicionar endereço';
 
-botoesEditarEndereco.forEach(function (botao) {
+            campoSalvarPerfil.style.display = 'flex';
 
-    botao.addEventListener('click', function (event) {
+            document.getElementById('btnSalvarEndereco').textContent =
+                'Adicionar';
 
-        // Impede o clique de selecionar o radio
-        event.preventDefault();
+            modalListar.classList.remove('active');
 
-        // Abre o modal de adicionar/editar
-        modalAdicionar.classList.add('active');
+            modalForm.classList.add('active');
 
-        // Altera o título
-        tituloModalEndereco.textContent = 'Editar endereço';
+        });
 
-        // Altera o texto do botão
-        btnSalvarEndereco.textContent = 'Salvar';
+    }
 
-        // Exemplo: pega o endereço onde o botão foi clicado
-        const endereco = botao.closest('.modalEndereco');
 
-        const nome = endereco.querySelector('h3').textContent;
-        const tipoResidenciaTexto = endereco.querySelectorAll('span')[0].textContent;
-        const enderecoCompleto = endereco.querySelectorAll('span')[1].textContent;
-        const cepTexto = endereco.querySelectorAll('span')[2].textContent;
+    // =====================================================
+    // EDITAR ENDEREÇO
+    // =====================================================
 
-        // Preenche o nome
-        nomeIdentificacao.value = nome;
+    btnsEditar.forEach(btn => {
 
-        // Preenche o tipo de residência
-        tipoResidencia.value = tipoResidenciaTexto.toLowerCase();
+        btn.addEventListener('click', (e) => {
 
-        // Exemplo de CEP
-        const cepValor = cepTexto
-            .replace('CEP:', '')
-            .split(',')[0]
-            .trim();
+            e.preventDefault();
+            e.stopPropagation();
 
-        cep.value = cepValor;
+            const dados = btn.dataset;
 
-        // Aqui você pode preencher os outros campos
-        // quando tiver os dados separados:
-        //
-        // tipoEndereco.value = ...
-        // tipoLogradouro.value = ...
-        // logradouro.value = ...
-        // bairro.value = ...
-        // numero.value = ...
-        // estado.value = ...
-        // cidade.value = ...
-        // pais.value = ...
-        // observacoes.value = ...
+
+            nomeIdentificacao.value =
+                dados.nome || '';
+
+            tipoEndereco.value =
+                dados.tipoEndereco || '';
+
+            tipoResidencia.value =
+                dados.tipoResidencia || '';
+
+            tipoLogradouro.value =
+                dados.tipoLogradouro || '';
+
+            cep.value =
+                dados.cep || '';
+
+            logradouro.value =
+                dados.logradouro || '';
+
+            bairro.value =
+                dados.bairro || '';
+
+            numero.value =
+                dados.numero || '';
+
+            estado.value =
+                dados.estado || '';
+
+            cidade.value =
+                dados.cidade || '';
+
+            pais.value =
+                dados.pais || 'Brasil';
+
+            observacoes.value =
+                dados.observacoes || '';
+
+
+            // Checkbox
+            salvarPerfil.checked = false;
+
+            campoSalvarPerfil.style.display = 'none';
+
+
+            // Título
+            tituloModal.textContent =
+                'Editar endereço';
+
+
+            // Botão
+            document.getElementById('btnSalvarEndereco').textContent =
+                'Salvar';
+
+
+            // Abre modal
+            modalListar.classList.remove('active');
+
+            modalForm.classList.add('active');
+
+        });
+
     });
+
+
+    // =====================================================
+    // FECHAR LISTA DE ENDEREÇOS
+    // =====================================================
+
+    if (btnFecharListar) {
+
+        btnFecharListar.addEventListener('click', () => {
+
+            modalListar.classList.remove('active');
+
+        });
+
+    }
+
+
+    // =====================================================
+    // FECHAR FORMULÁRIO DE ENDEREÇO
+    // =====================================================
+
+    if (btnFecharForm) {
+
+        btnFecharForm.addEventListener(
+            'click',
+            fecharModalForm
+        );
+
+    }
+
+
+    // =====================================================
+    // CANCELAR ENDEREÇO
+    // =====================================================
+
+    if (btnCancelarForm) {
+
+        btnCancelarForm.addEventListener(
+            'click',
+            fecharModalForm
+        );
+
+    }
+
+
+    // =====================================================
+    // MODAL DE CUPONS
+    // =====================================================
+
+    const modalCupons =
+        document.getElementById('modalCupons');
+
+    const btnMeusCupons =
+        document.getElementById('btnMeusCupons');
+
+    const btnFecharModalCupom =
+        document.getElementById('btnFecharModalCupom');
+
+
+    // Abrir cupons
+    if (btnMeusCupons && modalCupons) {
+
+        btnMeusCupons.addEventListener('click', (e) => {
+
+            e.preventDefault();
+
+            modalCupons.classList.add('active');
+
+        });
+
+    }
+
+
+    // Fechar cupons
+    if (btnFecharModalCupom && modalCupons) {
+
+        btnFecharModalCupom.addEventListener('click', () => {
+
+            modalCupons.classList.remove('active');
+
+        });
+
+    }
+
+
+    // =====================================================
+    // SELEÇÃO DE CUPONS
+    // =====================================================
+
+    const cupons =
+        document.querySelectorAll('.checkbox-cupom');
+
+    const cuponsSelecionados =
+        document.getElementById('cuponsSelecionados');
+
+
+    function atualizarCuponsSelecionados() {
+
+        // Limpa a área
+        cuponsSelecionados.innerHTML = '';
+
+        // Procura os cupons marcados
+        cupons.forEach(cupom => {
+
+            if (cupom.checked) {
+
+                // Pega o código do cupom
+                const codigo =
+                    cupom.dataset.codigo;
+
+                // Cria o elemento
+                const cupomSelecionado =
+                    document.createElement('div');
+
+                cupomSelecionado.classList.add(
+                    'cupom-selecionado'
+                );
+
+                cupomSelecionado.innerHTML = `
+                    <span>${codigo}</span>
+
+                    <button type="button"
+                            class="remover-cupom"
+                            data-codigo="${codigo}">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                `;
+
+                cuponsSelecionados.appendChild(
+                    cupomSelecionado
+                );
+
+            }
+
+        });
+
+        // Botões para remover cupom
+        const botoesRemover =
+            document.querySelectorAll('.remover-cupom');
+
+        botoesRemover.forEach(botao => {
+
+            botao.addEventListener('click', () => {
+
+                const codigo =
+                    botao.dataset.codigo;
+
+                // Procura o checkbox correspondente
+                cupons.forEach(cupom => {
+
+                    if (cupom.dataset.codigo === codigo) {
+
+                        cupom.checked = false;
+
+                    }
+
+                });
+
+                atualizarCuponsSelecionados();
+
+            });
+
+        });
+
+    }
+
+
+    // =====================================================
+    // QUANDO UM CUPOM FOR SELECIONADO
+    // =====================================================
+
+    cupons.forEach(cupom => {
+
+        cupom.addEventListener('change', () => {
+
+            // Se for promocional
+            if (
+                cupom.dataset.tipo === 'promocional' &&
+                cupom.checked
+            ) {
+
+                // Desmarca outros promocionais
+                cupons.forEach(outroCupom => {
+
+                    if (
+                        outroCupom !== cupom &&
+                        outroCupom.dataset.tipo === 'promocional'
+                    ) {
+
+                        outroCupom.checked = false;
+
+                    }
+
+                });
+
+            }
+
+            // Atualiza os cupons exibidos
+            atualizarCuponsSelecionados();
+
+        });
+
+    });
+
+
+    // =====================================================
+    // MODAL DE CARTÃO
+    // =====================================================
+
+    const modalCartao =
+        document.getElementById('modalCadastrarCartao');
+
+    const btnAbrirCartao =
+        document.getElementById('btnAbrirCartao');
+
+    const btnFecharCartao =
+        document.getElementById('btnFecharModalCartao');
+
+    const btnCancelarCartao =
+        document.getElementById('btnCancelarCartao');
+
+
+    // =====================================================
+    // ABRIR MODAL DE CARTÃO
+    // =====================================================
+
+    if (btnAbrirCartao && modalCartao) {
+
+        btnAbrirCartao.addEventListener('click', (e) => {
+
+            e.preventDefault();
+
+            modalCartao.classList.add('active');
+
+        });
+
+    }
+
+
+    // =====================================================
+    // FECHAR MODAL DE CARTÃO PELO X
+    // =====================================================
+
+    if (btnFecharCartao && modalCartao) {
+
+        btnFecharCartao.addEventListener('click', () => {
+
+            modalCartao.classList.remove('active');
+
+        });
+
+    }
+
+
+    // =====================================================
+    // FECHAR MODAL DE CARTÃO PELO CANCELAR
+    // =====================================================
+
+    if (btnCancelarCartao && modalCartao) {
+
+        btnCancelarCartao.addEventListener('click', () => {
+
+            modalCartao.classList.remove('active');
+
+        });
+
+    }
+
+
+    // =====================================================
+    // FECHAR MODAL DE CARTÃO CLICANDO FORA
+    // =====================================================
+
+    if (modalCartao) {
+
+        modalCartao.addEventListener('click', (event) => {
+
+            if (event.target === modalCartao) {
+
+                modalCartao.classList.remove('active');
+
+            }
+
+        });
+
+    }
+
+    const checkboxesCartao = document.querySelectorAll('.checkbox-cartao');
+
+    checkboxesCartao.forEach(checkbox => {
+
+        checkbox.addEventListener('change', function () {
+
+            const container = this.closest('.cartao-container');
+
+            if (this.checked) {
+                container.classList.add('selecionado');
+            } else {
+                container.classList.remove('selecionado');
+
+                const inputValor = container.querySelector('.input-valor input');
+
+                if (inputValor) {
+                    inputValor.value = '';
+                }
+            }
+
+        });
+
+    });
+
 });
+
+// =====================================================
+// FINALIZAR COMPRA
+// =====================================================
+
+const btnFinalizarCompra =
+    document.getElementById('btnFinalizarCompra');
+
+const toast =
+    document.getElementById('toast');
+
+
+if (btnFinalizarCompra && toast) {
+
+    btnFinalizarCompra.addEventListener('click', () => {
+
+        // Mostra o toast
+        toast.classList.add('ativo');
+
+        // Aguarda o toast aparecer
+        setTimeout(() => {
+
+            // Redireciona para a página de pedidos
+            window.location.href = '/cliente/pedido';
+
+        }, 2000);
+
+    });
+
+}

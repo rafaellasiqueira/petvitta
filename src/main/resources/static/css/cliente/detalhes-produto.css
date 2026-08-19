@@ -1,12 +1,4 @@
-.conteudo {
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
-    height: auto;
-    padding: 40px;
-    gap: 24px;
-}
-
+/*Detalhes do produto */
 .produto-detalhes {
     background: #FFFFFF;
     border-radius: 8px;
@@ -40,7 +32,8 @@
     margin-right: 4px;
 }
 
-.produto-apresentacao {
+/* Informação sobre o produto */
+.produto-info {
     display: flex;
     width: 100%;
     gap: 16px;
@@ -178,6 +171,7 @@ h3 {
     color: #1F2A29;
 }
 
+/* Botões */
 .btn-adicionar-carrinho {
     width: 100%;
     height: 36px;
@@ -192,7 +186,7 @@ h3 {
     cursor: pointer;
 }
 
-.btn-adicionar-carrinho {
+.btn-adicionar-carrinho:hover {
     background: #37937F;
 }
 
@@ -237,6 +231,7 @@ h3 {
     text-align: center;
 }
 
+/* Toast */
 .toast {
     position: fixed;
     top: 20px;

@@ -6,23 +6,32 @@
 
     <title>Detalhes do produto</title>
 
-    <!-- Font awesome (icones) -->
+    <!-- Font Awesome (Ícones) -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 
-    <!-- Cabecalho CSS -->
+    <!-- Cabeçalho CSS -->
     <link rel="stylesheet" th:href="@{/css/cliente/cabecalho.css}">
 
-    <!-- Detalhes produto CSS -->
+    <!-- Global CSS -->
+    <link rel="stylesheet" th:href="@{/css/cliente/global.css}">
+
+    <!-- Detalhes do produto CSS -->
     <link rel="stylesheet" th:href="@{/css/cliente/detalhes-produto.css}">
+
+    <!-- Chatbot -->
+    <link rel="stylesheet" th:href="@{/css/cliente/chatbot.css}">
+
 </head>
 
 <body>
 <div class="container">
-    <!-- Cabecalho -->
-    <div th:replace="~{cliente/cabecalho :: cabecalho}"></div>
 
-    <!-- Detalhes -->
+    <!-- Cabeçalho -->
+    <div th:replace="~{fragments/cliente/cabecalho :: cabecalho}"></div>
+
     <main class="conteudo">
+
+        <!-- Card esquerda -->
         <div class="produto-detalhes">
 
             <!-- Paginas -->
@@ -32,8 +41,8 @@
                 <span>Detalhes</span>
             </div>
 
-            <!-- Apresentação do Produto -->
-            <div class="produto-apresentacao">
+            <!-- Informação do produto -->
+            <div class="produto-info">
                 <div class="imagem-container">
                     <img th:src="@{/images/produtos/racao-1.png}" alt="GranPlus Choice Adulto">
                 </div>
@@ -157,8 +166,13 @@
 
     </main>
 </div>
-</body>
+
 
 <script th:src="@{/js/cliente/detalhes-produto.js}"></script>
 
+<!-- ChatBot -->
+<div th:replace="~{fragments/cliente/chatbot :: chatbot}"></div>
+<script th:src="@{/js/cliente/chatbot.js}"></script>
+
+</body>
 </html>
