@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Finalizar a compra</title>
+    <!-- Font awesome (icones) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+    <!-- Finalizar a compra CSS -->
+    <link rel="stylesheet" th:href="@{/css/cliente/finalizar-compra.css}">
+
+    <!-- Modal CSS -->
+    <link rel="stylesheet" th:href="@{/css/cliente/modal.css}">
+
+</head>
+
+<body>
+<div class="container">
+
+    <header class="cabecalho">
+        <a th:href="@{/cliente/carrinho}" class="voltar">
+            <i class="fa-solid fa-chevron-left"></i>
+            <span>Voltar</span>
+        </a>
+
+        <h1>Finalização da compra</h1>
+    </header>
+
+
+    <main class="conteudo">
+        <!-- Coluna esquerda -->
+        <div class="container-esquerdo">
+
+            <!-- Endereco -->
+            <div class="card">
+                <div class="titulo-card">
+                    <h2>Endereço de entrega</h2>
+                </div>
+
+                <div class="endereco">
+                    <h3>Escritório</h3>
+                    <span>Casa</span>
+                    <p>
+                        Rua João Batista, 355 - Jardim Ângela,
+                        Acrelândia - Acre
+                    </p>
+                    <span>CEP: 08888-888, Brasil.</span>
+                    <a href="#" id="btnAlterarEndereco">Alterar endereço</a>
+                </div>
+            </div>
+
+            <!-- Produtos-->
+            <div class="card">
+                <h2>Produtos</h2>
+
+                <div class="produto">
+                    <div class="imagem-produto">
+                        <img th:src="@{/images/produtos/racao-1.png}"
+                             alt="Ração Cães Adultos">
+                    </div>
+
+                    <div class="informacoes-produto">
+                        <h3>Ração Cães Adultos Frango e Carne Choice</h3>
+                        <span>Tamanho: 10.1 KG</span>
+                        <span>Quantidade: 1</span>
+                        <span class="preco">R$ 98,10</span>
+                    </div>
+
+                </div>
+
+
+                <div class="linha-produto"></div>
+
+
+                <div class="produto">
+                    <div class="imagem-produto">
+                        <img th:src="@{/images/produtos/Golden-Special-Frango-Carne-10kg-Frente.png}"
+                             alt="Ração GoldeN Special Gatos Adultos Sabor Frango e Carne">
+                    </div>
+
+                    <div class="informacoes-produto">
+                        <h3>Ração GoldeN Special Gatos Adultos Sabor Frango e Carne</h3>
+                        <span>Tamanho: 10.1 KG</span>
+                        <span>Quantidade: 2</span>
+                        <span class="preco">R$ 100,20</span>
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- Cupons -->
+            <div class="card">
+                <div class="titulo-com-link">
+                    <h2>Cupons</h2>
+                    <a href="#">Meus cupons</a>
+                </div>
+
+                <input type="text" class="campo-cupom" placeholder="Digite o código do cupom">
+
+                <div class="aviso">
+                    <span>Apenas um cupom promocional pode ser utilizado por compra.</span>
+                </div>
+            </div>
+
+
+            <!-- Pagamento -->
+            <div class="card">
+                <div class="titulo-com-link">
+                    <h2>Pagamento</h2>
+                    <a href="#">Adicionar cartão</a>
+                </div>
+
+                <div class="aviso">
+                    <span>O valor mínimo por cartão é de R$ 10,00</span>
+                </div>
+
+                <!-- Cartao 1 -->
+                <label class="cartao">
+
+                    <input type="radio"
+                           name="cartao"
+                           value="visa">
+
+                    <div class="radio-custom"></div>
+
+                    <div class="dados-cartao">
+                        <h3>Visa</h3>
+                        <span>**** **** **** 1234</span>
+                        <span>Letícia Souza</span>
+                        <span>Vencimento: 08/2029</span>
+                    </div>
+
+                    <button type="button"
+                            class="editar-cartao">
+                        <i class="fa-solid fa-pen"></i>
+                    </button>
+                </label>
+
+
+                <!-- Cartão 2 -->
+                <label class="cartao">
+                    <input type="radio"
+                           name="cartao"
+                           value="mastercard">
+
+                    <div class="radio-custom"></div>
+                    <div class="dados-cartao">
+                        <h3>Mastercard</h3>
+                        <span>**** **** **** 1234</span>
+                        <span>Letícia Souza</span>
+                        <span>Vencimento: 08/2029</span>
+                    </div>
+
+                    <button type="button"
+                            class="editar-cartao">
+                        <i class="fa-solid fa-pen"></i>
+                    </button>
+                </label>
+            </div>
+        </div>
+
+        <!-- Coluna direita -->
+        <div class="direito">
+            <div class="linha-resumo">
+                <h3>Subtotal</h3>
+                <h3>R$ 75,00</h3>
+            </div>
+
+            <div class="linha-resumo">
+                <h3>Frete</h3>
+                <h3>R$ 10,00</h3>
+            </div>
+
+            <div class="linha-resumo cupom-resumo">
+                <h3>Cupons</h3>
+                <h3>-R$ 0,00</h3>
+            </div>
+
+            <div class="separador"></div>
+
+            <div class="linha-total">
+                <h3>Total</h3>
+                <h3>R$ 85,00</h3>
+            </div>
+
+            <button type="button" class="btn-finalizar-a-compra">Finalizar a compra</button>
+        </div>
+    </main>
+
+    <!-- Modal de alterar endereço -->
+    <div th:replace="~{fragments/cliente/modais :: modal-alterar-endereco}"></div>
+
+    <!-- Modal de adicionar/editar endereço -->
+    <div th:replace="~{fragments/cliente/modais :: modal-adicionar-endereco}"></div>
+</div>
+
+<script th:src="@{/js/cliente/finalizar-compra.js}"></script>
+
+</body>
+</html>

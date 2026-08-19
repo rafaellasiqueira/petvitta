@@ -1,0 +1,206 @@
+/* Modal */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.4);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    visibility: hidden;
+    z-index: 9999;
+}
+
+.modal.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.modalConteudo {
+    background-color: #ffffff;
+    width: 100%;
+    max-width: 480px;
+    max-height: 90vh;
+    overflow-y: auto;
+    border-radius: 12px;
+    padding: 20px 24px;
+    box-sizing: border-box;
+}
+
+.modalCabecalho {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #E8EFEE;
+    padding-bottom: 12px;
+    margin-bottom: 16px;
+}
+
+.modalCabecalho h2 {
+    font-size: 20px;
+    color: #3A4A48;
+    font-family: 'Fredoka', sans-serif;
+    font-weight: 500;
+}
+
+.btn-fechar {
+    background: none;
+    border: none;
+    font-size: 24px;
+    color: #B8C7C3;
+    cursor: pointer;
+}
+
+.modal-body p {
+    font-size: 14px;
+    color: #3A4A48;
+    margin-bottom: 10px;
+    font-family: 'Nunito', sans-serif;
+}
+
+/* Botões */
+.modalBotoes {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 16px;
+}
+
+.btn-adicionar-endereco,
+.btn-cancelar {
+    width: 164px;
+    height: 40px;
+    font-family: 'Fredoka', sans-serif;
+    background: white;
+    border: 1px solid #1C9B86;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 500;
+    color: #1C9B86;
+    cursor: pointer;
+}
+
+.btn-adicionar-endereco:hover,
+.btn-cancelar:hover {
+    background: #EDF2F1;
+}
+
+.btn-confirmar,
+.btn-adicionar {
+    width: 164px;
+    height: 40px;
+    font-family: 'Fredoka', sans-serif;
+    background: #1C9B86;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 500;
+    color: white;
+    cursor: pointer;
+}
+
+.btn-confirmar:hover,
+.btn-adicionar:hover {
+    background: #157363;
+}
+
+.modalEndereco {
+    margin-bottom: 12px;
+}
+
+/* Inputs */
+.campo-formulario {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    margin-bottom: 14px;
+}
+
+.campo-formulario label {
+    font-family: 'Fredoka', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    color: #3A4A48;
+    margin-bottom: 6px;
+}
+
+.campo-formulario label span {
+    color: #7A8986;
+    font-weight: 400;
+}
+
+.campo-formulario input,
+.campo-formulario select,
+.campo-formulario textarea {
+    width: 100%;
+    box-sizing: border-box;
+    height: 40px;
+    padding: 0 12px;
+    border: 1px solid #B8C7C3;
+    border-radius: 8px;
+    background-color: #FFFFFF;
+    font-family: 'Nunito', sans-serif;
+    font-size: 14px;
+    color: #3A4A48;
+    outline: none;
+}
+
+.campo-formulario textarea {
+    height: 80px;
+    padding: 10px 12px;
+    resize: none;
+}
+
+.campo-formulario input::placeholder,
+.campo-formulario textarea::placeholder {
+    color: #9AA9A5;
+}
+
+/* Checkbox */
+.checkbox-endereco {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    margin-top: 4px;
+
+    cursor: pointer;
+
+    font-family: 'Nunito', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    color: #3A4A48;
+}
+
+.checkbox-endereco input {
+    display: none;
+}
+
+.checkbox-custom {
+    width: 16px;
+    height: 16px;
+
+    border: 1px solid #1C9B86;
+    border-radius: 4px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+/* Checkbox marcado */
+.checkbox-endereco input:checked + .checkbox-custom {
+    background-color: #1C9B86;
+}
+
+.checkbox-endereco input:checked + .checkbox-custom::after {
+    content: "✓";
+
+    color: white;
+    font-size: 12px;
+    font-weight: bold;
+}

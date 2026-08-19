@@ -23,7 +23,7 @@
         <div class="menu">
 
             <!-- Carrinho -->
-            <a href="#" class="menu-container">
+            <a th:href="@{/cliente/carrinho}" class="menu-container">
                 <i class="fa-solid fa-cart-shopping"></i>
                 <span>Carrinho</span>
             </a>
@@ -36,19 +36,19 @@
 
             <!-- Notificao -->
             <a href="#" class="menu-container">
-                <i class="fa-regular fa-bell"></i>
+                <i class="fa-solid fa-bell"></i>
             </a>
 
             <!-- Perfil -->
             <a href="#" class="menu-container">
-                <i class="fa-regular fa-circle-user"></i>
+                <i class="fa-solid fa-circle-user"></i>
             </a>
         </div>
     </div>
 
     <!-- Segunda parte -->
     <nav class="categorias">
-        <a href="#" class="categorias-container">Todos</a>
+        <a th:href="@{/cliente/produtos}" class="categorias-container">Todos</a>
         <span class="divisor">|</span>
         <a href="#" class="categorias-container">Cachorros</a>
         <a href="#" class="categorias-container">Gatos</a>

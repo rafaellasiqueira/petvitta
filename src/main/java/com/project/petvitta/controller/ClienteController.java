@@ -15,4 +15,14 @@ public class ClienteController {
     public String detalhesProduto() {
         return "cliente/detalhes-produto";
     }
+
+    @GetMapping("/cliente/carrinho")
+    public String carrinho() {
+        return "cliente/carrinho";
+    }
+
+    @GetMapping("/cliente/finalizar-compra")
+    public String finalizarCompra() {
+        return "cliente/finalizar-compra";
+    }
 }

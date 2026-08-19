@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Carrinho</title>
+
+    <!-- Font awesome (icones) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+    <!-- Cabecalho CSS -->
+    <link rel="stylesheet" th:href="@{/css/cliente/cabecalho.css}">
+
+    <!-- Carrinho CSS -->
+    <link rel="stylesheet" th:href="@{/css/cliente/carrinho.css}">
+
+
+</head>
+
+<body>
+<div class="container">
+    <!-- Cabecalho -->
+    <div th:replace="~{cliente/cabecalho :: cabecalho}"></div>
+
+    <!-- Detalhes -->
+    <main class="conteudo">
+        <div class="container-esquerdo">
+                <div class="carrinho-cabecalho">
+                    <h1>Carrinho</h1>
+                    <button type="button" class="btn-limpar">Limpar carrinho</button>
+                </div>
+
+                <div class="produtos-expirados">
+                        <h1>O tempo para finalizar sua compra expirou</h1>
+                        <p>
+                            Alguns produtos foram removidos do seu carrinho porque o prazo de reserva expirou. Para garantir a disponibilidade dos itens, eles precisam ser adicionados novamente ao carrinho antes de concluir a compra.
+                        </p>
+
+                    <span class="linha"></span>
+
+                    <div class="container-produtos-expirados">
+                        <p>Ração GoldeN Special Gatos Adultos Sabor Frango e Carne</p>
+                        <button type="button" class="btn-adicionar-novamente">Adicionar novamente</button>
+                    </div>
+               </div>
+
+                <!-- Selecionar todos -->
+                <div class="selecionar-todos">
+                    <input type="checkbox" id="todos">
+
+                    <label for="todos">
+                        Selecionar todos os itens
+                    </label>
+                </div>
+
+            <span class="linha-cinza"></span>
+
+            <!-- Produto 1 -->
+            <div class="produto">
+                <div class="imagem-e-dados">
+                    <input type="checkbox" class="checkbox-produto">
+
+                    <div class="imagem-container">
+                        <img th:src="@{/images/produtos/racao-1.png}" alt="GranPlus Choice Adulto">
+                    </div>
+
+                    <div class="informacoes-produto">
+                        <h3>Ração Cães Adultos Frango e Carne Choice</h3>
+                        <p class="tamanho">Tamanho: 10.1 KG</p>
+                        <p class="preco">R$ 98,10</p>
+
+                        <div class="quantidade-container">
+                            <div class="seletor-quantidade">
+                                <button type="button" class="btn-qtd">-</button>
+                                <input type="number" value="1" min="1">
+                                <button type="button" class="btn-qtd">+</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <button class="btn-excluir" type="button"><i class="fa-solid fa-trash"></i></button>
+            </div>
+        </div>
+
+        <!-- Card Direita -->
+        <div class="direito">
+            <div class="preco-container">
+                <h1>Subtotal</h1>
+                <span class="preco">R$ 156,75</span>
+            </div>
+
+            <a th:href="@{/cliente/finalizar-compra}" class="btn-finalizar-a-compra">
+                Finalizar a compra
+            </a>
+        </div>
+    </main>
+</div>
+</body>
+
+</html>

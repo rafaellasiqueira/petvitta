@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="pt-BR"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Modais</title>
+</head>
+
+<body>
+
+<!-- Modal alterar endereço-->
+<div th:fragment="modal-alterar-endereco"
+     id="modalAlterarEndereco"
+     class="modal">
+
+    <div class="modalConteudo">
+        <!-- Cabeçalho -->
+        <div class="modalCabecalho">
+            <h2>Endereços</h2>
+            <button type="button" class="btn-fechar" id="btnFecharModalAlterarEndereco">&times;</button>
+        </div>
+
+        <!-- Corpo -->
+        <div class="modal-body">
+            <!-- Endereço 1 -->
+            <label class="modalEndereco">
+
+                <input type="radio"
+                       name="endereco"
+                       value="escritorio">
+
+                <div class="radio-custom"></div>
+
+                <div class="dados-endereco">
+                    <h3>Escritório</h3>
+                    <span class="tipo-residencia">Casa</span>
+                    <span class="logradouro">Rua João Batista</span>
+                    <span class="numero">355</span>
+                    <span class="bairro">Jardim Ângela</span>
+                    <span class="cidade">Acrelândia</span>
+                    <span class="estado">Acre</span>
+                    <span class="cep">08888-888</span>
+                </div>
+
+                <button type="button" class="editar-endereco"><i class="fa-solid fa-pen"></i></button>
+            </label>
+
+            <!-- Endereço 2 -->
+            <label class="modalEndereco">
+
+                <input type="radio"
+                       name="endereco"
+                       value="escritorio">
+
+                <div class="radio-custom"></div>
+
+                <div class="dados-endereco">
+
+                    <h3>Minha casa</h3>
+                    <span class="tipo-residencia">Casa</span>
+                    <span class="logradouro">Avenida dos Ipês</span>
+                    <span class="numero">128</span>
+                    <span class="bairro">Jardim Primavera</span>
+                    <span class="cidade">Sorocaba</span>
+                    <span class="estado">São Paulo</span>
+                    <span class="cep">18046-310</span>
+                </div>
+
+                <button type="button" class="editar-endereco">
+                    <i class="fa-solid fa-pen"></i>
+                </button>
+
+            </label>
+
+            <!-- Botões -->
+            <div class="modalBotoes">
+                <button type="button" class="btn-adicionar-endereco" id="btnAdicionarEndereco">Adicionar endereço</button>
+                <button type="button" class="btn-confirmar" id="btnConfirmarEndereco">Confirmar</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- Modal adicionar/editar endereço -->
+<div th:fragment="modal-adicionar-endereco"
+     id="modalAdicionarEndereco"
+     class="modal">
+
+    <div class="modalConteudo">
+
+        <!-- Cabeçalho -->
+        <div class="modalCabecalho">
+            <h2 id="tituloModalEndereco">Adicionar endereço</h2>
+            <button type="button" class="btn-fechar" id="btnFecharModalEndereco">&times;</button>
+        </div>
+
+        <!-- Corpo -->
+        <div class="modal-body">
+
+            <!-- Nome de identificação -->
+            <div class="campo-formulario">
+                <label for="nomeIdentificacao">Nome de identificação</label>
+
+                <input type="text"
+                       id="nomeIdentificacao"
+                       placeholder="Digite um nome de identificação do endereço">
+            </div>
+
+            <!-- Tipo de endereço -->
+            <div class="campo-formulario">
+                <label for="tipoEndereco">Tipo de endereço</label>
+
+                <select id="tipoEndereco">
+                    <option value="">Selecione o tipo de endereço</option>
+                    <option value="cobranca">Cobrança</option>
+                    <option value="entrega">Entrega</option>
+                    <option value="cobranca-entrega">Cobrança e entrega</option>
+                </select>
+            </div>
+
+            <!-- Tipo de residência -->
+            <div class="campo-formulario">
+                <label for="tipoResidencia">Tipo de residência</label>
+
+                <select id="tipoResidencia">
+                    <option value="">Selecione</option>
+                    <option value="casa">Casa</option>
+                    <option value="apartamento">Apartamento</option>
+                    <option value="sobrado">Sobrado</option>
+                    <option value="outro">Outro</option>
+                </select>
+            </div>
+
+            <!-- Tipo de logradouro -->
+            <div class="campo-formulario">
+                <label for="tipoLogradouro">Tipo de logradouro</label>
+
+                <select id="tipoLogradouro">
+                    <option value="">Selecione</option>
+                    <option value="rua">Rua</option>
+                    <option value="avenida">Avenida</option>
+                    <option value="praca">Praça</option>
+                    <option value="alameda">Alameda</option>
+                    <option value="travessa">Travessa</option>
+                    <option value="estrada">Estrada</option>
+                    <option value="rodovia">Rodovia</option>
+                    <option value="outro">Outro</option>
+                </select>
+            </div>
+
+            <!-- CEP -->
+            <div class="campo-formulario">
+                <label for="cep">CEP</label>
+                <input type="text"
+                       id="cep"
+                       placeholder="00000-000"
+                       maxlength="9">
+            </div>
+
+
+            <!-- Logradouro -->
+            <div class="campo-formulario">
+                <label for="logradouro">Logradouro</label>
+                <input type="text"
+                       id="logradouro"
+                       placeholder="Digite o nome do logradouro">
+            </div>
+
+            <!-- Bairro -->
+            <div class="campo-formulario">
+                <label for="bairro">Bairro</label>
+                <input type="text"
+                       id="bairro"
+                       placeholder="Digite o bairro">
+            </div>
+
+            <!-- Número -->
+            <div class="campo-formulario">
+                <label for="numero">Número</label>
+                <input type="text"
+                       id="numero"
+                       placeholder="Digite o número">
+            </div>
+
+            <!-- Estado -->
+            <div class="campo-formulario">
+                <label for="estado">Estado</label>
+
+                <select id="estado">
+                    <option value="">Selecione o estado</option>
+                    <option value="AC">Acre</option>
+                    <option value="AL">Alagoas</option>
+                    <option value="AP">Amapá</option>
+                    <option value="AM">Amazonas</option>
+                    <option value="BA">Bahia</option>
+                    <option value="CE">Ceará</option>
+                    <option value="DF">Distrito Federal</option>
+                    <option value="ES">Espírito Santo</option>
+                    <option value="GO">Goiás</option>
+                    <option value="MA">Maranhão</option>
+                    <option value="MT">Mato Grosso</option>
+                    <option value="MS">Mato Grosso do Sul</option>
+                    <option value="MG">Minas Gerais</option>
+                    <option value="PA">Pará</option>
+                    <option value="PB">Paraíba</option>
+                    <option value="PR">Paraná</option>
+                    <option value="PE">Pernambuco</option>
+                    <option value="PI">Piauí</option>
+                    <option value="RJ">Rio de Janeiro</option>
+                    <option value="RN">Rio Grande do Norte</option>
+                    <option value="RS">Rio Grande do Sul</option>
+                    <option value="RO">Rondônia</option>
+                    <option value="RR">Roraima</option>
+                    <option value="SC">Santa Catarina</option>
+                    <option value="SP">São Paulo</option>
+                    <option value="SE">Sergipe</option>
+                    <option value="TO">Tocantins</option>
+                </select>
+            </div>
+
+            <!-- Cidade -->
+            <div class="campo-formulario">
+                <label for="cidade">Cidade</label>
+
+                <input type="text"
+                       id="cidade"
+                       placeholder="Digite a cidade">
+            </div>
+
+
+            <!-- País -->
+            <div class="campo-formulario">
+                <label for="pais">País</label>
+
+                <input type="text"
+                       id="pais"
+                       value="Brasil"
+                       placeholder="Digite o país">
+            </div>
+
+
+            <!-- Observações -->
+            <div class="campo-formulario">
+                <label for="observacoes">Observações <span>(Opcional)</span></label>
+
+                <textarea id="observacoes"
+                          placeholder="Digite alguma observação sobre o endereço"></textarea>
+            </div>
+
+            <!-- Salvar no perfil -->
+            <label class="checkbox-endereco">
+                <input type="checkbox"
+                       id="salvarPerfil">
+
+                <span class="checkbox-custom"></span>
+
+                <span>Salvar este endereço no meu perfil</span>
+            </label>
+
+            <!-- Botões -->
+            <div class="modalBotoes">
+                <button type="button" class="btn-cancelar" id="btnCancelarEndereco">Cancelar</button>
+                <button type="button" class="btn-adicionar" id="btnSalvarEndereco">Adicionar</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

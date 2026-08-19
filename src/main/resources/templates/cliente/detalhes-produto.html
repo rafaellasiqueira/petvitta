@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+    <title>Detalhes do produto</title>
+
     <!-- Font awesome (icones) -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 
@@ -133,7 +135,7 @@
         <!-- Card Direita -->
         <div class="direito">
             <div class="preco-container">
-                <span class="preco">R$ 156,75</span>
+                <span class="preco">R$ 98,10</span>
             </div>
 
             <div class="quantidade-container">
@@ -145,10 +147,18 @@
                 </div>
             </div>
 
-            <button type="button" class="btn-adicionar-carrinho">Adicionar ao carrinho</button>
+            <button type="button" class="btn-adicionar-carrinho" onclick="adicionarCarrinho()">Adicionar ao carrinho</button>
+
+            <div id="toast" class="toast">
+                <span class="toast-icone">✓</span>
+                <span>Produto adicionado ao carrinho com sucesso!</span>
+            </div>
         </div>
 
     </main>
 </div>
 </body>
+
+<script th:src="@{/js/cliente/detalhes-produto.js}"></script>
+
 </html>
