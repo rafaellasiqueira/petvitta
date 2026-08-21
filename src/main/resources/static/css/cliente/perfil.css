@@ -1,23 +1,8 @@
-.conteudo {
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
-    height: auto;
-    padding: 40px;
-    gap: 24px;
-}
-
-.container-esquerdo {
-    background: #FFFFFF;
-    border-radius: 8px;
-    padding: 16px 20px;
-    width: 1000px;
-    height: auto;
+.container-principal {
     display: flex;
     flex-direction: column;
-    gap: 18px;
+    gap: 16px;
 }
-
 
 h1 {
     font-family: 'Fredoka', sans-serif;
@@ -27,39 +12,22 @@ h1 {
     margin: 0;
 }
 
-/* Card de Dados Pessoais */
-.card-dados-pessoais {
-    padding: 24px;
-    gap: 20px;
-}
-
-/* Cabeçalho do Card com Ícone */
-.titulo-card-icone {
+/* Card de dados pessoais */
+.card {
+    background: #FFFFFF;
+    border-radius: 8px;
+    padding: 16px 20px;
+    width: 600px;
+    height: auto;
     display: flex;
-    align-items: center;
-    gap: 10px;
+    flex-direction: column;
+    gap: 18px;
 }
 
-.icone-cabecalho {
-    width: 28px;
-    height: 28px;
-    border-radius: 50%;
-    background-color: #4FD1B5;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #FFFFFF;
-    font-size: 14px;
-}
 
-.titulo-card-icone h2 {
-    font-size: 16px;
-    font-weight: 600;
-    color: #3A4A48;
-}
-
-/* Estrutura do Formulário */
-.form-dados-pessoais {
+/* Formulário */
+.form-dados-pessoais,
+.form-alterar-senha {
     display: flex;
     flex-direction: column;
     gap: 16px;
@@ -68,11 +36,7 @@ h1 {
 .campo-grupo {
     display: flex;
     flex-direction: column;
-    gap: 6px;
-    width: 100%;
-}
-
-.largura-total {
+    gap: 4px;
     width: 100%;
 }
 
@@ -83,55 +47,29 @@ h1 {
 }
 
 .campo-grupo label {
-    font-family: 'Nunito', sans-serif;
-    font-size: 13px;
-    font-weight: 600;
-    color: #5F7370;
+    font-family: 'Fredoka', sans-serif;
+    font-size: 14px;
+    font-weight: 400;
+    color: #3A4A48;
 }
 
 /* Inputs e Selects */
 .campo-grupo input,
 .campo-grupo select {
     width: 100%;
-    height: 42px;
-    padding: 0 14px;
-    border: 1px solid #E1E9E7;
+    height: 40px;
+    padding: 0 16px;
+    border: 1px solid #D9E2E0;
     border-radius: 8px;
     background-color: #FFFFFF;
     font-family: 'Nunito', sans-serif;
     font-size: 14px;
     color: #3A4A48;
     outline: none;
-    transition: border-color 0.2s;
 }
 
-.campo-grupo input:focus,
-.campo-grupo select:focus {
-    border-color: #1C9B86;
-}
-
-/* Customização da Seta Verde do Select */
-.select-wrapper {
-    position: relative;
-    width: 100%;
-}
-
-.select-wrapper select {
-    appearance: none;
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    cursor: pointer;
-    padding-right: 36px;
-}
-
-.icone-select {
-    position: absolute;
-    right: 14px;
-    top: 50%;
-    transform: translateY(-50%);
-    color: #4FD1B5;
-    font-size: 14px;
-    pointer-events: none;
+.campo-grupo input::placeholder {
+    color: #B8C7C3;
 }
 
 /* Botão Salvar */
@@ -141,8 +79,10 @@ h1 {
     margin-top: 8px;
 }
 
-.btn-salvar {
-    width: 100px;
+.btn-salvar,
+.btn-salvar-senha {
+    width: auto;
+    padding: 0px 12px;
     height: 38px;
     background-color: #4FD1B5;
     border: none;
@@ -152,9 +92,307 @@ h1 {
     font-weight: 500;
     color: #FFFFFF;
     cursor: pointer;
-    transition: background-color 0.2s;
 }
 
-.btn-salvar:hover {
+.btn-salvar:hover,
+.btn-salvar-senha:hover {
     background-color: #37937F;
+}
+
+li {
+    color: #5F7370;
+    font-family: 'Nunito', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+ul {
+  list-style-type: none;
+}
+
+/* =========================================================
+   ENDEREÇOS
+========================================================= */
+
+.lista-enderecos {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.item-endereco {
+    border: 1px solid #D9E2E0;
+    border-radius: 8px;
+    padding: 14px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.cabecalho-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 16px;
+}
+
+.cabecalho-item h3 {
+    margin: 0 0 6px 0;
+    font-family: 'Fredoka', sans-serif;
+    font-size: 15px;
+    font-weight: 500;
+    color: #1F2A29;
+}
+
+.item-endereco p {
+    margin: 0;
+    font-family: 'Nunito', sans-serif;
+    font-size: 13px;
+    color: #5F7370;
+}
+
+
+/* Status do endereço */
+
+.status-endereco {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 9px;
+    border-radius: 20px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+}
+
+.status-endereco.entrega {
+    background-color: #E2F7F1;
+    color: #37937F;
+}
+
+.status-endereco.cobranca {
+    background-color: #EEF0F0;
+    color: #5F7370;
+}
+
+
+/* =========================================================
+   AÇÕES
+========================================================= */
+
+.acoes-item {
+    display: flex;
+    gap: 6px;
+}
+
+.btn-editar,
+.btn-excluir {
+    border: none;
+    background: transparent;
+    font-family: 'Nunito', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.btn-editar {
+    color: #37937F;
+}
+
+.btn-editar:hover {
+    color: #267565;
+}
+
+.btn-excluir {
+    color: #C85C5C;
+}
+
+.btn-excluir:hover {
+    color: #A84343;
+}
+
+
+/* =========================================================
+   BOTÃO ADICIONAR
+========================================================= */
+
+.btn-adicionar-endereco,
+.btn-adicionar-cartao {
+    height: 38px;
+    padding: 0 14px;
+    border: none;
+    border-radius: 8px;
+    background-color: #4FD1B5;
+    color: #FFFFFF;
+
+    font-family: 'Fredoka', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+
+    cursor: pointer;
+
+    display: flex;
+    align-items: center;
+    gap: 7px;
+}
+
+.btn-adicionar-endereco:hover,
+.btn-adicionar-cartao:hover {
+    background-color: #37937F;
+}
+
+
+/* =========================================================
+   CARTÕES
+========================================================= */
+
+.lista-cartoes {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.item-cartao {
+    border: 1px solid #D9E2E0;
+    border-radius: 8px;
+    padding: 14px 16px;
+
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.item-cartao h3 {
+    margin: 0 0 6px 0;
+
+    font-family: 'Fredoka', sans-serif;
+    font-size: 15px;
+    font-weight: 500;
+
+    color: #1F2A29;
+
+    display: flex;
+    align-items: center;
+    gap: 7px;
+}
+
+.item-cartao h3 i {
+    font-size: 20px;
+}
+
+
+/* Status do cartão */
+
+.status-cartao {
+    display: inline-flex;
+    padding: 4px 9px;
+
+    border-radius: 20px;
+
+    background-color: #E2F7F1;
+    color: #37937F;
+
+    font-family: 'Nunito', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+}
+
+
+/* Informações do cartão */
+
+.informacoes-cartao {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.informacoes-cartao span {
+    font-family: 'Nunito', sans-serif;
+    font-size: 13px;
+    color: #5F7370;
+}
+
+
+/* =========================================================
+   CUPONS
+========================================================= */
+
+.lista-cupons {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.item-cupom {
+    border: 1px solid #D9E2E0;
+    border-radius: 8px;
+
+    padding: 14px 16px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 16px;
+}
+
+.dados-cupom {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.cupom-codigo {
+    font-family: 'Fredoka', sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    color: #1F2A29;
+}
+
+
+/* Tipo do cupom */
+
+.tipo-cupom {
+    padding: 4px 9px;
+    border-radius: 20px;
+
+    font-family: 'Nunito', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+}
+
+.tipo-cupom.troca {
+    background-color: #FFF0D9;
+    color: #A56B1F;
+}
+
+.tipo-cupom.promocional {
+    background-color: #E2F7F1;
+    color: #37937F;
+}
+
+
+/* Valor */
+
+.valor-cupom {
+    font-family: 'Fredoka', sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    color: #1F2A29;
+}
+
+
+/* =========================================================
+   AJUSTES
+========================================================= */
+
+.largura-total {
+    width: 100%;
+}
+
+.requisitos-senha {
+    padding: 0;
+    margin: 0;
 }

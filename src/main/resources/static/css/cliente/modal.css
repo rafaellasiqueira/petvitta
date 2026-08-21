@@ -71,7 +71,8 @@
 
 .btn-adicionar-endereco,
 .btn-cancelar {
-    width: 164px;
+    width: auto;
+    padding: 0px 12px;
     height: 40px;
     font-family: 'Fredoka', sans-serif;
     background: white;
@@ -89,8 +90,10 @@
 }
 
 .btn-confirmar,
-.btn-adicionar {
-    width: 164px;
+.btn-adicionar,
+.btn-confirmar-cancelamento {
+    width: auto;
+    padding: 0px 12px;
     height: 40px;
     font-family: 'Fredoka', sans-serif;
     background: #1C9B86;
@@ -103,7 +106,8 @@
 }
 
 .btn-confirmar:hover,
-.btn-adicionar:hover {
+.btn-adicionar:hover,
+.btn-confirmar-cancelamento {
     background: #157363;
 }
 
@@ -118,24 +122,18 @@
 .campo-formulario label {
     font-family: 'Fredoka', sans-serif;
     font-size: 14px;
-    font-weight: 500;
+    font-weight: 400;
     color: #3A4A48;
     margin-bottom: 6px;
-}
-
-.campo-formulario label span {
-    color: #7A8986;
-    font-weight: 400;
 }
 
 .campo-formulario input,
 .campo-formulario select,
 .campo-formulario textarea {
     width: 100%;
-    box-sizing: border-box;
     height: 40px;
     padding: 0 12px;
-    border: 1px solid #B8C7C3;
+    border: 1px solid #D9E2E0;
     border-radius: 8px;
     background-color: #FFFFFF;
     font-family: 'Nunito', sans-serif;
@@ -147,16 +145,18 @@
 .campo-formulario textarea {
     height: 80px;
     padding: 10px 12px;
-    resize: none;
 }
 
 .campo-formulario input::placeholder,
 .campo-formulario textarea::placeholder {
-    color: #9AA9A5;
+    color: #B8C7C3;
 }
 
 /* Checkbox */
-.checkbox-endereco {
+.checkbox-endereco,
+.checkbox-troca {
+    width: 16px;
+    height: 16px;
     display: flex;
     align-items: center;
     gap: 8px;
@@ -169,12 +169,17 @@
 }
 
 .checkbox-endereco input[type="checkbox"],
-.checkbox-cupom {
+.checkbox-cupom,
+.checkbox-troca {
     width: 16px;
     height: 16px;
     accent-color: #1C9B86;
     cursor: pointer;
     vertical-align: middle;
+}
+
+.checkbox-troca {
+    flex-shrink: 0;
 }
 
 .linha-endereco {
@@ -244,442 +249,186 @@
     font-family: 'Nunito', sans-serif;
 }
 
-/* =================================
-   MODAL SOLICITAR TROCA
-================================= */
-
+/* Modal solicitar troca */
 .item-troca {
     display: flex;
     align-items: flex-start;
-    gap: 10px;
-
+    gap: 12px;
     width: 100%;
     padding: 10px;
-
-    border: 1px solid #E1E9E7;
+    border: 1px solid #D9E2E0;
     border-radius: 8px;
-
     cursor: pointer;
-}
-
-.item-troca + .item-troca {
     margin-top: 8px;
 }
 
-/* Checkbox */
-
-.item-troca input[type="checkbox"] {
-    display: none;
-}
-
-.item-troca .checkbox-custom {
-    width: 16px;
-    height: 16px;
-
-    flex-shrink: 0;
-
-    border: 1px solid #1C9B86;
-    border-radius: 4px;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    margin-top: 2px;
-}
-
-/* Checkbox selecionado */
-
-.item-troca input[type="checkbox"]:checked + .checkbox-custom {
-    background-color: #1C9B86;
-}
-
-.item-troca input[type="checkbox"]:checked + .checkbox-custom::after {
-    content: "✓";
-
-    color: #FFFFFF;
-
-    font-size: 11px;
-    font-weight: 700;
-}
-
-
 /* Dados do produto */
-
 .dados-item-troca {
     width: 100%;
-
     display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-
-    gap: 15px;
+    flex-direction: column;
 }
 
 .informacoes-item {
     display: flex;
     flex-direction: column;
-    gap: 3px;
+    gap: 4px;
 }
 
 .informacoes-item h3 {
-    margin: 0;
-
     font-family: 'Fredoka', sans-serif;
     font-size: 14px;
     font-weight: 500;
-
     color: #3A4A48;
 }
 
-.informacoes-item span {
+.informacoes-item p {
     font-family: 'Nunito', sans-serif;
-    font-size: 12px;
-
+    font-size: 14px;
     color: #60716E;
 }
 
-
 /* Quantidade */
-
 .quantidade-troca {
     display: flex;
     flex-direction: column;
     gap: 4px;
-
-    flex-shrink: 0;
 }
 
 .quantidade-troca label {
-    font-family: 'Nunito', sans-serif;
-    font-size: 12px;
-    font-weight: 600;
-
+    font-family: 'Fredoka', sans-serif;
+    font-size: 14px;
+    font-weight: 400;
     color: #3A4A48;
 }
 
 .quantidade-troca input {
-    width: 65px;
+    width: 60px;
     height: 32px;
-
-    border: 1px solid #D5DEDC;
+    border: 1px solid #D9E2E0;
     border-radius: 6px;
-
     padding: 0 8px;
-
     outline: none;
-
     font-family: 'Nunito', sans-serif;
     font-size: 13px;
-
     color: #3A4A48;
 }
 
-.quantidade-troca input:focus {
-    border-color: #1C9B86;
-}
-
-
 /* Justificativa */
-
 #justificativaTroca {
     width: 100%;
-    min-height: 90px;
-
-    resize: vertical;
-
-    border: 1px solid #D5DEDC;
+    height: 80px;
+    border: 1px solid #D9E2E0;
     border-radius: 8px;
-
+    box-sizing: border-box;
     padding: 10px;
-
     outline: none;
-
     font-family: 'Nunito', sans-serif;
-    font-size: 13px;
-
+    font-size: 14px;
     color: #3A4A48;
 }
 
 #justificativaTroca::placeholder {
-    color: #9AA6A3;
+    color: #B8C7C3;
 }
 
-#justificativaTroca:focus {
-    border-color: #1C9B86;
-}
-
-/* =================================
-   MODAL CANCELAR PEDIDO
-================================= */
-
+/* Modal cancelar pedido */
 .mensagem-cancelar-pedido {
     display: flex;
     flex-direction: column;
-    align-items: center;
-    text-align: center;
-
     padding: 8px 0 20px;
-}
-
-.mensagem-cancelar-pedido i {
-    font-size: 42px;
-    color: #E5A11B;
-    margin-bottom: 14px;
 }
 
 .mensagem-cancelar-pedido p {
     margin: 0 0 6px;
-
-    font-family: 'Fredoka', sans-serif;
+    font-family: 'Nunito', sans-serif;
     font-size: 16px;
-    font-weight: 500;
-
-    color: #3A4A48;
-}
-
-.mensagem-cancelar-pedido span {
-    font-family: 'Nunito', sans-serif;
-    font-size: 13px;
-
-    color: #7A8986;
-}
-
-
-/* Resumo do pedido */
-
-.resumo-cancelamento {
-    display: flex;
-    justify-content: space-between;
-
-    padding: 12px 14px;
-
-    background-color: #F5F8F7;
-    border: 1px solid #E1E9E7;
-    border-radius: 8px;
-
-    margin-bottom: 4px;
-}
-
-.resumo-cancelamento div {
-    display: flex;
-    flex-direction: column;
-    gap: 3px;
-}
-
-.resumo-cancelamento span {
-    font-family: 'Nunito', sans-serif;
-    font-size: 12px;
-    color: #7A8986;
-}
-
-.resumo-cancelamento strong {
-    font-family: 'Fredoka', sans-serif;
-    font-size: 14px;
     font-weight: 500;
     color: #3A4A48;
 }
 
 
-/* Botão confirmar cancelamento */
-
-.btn-confirmar-cancelamento {
-    width: 164px;
-    height: 40px;
-
-    font-family: 'Fredoka', sans-serif;
-    font-size: 16px;
-    font-weight: 500;
-
-    color: #FFFFFF;
-
-    background-color: #D9534F;
-
-    border: none;
-    border-radius: 8px;
-
-    cursor: pointer;
-}
-
-.btn-confirmar-cancelamento:hover {
-    background-color: #C9433F;
-}
-
-/* =================================
-   MODAL ITENS RECEBIDOS
-================================= */
-
+/* Modal Itens recebidos */
 .texto-confirmacao-recebimento {
     font-family: 'Nunito', sans-serif;
     font-size: 14px;
-    color: #60716E;
-    line-height: 1.4;
+    color: #3A4A48;
     margin-bottom: 16px;
 }
 
-
 /* Item */
-
 .item-recebido {
     display: flex;
     align-items: flex-start;
-    gap: 12px;
-
     width: 100%;
     padding: 12px;
-
     border: 1px solid #E1E9E7;
     border-radius: 8px;
-
     box-sizing: border-box;
-}
-
-.item-recebido + .item-recebido {
-    margin-top: 10px;
-}
-
-
-/* Imagem */
-
-.imagem-item-recebido {
-    width: 70px;
-    height: 70px;
-
-    flex-shrink: 0;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.imagem-item-recebido img {
-    width: 100%;
-    height: 100%;
-
-    object-fit: contain;
+    margin-bottom: 12px;
 }
 
 
 /* Dados */
-
 .dados-item-recebido {
     flex: 1;
-
     display: flex;
     flex-direction: column;
     gap: 4px;
 }
 
 .dados-item-recebido h3 {
-    margin: 0;
-
     font-family: 'Fredoka', sans-serif;
     font-size: 14px;
     font-weight: 500;
-
     color: #3A4A48;
 }
 
-.dados-item-recebido > span {
+.dados-item-recebido p {
     font-family: 'Nunito', sans-serif;
-    font-size: 12px;
+    font-size: 14px;
     color: #60716E;
+    margin-bottom: 0px;
 }
 
-
 /* Quantidade */
-
 .quantidade-recebida {
     display: flex;
     align-items: center;
     gap: 8px;
-
-    margin-top: 6px;
 }
 
 .quantidade-recebida label {
-    font-family: 'Nunito', sans-serif;
-    font-size: 12px;
-    font-weight: 600;
-
+    font-family: 'Fredoka', sans-serif;
+    font-size: 14px;
+    font-weight: 400;
     color: #3A4A48;
 }
 
 .quantidade-recebida input {
-    width: 55px;
-    height: 30px;
-
+    width: 60px;
+    height: 32px;
     padding: 0 6px;
-
-    border: 1px solid #D5DEDC;
-    border-radius: 6px;
-
+    border: 1px solid #D9E2E0;
+    border-radius: 8px;
     font-family: 'Nunito', sans-serif;
-    font-size: 13px;
-
+    font-size: 14px;
     color: #3A4A48;
-
     outline: none;
-}
-
-.quantidade-recebida input:focus {
-    border-color: #1C9B86;
 }
 
 .quantidade-esperada {
     font-family: 'Nunito', sans-serif;
-    font-size: 12px;
-
+    font-size: 14px;
     color: #7A8986;
+    margin-bottom: 0px;
 }
 
-
-/* Checkbox de confirmação */
-
-.checkbox-confirmacao-recebimento {
-    display: flex;
-    align-items: flex-start;
-    gap: 8px;
-
-    margin-top: 16px;
-
-    cursor: pointer;
-
-    font-family: 'Nunito', sans-serif;
-    font-size: 13px;
-    font-weight: 500;
-
-    color: #3A4A48;
-    line-height: 1.4;
-}
-
-.checkbox-confirmacao-recebimento input {
-    display: none;
-}
-
-.checkbox-confirmacao-recebimento .checkbox-custom {
-    width: 16px;
-    height: 16px;
-
-    flex-shrink: 0;
-
-    border: 1px solid #1C9B86;
-    border-radius: 4px;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.checkbox-confirmacao-recebimento input:checked + .checkbox-custom {
-    background-color: #1C9B86;
-}
-
-.checkbox-confirmacao-recebimento input:checked + .checkbox-custom::after {
-    content: "✓";
-
-    color: white;
-
-    font-size: 11px;
-    font-weight: 700;
+/* Checkbox troca */
+input[type="checkbox"].checkbox-troca {
+    width: 20px;
+    height: 20px;
+    min-width: 20px;
+    min-height: 20px;
+    accent-color: #1C9B86;
 }

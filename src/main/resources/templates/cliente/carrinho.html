@@ -12,6 +12,9 @@
     <!-- Cabecalho CSS -->
     <link rel="stylesheet" th:href="@{/css/cliente/cabecalho.css}">
 
+    <!-- Global CSS -->
+    <link rel="stylesheet" th:href="@{/css/cliente/global.css}">
+
     <!-- Carrinho CSS -->
     <link rel="stylesheet" th:href="@{/css/cliente/carrinho.css}">
 
@@ -23,9 +26,8 @@
 <body>
 <div class="container">
     <!-- Cabecalho -->
-    <div th:replace="~{cliente/cabecalho :: cabecalho}"></div>
+    <div th:replace="~{fragments/cliente/cabecalho :: cabecalho}"></div>
 
-    <!-- Detalhes -->
     <main class="conteudo">
         <div class="container-esquerdo">
                 <div class="carrinho-cabecalho">
@@ -42,7 +44,7 @@
                     <span class="linha"></span>
 
                     <div class="container-produtos-expirados">
-                        <p>Ração GoldeN Special Gatos Adultos Sabor Frango e Carne</p>
+                        <p>Pedigree Ração Cães Carne Adulto</p>
                         <button type="button" class="btn-adicionar-novamente">Adicionar novamente</button>
                     </div>
                </div>
@@ -64,19 +66,67 @@
                     <input type="checkbox" class="checkbox-produto">
 
                     <div class="imagem-container">
-                        <img th:src="@{/images/produtos/racao-1.png}" alt="GranPlus Choice Adulto">
+                        <a th:href="@{/cliente/detalhes-produto}" class="produto-link">
+                            <img th:src="@{/images/produtos/racao-1.png}" alt="GranPlus Choice Adulto">
+                        </a>
                     </div>
 
                     <div class="informacoes-produto">
                         <h3>Ração Cães Adultos Frango e Carne Choice</h3>
-                        <p class="tamanho">Tamanho: 10.1 KG</p>
-                        <p class="preco">R$ 98,10</p>
+                        <p class="preco-produto">R$ 156,75</p>
 
                         <div class="quantidade-container">
                             <div class="seletor-quantidade">
-                                <button type="button" class="btn-qtd">-</button>
+                                <button type="button" class="btn-qtd menos">-</button>
                                 <input type="number" value="1" min="1">
-                                <button type="button" class="btn-qtd">+</button>
+                                <button type="button" class="btn-qtd mais">+</button>
+                            </div>
+                        </div>
+
+                        <div class="secao-tamanhos">
+                            <div class="opcoes-tamanho">
+                                <button type="button" class="tamanho-opcao active" data-preco="156.75">10.1 KG</button>
+                                <button type="button" class="tamanho-opcao" data-preco="199.90">15 KG</button>
+                                <button type="button" class="tamanho-opcao" data-preco="249.90">20 KG</button>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <button class="btn-excluir" type="button"><i class="fa-solid fa-trash"></i></button>
+            </div>
+
+            <span class="linha-cinza"></span>
+
+            <!-- Produto 2 -->
+            <div class="produto">
+                <div class="imagem-e-dados">
+                    <input type="checkbox" class="checkbox-produto">
+
+                    <div class="imagem-container">
+                        <a th:href="@{/cliente/detalhes-produto}">
+                            <img th:src="@{/images/produtos/racao-3.png}">
+                        </a>
+                    </div>
+
+                    <div class="informacoes-produto">
+                        <h3>Ração GoldeN Special Gatos Adultos Sabor Frango e Carne</h3>
+                        <p class="preco-produto">R$ 59,90</p>
+
+                        <div class="quantidade-container">
+                            <div class="seletor-quantidade">
+                                <button type="button" class="btn-qtd menos">-</button>
+                                <input type="number" value="1" min="1">
+                                <button type="button" class="btn-qtd mais">+</button>
+                            </div>
+                        </div>
+
+                        <div class="secao-tamanhos">
+                            <div class="opcoes-tamanho">
+                                <button type="button" class="tamanho-opcao active" data-preco="59.90">10.1 KG</button>
+                                <button type="button" class="tamanho-opcao" data-preco="79.90">15 KG</button>
+                                <button type="button" class="tamanho-opcao" data-preco="99.90">20 KG</button>
                             </div>
                         </div>
                     </div>
@@ -90,7 +140,7 @@
         <div class="direito">
             <div class="preco-container">
                 <h1>Subtotal</h1>
-                <span class="preco">R$ 156,75</span>
+                <span id="subtotal">R$ 0,00</span>
             </div>
 
             <a th:href="@{/cliente/finalizar-compra}" class="btn-finalizar-a-compra">
@@ -100,9 +150,12 @@
     </main>
 </div>
 
-<div th:replace="~{fragments/cliente/chatbot :: chatbot}"></div>
+<script th:src="@{/js/cliente/carrinho.js}"></script>
 
+<!-- ChatBot -->
+<div th:replace="~{fragments/cliente/chatbot :: chatbot}"></div>
 <script th:src="@{/js/cliente/chatbot.js}"></script>
+
 </body>
 
 </html>

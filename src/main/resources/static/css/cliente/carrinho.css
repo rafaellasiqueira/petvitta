@@ -1,12 +1,3 @@
-.conteudo {
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
-    height: auto;
-    padding: 40px;
-    gap: 24px;
-}
-
 .container-esquerdo {
     background: #FFFFFF;
     border-radius: 8px;
@@ -35,7 +26,7 @@ h1 {
 }
 
 .btn-limpar,
- .btn-adicionar-novamente {
+.btn-adicionar-novamente {
     font-family: 'Fredoka', sans-serif;
     background: none;
     border: none;
@@ -154,7 +145,7 @@ img {
     font-size: 14px;
     display: flex;
     flex-direction: column;
-    gap: 4px;
+    gap: 12px;
 }
 
 .btn-excluir {
@@ -195,7 +186,6 @@ img {
     color: #1F2A29;
 }
 
-
 .btn-finalizar-a-compra {
     width: 100%;
     height: 36px;
@@ -215,4 +205,35 @@ img {
 
 .btn-finalizar-a-compra:hover {
     background: #37937F;
+}
+
+/* Tamanho do produto */
+.tamanho-opcao {
+    width: auto;
+    height: 32px;
+    font-family: 'Fredoka', sans-serif;
+    background: white;
+    border: 1px solid #D9E2E0;
+    padding: 0px 8px;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 500;
+    color: #3A4A48;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.tamanho-opcao.active {
+    width: auto;
+    height: 32px;
+    font-family: 'Fredoka', sans-serif;
+    background: #0E1413;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 500;
+    color: white;
+    text-decoration: none;
+    cursor: pointer;
+    padding: 0px 8px;
 }

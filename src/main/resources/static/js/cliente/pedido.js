@@ -1,759 +1,590 @@
-document.addEventListener('DOMContentLoaded', () => {
-
-    // =========================================
-    // VARIÁVEIS DOS MODAIS
-    // =========================================
-
-    const modalTroca =
-        document.getElementById('modalSolicitarTroca');
-
-    const modalCancelarPedido =
-        document.getElementById('modalCancelarPedido');
-
-    const modalItensRecebidos =
-        document.getElementById('modalItensRecebidos');
+document.addEventListener("DOMContentLoaded", function () {
 
 
-    // Guarda o card que está sendo manipulado
-    let cardPedidoTrocaAtual = null;
-    let cardPedidoCancelarAtual = null;
-    let cardPedidoRecebimentoAtual = null;
+    const modalCancelar = document.getElementById("modalCancelarPedido");
+    const botoesCancelar = document.querySelectorAll(".btn-cancelar-pedido");
+    const btnFecharCancelar =
+        document.getElementById("btnFecharModalCancelarPedido");
+    const btnNaoCancelar =
+        document.getElementById("btnNaoCancelarPedido");
+    const btnConfirmarCancelamento =
+        document.getElementById("btnConfirmarCancelamento");
+
+    let pedidoSelecionadoCancelar = null;
+
+    // Abrir modal
+    botoesCancelar.forEach(function (botao) {
+        botao.addEventListener("click", function () {
+            pedidoSelecionadoCancelar =
+                botao.closest(".card-pedido");
+
+            modalCancelar.classList.add("active");
+        });
+
+    });
 
 
-    // =========================================
-    // MODAL SOLICITAR TROCA
-    // =========================================
+    // Fechar modal
+    btnFecharCancelar.addEventListener("click", function () {
 
-    const btnFecharTroca =
-        document.getElementById('btnFecharModalTroca');
+        modalCancelar.classList.remove("active");
 
-    const btnCancelarTroca =
-        document.getElementById('btnCancelarTroca');
-
-    const formSolicitarTroca =
-        document.getElementById('formSolicitarTroca');
+    });
 
 
-    // =========================================
-    // ABRIR MODAL DE TROCA
-    // =========================================
+    btnNaoCancelar.addEventListener("click", function () {
 
-    document.addEventListener('click', (event) => {
+        modalCancelar.classList.remove("active");
 
-        const botao =
-            event.target.closest('.btn-solicitar-troca');
+    });
 
-        if (!botao) {
+
+    // Confirmar cancelamento
+    btnConfirmarCancelamento.addEventListener("click", function () {
+
+        if (!pedidoSelecionadoCancelar) {
             return;
         }
-
-        const card =
-            botao.closest('.card-pedido');
-
-        if (!card) {
-            return;
-        }
-
-        cardPedidoTrocaAtual = card;
-
-        modalTroca?.classList.add('active');
-
-    });
-
-
-    // =========================================
-    // FECHAR MODAL DE TROCA
-    // =========================================
-
-    btnFecharTroca?.addEventListener('click', () => {
-
-        modalTroca?.classList.remove('active');
-
-    });
-
-
-    btnCancelarTroca?.addEventListener('click', () => {
-
-        modalTroca?.classList.remove('active');
-
-    });
-
-
-    // Fechar clicando fora
-    modalTroca?.addEventListener('click', (event) => {
-
-        if (event.target === modalTroca) {
-
-            modalTroca.classList.remove('active');
-
-        }
-
-    });
-
-
-    // =========================================
-    // CONFIRMAR SOLICITAÇÃO DE TROCA
-    // =========================================
-
-    formSolicitarTroca?.addEventListener('submit', (event) => {
-
-        event.preventDefault();
-
-        if (!cardPedidoTrocaAtual) {
-            return;
-        }
-
-        const card =
-            cardPedidoTrocaAtual;
-
-
-        // -----------------------------------------
-        // ALTERAR STATUS
-        // -----------------------------------------
 
         const status =
-            card.querySelector('.status-pedido');
+            pedidoSelecionadoCancelar.querySelector(".status-pedido");
 
-        if (status) {
+        const botaoCancelar =
+            pedidoSelecionadoCancelar.querySelector(".btn-cancelar-pedido");
 
-            status.textContent = 'Troca autorizada';
 
-            status.className =
-                'status-pedido troca-autorizada';
+        status.textContent = "Cancelado";
 
+        status.classList.remove(
+            "aprovado",
+            "em-processamento"
+        );
+
+        status.classList.add("pedido-cancelado");
+
+
+        if (botaoCancelar) {
+            botaoCancelar.remove();
         }
 
 
-        // -----------------------------------------
-        // REMOVER BOTÃO SOLICITAR TROCA
-        // -----------------------------------------
+        const mensagem = document.createElement("p");
 
-        const btnSolicitar =
-            card.querySelector('.btn-solicitar-troca');
-
-        btnSolicitar?.remove();
+        mensagem.textContent = "Pedido cancelado";
 
 
-        // -----------------------------------------
-        // CRIAR BOTÃO ITENS DESPACHADOS
-        // -----------------------------------------
-
-        let container =
-            card.querySelector('.container-status-troca');
-
-        if (!container) {
-
-            container =
-                card.querySelector('.cabecalho-pedido');
-
-        }
+        pedidoSelecionadoCancelar
+            .querySelector(".informacoes-pedido")
+            .appendChild(mensagem);
 
 
-        if (container) {
-
-            const btnDespachados =
-                document.createElement('button');
-
-            btnDespachados.type = 'button';
-
-            btnDespachados.className =
-                'btn-branco btn-itens-despachados';
-
-            btnDespachados.textContent =
-                'Itens despachados';
-
-            container.appendChild(btnDespachados);
-
-        }
-
-
-        // Fecha modal
-        modalTroca?.classList.remove('active');
+        modalCancelar.classList.remove("active");
 
     });
 
 
-    // =========================================
-    // MODAL CANCELAR PEDIDO
-    // =========================================
 
-    const botoesCancelarPedido =
-        document.querySelectorAll('.btn-cancelar-pedido');
+    // =========================================================
+    // ITENS RECEBIDOS
+    // =========================================================
 
-    const btnFecharModalCancelarPedido =
-        document.getElementById('btnFecharModalCancelarPedido');
+    const modalItensRecebidos =
+        document.getElementById("modalItensRecebidos");
 
-    const btnNaoCancelarPedido =
-        document.getElementById('btnNaoCancelarPedido');
+    const botoesItensRecebidos =
+        document.querySelectorAll(".btn-itens-recebidos");
 
-    const btnConfirmarCancelamento =
-        document.getElementById('btnConfirmarCancelamento');
+    const btnFecharItensRecebidos =
+        document.getElementById("btnFecharModalItensRecebidos");
+
+    const btnCancelarItensRecebidos =
+        document.getElementById("btnCancelarItensRecebidos");
+
+    const btnConfirmarItensRecebidos =
+        document.getElementById("btnConfirmarItensRecebidos");
 
 
-    // =========================================
-    // ABRIR MODAL CANCELAR
-    // =========================================
+    let pedidoSelecionadoItensRecebidos = null;
 
-    botoesCancelarPedido.forEach((botao) => {
 
-        botao.addEventListener('click', () => {
+    // Abrir modal
+    botoesItensRecebidos.forEach(function (botao) {
 
-            // Guarda exatamente o card clicado
-            cardPedidoCancelarAtual =
-                botao.closest('.card-pedido');
+        botao.addEventListener("click", function () {
 
-            modalCancelarPedido?.classList.add('active');
+            pedidoSelecionadoItensRecebidos =
+                botao.closest(".card-pedido");
+
+            modalItensRecebidos.classList.add("active");
 
         });
 
     });
 
 
-    // =========================================
-    // FECHAR MODAL CANCELAR
-    // =========================================
+    // Fechar
+    btnFecharItensRecebidos.addEventListener("click", function () {
 
-    btnFecharModalCancelarPedido?.addEventListener(
-        'click',
-        () => {
+        modalItensRecebidos.classList.remove("active");
 
-            modalCancelarPedido?.classList.remove('active');
+    });
 
+
+    btnCancelarItensRecebidos.addEventListener("click", function () {
+
+        modalItensRecebidos.classList.remove("active");
+
+    });
+
+
+    // Confirmar recebimento
+    btnConfirmarItensRecebidos.addEventListener("click", function () {
+
+        if (!pedidoSelecionadoItensRecebidos) {
+            return;
         }
-    );
 
 
-    btnNaoCancelarPedido?.addEventListener(
-        'click',
-        () => {
+        const quantidadeChoice =
+            document.getElementById("quantidadeRecebidaChoice");
 
-            modalCancelarPedido?.classList.remove('active');
+        const quantidadeGolden =
+            document.getElementById("quantidadeRecebidaGolden");
 
+
+        // Quantidades esperadas
+        const quantidadeEsperadaChoice = 1;
+        const quantidadeEsperadaGolden = 2;
+
+
+        // Verificar Choice
+        if (
+            Number(quantidadeChoice.value) <
+            quantidadeEsperadaChoice
+        ) {
+
+            alert(
+                "A quantidade recebida da Ração Choice não pode ser menor que a quantidade enviada."
+            );
+
+            quantidadeChoice.focus();
+
+            return;
         }
-    );
 
 
-    // =========================================
-    // CONFIRMAR CANCELAMENTO
-    // =========================================
+        // Verificar Golden
+        if (
+            Number(quantidadeGolden.value) <
+            quantidadeEsperadaGolden
+        ) {
 
-    btnConfirmarCancelamento?.addEventListener(
-        'click',
-        () => {
+            alert(
+                "A quantidade recebida da Ração GoldeN não pode ser menor que a quantidade enviada."
+            );
 
-            if (!cardPedidoCancelarAtual) {
-                return;
-            }
+            quantidadeGolden.focus();
 
-
-            const card =
-                cardPedidoCancelarAtual;
-
-
-            // -----------------------------------------
-            // STATUS
-            // -----------------------------------------
-
-            const status =
-                card.querySelector('.status-pedido');
-
-            if (status) {
-
-                status.textContent =
-                    'Cancelado';
-
-                status.className =
-                    'status-pedido pedido-cancelado';
-
-            }
+            return;
+        }
 
 
-            // -----------------------------------------
-            // DATA
-            // -----------------------------------------
-
-            const informacoes =
-                card.querySelector('.informacoes-pedido');
-
-            if (informacoes) {
-
-                const spans =
-                    informacoes.querySelectorAll('span');
-
-                const hoje =
-                    new Date();
-
-                const dataFormatada =
-                    hoje.toLocaleDateString('pt-BR');
+        // Status
+        const status =
+            pedidoSelecionadoItensRecebidos
+                .querySelector(".status-pedido");
 
 
-                if (spans.length > 1) {
+        status.textContent = "Entregue";
 
-                    spans[1].textContent =
-                        `Cancelado em ${dataFormatada}`;
+        status.classList.remove("em-transito");
 
-                } else {
+        status.classList.add("entregue");
 
-                    const novaData =
-                        document.createElement('span');
 
-                    novaData.textContent =
-                        `Cancelado em ${dataFormatada}`;
+        // Informações
+        const informacoesPedido =
+            pedidoSelecionadoItensRecebidos
+                .querySelector(".informacoes-pedido");
 
-                    informacoes.appendChild(
-                        novaData
-                    );
 
-                }
+        // Remover "Entrega prevista"
+        const mensagens =
+            informacoesPedido.querySelectorAll("p");
+
+
+        mensagens.forEach(function (mensagem) {
+
+            if (
+                mensagem.textContent.includes(
+                    "Entrega prevista"
+                )
+            ) {
+
+                mensagem.remove();
 
             }
 
-
-            // -----------------------------------------
-            // REMOVER BOTÃO CANCELAR
-            // -----------------------------------------
-
-            const botaoCancelar =
-                card.querySelector('.btn-cancelar-pedido');
-
-            botaoCancelar?.remove();
+        });
 
 
-            // Fecha modal
-            modalCancelarPedido?.classList.remove(
-                'active'
+        // Remover botão "Itens recebidos"
+        const botaoItensRecebidos =
+            pedidoSelecionadoItensRecebidos
+                .querySelector(".btn-itens-recebidos");
+
+
+        if (botaoItensRecebidos) {
+            botaoItensRecebidos.remove();
+        }
+
+
+        // Container dos botões
+        const containerStatus =
+            pedidoSelecionadoItensRecebidos
+                .querySelector(".container-status-troca");
+
+
+        // Criar botão Solicitar troca
+        const botaoTroca =
+            document.createElement("button");
+
+
+        botaoTroca.type = "button";
+
+        botaoTroca.classList.add(
+            "btn-branco",
+            "btn-solicitar-troca"
+        );
+
+        botaoTroca.textContent =
+            "Solicitar troca";
+
+
+        containerStatus.appendChild(botaoTroca);
+
+
+        // Adicionar data de entrega
+        const mensagem =
+            document.createElement("p");
+
+
+        mensagem.textContent =
+            "Entregue em " +
+            new Date().toLocaleDateString("pt-BR");
+
+
+        informacoesPedido.appendChild(mensagem);
+
+
+        // Fechar modal
+        modalItensRecebidos.classList.remove("active");
+
+    });
+
+
+
+    // =========================================================
+    // SOLICITAR TROCA
+    // =========================================================
+
+    const modalSolicitarTroca =
+        document.getElementById("modalSolicitarTroca");
+
+    const btnFecharTroca =
+        document.getElementById("btnFecharModalTroca");
+
+    const btnCancelarTroca =
+        document.getElementById("btnCancelarTroca");
+
+    const formSolicitarTroca =
+        document.getElementById("formSolicitarTroca");
+
+
+    let pedidoSelecionadoTroca = null;
+
+
+    // =========================================================
+    // ABRIR MODAL
+    // =========================================================
+    // Delegação de evento porque o botão pode ser criado
+    // depois do carregamento da página.
+
+    document.addEventListener("click", function (event) {
+
+        const botao =
+            event.target.closest(".btn-solicitar-troca");
+
+
+        if (!botao) {
+            return;
+        }
+
+
+        pedidoSelecionadoTroca =
+            botao.closest(".card-pedido");
+
+
+        modalSolicitarTroca.classList.add("active");
+
+    });
+
+
+
+    // =========================================================
+    // FECHAR MODAL
+    // =========================================================
+
+    btnFecharTroca.addEventListener("click", function () {
+
+        modalSolicitarTroca.classList.remove("active");
+
+    });
+
+
+    btnCancelarTroca.addEventListener("click", function () {
+
+        modalSolicitarTroca.classList.remove("active");
+
+    });
+
+
+
+    // =========================================================
+    // CONFIRMAR SOLICITAÇÃO DE TROCA
+    // =========================================================
+
+    formSolicitarTroca.addEventListener("submit", function (event) {
+
+        event.preventDefault();
+
+
+        if (!pedidoSelecionadoTroca) {
+            return;
+        }
+
+
+        // -----------------------------------------------------
+        // Verificar produtos selecionados
+        // -----------------------------------------------------
+
+        const produtosSelecionados =
+            document.querySelectorAll(
+                ".checkbox-troca:checked"
             );
 
 
-            // Limpa referência
-            cardPedidoCancelarAtual = null;
+        if (produtosSelecionados.length === 0) {
 
-        }
-    );
-
-
-    // =========================================
-    // FECHAR MODAL CANCELAR CLICANDO FORA
-    // =========================================
-
-    modalCancelarPedido?.addEventListener(
-        'click',
-        (event) => {
-
-            if (event.target === modalCancelarPedido) {
-
-                modalCancelarPedido.classList.remove(
-                    'active'
-                );
-
-            }
-
-        }
-    );
-
-
-    // =========================================
-    // MODAL ITENS RECEBIDOS
-    // =========================================
-
-    const btnAbrirModalItensRecebidos =
-        document.getElementById(
-            'btnAbrirModalItensRecebidos'
-        );
-
-    const btnFecharModalItensRecebidos =
-        document.getElementById(
-            'btnFecharModalItensRecebidos'
-        );
-
-    const btnCancelarItensRecebidos =
-        document.getElementById(
-            'btnCancelarItensRecebidos'
-        );
-
-    const formItensRecebidos =
-        document.getElementById(
-            'formItensRecebidos'
-        );
-
-
-    // =========================================
-    // ABRIR MODAL ITENS RECEBIDOS
-    // =========================================
-
-    btnAbrirModalItensRecebidos?.addEventListener(
-        'click',
-        () => {
-
-            cardPedidoRecebimentoAtual =
-                btnAbrirModalItensRecebidos
-                    .closest('.card-pedido');
-
-            modalItensRecebidos?.classList.add(
-                'active'
+            alert(
+                "Selecione pelo menos um item para realizar a troca."
             );
 
+            return;
         }
-    );
 
 
-    // =========================================
-    // FECHAR MODAL ITENS RECEBIDOS
-    // =========================================
 
-    btnFecharModalItensRecebidos?.addEventListener(
-        'click',
-        () => {
+        // -----------------------------------------------------
+        // Verificar Choice
+        // -----------------------------------------------------
 
-            modalItensRecebidos?.classList.remove(
-                'active'
+        const checkboxChoice =
+            document.querySelector(
+                ".checkbox-troca[value='racao-choice']"
             );
 
-        }
-    );
 
-
-    btnCancelarItensRecebidos?.addEventListener(
-        'click',
-        () => {
-
-            modalItensRecebidos?.classList.remove(
-                'active'
-            );
-
-        }
-    );
-
-
-    // Fechar clicando fora
-    modalItensRecebidos?.addEventListener(
-        'click',
-        (event) => {
-
-            if (event.target === modalItensRecebidos) {
-
-                modalItensRecebidos.classList.remove(
-                    'active'
-                );
-
-            }
-
-        }
-    );
-
-
-    // =========================================
-    // CONFIRMAR ITENS RECEBIDOS
-    // =========================================
-
-    formItensRecebidos?.addEventListener(
-        'submit',
-        (event) => {
-
-            event.preventDefault();
-
-
-            if (!cardPedidoRecebimentoAtual) {
-                return;
-            }
-
-
-            // -----------------------------------------
-            // QUANTIDADES RECEBIDAS
-            // -----------------------------------------
+        if (
+            checkboxChoice &&
+            checkboxChoice.checked
+        ) {
 
             const quantidadeChoice =
-                Number(
-                    document.getElementById(
-                        'quantidadeRecebidaChoice'
-                    ).value
-                );
-
-            const quantidadeGolden =
-                Number(
-                    document.getElementById(
-                        'quantidadeRecebidaGolden'
-                    ).value
-                );
+                document.getElementById("quantidadeChoice");
 
 
-            // -----------------------------------------
-            // QUANTIDADES ESPERADAS
-            // -----------------------------------------
-
-            const quantidadeEsperadaChoice = 1;
-
-            const quantidadeEsperadaGolden = 2;
-
-
-            // -----------------------------------------
-            // VERIFICAR QUANTIDADES
-            // -----------------------------------------
-
-            const recebeuTudo =
-                quantidadeChoice ===
-                    quantidadeEsperadaChoice &&
-
-                quantidadeGolden ===
-                    quantidadeEsperadaGolden;
-
-
-            // -----------------------------------------
-            // VERIFICAR CHECKBOX
-            // -----------------------------------------
-
-            const confirmou =
-                document.getElementById(
-                    'confirmarRecebimento'
-                ).checked;
-
-
-            if (!confirmou) {
+            if (
+                Number(quantidadeChoice.value) <
+                Number(quantidadeChoice.min)
+            ) {
 
                 alert(
-                    'Confirme que recebeu todos os itens.'
+                    "A quantidade da Ração Choice não pode ser menor que a quantidade enviada."
                 );
+
+                quantidadeChoice.focus();
 
                 return;
-
             }
 
-
-            // -----------------------------------------
-            // QUANTIDADE INCORRETA
-            // -----------------------------------------
-
-            if (!recebeuTudo) {
-
-                alert(
-                    'As quantidades recebidas não correspondem às quantidades do pedido.'
-                );
-
-                return;
-
-            }
+        }
 
 
-            // -----------------------------------------
-            // CARD
-            // -----------------------------------------
 
-            const card =
-                cardPedidoRecebimentoAtual;
+        // -----------------------------------------------------
+        // Verificar Golden
+        // -----------------------------------------------------
 
-
-            // -----------------------------------------
-            // STATUS ENTREGUE
-            // -----------------------------------------
-
-            let status =
-                card.querySelector('.status-pedido');
-
-            if (status) {
-
-                // Se já existir o status, apenas altera
-                status.textContent = 'Entregue';
-                status.className = 'status-pedido entregue';
-
-            } else {
-
-                // Se não existir, cria o status
-                status = document.createElement('span');
-
-                status.className = 'status-pedido entregue';
-
-                status.textContent = 'Entregue';
-
-                // Coloca o status dentro do container
-                const containerStatus =
-                    card.querySelector('.container-status-troca');
-
-                if (containerStatus) {
-                    containerStatus.prepend(status);
-                }
-            }
-
-
-            // -----------------------------------------
-            // ALTERAR DATA
-            // -----------------------------------------
-
-            const informacoes =
-                card.querySelector(
-                    '.informacoes-pedido'
-                );
-
-
-            if (informacoes) {
-
-                const spans =
-                    informacoes.querySelectorAll(
-                        'span'
-                    );
-
-                const hoje =
-                    new Date();
-
-                const dataFormatada =
-                    hoje.toLocaleDateString(
-                        'pt-BR'
-                    );
-
-
-                if (spans.length > 1) {
-
-                    spans[1].textContent =
-                        `Entregue em ${dataFormatada}`;
-
-                } else {
-
-                    const novaData =
-                        document.createElement(
-                            'span'
-                        );
-
-                    novaData.textContent =
-                        `Entregue em ${dataFormatada}`;
-
-                    informacoes.appendChild(
-                        novaData
-                    );
-
-                }
-
-            }
-
-
-            // -----------------------------------------
-            // REMOVER BOTÃO ITENS RECEBIDOS
-            // -----------------------------------------
-
-            const botaoRecebidos =
-                card.querySelector(
-                    '.btn-itens-recebidos'
-                );
-
-            botaoRecebidos?.remove();
-
-
-            // -----------------------------------------
-            // CRIAR CONTAINER DE STATUS
-            // -----------------------------------------
-
-            let containerStatus =
-                card.querySelector(
-                    '.container-status-troca'
-                );
-
-
-            if (!containerStatus) {
-
-                containerStatus =
-                    card.querySelector(
-                        '.cabecalho-pedido'
-                    );
-
-            }
-
-
-            // -----------------------------------------
-            // CRIAR BOTÃO SOLICITAR TROCA
-            // -----------------------------------------
-
-            if (containerStatus) {
-
-                const btnSolicitarTroca =
-                    document.createElement(
-                        'button'
-                    );
-
-
-                btnSolicitarTroca.type =
-                    'button';
-
-                btnSolicitarTroca.className =
-                    'btn-branco btn-solicitar-troca';
-
-                btnSolicitarTroca.textContent =
-                    'Solicitar troca';
-
-
-                containerStatus.appendChild(
-                    btnSolicitarTroca
-                );
-
-            }
-
-
-            // -----------------------------------------
-            // FECHAR MODAL
-            // -----------------------------------------
-
-            modalItensRecebidos?.classList.remove(
-                'active'
+        const checkboxGolden =
+            document.querySelector(
+                ".checkbox-troca[value='racao-golden']"
             );
 
 
-            // Limpa referência
-            cardPedidoRecebimentoAtual = null;
+        if (
+            checkboxGolden &&
+            checkboxGolden.checked
+        ) {
+
+            const quantidadeGolden =
+                document.getElementById("quantidadeGolden");
+
+
+            if (
+                Number(quantidadeGolden.value) <
+                Number(quantidadeGolden.min)
+            ) {
+
+                alert(
+                    "A quantidade da Ração GoldeN não pode ser menor que a quantidade enviada."
+                );
+
+                quantidadeGolden.focus();
+
+                return;
+            }
 
         }
-    );
 
 
-    // =========================================
-    // ITENS DESPACHADOS
-    // =========================================
 
-    document.addEventListener(
-        'click',
-        (event) => {
+        // =====================================================
+        // ALTERAR STATUS
+        // =====================================================
 
-            const botao =
-                event.target.closest(
-                    '.btn-itens-despachados'
-                );
+        const status =
+            pedidoSelecionadoTroca
+                .querySelector(".status-pedido");
 
 
-            if (!botao) {
-                return;
-            }
+        const containerStatus =
+            pedidoSelecionadoTroca
+                .querySelector(".container-status-troca");
 
 
-            const card =
-                botao.closest('.card-pedido');
+        status.textContent = "Troca aceita";
 
 
-            if (!card) {
-                return;
-            }
+        status.classList.remove(
+            "entregue",
+            "troca-finalizada"
+        );
 
 
-            const status =
-                card.querySelector(
-                    '.status-pedido'
-                );
+        status.classList.add(
+            "troca-autorizada"
+        );
 
 
-            // -----------------------------------------
-            // ALTERAR PARA TROCADO
-            // -----------------------------------------
 
-            if (status) {
+        // =====================================================
+        // REMOVER BOTÃO SOLICITAR TROCA
+        // =====================================================
+
+        const botaoSolicitarTroca =
+            pedidoSelecionadoTroca
+                .querySelector(".btn-solicitar-troca");
+
+
+        if (botaoSolicitarTroca) {
+            botaoSolicitarTroca.remove();
+        }
+
+
+
+        // =====================================================
+        // CRIAR BOTÃO ITENS DESPACHADOS
+        // =====================================================
+
+        const botaoItensDespachados =
+            document.createElement("button");
+
+
+        botaoItensDespachados.type = "button";
+
+
+        botaoItensDespachados.classList.add(
+            "btn-branco",
+            "btn-itens-despachados"
+        );
+
+
+        botaoItensDespachados.textContent =
+            "Itens despachados";
+
+
+        containerStatus.appendChild(
+            botaoItensDespachados
+        );
+
+
+
+        // Fechar modal
+        modalSolicitarTroca.classList.remove("active");
+
+
+
+        // =====================================================
+        // ITENS DESPACHADOS
+        // =====================================================
+
+        botaoItensDespachados.addEventListener(
+            "click",
+            function () {
 
                 status.textContent =
-                    'Trocado';
+                    "Troca processada";
 
-                status.className =
-                    'status-pedido troca-finalizada';
+
+                status.classList.remove(
+                    "troca-autorizada"
+                );
+
+
+                status.classList.add(
+                    "troca-finalizada"
+                );
+
+
+                // Remover botão
+                botaoItensDespachados.remove();
+
+
+                // Adicionar data
+                const informacoesPedido =
+                    pedidoSelecionadoTroca
+                        .querySelector(
+                            ".informacoes-pedido"
+                        );
+
+
+                const mensagem =
+                    document.createElement("p");
+
+
+                mensagem.textContent =
+                    "Troca processada em " +
+                    new Date().toLocaleDateString("pt-BR");
+
+
+                informacoesPedido.appendChild(
+                    mensagem
+                );
 
             }
+        );
 
-
-            // Remove botão
-            botao.remove();
-
-        }
-    );
+    });
 
 });
