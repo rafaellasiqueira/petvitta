@@ -40,13 +40,13 @@
                 </div>
 
                 <div class="endereco">
-                    <h3>Escritório</h3>
-                    <span>Casa</span>
-                    <p>
+                    <h3 id="enderecoNome">Escritório</h3>
+                    <span id="enderecoTipo">Casa</span>
+                    <p id="enderecoLogradouro">
                         Rua João Batista, 355 - Jardim Ângela,
                         Acrelândia - Acre
                     </p>
-                    <span>CEP: 08888-888, Brasil.</span>
+                    <span id="enderecoCep">CEP: 08888-888, Brasil.</span>
                     <a href="#" id="btnAlterarEndereco">Alterar endereço</a>
                 </div>
             </div>
@@ -65,7 +65,7 @@
                         <h3>Ração Cães Adultos Frango e Carne Choice</h3>
                         <span>Tamanho: 10.1 KG</span>
                         <span>Quantidade: 1</span>
-                        <span class="preco">R$ 98,10</span>
+                        <span class="preco">R$ 156,75</span>
                     </div>
 
                 </div>
@@ -76,7 +76,7 @@
 
                 <div class="produto">
                     <div class="imagem-produto">
-                        <img th:src="@{/images/produtos/Golden-Special-Frango-Carne-10kg-Frente.png}"
+                        <img th:src="@{/images/produtos/racao-3.png}"
                              alt="Ração GoldeN Special Gatos Adultos Sabor Frango e Carne">
                     </div>
 
@@ -84,7 +84,7 @@
                         <h3>Ração GoldeN Special Gatos Adultos Sabor Frango e Carne</h3>
                         <span>Tamanho: 10.1 KG</span>
                         <span>Quantidade: 2</span>
-                        <span class="preco">R$ 100,20</span>
+                        <span class="preco">R$ 119,80</span>
                     </div>
                 </div>
             </div>
@@ -194,16 +194,16 @@
         <div class="direito">
             <div class="linha-resumo">
                 <h3>Subtotal</h3>
-                <h3>R$ 75,00</h3>
+                <h3>R$ 55,00</h3>
             </div>
 
             <div class="linha-resumo">
                 <h3>Frete</h3>
-                <h3>R$ 10,00</h3>
+                <h3>R$ 0,00</h3>
             </div>
 
             <div class="linha-resumo cupom-resumo">
-                <h3>Cupons</h3>
+                <h3>Descontos</h3>
                 <h3>-R$ 0,00</h3>
             </div>
 
@@ -211,7 +211,7 @@
 
             <div class="linha-total">
                 <h3>Total</h3>
-                <h3>R$ 85,00</h3>
+                <h3>R$ 0,00</h3>
             </div>
 
             <button type="button" id="btnFinalizarCompra" class="btn-finalizar-a-compra">Finalizar a compra</button>

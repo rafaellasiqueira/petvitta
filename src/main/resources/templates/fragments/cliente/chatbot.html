@@ -1,16 +1,16 @@
 <!DOCTYPE html>
-<html lang="pt-BR"
-      xmlns:th="http://www.thymeleaf.org">
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
 
 <body>
 
-<!-- ==============================
-     CHATBOT
-================================ -->
-
 <div th:fragment="chatbot">
 
-    <!-- Janela do chatbot -->
+    <!-- Chatbot -->
     <div class="chatbot" id="chatbot">
 
         <!-- Cabeçalho -->
@@ -24,26 +24,23 @@
                          alt="PetVitta">
                 </div>
 
-                <span>Assistente virtual</span>
+                <p>Assistente virtual</p>
 
             </div>
 
             <button type="button"
-                    class="chatbot-fechar"
+                    class="btn-fechar-chatbot"
                     id="btnFecharChatbot">
-                <i class="fa-solid fa-xmark"></i>
+                &times;
             </button>
 
         </div>
 
+        <!-- Conversa -->
+        <div class="chatbot-mensagens" id="chatbotMensagens">
 
-        <!-- Corpo da conversa -->
-        <div class="chatbot-mensagens"
-             id="chatbotMensagens">
-
-            <!-- Mensagem do chatbot -->
+            <!-- Mensagem inicial do chatbot -->
             <div class="mensagem mensagem-bot">
-
                 <p>
                     Olá! Seja bem-vindo(a) à PetVitta Club!
                     Sou sua assistente virtual e estou pronta
@@ -51,26 +48,12 @@
                     petiscos, suplementos e muito mais.
                     É só me dizer o que você precisa!
                 </p>
-
-            </div>
-
-
-            <!-- Mensagem do usuário -->
-            <div class="mensagem mensagem-usuario">
-
-                <p>
-                    Olá! Gostaria de recomendações de rações
-                    do tipo seca.
-                </p>
-
             </div>
 
         </div>
 
-
         <!-- Campo de mensagem -->
-        <form class="chatbot-form"
-              id="formChatbot">
+        <form class="chatbot-form" id="formChatbot">
 
             <input type="text"
                    id="inputChatbot"
@@ -78,7 +61,8 @@
                    autocomplete="off">
 
             <button type="submit"
-                    id="btnEnviarChatbot">
+                    id="btnEnviarChatbot"
+                    aria-label="Enviar mensagem">
 
                 <i class="fa-solid fa-paper-plane"></i>
 
@@ -88,17 +72,18 @@
 
     </div>
 
-
     <!-- Botão flutuante -->
     <button type="button"
             class="chatbot-botao"
-            id="btnAbrirChatbot">
+            id="btnAbrirChatbot"
+            aria-label="Abrir assistente virtual">
 
-        <!-- NOVA ESTRUTURA COM IMAGEM -->
         <div class="chatbot-botao-icon">
+
             <img th:src="@{/images/logo-icone-chatbot.svg}"
                  src="/images/logo-icone-chatbot.svg"
                  alt="PetVitta">
+
         </div>
 
     </button>

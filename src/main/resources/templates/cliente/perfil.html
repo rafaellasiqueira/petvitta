@@ -16,6 +16,9 @@
     <!-- Global CSS -->
     <link rel="stylesheet" th:href="@{/css/cliente/global.css}">
 
+    <!-- Modal CSS -->
+    <link rel="stylesheet" th:href="@{/css/cliente/modal.css}">
+
     <!-- Perfil CSS -->
     <link rel="stylesheet" th:href="@{/css/cliente/perfil.css}">
 
@@ -34,15 +37,11 @@
 
         <div class="container-principal">
 
-            <!-- ================================================= -->
-            <!-- DADOS PESSOAIS -->
-            <!-- ================================================= -->
-
+            <!-- Dados pessoais -->
             <div class="card">
-
                 <h1>Dados pessoais</h1>
 
-                <form class="form-dados-pessoais">
+                <form class="form-dados-pessoais" method="post">
 
                     <div class="campo-grupo">
                         <label for="nome">Nome</label>
@@ -51,6 +50,8 @@
                                name="nome"
                                value="Letícia Gomes de Souza"
                                placeholder="Digite seu nome completo">
+
+                        <p class="mensagem-erro" id="erroNome"></p>
                     </div>
 
                     <div class="campo-grupo">
@@ -60,6 +61,7 @@
                                name="cpf"
                                value="123.456.789-00"
                                placeholder="000.000.000-00">
+                        <p class="mensagem-erro" id="erroCpf"></p>
                     </div>
 
                     <div class="linha-campos">
@@ -81,6 +83,7 @@
                                    name="telefone"
                                    value="(11) 91111-1111"
                                    placeholder="(00) 00000-0000">
+                            <p class="mensagem-erro" id="erroTelefone"></p>
                         </div>
 
                     </div>
@@ -102,10 +105,11 @@
                                 Data de nascimento
                             </label>
 
-                            <input type="text"
+                            <input type="date"
                                    id="dataNascimento"
                                    name="dataNascimento"
-                                   value="10/09/1991">
+                                   value="1991-09-10">
+                            <p class="mensagem-erro" id="erroDataNascimento"></p>
                         </div>
 
                     </div>
@@ -120,15 +124,12 @@
             </div>
 
 
-            <!-- ================================================= -->
-            <!-- ALTERAR SENHA -->
-            <!-- ================================================= -->
-
+            <!-- Alterar senha -->
             <div class="card">
 
                 <h1>Alterar senha</h1>
 
-                <form class="form-alterar-senha">
+                <form class="form-alterar-senha" method="post">
 
                     <div class="campo-grupo largura-total">
 
@@ -136,10 +137,23 @@
                             Senha atual
                         </label>
 
-                        <input type="password"
-                               id="senhaAtual"
-                               name="senhaAtual"
-                               placeholder="Digite sua senha">
+                        <div class="campo-senha">
+
+                            <input type="password"
+                                   id="senhaAtual"
+                                   name="senhaAtual"
+                                   placeholder="Digite sua senha">
+
+                            <button type="button"
+                                    class="btn-mostrar-senha"
+                                    data-input="senhaAtual"
+                                    aria-label="Mostrar senha">
+                                <i class="fa-solid fa-eye"></i>
+                            </button>
+
+                        </div>
+
+                        <p class="mensagem-erro" id="erroSenhaAtual"></p>
 
                     </div>
 
@@ -151,10 +165,23 @@
                                 Nova senha
                             </label>
 
-                            <input type="password"
-                                   id="novaSenha"
-                                   name="novaSenha"
-                                   placeholder="Digite sua nova senha">
+                            <div class="campo-senha">
+
+                                <input type="password"
+                                       id="novaSenha"
+                                       name="novaSenha"
+                                       placeholder="Digite sua nova senha">
+
+                                <button type="button"
+                                        class="btn-mostrar-senha"
+                                        data-input="novaSenha"
+                                        aria-label="Mostrar senha">
+                                    <i class="fa-solid fa-eye"></i>
+                                </button>
+
+                            </div>
+
+                            <p class="mensagem-erro" id="erroNovaSenha"></p>
 
                         </div>
 
@@ -164,10 +191,23 @@
                                 Confirme a nova senha
                             </label>
 
-                            <input type="password"
-                                   id="confirmarSenha"
-                                   name="confirmarSenha"
-                                   placeholder="Digite sua nova senha novamente">
+                            <div class="campo-senha">
+
+                                <input type="password"
+                                       id="confirmarSenha"
+                                       name="confirmarSenha"
+                                       placeholder="Digite sua nova senha novamente">
+
+                                <button type="button"
+                                        class="btn-mostrar-senha"
+                                        data-input="confirmarSenha"
+                                        aria-label="Mostrar senha">
+                                    <i class="fa-solid fa-eye"></i>
+                                </button>
+
+                            </div>
+
+                            <p class="mensagem-erro" id="erroConfirmarSenha"></p>
 
                         </div>
 
@@ -193,322 +233,233 @@
             </div>
 
 
-            <!-- ================================================= -->
-            <!-- ENDEREÇOS -->
-            <!-- ================================================= -->
-
+            <!-- Endereços -->
             <div class="card">
 
                 <h1>Endereços</h1>
 
                 <div class="lista-enderecos">
 
-                    <!-- ENDEREÇO DE ENTREGA -->
+                    <!-- Endereço de entrega -->
                     <div class="item-endereco">
-
                         <div class="cabecalho-item">
-
                             <div>
                                 <h3>Casa</h3>
-
-                                <span class="status-endereco entrega">
-                                    Entrega
-                                </span>
+                                <span class="status-endereco entrega">Entrega</span>
                             </div>
 
                             <div class="acoes-item">
 
                                 <button type="button"
-                                        class="btn-editar">
+                                        class="btn-editar editar-endereco"
+                                        data-nome="Escritório"
+                                        data-tipo-endereco="entrega"
+                                        data-tipo-residencia="casa"
+                                        data-tipo-logradouro="rua"
+                                        data-cep="08888-888"
+                                        data-logradouro="Rua João Batista"
+                                        data-bairro="Jardim Ângela"
+                                        data-numero="355"
+                                        data-estado="AC"
+                                        data-cidade="Acrelândia"
+                                        data-pais="Brasil"
+                                        data-observacoes="">
                                     <i class="fa-solid fa-pen"></i>
-                                    Editar
                                 </button>
 
                                 <button type="button"
-                                        class="btn-excluir">
+                                        class="btn-excluir excluir-endereco"
+                                        data-nome="Escritório">
                                     <i class="fa-solid fa-trash"></i>
-                                    Excluir
                                 </button>
-
                             </div>
-
                         </div>
-
-                        <p>
-                            Rua João Batista, 355 - Jardim Ângela
-                        </p>
-
-                        <p>
-                            Acrelândia - Acre
-                        </p>
-
-                        <p>
-                            CEP: 08888-888, Brasil
-                        </p>
-
+                        <p>Rua João Batista, 355 - Jardim Ângela</p>
+                        <p>Acrelândia - Acre</p>
+                        <p>CEP: 08888-888, Brasil</p>
                     </div>
 
 
-                    <!-- ENDEREÇO DE COBRANÇA -->
+                    <!-- Endereço de cobrança -->
                     <div class="item-endereco">
-
                         <div class="cabecalho-item">
-
                             <div>
                                 <h3>Escritório</h3>
-
-                                <span class="status-endereco cobranca">
-                                    Cobrança
-                                </span>
+                                <span class="status-endereco cobranca">Cobrança</span>
                             </div>
 
                             <div class="acoes-item">
 
                                 <button type="button"
-                                        class="btn-editar">
+                                        class=" btn-editar editar-endereco"
+                                        data-nome="Escritório"
+                                        data-tipo-endereco="entrega"
+                                        data-tipo-residencia="casa"
+                                        data-tipo-logradouro="rua"
+                                        data-cep="08888-888"
+                                        data-logradouro="Rua João Batista"
+                                        data-bairro="Jardim Ângela"
+                                        data-numero="355"
+                                        data-estado="AC"
+                                        data-cidade="Acrelândia"
+                                        data-pais="Brasil"
+                                        data-observacoes="">
                                     <i class="fa-solid fa-pen"></i>
-                                    Editar
                                 </button>
 
                                 <button type="button"
-                                        class="btn-excluir">
+                                        class="btn-excluir excluir-endereco"
+                                        data-nome="Escritório">
                                     <i class="fa-solid fa-trash"></i>
-                                    Excluir
                                 </button>
-
                             </div>
-
                         </div>
 
-                        <p>
-                            Avenida Paulista, 1000 - Bela Vista
-                        </p>
-
-                        <p>
-                            São Paulo - SP
-                        </p>
-
-                        <p>
-                            CEP: 01310-100, Brasil
-                        </p>
-
+                        <p>Avenida Paulista, 1000 - Bela Vista</p>
+                        <p>São Paulo - SP</p>
+                        <p>CEP: 01310-100, Brasil</p>
                     </div>
-
                 </div>
 
                 <div class="container-btn-salvar">
 
                     <button type="button"
-                            class="btn-adicionar-endereco">
-                        <i class="fa-solid fa-plus"></i>
+                            class="btn-adicionar-endereco"
+                            id="btnAdicionarEndereco">
                         Adicionar endereço
                     </button>
-
                 </div>
-
             </div>
 
-
-            <!-- ================================================= -->
-            <!-- CARTÕES -->
-            <!-- ================================================= -->
-
+            <!-- Cartões -->
             <div class="card">
-
                 <h1>Cartões</h1>
-
                 <div class="lista-cartoes">
 
-                    <!-- CARTÃO VISA -->
+                    <!-- Primeiro cartão -->
                     <div class="item-cartao">
-
                         <div class="cabecalho-item">
-
                             <div>
-
-                                <h3>
-                                    <i class="fa-brands fa-cc-visa"></i>
-                                    Visa
-                                </h3>
-
-                                <span class="status-cartao">
-                                    Preferencial
-                                </span>
-
+                                <h3>Visa</h3>
+                                <span class="status-cartao">Preferencial</span>
                             </div>
 
                             <div class="acoes-item">
-
                                 <button type="button"
-                                        class="btn-editar">
+                                        class="btn-editar editar-cartao"
+                                        data-numero="**** **** **** 1234"
+                                        data-nome="Letícia Souza"
+                                        data-bandeira="visa"
+                                        data-cvv="123"
+                                        data-validade="08/29">
                                     <i class="fa-solid fa-pen"></i>
-                                    Editar
                                 </button>
 
                                 <button type="button"
-                                        class="btn-excluir">
+                                        class="btn-excluir excluir-cartao"
+                                        data-nome="Visa"
+                                        data-numero="**** **** **** 1234">
                                     <i class="fa-solid fa-trash"></i>
-                                    Excluir
                                 </button>
-
                             </div>
-
                         </div>
 
                         <div class="informacoes-cartao">
-
-                            <span>
-                                **** **** **** 1234
-                            </span>
-
-                            <span>
-                                Letícia Souza
-                            </span>
-
-                            <span>
-                                Vencimento: 08/2029
-                            </span>
-
+                            <p>**** **** **** 1234</p>
+                            <p>Letícia Souza</p>
+                            <p>Vencimento: 08/2029</p>
                         </div>
 
                     </div>
 
 
-                    <!-- CARTÃO MASTERCARD -->
+                    <!-- Segundo cartão -->
                     <div class="item-cartao">
-
                         <div class="cabecalho-item">
-
                             <div>
-
-                                <h3>
-                                    <i class="fa-brands fa-cc-mastercard"></i>
-                                    Mastercard
-                                </h3>
-
-                                <span class="status-cartao">
-                                    Cadastrado
-                                </span>
-
+                                <h3>Mastercard</h3>
                             </div>
 
                             <div class="acoes-item">
-
                                 <button type="button"
-                                        class="btn-editar">
+                                        class="btn-editar editar-cartao"
+                                        data-numero="**** **** **** 5678"
+                                        data-nome="Letícia Souza"
+                                        data-bandeira="mastercard"
+                                        data-cvv="456"
+                                        data-validade="11/30">
                                     <i class="fa-solid fa-pen"></i>
-                                    Editar
                                 </button>
 
                                 <button type="button"
-                                        class="btn-excluir">
+                                        class="btn-excluir excluir-cartao"
+                                        data-nome="Mastercard"
+                                        data-numero="**** **** **** 5678">
                                     <i class="fa-solid fa-trash"></i>
-                                    Excluir
                                 </button>
-
                             </div>
-
                         </div>
 
                         <div class="informacoes-cartao">
-
-                            <span>
-                                **** **** **** 5678
-                            </span>
-
-                            <span>
-                                Letícia Souza
-                            </span>
-
-                            <span>
-                                Vencimento: 11/2030
-                            </span>
-
+                            <p>**** **** **** 5678</p>
+                            <p>Letícia Souza</p>
+                            <p>Vencimento: 11/2030</p>
                         </div>
-
                     </div>
-
                 </div>
 
                 <div class="container-btn-salvar">
-
                     <button type="button"
                             class="btn-adicionar-cartao">
-                        <i class="fa-solid fa-plus"></i>
                         Adicionar cartão
                     </button>
-
                 </div>
 
             </div>
 
 
-            <!-- ================================================= -->
-            <!-- CUPONS -->
-            <!-- ================================================= -->
-
+            <!-- Cupons -->
             <div class="card">
-
                 <h1>Cupons</h1>
-
                 <div class="lista-cupons">
 
-                    <!-- CUPOM DE TROCA -->
+                    <!-- Primeiro cupom -->
                     <div class="item-cupom">
-
                         <div class="dados-cupom">
-
-                            <div class="cupom-codigo">
-                                TROCA50
-                            </div>
-
-                            <span class="tipo-cupom troca">
-                                Troca
-                            </span>
-
+                            <span class="tipo-cupom troca">Troca</span>
+                            <h4>TROCA216</h4>
+                            <h4>Validade: 12/12/2026</h4>
                         </div>
-
-                        <div class="valor-cupom">
-                            R$ 50,00
-                        </div>
-
+                        <div class="valor-cupom">R$ 216,00</div>
                     </div>
 
-
-                    <!-- CUPOM PROMOCIONAL -->
+                    <!-- Segundo cupom -->
                     <div class="item-cupom">
-
                         <div class="dados-cupom">
-
-                            <div class="cupom-codigo">
-                                PET10
-                            </div>
-
-                            <span class="tipo-cupom promocional">
-                                Promocional
-                            </span>
-
+                            <span class="tipo-cupom promocional">Promocional</span>
+                            <h4>PET10</h4>
+                            <h4>Validade: 12/12/2026</h4>
                         </div>
-
-                        <div class="valor-cupom">
-                            10% OFF
-                        </div>
-
+                        <div class="valor-cupom">10% OFF</div>
                     </div>
 
                 </div>
-
             </div>
-
         </div>
-
     </main>
-
-    <!-- Chatbot -->
-    <div th:replace="~{fragments/cliente/chatbot :: chatbot}"></div>
-
 </div>
 
+<!-- Modais -->
+<div th:replace="~{fragments/cliente/modais :: modal-adicionar-endereco}"></div>
+
+<div th:replace="~{fragments/cliente/modais :: modal-cadastrar-cartao}"></div>
+
+<div th:replace="~{fragments/cliente/modais :: modal-confirmar-exclusao}"></div>
+
+<script th:src="@{/js/cliente/perfil.js}"></script>
+
+<!-- Chatbot -->
+<div th:replace="~{fragments/cliente/chatbot :: chatbot}"></div>
 <script th:src="@{/js/cliente/chatbot.js}"></script>
 
 </body>

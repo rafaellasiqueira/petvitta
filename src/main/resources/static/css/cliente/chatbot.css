@@ -1,268 +1,150 @@
-/* =========================================
-   CHATBOT
-========================================= */
-
 .chatbot {
     position: fixed;
     right: 24px;
     bottom: 82px;
-
     width: 360px;
     height: 480px;
-
     background: #FFFFFF;
-    border-radius: 8px;
-
-    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.15);
-
     display: flex;
     flex-direction: column;
-
     overflow: hidden;
-
     z-index: 9999;
-
     font-family: 'Nunito', sans-serif;
 
-    /* começa fechado */
+    /* Controle de visibilidade e transição */
     opacity: 0;
     visibility: hidden;
-    transform: translateY(15px);
-
-    transition:
-        opacity 0.2s ease,
-        transform 0.2s ease,
-        visibility 0.2s ease;
+    pointer-events: none; /* Evita cliques quando invisível */
+    transition: opacity 0.3s ease, visibility 0.3s ease;
 }
 
-
 /* Chat aberto */
-
 .chatbot.active {
     opacity: 1;
     visibility: visible;
-    transform: translateY(0);
+    pointer-events: auto; /* Reativa cliques quando visível */
 }
 
+/* Garante que o botão de fechar fique por cima e clicável */
+.btn-fechar-chatbot {
+    background: none;
+    border: none;
+    font-size: 24px;
+    color: #B8C7C3;
+    cursor: pointer;
+    z-index: 10001;
+    line-height: 1;
+    padding: 0 4px;
+}
 
-/* =========================================
-   CABEÇALHO
-========================================= */
+/* Cabeçalho */
 
 .chatbot-cabecalho {
     width: 100%;
     height: 52px;
-
     padding: 8px 12px;
-
     display: flex;
     align-items: center;
     justify-content: space-between;
-
     background: #FFFFFF;
-
     border-bottom: 1px solid #E1E9E7;
-
-    flex-shrink: 0;
+    flex-shrink: 0;     /* Mantém o tamanho fixo no topo */
 }
 
-
 /* Título */
-
 .chatbot-titulo {
     display: flex;
     align-items: center;
-
     gap: 8px;
-
     font-family: 'Fredoka', sans-serif;
-    font-size: 14px;
+    font-size: 16px;
     font-weight: 500;
-
     color: #3A4A48;
 }
 
 
-/* =========================================
-   LOGO
-========================================= */
-
+/* Logo */
 .chatbot-logo {
     width: 36px;
     height: 36px;
-
-    border-radius: 50%;
-
-    background: #E8EFEE;
-
     display: flex;
     align-items: center;
     justify-content: center;
-
     overflow: hidden;
-
     flex-shrink: 0;
 }
 
 .chatbot-logo img {
     width: 100%;
     height: 100%;
-
     object-fit: contain;
-
     display: block;
 }
 
-
-/* =========================================
-   BOTÃO FECHAR
-========================================= */
-
-.chatbot-fechar {
-    width: 28px;
-    height: 28px;
-
-    border: none;
-    background: transparent;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    color: #A8B5B2;
-
-    font-size: 16px;
-
-    cursor: pointer;
-
-    border-radius: 50%;
-}
-
-.chatbot-fechar:hover {
-    background: #F1F5F4;
-    color: #60716E;
-}
-
-
-/* =========================================
-   ÁREA DAS MENSAGENS
-========================================= */
-
+/* Mensagens */
 .chatbot-mensagens {
     flex: 1;
-
     padding: 12px;
-
     background: #E8EFEE;
-
     display: flex;
     flex-direction: column;
-
     gap: 10px;
 
-    overflow-y: auto;
+    /* ADICIONE ESTAS DUAS LINHAS: */
+    overflow-y: auto;   /* Adiciona a barra de rolagem vertical apenas aqui */
+    min-height: 0;      /* Impede que o container estique o layout pai */
 }
 
-
-/* Barra de rolagem */
-
-.chatbot-mensagens::-webkit-scrollbar {
-    width: 5px;
-}
-
-.chatbot-mensagens::-webkit-scrollbar-thumb {
-    background: #B7C8C4;
-    border-radius: 10px;
-}
-
-
-/* =========================================
-   MENSAGENS
-========================================= */
-
+/* Mensagem */
 .mensagem {
     max-width: 90%;
-
     padding: 9px 10px;
-
     border-radius: 6px;
-
     font-family: 'Nunito', sans-serif;
-    font-size: 12px;
-    line-height: 1.4;
-
-    word-wrap: break-word;
+    font-size: 14px;
 }
 
 .mensagem p {
     margin: 0;
 }
 
-
 /* Mensagem do bot */
-
 .mensagem-bot {
     align-self: flex-start;
-
     background: #1C2423;
-
     color: #FFFFFF;
-
     border-top-left-radius: 2px;
 }
 
-
 /* Mensagem do usuário */
-
 .mensagem-usuario {
     align-self: flex-end;
-
     background: #FFFFFF;
-
-    color: #60716E;
-
+    color: #3A4A48;
     border-top-right-radius: 2px;
 }
 
-
-/* =========================================
-   CAMPO DE MENSAGEM
-========================================= */
-
+/* Campo de mensagem */
 .chatbot-form {
     width: 100%;
     height: 52px;
-
     padding: 8px 10px;
-
     display: flex;
     align-items: center;
-
     background: #FFFFFF;
-
     border-top: 1px solid #E1E9E7;
-
-    flex-shrink: 0;
+    flex-shrink: 0;     /* Mantém o tamanho fixo embaixo */
 }
 
-
 /* Input */
-
 .chatbot-form input {
     flex: 1;
-
     height: 36px;
-
     padding: 0 8px;
-
     border: none;
     outline: none;
-
-    background: transparent;
-
     font-family: 'Nunito', sans-serif;
-    font-size: 12px;
-
+    font-size: 14px;
     color: #3A4A48;
 }
 
@@ -270,87 +152,38 @@
     color: #B7C4C1;
 }
 
-
-/* =========================================
-   BOTÃO ENVIAR
-========================================= */
+/* Botão enviar */
 
 .chatbot-form button {
     width: 34px;
     height: 34px;
-
     border: none;
-    background: transparent;
-
     display: flex;
     align-items: center;
     justify-content: center;
-
     color: #8FA5A1;
-
     font-size: 16px;
-
     cursor: pointer;
-
     border-radius: 50%;
-
-    transition: 0.2s;
 }
 
-.chatbot-form button:hover {
-    background: #EDF3F1;
-    color: #1C9B86;
-}
-
-
-/* =========================================
-   BOTÃO FLUTUANTE
-========================================= */
-
+/* Botão flutuante */
 .chatbot-botao {
     position: fixed;
-
+    border: none;
+    background: transparent;
     right: 24px;
     bottom: 24px;
-
     width: 52px;
     height: 52px;
-
-    border: none;
-
-    border-radius: 50%;
-
-    background: #48CDB7;
-
-    color: #FFFFFF;
-
     display: flex;
     align-items: center;
     justify-content: center;
-
-    font-size: 22px;
-
     cursor: pointer;
-
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.18);
-
     z-index: 10000;
-
-    transition:
-        transform 0.2s ease,
-        background 0.2s ease;
 }
 
-.chatbot-botao:hover {
-    background: #1C9B86;
-    transform: scale(1.05);
-}
-
-
-/* =========================================
-   RESPONSIVIDADE
-========================================= */
-
+/* Reponsividade */
 @media (max-width: 500px) {
 
     .chatbot {

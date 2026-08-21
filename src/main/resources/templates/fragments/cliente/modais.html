@@ -121,9 +121,7 @@
 </div>
 
 <!-- Modal adicionar/editar endereço -->
-<div th:fragment="modal-adicionar-endereco"
-     id="modalAdicionarEditarEndereco"
-     class="modal">
+<div th:fragment="modal-adicionar-endereco" id="modalAdicionarEditarEndereco" class="modal">
 
     <form id="formEndereco">
 
@@ -302,9 +300,7 @@
                     <input type="checkbox"
                            id="salvarPerfil">
 
-                    <span class="checkbox-custom"></span>
-
-                    <span>Salvar este endereço no meu perfil</span>
+                    <p>Salvar este endereço no meu perfil</p>
                 </label>
 
                 <!-- Botões -->
@@ -355,7 +351,7 @@
                        class="checkbox-cupom"
                        data-tipo="troca"
                        data-codigo="TROCA50"
-                       data-valor="80.00">
+                       data-valor="50.00">
 
                 <div class="dados-cupom">
                     <h3>TROCA50</h3>
@@ -376,7 +372,7 @@
                 <div class="dados-cupom">
                     <h3>PROMO10</h3>
                     <span>Promocional</span>
-                    <span>10%</span>
+                    <span>R$ 10,00</span>
                 </div>
             </label>
         </div>
@@ -479,9 +475,7 @@
                     <input type="checkbox"
                            id="salvarCartao">
 
-                    <span class="checkbox-custom"></span>
-
-                    <span>Salvar este cartão no meu perfil</span>
+                    <p>Salvar este cartão no meu perfil</p>
 
                 </label>
 
@@ -741,6 +735,60 @@
 
     </form>
 
+</div>
+
+<!-- Modal confirmar exclusão -->
+<div th:fragment="modal-confirmar-exclusao" id="modalConfirmarExclusao" class="modal">
+
+    <div class="modalConteudo">
+
+        <!-- Cabeçalho -->
+        <div class="modalCabecalho">
+
+            <h2 id="tituloModalExclusao">
+                Confirmar exclusão
+            </h2>
+
+            <button type="button"
+                    class="btn-fechar"
+                    id="btnFecharModalExclusao">
+                &times;
+            </button>
+
+        </div>
+
+        <!-- Corpo -->
+        <div class="modal-body">
+
+            <div class="mensagem-exclusao">
+
+                <p id="mensagemModalExclusao">
+                    Tem certeza de que deseja excluir este item?
+                </p>
+
+                <p>
+                    Essa ação não poderá ser desfeita.
+                </p>
+
+            </div>
+
+            <!-- Botões -->
+            <div class="modalBotoes">
+
+                <button type="button"
+                        class="btn-cancelar"
+                        id="btnCancelarExclusao">
+                    Cancelar
+                </button>
+
+                <button type="button"
+                        class="btn-confirmar-exclusao"
+                        id="btnConfirmarExclusao">
+                    Excluir
+                </button>
+            </div>
+        </div>
+    </div>
 </div>
 
 </body>

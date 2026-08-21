@@ -47,7 +47,7 @@
     flex-shrink: 0;
 }
 
-img {
+.imagem-container img {
     width: 200px;
     height: 200px;
     object-fit: contain;
@@ -79,7 +79,7 @@ h2 {
     color: #1F2A29;
 }
 
-p {
+.produto-info p {
     font-family: 'Nunito', sans-serif;
     font-size: 16px;
     font-weight: 500;

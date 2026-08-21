@@ -21,7 +21,7 @@
 
 .modalConteudo {
     background-color: #ffffff;
-    width: 100%;
+    width: 600px;
     max-width: 480px;
     max-height: 90vh;
     overflow-y: auto;
@@ -153,7 +153,6 @@
 }
 
 /* Checkbox */
-.checkbox-endereco,
 .checkbox-troca {
     width: 16px;
     height: 16px;
@@ -169,13 +168,19 @@
 }
 
 .checkbox-endereco input[type="checkbox"],
-.checkbox-cupom,
-.checkbox-troca {
+.checkbox-cupom input[type="checkbox"],
+.checkbox-troca input[type="checkbox"] {
     width: 16px;
     height: 16px;
     accent-color: #1C9B86;
     cursor: pointer;
     vertical-align: middle;
+}
+
+.checkbox-endereco {
+    width: 100%;
+    display: flex;
+    gap: 4px;
 }
 
 .checkbox-troca {

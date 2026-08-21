@@ -18,7 +18,7 @@
     font-family: 'Fredoka', sans-serif;
 }
 
-h1 {
+.conteudo h1 {
    font-size: 16px;
    font-weight: 500;
    color: #1F2A29;
@@ -134,7 +134,7 @@ input[type="checkbox"] {
     flex-shrink: 0;
 }
 
-img {
+.imagem-container img {
     width: 120px;
     height: 120px;
     object-fit: contain;
@@ -236,4 +236,37 @@ img {
     text-decoration: none;
     cursor: pointer;
     padding: 0px 8px;
+}
+
+/* Toast */
+.toast {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    display: none;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 20px;
+    background-color: #F4AC2D;
+    color: white;
+    border-radius: 8px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    z-index: 1000;
+}
+
+.toast.ativo {
+    display: flex;
+}
+
+.toast i {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    color: white;
+    border-radius: 50%;
+    font-size: 14px;
 }

@@ -33,45 +33,38 @@ checkboxesProdutos.forEach(checkbox => {
     };
 });
 
-checkboxTodos.onclick = function() {
-
-    for (let i = 0; i < checkboxesProdutos.length; i++) {
-        checkboxesProdutos[i].checked = checkboxTodos.checked;
-    }
-
-    for (let i = 0; i < checkboxesProdutos.length; i++) {
-        checkboxesProdutos[i].onclick = function() {
-            if (this.checked === false) {
-                checkboxTodos.checked = false;
-            }
-
-            atualizarSubtotal();
-        };
-    }
-
-    atualizarSubtotal();
-};
+if (checkboxTodos) {
+    checkboxTodos.onclick = function() {
+        checkboxesProdutos.forEach(checkbox => {
+            checkbox.checked = checkboxTodos.checked;
+        });
+        atualizarSubtotal();
+    };
+}
 
 // Limpar carrinho
-const btnLimpar = document.querySelector(".btn-limpar")
+const btnLimpar = document.querySelector(".btn-limpar");
 
-btnLimpar.onclick = function() {
-    const produtos = document.querySelectorAll(".produto");
-
-    for (let i = 0; i < produtos.length; i++) {
-        produtos[i].remove();
-    }
-};
+if (btnLimpar) {
+    btnLimpar.onclick = function() {
+        const produtos = document.querySelectorAll(".produto");
+        produtos.forEach(produto => produto.remove());
+        atualizarSubtotal();
+    };
+}
 
 // Excluir produto
 const botoesExcluir = document.querySelectorAll(".btn-excluir");
 
-for (let i = 0; i < botoesExcluir.length; i++) {
-    botoesExcluir[i].onclick = function() {
-        const produto = botoesExcluir[i].closest(".produto");
-        produto.remove();
+botoesExcluir.forEach(btn => {
+    btn.onclick = function() {
+        const produto = btn.closest(".produto");
+        if (produto) {
+            produto.remove();
+            atualizarSubtotal();
+        }
     };
-}
+});
 
 // Mudar o tamanho
 document.querySelectorAll('.produto').forEach(produto => {
@@ -94,7 +87,7 @@ function atualizarSubtotal() {
     document.querySelectorAll('.produto').forEach(produto => {
         const checkbox = produto.querySelector('.checkbox-produto');
 
-        if (!checkbox.checked) {
+        if (!checkbox || !checkbox.checked) {
             return;
         }
 
@@ -103,14 +96,45 @@ function atualizarSubtotal() {
         ) || 1;
 
         const tamanho = produto.querySelector('.tamanho-opcao.active');
-        const preco = parseFloat(tamanho.dataset.preco);
-        total += preco * quantidade;
+        if (tamanho) {
+            const preco = parseFloat(tamanho.dataset.preco);
+            total += preco * quantidade;
+        }
     });
 
-    document.getElementById('subtotal').innerText =
-        total.toLocaleString('pt-BR', {
+    const subtotalElement = document.getElementById('subtotal');
+    if (subtotalElement) {
+        subtotalElement.innerText = total.toLocaleString('pt-BR', {
             style: 'currency',
             currency: 'BRL'
         });
+    }
 }
 
+// Toast
+function mostrarToast() {
+    const toast = document.getElementById("toast");
+
+    if (toast) {
+        toast.classList.add("ativo");
+
+        setTimeout(function() {
+            toast.classList.remove("ativo");
+        }, 3000);
+    }
+}
+
+// Finalizar a compra (Apenas uma declaração do botão)
+const btnFinalizarCompra = document.querySelector('.btn-finalizar-a-compra');
+
+if (btnFinalizarCompra) {
+    btnFinalizarCompra.addEventListener('click', function(event) {
+        const produtosSelecionados = document.querySelectorAll('.checkbox-produto:checked');
+
+        // Se nenhum produto estiver selecionado, impede o redirecionamento e exibe o toast
+        if (produtosSelecionados.length === 0) {
+            event.preventDefault();
+            mostrarToast();
+        }
+    });
+}
