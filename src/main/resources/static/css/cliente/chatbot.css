@@ -10,12 +10,9 @@
     overflow: hidden;
     z-index: 9999;
     font-family: 'Nunito', sans-serif;
-
-    /* Controle de visibilidade e transição */
     opacity: 0;
     visibility: hidden;
     pointer-events: none; /* Evita cliques quando invisível */
-    transition: opacity 0.3s ease, visibility 0.3s ease;
 }
 
 /* Chat aberto */
@@ -182,21 +179,4 @@
     justify-content: center;
     cursor: pointer;
     z-index: 10000;
-}
-
-/* Reponsividade */
-@media (max-width: 500px) {
-
-    .chatbot {
-        right: 12px;
-        bottom: 76px;
-
-        width: calc(100% - 24px);
-        height: 450px;
-    }
-
-    .chatbot-botao {
-        right: 12px;
-        bottom: 16px;
-    }
 }

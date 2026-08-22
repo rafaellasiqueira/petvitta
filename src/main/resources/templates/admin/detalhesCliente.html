@@ -1,36 +1,25 @@
 <!DOCTYPE html>
 <html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <title>Detalhes do cliente</title>
 
     <!-- Font Awesome -->
     <link rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-
     <!-- Sidebar CSS -->
     <link rel="stylesheet" th:href="@{/css/admin/sidebar.css}">
 
     <!-- Global CSS -->
     <link rel="stylesheet" th:href="@{/css/admin/global.css}">
 
-    <!-- Clientes CSS (reaproveitando .card, tabela, etc.) -->
-    <link rel="stylesheet" th:href="@{/css/admin/clientes.css}">
-
-    <!-- NOVO: CSS próprio da tela de detalhes (crie reaproveitando as classes acima) -->
+    <!-- Detalhes do Cliente CSS-->
     <link rel="stylesheet" th:href="@{/css/admin/detalhesCliente.css}">
-
-    <!-- Modal CSS (mesmo padrão do restante do projeto) -->
-    <link rel="stylesheet" th:href="@{/css/cliente/modal.css}">
 </head>
 
 <body>
-
 <div class="container">
-
     <!-- Sidebar -->
     <div th:replace="~{fragments/admin/sidebar :: sidebar}"></div>
 
@@ -44,80 +33,117 @@
         </header>
 
 
-        <!-- =====================================================
-             PERFIL
-        ====================================================== -->
-        <main class="card">
-
-            <div class="perfil-cliente">
-
-                <div class="perfil-cabecalho">
-                    <h2 id="detalheNome">-</h2>
-                    <span class="badge-ranking">
-                        Ranking: <span id="detalheRanking">0</span>
-                    </span>
-                </div>
-
-                <div class="grid-perfil">
-
-                    <div class="campo-perfil">
-                        <label>CPF</label>
-                        <p id="detalheCpf">-</p>
-                    </div>
-
-                    <div class="campo-perfil">
-                        <label>E-mail</label>
-                        <p id="detalheEmail">-</p>
-                    </div>
-
-                    <div class="campo-perfil">
-                        <label>Gênero</label>
-                        <p id="detalheGenero">-</p>
-                    </div>
-
-                    <div class="campo-perfil">
-                        <label>Data de nascimento</label>
-                        <p id="detalheNascimento">-</p>
-                    </div>
-
-                    <div class="campo-perfil">
-                        <label>Celular</label>
-                        <p id="detalheTelefone">-</p>
-                    </div>
-
-                </div>
-
+        <!-- Perfil -->
+        <div class="card">
+            <div class="perfil-cabecalho">
+                <h2 id="detalheNome">-</h2>
+                <h3 class="ranking">Ranking: <span id="detalheRanking">0 pts</span>
+                </h3>
             </div>
 
-        </main>
+            <div class="container-perfil">
+
+                <div class="campo-perfil">
+                    <label>CPF</label>
+                    <p id="detalheCpf">-</p>
+                </div>
+
+                <div class="campo-perfil">
+                    <label>E-mail</label>
+                    <p id="detalheEmail">-</p>
+                </div>
+
+                <div class="campo-perfil">
+                    <label>Gênero</label>
+                    <p id="detalheGenero">-</p>
+                </div>
+
+                <div class="campo-perfil">
+                    <label>Data de nascimento</label>
+                    <p id="detalheNascimento">-</p>
+                </div>
+
+                <div class="campo-perfil">
+                    <label>Celular</label>
+                    <p id="detalheTelefone">-</p>
+                </div>
+            </div>
+        </div>
 
 
-        <!-- =====================================================
-             ENDEREÇO
-        ====================================================== -->
-        <main class="card">
-
+        <!-- Endereço -->
+        <div class="card">
             <h2>Endereço</h2>
 
-            <div class="endereco-cliente">
-                <p id="detalheEndereco">-</p>
-                <span id="detalheCep">-</span>
+            <div class="container-endereco">
+
+                <div class="campo-endereco">
+                    <label>Nome de identificação</label>
+                    <p id="detalheNomeIdentificacao">-</p>
+                </div>
+
+                <div class="campo-endereco">
+                    <label>Tipo de endereço</label>
+                    <p id="detalheTipoEndereco">-</p>
+                </div>
+
+                <div class="campo-endereco">
+                    <label>Tipo de residência</label>
+                    <p id="detalheTipoResidencia">-</p>
+                </div>
+
+                <div class="campo-endereco">
+                    <label>Tipo de logradouro</label>
+                    <p id="detalheTipoLogradouro">-</p>
+                </div>
+
+                <div class="campo-endereco">
+                    <label>CEP</label>
+                    <p id="detalheCep">-</p>
+                </div>
+
+                <div class="campo-endereco">
+                    <label>Logradouro</label>
+                    <p id="detalheLogradouro">-</p>
+                </div>
+
+                <div class="campo-endereco">
+                    <label>Bairro</label>
+                    <p id="detalheBairro">-</p>
+                </div>
+
+                <div class="campo-endereco">
+                    <label>Número</label>
+                    <p id="detalheNumero">-</p>
+                </div>
+
+                <div class="campo-endereco">
+                    <label>Estado</label>
+                    <p id="detalheEstado">-</p>
+                </div>
+
+                <div class="campo-endereco">
+                    <label>Cidade</label>
+                    <p id="detalheCidade">-</p>
+                </div>
+
+                <div class="campo-endereco">
+                    <label>País</label>
+                    <p id="detalhePais">-</p>
+                </div>
+
+                <div class="campo-endereco">
+                    <label>Observações</label>
+                    <p id="detalheObservacoes">-</p>
+                </div>
+
             </div>
-
-        </main>
-
-
-        <!-- =====================================================
-             TRANSAÇÕES
-             (dados fictícios direto no HTML, pois ainda não
-             existe consulta ao banco de pedidos)
-        ====================================================== -->
-        <main class="card">
-
+        </div>
+        <!-- Transações -->
+        <div class="card">
             <h2>Transações</h2>
 
             <table>
-
                 <thead>
                 <tr>
                     <th>Pedido</th>
@@ -129,7 +155,6 @@
                 </thead>
 
                 <tbody>
-
                 <tr>
                     <td>PED-2031</td>
                     <td>12/07/2026</td>
@@ -180,22 +205,14 @@
                            data-valor="R$ 210,00"></i>
                     </td>
                 </tr>
-
                 </tbody>
-
             </table>
-
-        </main>
-
+        </div>
     </div>
-
 </div>
 
+<!-- Modal de detalhes -->
 
-<!-- =====================================================
-     MODAL DETALHES DO PEDIDO
-     (adaptado do modelo modalAuditoria que você enviou)
-====================================================== -->
 <div id="modalDetalhesPedido" class="modal">
     <div class="modalConteudo">
         <div class="modalCabecalho">
@@ -213,7 +230,7 @@
     </div>
 </div>
 
-
+<!-- Modal de detalhes da transação -->
 <script th:src="@{/js/admin/detalhesCliente.js}"></script>
 
 </body>

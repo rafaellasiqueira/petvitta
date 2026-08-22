@@ -54,6 +54,15 @@
     cursor: pointer;
 }
 
+/* Mensagem de erro */
+.mensagem-erro-troca,
+ .mensagem-erro-CEP {
+    margin: 2px 0 0;
+    font-family: 'Nunito', sans-serif;
+    font-size: 12px;
+    color: #EA2B41 !important;
+}
+
 .modal-body p {
     font-size: 14px;
     color: #3A4A48;

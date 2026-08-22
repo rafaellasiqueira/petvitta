@@ -1,16 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
 
-    // =========================================================
-    // DADOS DO CLIENTE
-    //
-    // OBS (BACKEND): aqui é só front. Numa versão real, o
-    // controller deveria devolver esses dados no GET
-    // /admin/detalhesCliente?codigo=CL-001 consultando o banco,
-    // em vez de ler do localStorage preenchido pela listagem.
-    // O fallback abaixo existe só para a tela não ficar vazia
-    // caso alguém acesse direto pela URL, sem vir da listagem.
-    // =========================================================
-
+    // Dados do cliente
     const dadosSalvos = localStorage.getItem('clienteParaDetalhar');
 
     const clienteFallback = {
@@ -22,74 +12,84 @@ document.addEventListener('DOMContentLoaded', () => {
         genero: 'Feminino',
         dataNascimento: '20/05/1995',
         telefone: '(11) 98765-4321',
-        logradouro: 'Avenida Paulista',
-        numero: '1578',
-        bairro: 'Bela Vista',
-        cidade: 'São Paulo',
-        estado: 'SP',
+
+        // Endereço
+        nomeIdentificacao: 'Minha casa',
+        tipoEndereco: 'Cobrança e entrega',
+        tipoResidencia: 'Apartamento',
+        tipoLogradouro: 'Avenida',
         cep: '01310-100',
-        pais: 'Brasil'
+        logradouro: 'Avenida Paulista',
+        bairro: 'Bela Vista',
+        numero: '1578',
+        estado: 'São Paulo',
+        cidade: 'São Paulo',
+        pais: 'Brasil',
+        observacoes: 'Entregar na portaria'
     };
 
-    const cliente = dadosSalvos ? JSON.parse(dadosSalvos) : clienteFallback;
+    const cliente = dadosSalvos
+        ? JSON.parse(dadosSalvos)
+        : clienteFallback;
 
-    const preencher = (id, valor) => {
-        const el = document.getElementById(id);
-        if (el) el.textContent = valor || '-';
-    };
 
+    // Função para preencher os campos
+    function preencher(id, valor) {
+        document.getElementById(id).textContent = valor || '-';
+    }
+
+
+    // Dados pessoais
     preencher('detalheNome', cliente.nome);
-    preencher('detalheRanking', cliente.ranking ?? '0');
+    preencher('detalheRanking', cliente.ranking);
     preencher('detalheCpf', cliente.cpf);
     preencher('detalheEmail', cliente.email);
     preencher('detalheGenero', cliente.genero);
     preencher('detalheNascimento', cliente.dataNascimento);
     preencher('detalheTelefone', cliente.telefone);
 
-    preencher(
-        'detalheEndereco',
-        `${cliente.logradouro || ''}, ${cliente.numero || ''} - ${cliente.bairro || ''}, ${cliente.cidade || ''} - ${cliente.estado || ''}`
-    );
 
-    preencher('detalheCep', `CEP: ${cliente.cep || ''}, ${cliente.pais || ''}`);
+    // Dados do endereço
+    preencher('detalheNomeIdentificacao', cliente.nomeIdentificacao);
+    preencher('detalheTipoEndereco', cliente.tipoEndereco);
+    preencher('detalheTipoResidencia', cliente.tipoResidencia);
+    preencher('detalheTipoLogradouro', cliente.tipoLogradouro);
+    preencher('detalheCep', cliente.cep);
+    preencher('detalheLogradouro', cliente.logradouro);
+    preencher('detalheBairro', cliente.bairro);
+    preencher('detalheNumero', cliente.numero);
+    preencher('detalheEstado', cliente.estado);
+    preencher('detalheCidade', cliente.cidade);
+    preencher('detalhePais', cliente.pais);
+    preencher('detalheObservacoes', cliente.observacoes);
 
 
-    // =========================================================
-    // MODAL DE DETALHES DO PEDIDO
-    //
-    // OBS (BACKEND): a lista de transações aqui é fixa no HTML.
-    // Numa versão real, viria de uma consulta tipo
-    // GET /admin/clientes/{codigo}/pedidos.
-    // =========================================================
-
+    // Modal do pedido
     const modalPedido = document.getElementById('modalDetalhesPedido');
-    const btnFecharModalPedido = document.getElementById('btnFecharModalPedido');
+    const btnFechar = document.getElementById('btnFecharModalPedido');
 
-    document.querySelectorAll('.btn-ver-pedido').forEach((botao) => {
+
+    // Abrir modal
+    document.querySelectorAll('.btn-ver-pedido').forEach(botao => {
 
         botao.addEventListener('click', () => {
 
-            const dados = botao.dataset;
+            preencher('modalPedidoId', botao.dataset.pedido);
+            preencher('modalPedidoData', botao.dataset.data);
+            preencher('modalPedidoStatus', botao.dataset.status);
+            preencher('modalPedidoPagamento', botao.dataset.pagamento);
+            preencher('modalPedidoItens', botao.dataset.itens);
+            preencher('modalPedidoValor', botao.dataset.valor);
 
-            preencher('modalPedidoId', dados.pedido);
-            preencher('modalPedidoData', dados.data);
-            preencher('modalPedidoStatus', dados.status);
-            preencher('modalPedidoPagamento', dados.pagamento);
-            preencher('modalPedidoItens', dados.itens);
-            preencher('modalPedidoValor', dados.valor);
-
-            modalPedido?.classList.add('active');
+            modalPedido.classList.add('active');
         });
+
     });
 
-    if (btnFecharModalPedido && modalPedido) {
-        btnFecharModalPedido.addEventListener('click', () => modalPedido.classList.remove('active'));
-    }
 
-    if (modalPedido) {
-        modalPedido.addEventListener('click', (event) => {
-            if (event.target === modalPedido) modalPedido.classList.remove('active');
-        });
-    }
+    // Fechar modal
+    btnFechar.addEventListener('click', () => {
+        modalPedido.classList.remove('active');
+    });
 
 });

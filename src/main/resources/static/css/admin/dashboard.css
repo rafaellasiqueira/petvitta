@@ -1,7 +1,3 @@
-/* =========================================================
-   CABEÇALHO DO GRÁFICO
-   ========================================================= */
-
 .cabecalho-grafico {
     display: flex;
     align-items: center;
@@ -10,8 +6,6 @@
     margin-bottom: 24px;
     gap: 20px;
 }
-
-/* Título */
 
 .cabecalho-grafico h2 {
     font-family: 'Fredoka', sans-serif;
@@ -22,10 +16,6 @@
     margin: 0;
 }
 
-/* =========================================================
-   FILTROS
-   ========================================================= */
-
 .filtros {
     display: flex;
     align-items: center;
@@ -35,7 +25,6 @@
 }
 
 /* Checkbox */
-
 .checkbox {
     display: flex;
     align-items: center;
@@ -60,15 +49,10 @@
 }
 
 /* Separadores */
-
 .separador {
     color: #B8C7C3;
     font-size: 14px;
 }
-
-/* =========================================================
-   DATAS
-   ========================================================= */
 
 .data {
     display: flex;
@@ -83,7 +67,6 @@
     outline: none;
     padding: 0 10px;
     height: 34px;
-
     font-family: 'Nunito', sans-serif;
     font-size: 14px;
     color: #1F2A29;
@@ -94,29 +77,20 @@
     border-color: #1C9B86;
 }
 
-/* =========================================================
-   BOTÕES
-   ========================================================= */
 
 .filtros button {
     height: 34px;
     margin-left: 8px;
     border: none;
     border-radius: 8px;
-
     color: #FFFFFF;
-
     font-size: 14px;
     font-family: 'Fredoka', sans-serif;
     font-weight: 500;
-
     cursor: pointer;
-
-    transition: background 0.2s ease;
 }
 
 /* Aplicar */
-
 .btn-aplicar {
     width: 90px;
     background: #1C9B86;
@@ -127,87 +101,32 @@
 }
 
 /* Exportar */
-
 .btn-exportar {
     width: 132px;
     background: #0E1413;
 }
-
 .btn-exportar:hover {
     background: #262B2A;
 }
 
-/* =========================================================
-   GRÁFICO
-   ========================================================= */
+/* Gráfico */
 
 .grafico-container {
     position: relative;
-
     width: 100%;
     height: 420px;
-
     margin-top: 10px;
 }
 
-/* =========================================================
-   MENSAGEM DE ERRO
-   ========================================================= */
+/* Mensagem de erro */
 
 .mensagem-erro {
     width: 100%;
-
     padding: 10px 14px;
     margin-bottom: 15px;
-
     border-radius: 8px;
-
     background: #FDECEC;
     color: #B42318;
-
     font-family: 'Nunito', sans-serif;
     font-size: 14px;
-}
-
-/* =========================================================
-   RESPONSIVIDADE
-   ========================================================= */
-
-@media (max-width: 1200px) {
-
-    .cabecalho-grafico {
-        align-items: flex-start;
-        flex-direction: column;
-    }
-
-    .filtros {
-        width: 100%;
-        justify-content: flex-start;
-    }
-
-}
-
-@media (max-width: 700px) {
-
-    .filtros {
-        flex-direction: column;
-        align-items: flex-start;
-    }
-
-    .separador {
-        display: none;
-    }
-
-    .data {
-        margin-left: 0;
-    }
-
-    .filtros button {
-        margin-left: 0;
-    }
-
-    .grafico-container {
-        height: 350px;
-    }
-
 }

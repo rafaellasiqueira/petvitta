@@ -110,6 +110,9 @@ if (btnLimpar) {
 // Toast
 function mostrarToast() {
     const toast = document.getElementById("toast");
+    if (!toast) return;
+
+    toast.classList.add("ativo");
 
     setTimeout(function() {
         toast.classList.remove("ativo");

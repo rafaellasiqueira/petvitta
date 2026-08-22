@@ -1,397 +1,198 @@
 document.addEventListener('DOMContentLoaded', () => {
 
-    // =========================================================
-    // ELEMENTOS DOS FILTROS
-    // =========================================================
-
+    // Filtro
     const btnFiltro = document.getElementById('btnfiltrar');
     const painelFiltro = document.getElementById('painelFiltro');
     const btnLimpar = document.getElementById('btnLimparFiltro');
 
-
     if (btnFiltro && painelFiltro) {
-
         btnFiltro.addEventListener('click', () => {
             painelFiltro.classList.toggle('hidden');
         });
     }
 
-
     if (btnLimpar && painelFiltro) {
-
         btnLimpar.addEventListener('click', () => {
             painelFiltro.reset();
         });
     }
 
-
-    // =========================================================
-    // BUSCA POR NOME
-    // =========================================================
-
-    const inputPesquisa = document.getElementById('inputPesquisa');
-    const linhasTabela = document.querySelectorAll('tbody tr');
-
-
-    if (inputPesquisa) {
-
-        inputPesquisa.addEventListener('input', () => {
-
-            const texto = inputPesquisa.value.toLowerCase().trim();
-
-            linhasTabela.forEach((linha) => {
-
-                const nome = linha.children[1]?.textContent.toLowerCase().trim();
-
-                linha.style.display = (nome && nome.includes(texto)) ? '' : 'none';
-            });
-        });
-    }
-
-
-    // =========================================================
-    // PAGINAÇÃO VISUAL
-    // =========================================================
-
-    const paginas = document.querySelectorAll('.paginacao-item');
-
-    paginas.forEach((pagina) => {
-
-        pagina.addEventListener('click', () => {
-            paginas.forEach((item) => item.classList.remove('active'));
-            pagina.classList.add('active');
-        });
+    // Máscaras
+    // Máscara CPF
+    document.getElementById('filtroCpf').addEventListener('input', function() {
+        let filtroCpf = this.value.replace(/\D/g, '');
+        filtroCpf = filtroCpf.substring(0, 11);
+        filtroCpf = filtroCpf.replace(/(\d{3})(\d)/, '$1.$2');
+        filtroCpf = filtroCpf.replace(/(\d{3})(\d)/, '$1.$2');
+        filtroCpf = filtroCpf.replace(/(\d{3})(\d{1,2})$/, '$1-$2');
+        this.value = filtroCpf;
     });
 
+    // Máscara telefone
+    document.getElementById('filtroTelefone').addEventListener('input', function() {
+        let telefone = this.value.replace(/\D/g, '');
+        telefone = telefone.substring(0, 11);
+        if (telefone.length > 2) {
+            telefone = telefone.replace(
+                /(\d{2})(\d{5})(\d{0,4})/,
+                '($1) $2-$3'
+            );
+        }
+        this.value = telefone;
+    });
 
-    // =========================================================
-    // INATIVAR / ATIVAR CLIENTE
-    // =========================================================
-
+    // Modais
     const modalInativar = document.getElementById('modalInativarCliente');
     const modalAtivar = document.getElementById('modalAtivarCliente');
-
     const formInativar = document.getElementById('formInativarCliente');
     const formAtivar = document.getElementById('formAtivarCliente');
+    let botaoClicado;
 
-    const btnFecharModalInativar =
-        document.getElementById('btnFecharModalInativar');
 
-    const btnCancelarInativar =
-        document.getElementById('btnCancelarInativar');
-
-    const btnFecharModalAtivar =
-        document.getElementById('btnFecharModalAtivar');
-
-    const btnCancelarAtivar =
-        document.getElementById('btnCancelarAtivar');
-
-
-    // Guarda o botão que foi clicado
-    let botaoAlvo = null;
-
-
-    // =========================================================
-    // FECHAR MODAIS
-    // =========================================================
-
-    function fecharModalInativar() {
-
-        if (modalInativar) {
-            modalInativar.classList.remove('active');
-        }
-
-        if (formInativar) {
-            formInativar.reset();
-        }
-
-        botaoAlvo = null;
-    }
-
-
-    function fecharModalAtivar() {
-
-        if (modalAtivar) {
-            modalAtivar.classList.remove('active');
-        }
-
-        if (formAtivar) {
-            formAtivar.reset();
-        }
-
-        botaoAlvo = null;
-    }
-
-
-    // =========================================================
-    // CONFIGURAR BOTÕES DE STATUS
-    // =========================================================
-
-    function configurarBotoesStatus() {
-
-        // ---------------------------------------------------------
-        // BOTÃO INATIVAR
-        // ---------------------------------------------------------
-
-        document.querySelectorAll('.btn-inativar').forEach((botao) => {
-
-            // Evita adicionar o evento duas vezes
-            if (botao.dataset.configurado === 'true') {
-                return;
-            }
-
-            botao.dataset.configurado = 'true';
-
-            botao.addEventListener('click', (event) => {
-
-                event.preventDefault();
-                event.stopPropagation();
-
-                botaoAlvo = botao;
-
-                // Garante que o outro modal esteja fechado
-                modalAtivar?.classList.remove('active');
-
-                // Abre SOMENTE o modal de inativar
-                modalInativar?.classList.add('active');
-            });
-        });
-
-
-        // ---------------------------------------------------------
-        // BOTÃO ATIVAR
-        // ---------------------------------------------------------
-
-        document.querySelectorAll('.btn-ativar').forEach((botao) => {
-
-            // Evita adicionar o evento duas vezes
-            if (botao.dataset.configurado === 'true') {
-                return;
-            }
-
-            botao.dataset.configurado = 'true';
-
-            botao.addEventListener('click', (event) => {
-
-                event.preventDefault();
-                event.stopPropagation();
-
-                botaoAlvo = botao;
-
-                // Garante que o outro modal esteja fechado
-                modalInativar?.classList.remove('active');
-
-                // Abre SOMENTE o modal de ativar
-                modalAtivar?.classList.add('active');
-            });
-        });
-    }
-
-
-    // Executa na abertura da página
-    configurarBotoesStatus();
-
-
-    // =========================================================
-    // CONFIRMAR INATIVAÇÃO
-    // =========================================================
-
-    if (formInativar) {
-
-        formInativar.addEventListener('submit', (event) => {
-
-            event.preventDefault();
-
-            if (!botaoAlvo) {
-                fecharModalInativar();
-                return;
-            }
-
-            const linha = botaoAlvo.closest('tr');
-
-            if (linha) {
-
-                // Marca a linha como inativa
-                linha.classList.add('inativo');
-
-                // Troca o botão
-                botaoAlvo.textContent = 'Ativar';
-
-                botaoAlvo.classList.remove('btn-inativar');
-                botaoAlvo.classList.add('btn-ativar');
-
-                // Permite adicionar o novo evento
-                delete botaoAlvo.dataset.configurado;
-            }
-
-            fecharModalInativar();
-
-            // Configura novamente o botão que virou "Ativar"
-            configurarBotoesStatus();
-        });
-    }
-
-
-    // =========================================================
-    // CONFIRMAR ATIVAÇÃO
-    // =========================================================
-
-    if (formAtivar) {
-
-        formAtivar.addEventListener('submit', (event) => {
-
-            event.preventDefault();
-
-            if (!botaoAlvo) {
-                fecharModalAtivar();
-                return;
-            }
-
-            const linha = botaoAlvo.closest('tr');
-
-            if (linha) {
-
-                // Remove o estado inativo
-                linha.classList.remove('inativo');
-
-                // Troca o botão
-                botaoAlvo.textContent = 'Inativar';
-
-                botaoAlvo.classList.remove('btn-ativar');
-                botaoAlvo.classList.add('btn-inativar');
-
-                // Permite adicionar o novo evento
-                delete botaoAlvo.dataset.configurado;
-            }
-
-            fecharModalAtivar();
-
-            // Configura novamente o botão que virou "Inativar"
-            configurarBotoesStatus();
-        });
-    }
-
-
-    // =========================================================
-    // BOTÕES DE FECHAR
-    // =========================================================
-
-    btnFecharModalInativar?.addEventListener(
-        'click',
-        fecharModalInativar
-    );
-
-    btnCancelarInativar?.addEventListener(
-        'click',
-        fecharModalInativar
-    );
-
-    btnFecharModalAtivar?.addEventListener(
-        'click',
-        fecharModalAtivar
-    );
-
-    btnCancelarAtivar?.addEventListener(
-        'click',
-        fecharModalAtivar
-    );
-
-
-    // =========================================================
-    // FECHAR CLICANDO FORA DO MODAL
-    // =========================================================
-
-    modalInativar?.addEventListener('click', (event) => {
-
-        if (event.target === modalInativar) {
-            fecharModalInativar();
-        }
-    });
-
-
-    modalAtivar?.addEventListener('click', (event) => {
-
-        if (event.target === modalAtivar) {
-            fecharModalAtivar();
-        }
-    });
-
-
-    // =========================================================
-    // EDITAR CLIENTE
-    // =========================================================
-
-    document.querySelectorAll('.btn-editar').forEach((botao) => {
-
+    // ATIVAR E INATIVAR CLIENTE
+    document.querySelectorAll('.btn-inativar, .btn-ativar').forEach(botao => {
         botao.addEventListener('click', () => {
+            botaoClicado = botao;
 
+            if (botao.classList.contains('btn-inativar')) {
+                modalInativar.classList.add('active');
+            } else {
+                modalAtivar.classList.add('active');
+            }
+
+        });
+
+    });
+
+
+    // CONFIRMAR INATIVAÇÃO
+
+    formInativar.addEventListener('submit', (event) => {
+
+        event.preventDefault();
+
+        const linha = botaoClicado.closest('tr');
+
+        linha.classList.add('inativo');
+
+        botaoClicado.textContent = 'Ativar';
+
+        botaoClicado.classList.remove('btn-inativar');
+        botaoClicado.classList.add('btn-ativar');
+
+        modalInativar.classList.remove('active');
+
+        formInativar.reset();
+    });
+
+
+    // BOTÕES QUE JÁ COMEÇAM COMO ATIVAR
+    document.querySelectorAll('.btn-ativar').forEach(botao => {
+        botao.addEventListener('click', () => {
+            botaoClicado = botao;
+            modalAtivar.classList.add('active');
+        });
+
+    });
+
+    // CONFIRMAR ATIVAÇÃO
+
+    formAtivar.addEventListener('submit', (event) => {
+
+        event.preventDefault();
+
+        const linha = botaoClicado.closest('tr');
+
+        linha.classList.remove('inativo');
+
+        botaoClicado.textContent = 'Inativar';
+
+        botaoClicado.classList.remove('btn-ativar');
+        botaoClicado.classList.add('btn-inativar');
+
+        modalAtivar.classList.remove('active');
+
+        formAtivar.reset();
+    });
+
+
+    // FECHAR MODAL INATIVAR
+    document.getElementById('btnFecharModalInativar').addEventListener('click', () => {
+        modalInativar.classList.remove('active');
+        formInativar.reset();
+    });
+
+    document.getElementById('btnCancelarInativar').addEventListener('click', () => {
+        modalInativar.classList.remove('active');
+        formInativar.reset();
+    });
+
+    // FECHAR MODAL ATIVAR
+    document.getElementById('btnFecharModalAtivar').addEventListener('click', () => {
+        modalAtivar.classList.remove('active');
+        formAtivar.reset();
+    });
+
+    document.getElementById('btnCancelarAtivar').addEventListener('click', () => {
+        modalAtivar.classList.remove('active');
+        formAtivar.reset();
+    });
+
+    // Editar cliente
+    document.querySelectorAll('.btn-editar').forEach(botao => {
+        botao.addEventListener('click', () => {
             const cliente = {
-                codigo: botao.dataset.codigo || '',
-                nome: botao.dataset.nome || '',
-                cpf: botao.dataset.cpf || '',
-                email: botao.dataset.email || '',
-
+                codigo: botao.dataset.codigo,
+                nome: botao.dataset.nome,
+                cpf: botao.dataset.cpf,
+                email: botao.dataset.email,
                 telefone: '(11) 98765-4321',
                 tipoTelefone: 'celular',
                 dataNascimento: '1995-05-20',
-                genero: 'feminino',
-
-                nomeIdentificacao: 'Casa',
-                tipoEndereco: 'cobranca-entrega',
-                tipoResidencia: 'casa',
-                tipoLogradouro: 'avenida',
-                cep: '01310-100',
-                logradouro: 'Avenida Paulista',
-                bairro: 'Bela Vista',
-                numero: '1578',
-                estado: 'SP',
-                cidade: 'São Paulo',
-                pais: 'Brasil',
-                observacoes: 'Endereço principal do cliente.'
+                genero: 'feminino'
             };
-
-            localStorage.setItem(
-                'clienteParaEditar',
-                JSON.stringify(cliente)
-            );
-
+            localStorage.setItem('clienteParaEditar', JSON.stringify(cliente));
             window.location.href = '/admin/cadastrarCliente?editar=true';
         });
     });
 
-
-    // =========================================================
-    // NOVO: VER DETALHES DO CLIENTE
-    // =========================================================
-
-    document.querySelectorAll('.btn-detalhes').forEach((icone) => {
+    // Ver detalhes
+    document.querySelectorAll('.btn-detalhes').forEach(icone => {
 
         icone.addEventListener('click', () => {
 
-            const dados = icone.dataset;
-
             const cliente = {
-                codigo: dados.codigo || '',
-                nome: dados.nome || '',
-                cpf: dados.cpf || '',
-                email: dados.email || '',
-                genero: dados.genero || '',
-                ranking: dados.ranking || '0',
-                dataNascimento: dados.nascimento || '',
-                telefone: dados.telefone || '',
-                logradouro: dados.logradouro || '',
-                numero: dados.numero || '',
-                bairro: dados.bairro || '',
-                cidade: dados.cidade || '',
-                estado: dados.estado || '',
-                cep: dados.cep || '',
-                pais: dados.pais || ''
+                codigo: icone.dataset.codigo,
+                nome: icone.dataset.nome,
+                cpf: icone.dataset.cpf,
+                email: icone.dataset.email,
+                genero: icone.dataset.genero,
+                ranking: icone.dataset.ranking,
+                dataNascimento: icone.dataset.nascimento,
+                telefone: icone.dataset.telefone,
+
+                // Endereço
+                nomeIdentificacao: icone.dataset.nomeIdentificacao,
+                tipoEndereco: icone.dataset.tipoEndereco,
+                tipoResidencia: icone.dataset.tipoResidencia,
+                tipoLogradouro: icone.dataset.tipoLogradouro,
+                cep: icone.dataset.cep,
+                logradouro: icone.dataset.logradouro,
+                bairro: icone.dataset.bairro,
+                numero: icone.dataset.numero,
+                estado: icone.dataset.estado,
+                cidade: icone.dataset.cidade,
+                pais: icone.dataset.pais,
+                observacoes: icone.dataset.observacoes
             };
 
-            localStorage.setItem('clienteParaDetalhar', JSON.stringify(cliente));
+            localStorage.setItem(
+                'clienteParaDetalhar',
+                JSON.stringify(cliente)
+            );
 
             window.location.href = '/admin/detalhesCliente';
         });
-    });
 
+    });
 });

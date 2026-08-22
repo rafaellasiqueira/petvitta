@@ -1,0 +1,94 @@
+.voltar {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    font-size: 16px;
+    font-weight: 600;
+    color: #4FD1B5;
+}
+
+.cabecalho {
+    gap: 12px;
+}
+
+.conteudo {
+    display: flex;
+    align-items: center;
+    justify-align: center;
+}
+
+.card {
+    width: 600px;
+    gap: 12px;
+}
+
+h2 {
+     font-family: 'Fredoka', sans-serif;
+     font-size: 20px;
+     font-weight: 500;
+     color: #1F2A29;
+     text-align: center;
+ }
+
+h3,
+.perfil-cabecalho span{
+      font-family: 'Fredoka', sans-serif;
+      font-size: 16px;
+      font-weight: 500;
+      color: #5F7370;
+      text-align: center;
+}
+
+.container-perfil {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px 40px;
+}
+
+.campo-perfil {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.campo-perfil label {
+    font-family: 'Fredoka', sans-serif;
+    font-size: 16px;
+    color: #3A4A48;
+}
+
+.campo-perfil p {
+    margin: 0;
+    font-family: 'Nunito', sans-serif;
+    font-size: 16px;
+    color: #1F2A29;
+}
+
+.endereco-cliente p,
+.endereco-cliente span {
+    margin: 0;
+    font-family: 'Nunito', sans-serif;
+    font-size: 16px;
+    color: #1F2A29;
+}
+
+.container-endereco {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    border: 1px solid #E8EFEE;
+    gap: 8px;
+    padding: 12px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 14px;
+    color: #1F2A29;
+}
+
+.campo-endereco label {
+    font-weight: bold;
+    display: block;
+    margin-bottom: 5px;
+}
+
+.campo-endereco p {
+    margin: 0;
+}

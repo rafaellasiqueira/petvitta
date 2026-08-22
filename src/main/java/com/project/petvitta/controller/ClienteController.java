@@ -11,6 +11,11 @@ public class ClienteController {
         return "cliente/login";
     }
 
+    @GetMapping("/cliente/cadastrar")
+    public String cadastrar() {
+        return "cliente/cadastrar";
+    }
+
     @GetMapping("/cliente/produtos")
     public String produtos() {
         return "cliente/produtos";

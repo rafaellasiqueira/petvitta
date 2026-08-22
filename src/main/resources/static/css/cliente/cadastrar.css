@@ -1,22 +1,19 @@
-.voltar {
-    display: flex;
-    align-items: center;
-    text-decoration: none;
-    font-size: 16px;
-    font-weight: 600;
-    color: #4FD1B5;
-}
-
-.cabecalho {
-    gap: 12px;
-}
-
-.container-principal {
+.conteudo {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 16px;
+    box-sizing: border-box;
 }
+
+
+/* Formulário */
+.form-cadastrar-cliente {
+    width: 600px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
 
 /* Card */
 .card {
@@ -31,7 +28,6 @@
     box-sizing: border-box;
 }
 
-/* Título do card */
 .card h1 {
     font-family: 'Fredoka', sans-serif;
     font-size: 16px;
@@ -40,12 +36,24 @@
     margin: 0;
 }
 
-/* Formulários */
-.form-dados-pessoais,
-.form-dados-acesso {
+.card h2 {
+    font-family: 'Fredoka', sans-serif;
+    font-size: 16px;
+    font-weight: 500;
+    color: #1F2A29;
+    margin: 0;
+}
+
+/* Subtitulo dos cards */
+.subtitulo-item {
     display: flex;
-    flex-direction: column;
-    gap: 16px;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.subtitulo-item h2 {
+    font-size: 16px;
+    color: #1F2A29;
 }
 
 /* Campos */
@@ -63,6 +71,11 @@
     color: #3A4A48;
 }
 
+.campo-grupo label span {
+    color: #8A9996;
+    font-size: 12px;
+}
+
 /* Linha com dois campos */
 .linha-campos {
     display: flex;
@@ -74,7 +87,8 @@
     flex: 1;
 }
 
-/* Inputs e selects  */
+/* Inputs */
+
 .campo-grupo input,
 .campo-grupo select,
 .campo-grupo textarea {
@@ -107,7 +121,42 @@
     color: #B8C7C3;
 }
 
-/* Campo de senha */
+
+/* =====================================================
+   MENSAGEM DE ERRO
+===================================================== */
+
+.mensagem-erro {
+
+    margin: 2px 0 0;
+
+    font-family: 'Nunito', sans-serif;
+
+    font-size: 12px;
+
+    color: #D9534F;
+}
+
+
+/* Requisitos da senha */
+.requisitos-senha {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.requisitos-senha li {
+    color: #5F7370;
+    font-family: 'Nunito', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+
+/* Campo senha */
 .campo-senha {
     position: relative;
     width: 100%;
@@ -157,57 +206,119 @@
     font-size: 16px;
 }
 
-/* Requisitos da senha */
-.requisitos-senha {
-    list-style: none;
-    padding: 0;
-    margin: 0;
+/* Endereços e cartões */
+.item-endereco,
+.item-cartao {
     display: flex;
     flex-direction: column;
-    gap: 4px;
+    gap: 18px;
+    border: 1px solid #D9E2E0;
+    border-radius: 8px;
+    padding: 18px;
+    box-sizing: border-box;
+    background: #FFFFFF;
 }
 
-.requisitos-senha li {
-    color: #5F7370;
-    font-family: 'Nunito', sans-serif;
-    font-size: 14px;
-    font-weight: 500;
+/* Preferencial */
+.preferencial {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    padding-top: 15px;
 }
 
-/* Mensagem de erro */
-.mensagem-erro {
-    display: block;
-    color: #d93025;
+.preferencial input {
+    width: 16px;
+    height: 16px;
+    margin: 0;
+    border: none;
+}
+
+.preferencial label {
     font-family: 'Nunito', sans-serif;
     font-size: 13px;
-    margin: 3px 0 0;
+    color: #3A4A48;
+    cursor: pointer;
 }
 
-/* Botão  */
+
+/* Botão adicionar cartão e endereço */
+.btn-adicionar-card {
+    width: 100%;
+    height: 42px;
+    padding: 0 16px;
+    border: 1px dashed #4FD1B5;
+    border-radius: 8px;
+    background-color: #F7FCFB;
+    color: #37937F;
+    font-family: 'Fredoka', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.btn-adicionar-card:hover {
+    background-color: #EAF8F5;
+    border-color: #37937F;
+}
+
+
+/* Remover */
+.btn-remover-item {
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    border: none;
+    border-radius: 6px;
+    background-color: #FFF1F0;
+    color: #D9534F;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.btn-remover-item:hover {
+    background-color: #D9534F;
+    color: #FFFFFF;
+}
+
+.btn-remover-item i {
+    font-size: 13px;
+}
+
+
+/* Salvar */
 .container-btn-salvar {
+    width: 100%;
     display: flex;
     justify-content: flex-end;
-    margin-top: 8px;
+    margin-top: 0;
+    margin-bottom: 30px;
 }
 
 .btn-salvar {
-    width: auto;
-    min-width: 150px;
-    height: 38px;
-    padding: 0 16px;
+    min-width: 170px;
+    height: 42px;
+    padding: 0 18px;
     background-color: #4FD1B5;
     border: none;
     border-radius: 8px;
     font-family: 'Fredoka', sans-serif;
     font-size: 14px;
     font-weight: 500;
-    color: #FFFFFF;
+    color: white;
     cursor: pointer;
 }
 
 .btn-salvar:hover {
     background-color: #37937F;
 }
+
 
 /* Toast */
 .toast {

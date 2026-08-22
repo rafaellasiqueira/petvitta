@@ -138,16 +138,20 @@ td {
 
 /* Icones */
 .fa-eye {
-    color: #B8C7C3;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
     height: 24px;
-    weight: 24px;
+    color: #B8C7C3;
     cursor: pointer;
 }
 
 .fa-pen {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     color: #E1CE8A;
-    height: 24px;
-    weight: 24px;
     cursor: pointer;
     margin-right: 12px;
 }
@@ -280,9 +284,53 @@ h2 {
     cursor: pointer;
 }
 
+.modal-body {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
 .modal-body p {
     font-size: 16px;
     color: #3A4A48;
-    margin-bottom: 10px;
     font-family: 'Nunito', sans-serif;
+}
+
+/* Botões */
+.btn-cancelar {
+    width: auto;
+    padding: 0px 12px;
+    height: 40px;
+    font-family: 'Fredoka', sans-serif;
+    background: white;
+    border: 1px solid #1C9B86;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 500;
+    color: #1C9B86;
+    cursor: pointer;
+}
+
+.btn-cancelar:hover {
+    background: #EDF2F1;
+}
+
+.btn-adicionar,
+.btn-confirmar-exclusao {
+    width: auto;
+    padding: 0px 12px;
+    height: 40px;
+    font-family: 'Fredoka', sans-serif;
+    background: #1C9B86;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 500;
+    color: white;
+    cursor: pointer;
+}
+
+.btn-adicionar:hover,
+.btn-confirmar-exclusao:hover {
+    background: #157363;
 }

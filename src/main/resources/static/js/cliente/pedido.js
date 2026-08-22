@@ -1,22 +1,29 @@
 document.addEventListener("DOMContentLoaded", function () {
 
+    // =====================================================
+    // MODAL CANCELAR PEDIDO
+    // =====================================================
 
     const modalCancelar = document.getElementById("modalCancelarPedido");
     const botoesCancelar = document.querySelectorAll(".btn-cancelar-pedido");
-    const btnFecharCancelar =
-        document.getElementById("btnFecharModalCancelarPedido");
-    const btnNaoCancelar =
-        document.getElementById("btnNaoCancelarPedido");
-    const btnConfirmarCancelamento =
-        document.getElementById("btnConfirmarCancelamento");
+    const btnFecharCancelar = document.getElementById("btnFecharModalCancelarPedido");
+    const btnNaoCancelar = document.getElementById("btnNaoCancelarPedido");
+    const btnConfirmarCancelamento = document.getElementById("btnConfirmarCancelamento");
 
     let pedidoSelecionadoCancelar = null;
 
-    // Abrir modal
+
+    // =====================================================
+    // ABRIR MODAL CANCELAR
+    // =====================================================
+
     botoesCancelar.forEach(function (botao) {
+
         botao.addEventListener("click", function () {
-            pedidoSelecionadoCancelar =
-                botao.closest(".card-pedido");
+
+            pedidoSelecionadoCancelar = botao.closest(".card-pedido");
+
+            if (!pedidoSelecionadoCancelar) return;
 
             modalCancelar.classList.add("active");
         });
@@ -24,69 +31,102 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
 
-    // Fechar modal
-    btnFecharCancelar.addEventListener("click", function () {
+    // =====================================================
+    // FECHAR MODAL CANCELAR
+    // =====================================================
 
-        modalCancelar.classList.remove("active");
+    if (btnFecharCancelar) {
 
-    });
+        btnFecharCancelar.addEventListener("click", function () {
 
+            modalCancelar.classList.remove("active");
 
-    btnNaoCancelar.addEventListener("click", function () {
+            pedidoSelecionadoCancelar = null;
+        });
 
-        modalCancelar.classList.remove("active");
-
-    });
-
-
-    // Confirmar cancelamento
-    btnConfirmarCancelamento.addEventListener("click", function () {
-
-        if (!pedidoSelecionadoCancelar) {
-            return;
-        }
-
-        const status =
-            pedidoSelecionadoCancelar.querySelector(".status-pedido");
-
-        const botaoCancelar =
-            pedidoSelecionadoCancelar.querySelector(".btn-cancelar-pedido");
+    }
 
 
-        status.textContent = "Cancelado";
+    // =====================================================
+    // NÃO CANCELAR
+    // =====================================================
 
-        status.classList.remove(
-            "aprovado",
-            "em-processamento"
-        );
+    if (btnNaoCancelar) {
 
-        status.classList.add("pedido-cancelado");
+        btnNaoCancelar.addEventListener("click", function () {
 
+            modalCancelar.classList.remove("active");
 
-        if (botaoCancelar) {
-            botaoCancelar.remove();
-        }
+            pedidoSelecionadoCancelar = null;
+        });
 
-
-        const mensagem = document.createElement("p");
-
-        mensagem.textContent = "Pedido cancelado";
+    }
 
 
-        pedidoSelecionadoCancelar
-            .querySelector(".informacoes-pedido")
-            .appendChild(mensagem);
+    // =====================================================
+    // CONFIRMAR CANCELAMENTO
+    // =====================================================
+
+    if (btnConfirmarCancelamento) {
+
+        btnConfirmarCancelamento.addEventListener("click", function () {
+
+            if (!pedidoSelecionadoCancelar) return;
+
+            const status =
+                pedidoSelecionadoCancelar.querySelector(".status-pedido");
+
+            const botaoCancelar =
+                pedidoSelecionadoCancelar.querySelector(".btn-cancelar-pedido");
+
+            const informacoesPedido =
+                pedidoSelecionadoCancelar.querySelector(".informacoes-pedido");
 
 
-        modalCancelar.classList.remove("active");
+            // Altera status
+            if (status) {
 
-    });
+                status.textContent = "Cancelado";
+
+                status.classList.remove(
+                    "aprovado",
+                    "em-processamento"
+                );
+
+                status.classList.add("pedido-cancelado");
+            }
+
+
+            // Remove botão cancelar
+            if (botaoCancelar) {
+                botaoCancelar.remove();
+            }
+
+
+            // Adiciona mensagem
+            if (informacoesPedido) {
+
+                const mensagem = document.createElement("p");
+
+                mensagem.textContent = "Pedido cancelado";
+
+                informacoesPedido.appendChild(mensagem);
+            }
+
+
+            // Fecha modal
+            modalCancelar.classList.remove("active");
+
+            pedidoSelecionadoCancelar = null;
+        });
+
+    }
 
 
 
-    // =========================================================
-    // ITENS RECEBIDOS
-    // =========================================================
+    // =====================================================
+    // MODAL ITENS RECEBIDOS
+    // =====================================================
 
     const modalItensRecebidos =
         document.getElementById("modalItensRecebidos");
@@ -103,190 +143,193 @@ document.addEventListener("DOMContentLoaded", function () {
     const btnConfirmarItensRecebidos =
         document.getElementById("btnConfirmarItensRecebidos");
 
-
     let pedidoSelecionadoItensRecebidos = null;
 
 
-    // Abrir modal
+    // =====================================================
+    // ABRIR MODAL ITENS RECEBIDOS
+    // =====================================================
+
     botoesItensRecebidos.forEach(function (botao) {
 
         botao.addEventListener("click", function () {
 
-            pedidoSelecionadoItensRecebidos =
-                botao.closest(".card-pedido");
+            const card = botao.closest(".card-pedido");
 
-            modalItensRecebidos.classList.add("active");
+            if (!card) return;
 
-        });
+            const status =
+                card.querySelector(".status-pedido");
 
-    });
-
-
-    // Fechar
-    btnFecharItensRecebidos.addEventListener("click", function () {
-
-        modalItensRecebidos.classList.remove("active");
-
-    });
+            if (!status) return;
 
 
-    btnCancelarItensRecebidos.addEventListener("click", function () {
-
-        modalItensRecebidos.classList.remove("active");
-
-    });
-
-
-    // Confirmar recebimento
-    btnConfirmarItensRecebidos.addEventListener("click", function () {
-
-        if (!pedidoSelecionadoItensRecebidos) {
-            return;
-        }
-
-
-        const quantidadeChoice =
-            document.getElementById("quantidadeRecebidaChoice");
-
-        const quantidadeGolden =
-            document.getElementById("quantidadeRecebidaGolden");
-
-
-        // Quantidades esperadas
-        const quantidadeEsperadaChoice = 1;
-        const quantidadeEsperadaGolden = 2;
-
-
-        // Verificar Choice
-        if (
-            Number(quantidadeChoice.value) <
-            quantidadeEsperadaChoice
-        ) {
-
-            alert(
-                "A quantidade recebida da Ração Choice não pode ser menor que a quantidade enviada."
-            );
-
-            quantidadeChoice.focus();
-
-            return;
-        }
-
-
-        // Verificar Golden
-        if (
-            Number(quantidadeGolden.value) <
-            quantidadeEsperadaGolden
-        ) {
-
-            alert(
-                "A quantidade recebida da Ração GoldeN não pode ser menor que a quantidade enviada."
-            );
-
-            quantidadeGolden.focus();
-
-            return;
-        }
-
-
-        // Status
-        const status =
-            pedidoSelecionadoItensRecebidos
-                .querySelector(".status-pedido");
-
-
-        status.textContent = "Entregue";
-
-        status.classList.remove("em-transito");
-
-        status.classList.add("entregue");
-
-
-        // Informações
-        const informacoesPedido =
-            pedidoSelecionadoItensRecebidos
-                .querySelector(".informacoes-pedido");
-
-
-        // Remover "Entrega prevista"
-        const mensagens =
-            informacoesPedido.querySelectorAll("p");
-
-
-        mensagens.forEach(function (mensagem) {
-
-            if (
-                mensagem.textContent.includes(
-                    "Entrega prevista"
-                )
-            ) {
-
-                mensagem.remove();
-
+            // Só permite abrir para pedido em trânsito
+            if (status.textContent.trim() !== "Em trânsito") {
+                return;
             }
 
+
+            pedidoSelecionadoItensRecebidos = card;
+
+            modalItensRecebidos.classList.add("active");
         });
-
-
-        // Remover botão "Itens recebidos"
-        const botaoItensRecebidos =
-            pedidoSelecionadoItensRecebidos
-                .querySelector(".btn-itens-recebidos");
-
-
-        if (botaoItensRecebidos) {
-            botaoItensRecebidos.remove();
-        }
-
-
-        // Container dos botões
-        const containerStatus =
-            pedidoSelecionadoItensRecebidos
-                .querySelector(".container-status-troca");
-
-
-        // Criar botão Solicitar troca
-        const botaoTroca =
-            document.createElement("button");
-
-
-        botaoTroca.type = "button";
-
-        botaoTroca.classList.add(
-            "btn-branco",
-            "btn-solicitar-troca"
-        );
-
-        botaoTroca.textContent =
-            "Solicitar troca";
-
-
-        containerStatus.appendChild(botaoTroca);
-
-
-        // Adicionar data de entrega
-        const mensagem =
-            document.createElement("p");
-
-
-        mensagem.textContent =
-            "Entregue em " +
-            new Date().toLocaleDateString("pt-BR");
-
-
-        informacoesPedido.appendChild(mensagem);
-
-
-        // Fechar modal
-        modalItensRecebidos.classList.remove("active");
 
     });
 
 
+    // =====================================================
+    // FECHAR MODAL ITENS RECEBIDOS
+    // =====================================================
 
-    // =========================================================
-    // SOLICITAR TROCA
-    // =========================================================
+    if (btnFecharItensRecebidos) {
+
+        btnFecharItensRecebidos.addEventListener("click", function () {
+
+            modalItensRecebidos.classList.remove("active");
+
+            pedidoSelecionadoItensRecebidos = null;
+        });
+
+    }
+
+
+    // =====================================================
+    // CANCELAR ITENS RECEBIDOS
+    // =====================================================
+
+    if (btnCancelarItensRecebidos) {
+
+        btnCancelarItensRecebidos.addEventListener("click", function () {
+
+            modalItensRecebidos.classList.remove("active");
+
+            pedidoSelecionadoItensRecebidos = null;
+        });
+
+    }
+
+
+    // =====================================================
+    // CONFIRMAR ITENS RECEBIDOS
+    // =====================================================
+
+    if (btnConfirmarItensRecebidos) {
+
+        btnConfirmarItensRecebidos.addEventListener("click", function () {
+
+            if (!pedidoSelecionadoItensRecebidos) return;
+
+            const card = pedidoSelecionadoItensRecebidos;
+
+            const status =
+                card.querySelector(".status-pedido");
+
+            const informacoesPedido =
+                card.querySelector(".informacoes-pedido");
+
+            const containerStatus =
+                card.querySelector(".container-status-troca");
+
+            if (!status) return;
+
+
+            // Segurança: só permite confirmar pedido em trânsito
+            if (status.textContent.trim() !== "Em trânsito") {
+
+                modalItensRecebidos.classList.remove("active");
+
+                pedidoSelecionadoItensRecebidos = null;
+
+                return;
+            }
+
+
+            // Altera status para entregue
+            status.textContent = "Entregue";
+
+            status.classList.remove("em-transito");
+
+            status.classList.add("entregue");
+
+
+            // Remove mensagem de entrega prevista
+            if (informacoesPedido) {
+
+                const mensagens =
+                    informacoesPedido.querySelectorAll("p");
+
+                mensagens.forEach(function (mensagem) {
+
+                    if (mensagem.textContent.includes("Entrega prevista")) {
+                        mensagem.remove();
+                    }
+
+                });
+            }
+
+
+            // Remove botão itens recebidos
+            const botaoItensRecebidos =
+                card.querySelector(".btn-itens-recebidos");
+
+            if (botaoItensRecebidos) {
+                botaoItensRecebidos.remove();
+            }
+
+
+            // Adiciona botão solicitar troca
+            if (containerStatus) {
+
+                const trocaExistente =
+                    containerStatus.querySelector(".btn-solicitar-troca");
+
+                if (!trocaExistente) {
+
+                    const botaoTroca =
+                        document.createElement("button");
+
+                    botaoTroca.type = "button";
+
+                    botaoTroca.classList.add(
+                        "btn-branco",
+                        "btn-solicitar-troca"
+                    );
+
+                    botaoTroca.textContent = "Solicitar troca";
+
+                    containerStatus.appendChild(botaoTroca);
+                }
+            }
+
+
+            // Adiciona data de entrega
+            if (informacoesPedido) {
+
+                const mensagemEntrega =
+                    document.createElement("p");
+
+                mensagemEntrega.textContent =
+                    "Entregue em " +
+                    new Date().toLocaleDateString("pt-BR");
+
+                informacoesPedido.appendChild(mensagemEntrega);
+            }
+
+
+            // Fecha modal
+            modalItensRecebidos.classList.remove("active");
+
+            pedidoSelecionadoItensRecebidos = null;
+        });
+
+    }
+
+
+
+    // =====================================================
+    // MODAL SOLICITAR TROCA
+    // =====================================================
 
     const modalSolicitarTroca =
         document.getElementById("modalSolicitarTroca");
@@ -300,291 +343,339 @@ document.addEventListener("DOMContentLoaded", function () {
     const formSolicitarTroca =
         document.getElementById("formSolicitarTroca");
 
+    const mensagemErroTroca =
+        document.getElementById("mensagemErroTroca");
 
     let pedidoSelecionadoTroca = null;
 
 
-    // =========================================================
-    // ABRIR MODAL
-    // =========================================================
-    // Delegação de evento porque o botão pode ser criado
-    // depois do carregamento da página.
+    // =====================================================
+    // LIMPAR MODAL DE TROCA
+    // =====================================================
+
+    function limparModalTroca() {
+
+        // Limpa os campos do formulário
+        if (formSolicitarTroca) {
+            formSolicitarTroca.reset();
+        }
+
+
+        // Desmarca todos os checkboxes
+        const checkboxes =
+            modalSolicitarTroca.querySelectorAll(
+                ".checkbox-troca"
+            );
+
+        checkboxes.forEach(function (checkbox) {
+            checkbox.checked = false;
+        });
+
+
+        // Limpa campos de quantidade
+        const camposQuantidade =
+            modalSolicitarTroca.querySelectorAll(
+                "input[type='number']"
+            );
+
+        camposQuantidade.forEach(function (campo) {
+
+            if (campo.defaultValue !== "") {
+                campo.value = campo.defaultValue;
+            } else {
+                campo.value = "";
+            }
+
+        });
+
+
+        // Limpa justificativa
+        const justificativa =
+            modalSolicitarTroca.querySelector(
+                "#justificativaTroca"
+            );
+
+        if (justificativa) {
+            justificativa.value = "";
+        }
+
+
+        // Limpa mensagem de erro
+        if (mensagemErroTroca) {
+            mensagemErroTroca.textContent = "";
+        }
+
+
+        // Limpa qualquer mensagem de validação
+        const mensagensErro =
+            modalSolicitarTroca.querySelectorAll(
+                ".mensagem-erro"
+            );
+
+        mensagensErro.forEach(function (mensagem) {
+            mensagem.textContent = "";
+        });
+
+    }
+
+
+    // =====================================================
+    // ABRIR MODAL SOLICITAR TROCA
+    // =====================================================
 
     document.addEventListener("click", function (event) {
 
         const botao =
             event.target.closest(".btn-solicitar-troca");
 
+        if (!botao) return;
 
-        if (!botao) {
-            return;
-        }
-
-
-        pedidoSelecionadoTroca =
+        const card =
             botao.closest(".card-pedido");
 
-
-        modalSolicitarTroca.classList.add("active");
-
-    });
-
-
-
-    // =========================================================
-    // FECHAR MODAL
-    // =========================================================
-
-    btnFecharTroca.addEventListener("click", function () {
-
-        modalSolicitarTroca.classList.remove("active");
-
-    });
-
-
-    btnCancelarTroca.addEventListener("click", function () {
-
-        modalSolicitarTroca.classList.remove("active");
-
-    });
-
-
-
-    // =========================================================
-    // CONFIRMAR SOLICITAÇÃO DE TROCA
-    // =========================================================
-
-    formSolicitarTroca.addEventListener("submit", function (event) {
-
-        event.preventDefault();
-
-
-        if (!pedidoSelecionadoTroca) {
-            return;
-        }
-
-
-        // -----------------------------------------------------
-        // Verificar produtos selecionados
-        // -----------------------------------------------------
-
-        const produtosSelecionados =
-            document.querySelectorAll(
-                ".checkbox-troca:checked"
-            );
-
-
-        if (produtosSelecionados.length === 0) {
-
-            alert(
-                "Selecione pelo menos um item para realizar a troca."
-            );
-
-            return;
-        }
-
-
-
-        // -----------------------------------------------------
-        // Verificar Choice
-        // -----------------------------------------------------
-
-        const checkboxChoice =
-            document.querySelector(
-                ".checkbox-troca[value='racao-choice']"
-            );
-
-
-        if (
-            checkboxChoice &&
-            checkboxChoice.checked
-        ) {
-
-            const quantidadeChoice =
-                document.getElementById("quantidadeChoice");
-
-
-            if (
-                Number(quantidadeChoice.value) <
-                Number(quantidadeChoice.min)
-            ) {
-
-                alert(
-                    "A quantidade da Ração Choice não pode ser menor que a quantidade enviada."
-                );
-
-                quantidadeChoice.focus();
-
-                return;
-            }
-
-        }
-
-
-
-        // -----------------------------------------------------
-        // Verificar Golden
-        // -----------------------------------------------------
-
-        const checkboxGolden =
-            document.querySelector(
-                ".checkbox-troca[value='racao-golden']"
-            );
-
-
-        if (
-            checkboxGolden &&
-            checkboxGolden.checked
-        ) {
-
-            const quantidadeGolden =
-                document.getElementById("quantidadeGolden");
-
-
-            if (
-                Number(quantidadeGolden.value) <
-                Number(quantidadeGolden.min)
-            ) {
-
-                alert(
-                    "A quantidade da Ração GoldeN não pode ser menor que a quantidade enviada."
-                );
-
-                quantidadeGolden.focus();
-
-                return;
-            }
-
-        }
-
-
-
-        // =====================================================
-        // ALTERAR STATUS
-        // =====================================================
+        if (!card) return;
 
         const status =
-            pedidoSelecionadoTroca
-                .querySelector(".status-pedido");
+            card.querySelector(".status-pedido");
+
+        if (!status) return;
 
 
-        const containerStatus =
-            pedidoSelecionadoTroca
-                .querySelector(".container-status-troca");
-
-
-        status.textContent = "Troca aceita";
-
-
-        status.classList.remove(
-            "entregue",
-            "troca-finalizada"
-        );
-
-
-        status.classList.add(
-            "troca-autorizada"
-        );
-
-
-
-        // =====================================================
-        // REMOVER BOTÃO SOLICITAR TROCA
-        // =====================================================
-
-        const botaoSolicitarTroca =
-            pedidoSelecionadoTroca
-                .querySelector(".btn-solicitar-troca");
-
-
-        if (botaoSolicitarTroca) {
-            botaoSolicitarTroca.remove();
+        // Só permite solicitar troca para pedido entregue
+        if (status.textContent.trim() !== "Entregue") {
+            return;
         }
 
 
-
-        // =====================================================
-        // CRIAR BOTÃO ITENS DESPACHADOS
-        // =====================================================
-
-        const botaoItensDespachados =
-            document.createElement("button");
+        // Limpa o formulário antes de abrir
+        limparModalTroca();
 
 
-        botaoItensDespachados.type = "button";
+        // Seleciona o pedido atual
+        pedidoSelecionadoTroca = card;
 
 
-        botaoItensDespachados.classList.add(
-            "btn-branco",
-            "btn-itens-despachados"
-        );
+        // Abre modal
+        modalSolicitarTroca.classList.add("active");
+    });
 
 
-        botaoItensDespachados.textContent =
-            "Itens despachados";
+    // =====================================================
+    // FECHAR MODAL TROCA
+    // =====================================================
+
+    if (btnFecharTroca) {
+
+        btnFecharTroca.addEventListener("click", function () {
+
+            limparModalTroca();
+
+            modalSolicitarTroca.classList.remove("active");
+
+            pedidoSelecionadoTroca = null;
+        });
+
+    }
 
 
-        containerStatus.appendChild(
-            botaoItensDespachados
-        );
+    // =====================================================
+    // CANCELAR SOLICITAÇÃO DE TROCA
+    // =====================================================
+
+    if (btnCancelarTroca) {
+
+        btnCancelarTroca.addEventListener("click", function () {
+
+            limparModalTroca();
+
+            modalSolicitarTroca.classList.remove("active");
+
+            pedidoSelecionadoTroca = null;
+        });
+
+    }
 
 
+    // =====================================================
+    // FORMULÁRIO DE TROCA
+    // =====================================================
 
-        // Fechar modal
-        modalSolicitarTroca.classList.remove("active");
+    if (formSolicitarTroca) {
+
+        formSolicitarTroca.addEventListener(
+            "submit",
+            function (event) {
+
+                event.preventDefault();
+
+                if (!pedidoSelecionadoTroca) return;
 
 
+                // =================================================
+                // PRODUTOS SELECIONADOS
+                // =================================================
 
-        // =====================================================
-        // ITENS DESPACHADOS
-        // =====================================================
+                const produtosSelecionados =
+                    modalSolicitarTroca.querySelectorAll(
+                        ".checkbox-troca:checked"
+                    );
 
-        botaoItensDespachados.addEventListener(
-            "click",
-            function () {
 
-                status.textContent =
-                    "Troca processada";
+                // Limpa mensagem anterior
+                if (mensagemErroTroca) {
+                    mensagemErroTroca.textContent = "";
+                }
 
+
+                // Verifica se selecionou algum produto
+                if (produtosSelecionados.length === 0) {
+
+                    if (mensagemErroTroca) {
+
+                        mensagemErroTroca.textContent =
+                            "Selecione pelo menos um item para realizar a troca.";
+                    }
+
+                    return;
+                }
+
+
+                // =================================================
+                // ELEMENTOS DO PEDIDO
+                // =================================================
+
+                const status =
+                    pedidoSelecionadoTroca.querySelector(
+                        ".status-pedido"
+                    );
+
+                const containerStatus =
+                    pedidoSelecionadoTroca.querySelector(
+                        ".container-status-troca"
+                    );
+
+
+                if (!status || !containerStatus) return;
+
+
+                // =================================================
+                // ENTREGUE → TROCA ACEITA
+                // =================================================
+
+                status.textContent = "Troca aceita";
 
                 status.classList.remove(
+                    "entregue",
+                    "troca-finalizada"
+                );
+
+                status.classList.add(
                     "troca-autorizada"
                 );
 
 
-                status.classList.add(
-                    "troca-finalizada"
+                // =================================================
+                // REMOVE BOTÃO SOLICITAR TROCA
+                // =================================================
+
+                const botaoSolicitarTroca =
+                    pedidoSelecionadoTroca.querySelector(
+                        ".btn-solicitar-troca"
+                    );
+
+                if (botaoSolicitarTroca) {
+                    botaoSolicitarTroca.remove();
+                }
+
+
+                // =================================================
+                // CRIA BOTÃO ITENS DESPACHADOS
+                // =================================================
+
+                const botaoItensDespachados =
+                    document.createElement("button");
+
+                botaoItensDespachados.type = "button";
+
+                botaoItensDespachados.classList.add(
+                    "btn-branco",
+                    "btn-itens-despachados"
+                );
+
+                botaoItensDespachados.textContent =
+                    "Itens despachados";
+
+                containerStatus.appendChild(
+                    botaoItensDespachados
                 );
 
 
-                // Remover botão
-                botaoItensDespachados.remove();
+                // =================================================
+                // LIMPA MODAL
+                // =================================================
+
+                limparModalTroca();
+
+                modalSolicitarTroca.classList.remove("active");
 
 
-                // Adicionar data
-                const informacoesPedido =
-                    pedidoSelecionadoTroca
-                        .querySelector(
-                            ".informacoes-pedido"
+                // =================================================
+                // ITENS DESPACHADOS
+                // =================================================
+
+                botaoItensDespachados.addEventListener(
+                    "click",
+                    function () {
+
+                        // Troca aceita para troca processada
+                        status.textContent =
+                            "Troca processada";
+
+                        status.classList.remove(
+                            "troca-autorizada"
+                        );
+
+                        status.classList.add(
+                            "troca-finalizada"
                         );
 
 
-                const mensagem =
-                    document.createElement("p");
+                        // Remove botão
+                        botaoItensDespachados.remove();
 
 
-                mensagem.textContent =
-                    "Troca processada em " +
-                    new Date().toLocaleDateString("pt-BR");
+                        // Adiciona data
+                        const informacoesPedido =
+                            pedidoSelecionadoTroca.querySelector(
+                                ".informacoes-pedido"
+                            );
 
 
-                informacoesPedido.appendChild(
-                    mensagem
+                        if (informacoesPedido) {
+
+                            const mensagem =
+                                document.createElement("p");
+
+                            mensagem.textContent =
+                                "Troca processada em " +
+                                new Date().toLocaleDateString(
+                                    "pt-BR"
+                                );
+
+                            informacoesPedido.appendChild(
+                                mensagem
+                            );
+                        }
+
+
+                        // Limpa referência do pedido
+                        pedidoSelecionadoTroca = null;
+                    }
                 );
 
             }
         );
 
-    });
+    }
 
 });

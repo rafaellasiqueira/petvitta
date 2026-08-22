@@ -7,8 +7,7 @@
     <title>Perfil</title>
 
     <!-- Font Awesome -->
-    <link rel="stylesheet"
-          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 
     <!-- Cabeçalho CSS -->
     <link rel="stylesheet" th:href="@{/css/cliente/cabecalho.css}">
@@ -34,7 +33,6 @@
     <div th:replace="~{fragments/cliente/cabecalho :: cabecalho}"></div>
 
     <main class="conteudo">
-
         <div class="container-principal">
             <h2>RANKING 200pts</h2>
 
@@ -70,8 +68,14 @@
                         <div class="campo-grupo">
                             <label for="tipoTelefone">Tipo de telefone</label>
 
-                            <select id="tipoTelefone" name="tipoTelefone">
+                            <select id="tipoTelefone"
+                                    name="tipoTelefone"
+                                    required>
+
+                                <option value="" disabled hidden>Selecione</option>
+
                                 <option value="celular" selected>Celular</option>
+
                                 <option value="fixo">Fixo</option>
                             </select>
                         </div>
@@ -82,8 +86,10 @@
                             <input type="text"
                                    id="telefone"
                                    name="telefone"
-                                   value="(11) 91111-1111"
-                                   placeholder="(00) 00000-0000">
+                                   placeholder="(00) 00000-0000"
+                                   value="(11) 99999-9999"
+                                   required>
+
                             <p class="mensagem-erro" id="erroTelefone"></p>
                         </div>
 
@@ -123,7 +129,6 @@
 
                 </form>
             </div>
-
 
             <!-- Alterar senha -->
             <div class="card">
@@ -447,6 +452,12 @@
                 </div>
             </div>
         </div>
+
+        <div id="toast" class="toast">
+            <i class="toast-icone fa-solid fa-check"></i>
+            <p id="toastMensagem">Alterações feitas com sucesso!</p>
+        </div>
+
     </main>
 </div>
 

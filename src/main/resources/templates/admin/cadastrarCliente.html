@@ -4,7 +4,6 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <title>Cadastrar cliente</title>
 
     <!-- Font Awesome -->
@@ -20,9 +19,7 @@
     <!-- Cadastrar Cliente CSS -->
     <link rel="stylesheet" th:href="@{/css/admin/cadastrarCliente.css}">
 </head>
-
 <body>
-
 <div class="container">
 
     <!-- Sidebar -->
@@ -34,27 +31,20 @@
         <!-- Cabeçalho -->
         <header class="cabecalho">
             <a th:href="@{/admin/clientes}" class="voltar"><i class="fa-solid fa-chevron-left"></i></a>
-            <!-- NOVO: id para trocar o texto para "Editar cliente" via JS -->
             <h1 id="tituloPagina">Cadastrar cliente</h1>
         </header>
 
         <div class="container-principal">
 
             <form class="form-cadastrar-cliente" method="post">
-
-                <!-- NOVO: identifica qual cliente está sendo editado (fictício, sem uso real de backend ainda) -->
                 <input type="hidden" id="codigoCliente" name="codigoCliente" value="">
 
-                <!-- =====================================================
-                     DADOS PESSOAIS
-                ====================================================== -->
+                <!-- Dados pessoais -->
                 <div class="card">
-
                     <h1>Dados pessoais</h1>
 
                     <!-- Nome -->
                     <div class="campo-grupo">
-
                         <label for="nome">Nome</label>
 
                         <input type="text"
@@ -62,17 +52,12 @@
                                name="nome"
                                placeholder="Digite seu nome completo"
                                required>
-
                         <p class="mensagem-erro" id="erroNome"></p>
-
                     </div>
-
 
                     <!-- CPF -->
                     <div class="campo-grupo">
-
                         <label for="cpf">CPF</label>
-
                         <input type="text"
                                id="cpf"
                                name="cpf"
@@ -81,18 +66,13 @@
                                required>
 
                         <p class="mensagem-erro" id="erroCpf"></p>
-
                     </div>
 
 
                     <!-- Telefone -->
                     <div class="linha-campos">
-
                         <div class="campo-grupo">
-
-                            <label for="tipoTelefone">
-                                Tipo de telefone
-                            </label>
+                            <label for="tipoTelefone">Tipo de telefone</label>
 
                             <select id="tipoTelefone"
                                     name="tipoTelefone"
@@ -101,28 +81,19 @@
                                 <option value=""
                                         disabled
                                         selected
-                                        hidden>
-                                    Selecione
-                                </option>
+                                        hidden>Selecione</option>
 
-                                <option value="celular">
-                                    Celular
-                                </option>
+                                <option value="celular">Celular</option>
 
-                                <option value="fixo">
-                                    Fixo
-                                </option>
-
+                                <option value="fixo">Fixo</option>
                             </select>
 
+                            <p class="mensagem-erro" id="erroTipoTelefone"></p>
                         </div>
 
 
                         <div class="campo-grupo">
-
-                            <label for="telefone">
-                                Telefone
-                            </label>
+                            <label for="telefone">Telefone</label>
 
                             <input type="text"
                                    id="telefone"
@@ -131,22 +102,16 @@
                                    maxlength="15"
                                    required>
 
-                            <p class="mensagem-erro"
-                               id="erroTelefone"></p>
-
+                            <p class="mensagem-erro" id="erroTelefone"></p>
                         </div>
-
                     </div>
 
 
                     <!-- Gênero + nascimento -->
                     <div class="linha-campos">
-
                         <div class="campo-grupo">
 
-                            <label for="genero">
-                                Gênero
-                            </label>
+                            <label for="genero">Gênero</label>
 
                             <select id="genero"
                                     name="genero"
@@ -159,58 +124,36 @@
                                     Selecione
                                 </option>
 
-                                <option value="feminino">
-                                    Feminino
-                                </option>
-
-                                <option value="masculino">
-                                    Masculino
-                                </option>
-
-                                <option value="outro">
-                                    Outro
-                                </option>
-
+                                <option value="feminino">Feminino</option>
+                                <option value="masculino">Masculino</option>
+                                <option value="outro">Outro</option>
                             </select>
 
+                            <p class="mensagem-erro" id="erroGenero"></p>
                         </div>
 
 
                         <div class="campo-grupo">
-
-                            <label for="dataNascimento">
-                                Data de nascimento
-                            </label>
+                            <label for="dataNascimento">Data de nascimento</label>
 
                             <input type="date"
                                    id="dataNascimento"
                                    name="dataNascimento"
                                    required>
 
-                            <p class="mensagem-erro"
-                               id="erroDataNascimento"></p>
-
+                            <p class="mensagem-erro" id="erroDataNascimento"></p>
                         </div>
-
                     </div>
-
                 </div>
 
-
-                <!-- =====================================================
-                     DADOS DE ACESSO
-                ====================================================== -->
+                <!-- Dados de acesso -->
                 <div class="card">
-
                     <h1>Dados de acesso</h1>
-
 
                     <!-- E-mail -->
                     <div class="campo-grupo">
 
-                        <label for="email">
-                            E-mail
-                        </label>
+                        <label for="email">E-mail</label>
 
                         <input type="email"
                                id="email"
@@ -218,24 +161,12 @@
                                placeholder="Digite o e-mail"
                                required>
 
-                        <p class="mensagem-erro"
-                           id="erroEmail"></p>
-
+                        <p class="mensagem-erro" id="erroEmail"></p>
                     </div>
-
-
-                    <!-- NOVO: aviso que só aparece no modo edição -->
-                    <p class="dica-campo" id="dicaSenhaEdicao" style="display:none;">
-                        Deixe os campos de senha em branco para manter a senha atual.
-                    </p>
-
 
                     <!-- Senha -->
                     <div class="campo-grupo">
-
-                        <label for="senha">
-                            Senha
-                        </label>
+                        <label for="senha">Senha</label>
 
                         <div class="campo-senha">
 
@@ -247,28 +178,19 @@
 
                             <button type="button"
                                     class="btn-mostrar-senha"
-                                    data-input="senha"
-                                    aria-label="Mostrar senha">
+                                    data-input="senha">
 
                                 <i class="fa-solid fa-eye"></i>
-
                             </button>
-
                         </div>
 
-                        <p class="mensagem-erro"
-                           id="erroSenha"></p>
-
+                        <p class="mensagem-erro" id="erroSenha"></p>
                     </div>
-
 
                     <!-- Confirmar senha -->
                     <div class="campo-grupo">
 
-                        <label for="confirmarSenha">
-                            Confirmar senha
-                        </label>
-
+                        <label for="confirmarSenha">Confirmar senha</label>
                         <div class="campo-senha">
 
                             <input type="password"
@@ -279,20 +201,14 @@
 
                             <button type="button"
                                     class="btn-mostrar-senha"
-                                    data-input="confirmarSenha"
-                                    aria-label="Mostrar senha">
+                                    data-input="confirmarSenha">
 
                                 <i class="fa-solid fa-eye"></i>
-
                             </button>
-
                         </div>
 
-                        <p class="mensagem-erro"
-                           id="erroConfirmarSenha"></p>
-
+                        <p class="mensagem-erro" id="erroConfirmarSenha"></p>
                     </div>
-
 
                     <!-- Requisitos -->
                     <ul class="requisitos-senha">
@@ -308,328 +224,34 @@
                         <li>
                             - Conter pelo menos um caractere especial
                         </li>
-
                     </ul>
-
-                </div>
-
-
-                <!-- =====================================================
-                     ENDEREÇO
-                ====================================================== -->
-                <div class="card">
-
-                    <h1>Endereço</h1>
-
-
-                    <!-- Nome identificação -->
-                    <div class="campo-grupo">
-
-                        <label for="nomeIdentificacao">
-                            Nome de identificação
-                        </label>
-
-                        <input type="text"
-                               id="nomeIdentificacao"
-                               name="nomeIdentificacao"
-                               placeholder="Ex.: Casa, Trabalho..."
-                               required>
-
-                    </div>
-
-
-                    <!-- Tipo endereço -->
-                    <div class="campo-grupo">
-
-                        <label for="tipoEndereco">
-                            Tipo de endereço
-                        </label>
-
-                        <select id="tipoEndereco"
-                                name="tipoEndereco"
-                                required>
-
-                            <option value=""
-                                    disabled
-                                    selected
-                                    hidden>
-                                Selecione o tipo de endereço
-                            </option>
-
-                            <option value="cobranca">
-                                Cobrança
-                            </option>
-
-                            <option value="entrega">
-                                Entrega
-                            </option>
-
-                            <option value="cobranca-entrega">
-                                Cobrança e entrega
-                            </option>
-
-                        </select>
-
-                    </div>
-
-
-                    <!-- Tipo residência -->
-                    <div class="campo-grupo">
-
-                        <label for="tipoResidencia">
-                            Tipo de residência
-                        </label>
-
-                        <select id="tipoResidencia"
-                                name="tipoResidencia"
-                                required>
-
-                            <option value=""
-                                    disabled
-                                    selected
-                                    hidden>
-                                Selecione
-                            </option>
-
-                            <option value="casa">
-                                Casa
-                            </option>
-
-                            <option value="apartamento">
-                                Apartamento
-                            </option>
-
-                            <option value="sobrado">
-                                Sobrado
-                            </option>
-
-                            <option value="outro">
-                                Outro
-                            </option>
-
-                        </select>
-
-                    </div>
-
-
-                    <!-- Tipo logradouro -->
-                    <div class="campo-grupo">
-
-                        <label for="tipoLogradouro">
-                            Tipo de logradouro
-                        </label>
-
-                        <select id="tipoLogradouro"
-                                name="tipoLogradouro"
-                                required>
-
-                            <option value=""
-                                    disabled
-                                    selected
-                                    hidden>
-                                Selecione
-                            </option>
-
-                            <option value="rua">Rua</option>
-                            <option value="avenida">Avenida</option>
-                            <option value="praca">Praça</option>
-                            <option value="alameda">Alameda</option>
-                            <option value="travessa">Travessa</option>
-                            <option value="estrada">Estrada</option>
-                            <option value="rodovia">Rodovia</option>
-                            <option value="outro">Outro</option>
-
-                        </select>
-
-                    </div>
-
-
-                    <!-- CEP -->
-                    <div class="campo-grupo">
-
-                        <label for="cep">
-                            CEP
-                        </label>
-
-                        <input type="text"
-                               id="cep"
-                               name="cep"
-                               placeholder="00000-000"
-                               maxlength="9"
-                               required>
-
-                        <p class="mensagem-erro"
-                           id="erroCep"></p>
-
-                    </div>
-
-
-                    <!-- Logradouro -->
-                    <div class="campo-grupo">
-
-                        <label for="logradouro">
-                            Logradouro
-                        </label>
-
-                        <input type="text"
-                               id="logradouro"
-                               name="logradouro"
-                               placeholder="Digite o nome do logradouro"
-                               required>
-
-                    </div>
-
-
-                    <!-- Bairro -->
-                    <div class="campo-grupo">
-
-                        <label for="bairro">
-                            Bairro
-                        </label>
-
-                        <input type="text"
-                               id="bairro"
-                               name="bairro"
-                               placeholder="Digite o bairro"
-                               required>
-
-                    </div>
-
-
-                    <!-- Número -->
-                    <div class="campo-grupo">
-
-                        <label for="numero">
-                            Número
-                        </label>
-
-                        <input type="text"
-                               id="numero"
-                               name="numero"
-                               placeholder="Digite o número"
-                               required>
-
-                    </div>
-
-
-                    <!-- Estado -->
-                    <div class="campo-grupo">
-
-                        <label for="estado">
-                            Estado
-                        </label>
-
-                        <select id="estado"
-                                name="estado"
-                                required>
-
-                            <option value=""
-                                    disabled
-                                    selected
-                                    hidden>
-                                Selecione o estado
-                            </option>
-
-                            <option value="AC">Acre</option>
-                            <option value="AL">Alagoas</option>
-                            <option value="AP">Amapá</option>
-                            <option value="AM">Amazonas</option>
-                            <option value="BA">Bahia</option>
-                            <option value="CE">Ceará</option>
-                            <option value="DF">Distrito Federal</option>
-                            <option value="ES">Espírito Santo</option>
-                            <option value="GO">Goiás</option>
-                            <option value="MA">Maranhão</option>
-                            <option value="MT">Mato Grosso</option>
-                            <option value="MS">Mato Grosso do Sul</option>
-                            <option value="MG">Minas Gerais</option>
-                            <option value="PA">Pará</option>
-                            <option value="PB">Paraíba</option>
-                            <option value="PR">Paraná</option>
-                            <option value="PE">Pernambuco</option>
-                            <option value="PI">Piauí</option>
-                            <option value="RJ">Rio de Janeiro</option>
-                            <option value="RN">Rio Grande do Norte</option>
-                            <option value="RS">Rio Grande do Sul</option>
-                            <option value="RO">Rondônia</option>
-                            <option value="RR">Roraima</option>
-                            <option value="SC">Santa Catarina</option>
-                            <option value="SP">São Paulo</option>
-                            <option value="SE">Sergipe</option>
-                            <option value="TO">Tocantins</option>
-
-                        </select>
-
-                    </div>
-
-
-                    <!-- Cidade -->
-                    <div class="campo-grupo">
-
-                        <label for="cidade">
-                            Cidade
-                        </label>
-
-                        <input type="text"
-                               id="cidade"
-                               name="cidade"
-                               placeholder="Digite a cidade"
-                               required>
-
-                    </div>
-
-
-                    <!-- País -->
-                    <div class="campo-grupo">
-
-                        <label for="pais">
-                            País
-                        </label>
-
-                        <input type="text"
-                               id="pais"
-                               name="pais"
-                               value="Brasil"
-                               required>
-
-                    </div>
-
-
-                    <!-- Observações -->
-                    <div class="campo-grupo">
-
-                        <label for="observacoes">
-                            Observações <span>(Opcional)</span>
-                        </label>
-
-                        <textarea id="observacoes"
-                                  name="observacoes"
-                                  placeholder="Digite alguma observação sobre o endereço"></textarea>
-
-                    </div>
-
 
                     <!-- Botão -->
                     <div class="container-btn-salvar">
 
-                        <button type="submit"
+                        <button type="button"
                                 class="btn-salvar"
-                                id="btnSalvarCliente">
+                                id="btnSalvarCliente"
+                                onclick="cadastrarCliente()">
                             Cadastrar cliente
                         </button>
 
                     </div>
-
                 </div>
-
             </form>
-
         </div>
+
+        <div id="toast" class="toast">
+            <i class="toast-icone fa-solid fa-check"></i>
+            <p id="toastMensagem">Cliente cadastrado com sucesso!</p>
+        </div>
+
     </div>
+</div>
 
 
-    <!-- JavaScript -->
-    <script th:src="@{/js/admin/cadastrarCliente.js}"></script>
+<!-- JavaScript -->
+<script th:src="@{/js/admin/cadastrarCliente.js}"></script>
 
 </body>
 </html>

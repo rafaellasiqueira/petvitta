@@ -3,7 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <title>Pedidos</title>
 
     <!-- font awesome -->
@@ -19,7 +18,6 @@
     <!-- Pedidos CSS -->
     <link rel="stylesheet" th:href="@{/css/admin/pedidos.css}">
 </head>
-
 <body>
 
 <div class="container">
@@ -29,13 +27,16 @@
 
     <!-- conteudo -->
     <div class="conteudo">
+
         <!-- cabecalho -->
         <header class="cabecalho">
             <h1>Pedidos</h1>
         </header>
 
         <main class="card">
+
             <!-- filtros -->
+
             <div class="filtros">
                 <!-- lado esquerdo -->
                 <div class="botoes">
@@ -91,13 +92,6 @@
                            data-codigo="PEDI001"
                            data-cliente="Letícia Gomes de Souza"
                            data-data="16/08/2026"
-
-                           data-data-aprovacao="16/08/2026"
-                           data-previsao-entrega="20/08/2026"
-                           data-data-entrega="20/08/2026"
-                           data-data-cancelamento="17/08/2026"
-                           data-data-recusa="16/08/2026"
-
                            data-produtos="Ração Golden 10kg|Petisco de Carne"
                            data-subtotal="R$ 100,00"
                            data-descontos="R$ 10,00"
@@ -122,7 +116,7 @@
                 <div class="modalConteudo">
                     <div class="modalCabecalho">
                         <h2 id="modalStatus"></h2>
-                        <button class="btn-fechar" id="btnFecharModal">&times;</button> <!-- Exibe o simbolo x -->
+                        <button class="btn-fechar" id="btnFecharModal">&times;</button>
                     </div>
                     <div class="modal-body">
                         <p><strong>Código do pedido:</strong> <span id="modalCodigo"></span></p>
@@ -148,12 +142,11 @@
                     </div>
                 </div>
             </div>
-
         </main>
     </div>
 </div>
 
-<!-- JavaScript -->
+<!-- Pedidos JavaScript -->
 <script th:src="@{/js/admin/pedidos.js}"></script>
 
 </body>

@@ -1,984 +1,368 @@
-document.addEventListener('DOMContentLoaded', () => {
-
-    // =========================================================
-    // MODAL ADICIONAR / EDITAR ENDEREÇO
-    // =========================================================
-
-    const modalAdicionarEditarEndereco =
-        document.getElementById('modalAdicionarEditarEndereco');
-
-    const btnAdicionarEndereco =
-        document.getElementById('btnAdicionarEndereco');
-
-    const btnFecharModalEndereco =
-        document.getElementById('btnFecharModalEndereco');
-
-    const btnCancelarEndereco =
-        document.getElementById('btnCancelarEndereco');
-
-    const tituloModalEndereco =
-        document.getElementById('tituloModalEndereco');
-
-    const btnSalvarEndereco =
-        document.getElementById('btnSalvarEndereco');
-
-    const formEndereco =
-        document.getElementById('formEndereco');
-
-
-    // =========================================================
-    // CAMPOS DO ENDEREÇO
-    // =========================================================
-
-    const nomeIdentificacao =
-        document.getElementById('nomeIdentificacao');
-
-    const tipoEndereco =
-        document.getElementById('tipoEndereco');
-
-    const tipoResidencia =
-        document.getElementById('tipoResidencia');
-
-    const tipoLogradouro =
-        document.getElementById('tipoLogradouro');
-
-    const cep =
-        document.getElementById('cep');
-
-    const logradouro =
-        document.getElementById('logradouro');
-
-    const bairro =
-        document.getElementById('bairro');
-
-    const numero =
-        document.getElementById('numero');
-
-    const estado =
-        document.getElementById('estado');
-
-    const cidade =
-        document.getElementById('cidade');
-
-    const pais =
-        document.getElementById('pais');
-
-    const observacoes =
-        document.getElementById('observacoes');
-
-    const salvarPerfil =
-        document.getElementById('salvarPerfil');
-
-    const campoSalvarPerfil =
-        document.getElementById('campoSalvarPerfil');
-
-
-    // =========================================================
-    // VERIFICA SE ESTÁ NA PÁGINA DE PERFIL
-    // =========================================================
-
-    const estaNaPaginaPerfil =
-        window.location.pathname.includes('/perfil');
-
-
-    // =========================================================
-    // ESCONDE "SALVAR ESTE ENDEREÇO NO MEU PERFIL"
-    // =========================================================
-    // Na página de perfil esse campo nunca será exibido.
-    // =========================================================
-
-    if (estaNaPaginaPerfil && campoSalvarPerfil) {
-        campoSalvarPerfil.style.display = 'none';
+document.addEventListener('DOMContentLoaded', function() {
+    // Toast
+    function mostrarToast(mensagem) {
+        const toast = document.getElementById('toast');
+        const texto = document.getElementById('toastMensagem');
+        if (!toast || !texto) return;
+        texto.textContent = mensagem;
+        toast.classList.add('ativo');
+        setTimeout(() => toast.classList.remove('ativo'), 2000);
     }
 
+    // Senha
+    document.querySelectorAll('.btn-mostrar-senha').forEach(botao => {
+        botao.addEventListener('click', function() {
+            const input = document.getElementById(this.dataset.input);
+            const icone = this.querySelector('i');
+            if (input.type === 'password') {
+                input.type = 'text';
+                icone.classList.replace('fa-eye', 'fa-eye-slash');
+            } else {
+                input.type = 'password';
+                icone.classList.replace('fa-eye-slash', 'fa-eye');
+            }
+        });
+    });
 
-    // =========================================================
-    // MODO DO ENDEREÇO
-    // =========================================================
+    // CPF
+    const cpf = document.getElementById('cpf');
+    if (cpf) {
+        cpf.addEventListener('input', function() {
+            let v = this.value.replace(/\D/g, '').substring(0, 11);
+            v = v.replace(/(\d{3})(\d)/, '$1.$2');
+            v = v.replace(/(\d{3})(\d)/, '$1.$2');
+            v = v.replace(/(\d{3})(\d{1,2})$/, '$1-$2');
+            this.value = v;
+        });
+    }
 
-    let modoEndereco = 'adicionar';
-
-
-    // =========================================================
-    // ABRIR MODAL DE ENDEREÇO
-    // =========================================================
-
-    const abrirModalEndereco = () => {
-
-        if (modalAdicionarEditarEndereco) {
-            modalAdicionarEditarEndereco.classList.add('active');
+    // Telefone
+    const telefone = document.getElementById('telefone');
+    const tipoTelefone = document.getElementById('tipoTelefone');
+    function mascaraTelefone() {
+        if (!telefone || !tipoTelefone) return;
+        let v = telefone.value.replace(/\D/g, '');
+        if (tipoTelefone.value === 'fixo') {
+            v = v.substring(0, 10);
+            if (v.length > 2) v = v.replace(/^(\d{2})(\d{0,4})(\d{0,4})$/, '($1) $2-$3');
+            telefone.placeholder = '(00) 0000-0000';
+        } else {
+            v = v.substring(0, 11);
+            if (v.length > 2) v = v.replace(/^(\d{2})(\d{0,5})(\d{0,4})$/, '($1) $2-$3');
+            telefone.placeholder = '(00) 00000-0000';
         }
-    };
+        telefone.value = v;
+    }
+    if (telefone) telefone.addEventListener('input', mascaraTelefone);
+    if (tipoTelefone) tipoTelefone.addEventListener('change', mascaraTelefone);
 
+    // Dados pessoais
+    const formDados = document.querySelector('.form-dados-pessoais');
+    if (formDados) {
+        formDados.addEventListener('submit', function(e) {
+            e.preventDefault();
+            let valido = true;
+            document.querySelectorAll('.mensagem-erro').forEach(e => e.textContent = '');
+            if (!document.getElementById('nome').value.trim()) {
+                document.getElementById('erroNome').textContent = 'Digite seu nome.';
+                valido = false;
+            }
+            if (!cpf.value.trim()) {
+                document.getElementById('erroCpf').textContent = 'Digite seu CPF.';
+                valido = false;
+            }
+            if (!telefone.value.trim()) {
+                document.getElementById('erroTelefone').textContent = 'Digite seu telefone.';
+                valido = false;
+            }
+            if (!document.getElementById('dataNascimento').value) {
+                document.getElementById('erroDataNascimento').textContent = 'Informe sua data de nascimento.';
+                valido = false;
+            }
+            if (valido) mostrarToast('Dados pessoais salvos com sucesso!');
+        });
+    }
 
-    // =========================================================
-    // FECHAR MODAL DE ENDEREÇO
-    // =========================================================
+    // Senha
+    const formSenha = document.querySelector('.form-alterar-senha');
+    if (formSenha) {
+        formSenha.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const atual = document.getElementById('senhaAtual');
+            const nova = document.getElementById('novaSenha');
+            const confirmar = document.getElementById('confirmarSenha');
+            document.querySelectorAll('.form-alterar-senha .mensagem-erro').forEach(e => e.textContent = '');
+            let valido = true;
+            if (!atual.value) {
+                document.getElementById('erroSenhaAtual').textContent = 'Digite sua senha atual.';
+                valido = false;
+            }
+            if (nova.value.length < 8) {
+                document.getElementById('erroNovaSenha').textContent = 'A senha deve ter pelo menos 8 caracteres.';
+                valido = false;
+            } else if (!/[A-Z]/.test(nova.value) || !/[a-z]/.test(nova.value) || !/[^A-Za-z0-9]/.test(nova.value)) {
+                document.getElementById('erroNovaSenha').textContent = 'A senha deve ter maiúscula, minúscula e caractere especial.';
+                valido = false;
+            }
+            if (!confirmar.value) {
+                document.getElementById('erroConfirmarSenha').textContent = 'Confirme a nova senha.';
+                valido = false;
+            } else if (nova.value !== confirmar.value) {
+                document.getElementById('erroConfirmarSenha').textContent = 'As senhas não coincidem.';
+                valido = false;
+            }
+            if (valido) {
+                mostrarToast('Senha alterada com sucesso!');
+                formSenha.reset();
+            }
+        });
+    }
 
-    const fecharModalEndereco = () => {
+    // Endereço
+    const modalEndereco = document.getElementById('modalAdicionarEditarEndereco');
+    const formEndereco = document.getElementById('formEndereco');
+    const tituloEndereco = document.getElementById('tituloModalEndereco');
+    const cep = document.getElementById('cep');
 
-        if (modalAdicionarEditarEndereco) {
-            modalAdicionarEditarEndereco.classList.remove('active');
-        }
-    };
+    // CORRIGIDO: era 'ativo', o CSS espera 'active'
+    function abrirEndereco() {
+        if (modalEndereco) modalEndereco.classList.add('active');
+    }
 
+    // CORRIGIDO: era 'ativo', o CSS espera 'active'
+    function fecharEndereco() {
+        if (modalEndereco) modalEndereco.classList.remove('active');
+    }
 
-    // =========================================================
-    // ADICIONAR ENDEREÇO
-    // =========================================================
-
+    const btnAdicionarEndereco = document.getElementById('btnAdicionarEndereco');
     if (btnAdicionarEndereco) {
-
-        btnAdicionarEndereco.addEventListener('click', () => {
-
-            modoEndereco = 'adicionar';
-
-            if (formEndereco) {
-                formEndereco.reset();
-            }
-
-            // Define Brasil novamente depois do reset
-            if (pais) {
-                pais.value = 'Brasil';
-            }
-
-            if (tituloModalEndereco) {
-                tituloModalEndereco.textContent =
-                    'Adicionar endereço';
-            }
-
-            if (btnSalvarEndereco) {
-                btnSalvarEndereco.textContent =
-                    'Adicionar';
-            }
-
-
-            // =================================================
-            // SALVAR NO PERFIL
-            // =================================================
-            // Como estamos na página de perfil, permanece
-            // escondido.
-            // =================================================
-
-            if (estaNaPaginaPerfil) {
-
-                if (campoSalvarPerfil) {
-                    campoSalvarPerfil.style.display = 'none';
-                }
-
-                if (salvarPerfil) {
-                    salvarPerfil.checked = false;
-                }
-
-            } else {
-
-                // Caso o mesmo JS seja usado em outra página,
-                // o campo poderá aparecer normalmente.
-
-                if (campoSalvarPerfil) {
-                    campoSalvarPerfil.style.display = 'flex';
-                }
-
-                if (salvarPerfil) {
-                    salvarPerfil.checked = false;
-                }
-            }
-
-
-            abrirModalEndereco();
+        btnAdicionarEndereco.addEventListener('click', function() {
+            if (!formEndereco) return;
+            formEndereco.reset();
+            tituloEndereco.textContent = 'Adicionar endereço';
+            document.getElementById('pais').value = 'Brasil';
+            abrirEndereco();
         });
     }
 
-
-    // =========================================================
-    // EDITAR ENDEREÇO
-    // =========================================================
-
-    const botoesEditarEndereco =
-        document.querySelectorAll('.editar-endereco');
-
-    botoesEditarEndereco.forEach((botao) => {
-
-        botao.addEventListener('click', (event) => {
-
-            event.preventDefault();
-            event.stopPropagation();
-
-            modoEndereco = 'editar';
-
-            const dados = botao.dataset;
-
-
-            if (nomeIdentificacao) {
-                nomeIdentificacao.value =
-                    dados.nome || '';
-            }
-
-            if (tipoEndereco) {
-                tipoEndereco.value =
-                    dados.tipoEndereco || '';
-            }
-
-            if (tipoResidencia) {
-                tipoResidencia.value =
-                    dados.tipoResidencia || '';
-            }
-
-            if (tipoLogradouro) {
-                tipoLogradouro.value =
-                    dados.tipoLogradouro || '';
-            }
-
-            if (cep) {
-                cep.value =
-                    dados.cep || '';
-            }
-
-            if (logradouro) {
-                logradouro.value =
-                    dados.logradouro || '';
-            }
-
-            if (bairro) {
-                bairro.value =
-                    dados.bairro || '';
-            }
-
-            if (numero) {
-                numero.value =
-                    dados.numero || '';
-            }
-
-            if (estado) {
-                estado.value =
-                    dados.estado || '';
-            }
-
-            if (cidade) {
-                cidade.value =
-                    dados.cidade || '';
-            }
-
-            if (pais) {
-                pais.value =
-                    dados.pais || 'Brasil';
-            }
-
-            if (observacoes) {
-                observacoes.value =
-                    dados.observacoes || '';
-            }
-
-
-            // =================================================
-            // ESCONDE "SALVAR NO PERFIL"
-            // =================================================
-
-            if (salvarPerfil) {
-                salvarPerfil.checked = false;
-            }
-
-            if (campoSalvarPerfil) {
-                campoSalvarPerfil.style.display = 'none';
-            }
-
-
-            if (tituloModalEndereco) {
-                tituloModalEndereco.textContent =
-                    'Editar endereço';
-            }
-
-            if (btnSalvarEndereco) {
-                btnSalvarEndereco.textContent =
-                    'Salvar alterações';
-            }
-
-
-            abrirModalEndereco();
-        });
-    });
-
-
-    // =========================================================
-    // FECHAR MODAL DE ENDEREÇO
-    // =========================================================
-
-    if (btnFecharModalEndereco) {
-
-        btnFecharModalEndereco.addEventListener(
-            'click',
-            fecharModalEndereco
-        );
-    }
-
-
-    if (btnCancelarEndereco) {
-
-        btnCancelarEndereco.addEventListener(
-            'click',
-            fecharModalEndereco
-        );
-    }
-
-
-    // =========================================================
-    // SALVAR / ADICIONAR ENDEREÇO
-    // =========================================================
-
-    if (formEndereco) {
-
-        formEndereco.addEventListener('submit', (event) => {
-
-            event.preventDefault();
-
-
-            if (modoEndereco === 'adicionar') {
-
-                console.log(
-                    'Novo endereço adicionado.'
-                );
-
-            } else if (modoEndereco === 'editar') {
-
-                console.log(
-                    'Endereço editado.'
-                );
-            }
-
-
-            fecharModalEndereco();
-        });
-    }
-
-
-    // =========================================================
-    // MODAL ADICIONAR / EDITAR CARTÃO
-    // =========================================================
-
-    const modalCadastrarCartao =
-        document.getElementById('modalCadastrarCartao');
-
-    const formCartao =
-        document.getElementById('formCartao');
-
-    const tituloModalCartao =
-        document.getElementById('tituloModalCartao');
-
-    const btnSalvarCartao =
-        document.getElementById('btnSalvarCartao');
-
-    const btnFecharModalCartao =
-        document.getElementById('btnFecharModalCartao');
-
-    const btnCancelarCartao =
-        document.getElementById('btnCancelarCartao');
-
-
-    // =========================================================
-    // CAMPOS DO CARTÃO
-    // =========================================================
-
-    const numeroCartao =
-        document.getElementById('numeroCartao');
-
-    const nomeCartao =
-        document.getElementById('nomeCartao');
-
-    const bandeiraCartao =
-        document.getElementById('bandeiraCartao');
-
-    const cvvCartao =
-        document.getElementById('cvvCartao');
-
-    const validadeCartao =
-        document.getElementById('validadeCartao');
-
-    const salvarCartao =
-        document.getElementById('salvarCartao');
-
-    const campoSalvarCartao =
-        document.getElementById('campoSalvarCartao');
-
-
-    // =========================================================
-    // ESCONDE "SALVAR ESTE CARTÃO NO MEU PERFIL"
-    // =========================================================
-
-    if (estaNaPaginaPerfil && campoSalvarCartao) {
-        campoSalvarCartao.style.display = 'none';
-    }
-
-
-    // =========================================================
-    // MODO DO CARTÃO
-    // =========================================================
-
-    let modoCartao = 'adicionar';
-
-
-    // =========================================================
-    // ABRIR MODAL DE CARTÃO
-    // =========================================================
-
-    const abrirModalCartao = () => {
-
-        if (modalCadastrarCartao) {
-            modalCadastrarCartao.classList.add('active');
-        }
-    };
-
-
-    // =========================================================
-    // FECHAR MODAL DE CARTÃO
-    // =========================================================
-
-    const fecharModalCartao = () => {
-
-        if (modalCadastrarCartao) {
-            modalCadastrarCartao.classList.remove('active');
-        }
-    };
-
-
-    // =========================================================
-    // ADICIONAR CARTÃO
-    // =========================================================
-
-    const botoesAdicionarCartao =
-        document.querySelectorAll('.btn-adicionar-cartao');
-
-    botoesAdicionarCartao.forEach((botao) => {
-
-        botao.addEventListener('click', () => {
-
-            modoCartao = 'adicionar';
-
-            if (formCartao) {
-                formCartao.reset();
-            }
-
-
-            if (tituloModalCartao) {
-                tituloModalCartao.textContent =
-                    'Cadastrar cartão';
-            }
-
-            if (btnSalvarCartao) {
-                btnSalvarCartao.textContent =
-                    'Cadastrar';
-            }
-
-
-            // =================================================
-            // SALVAR NO PERFIL
-            // =================================================
-            // Na página de perfil permanece escondido.
-            // =================================================
-
-            if (estaNaPaginaPerfil) {
-
-                if (campoSalvarCartao) {
-                    campoSalvarCartao.style.display = 'none';
-                }
-
-                if (salvarCartao) {
-                    salvarCartao.checked = false;
-                }
-
-            } else {
-
-                if (campoSalvarCartao) {
-                    campoSalvarCartao.style.display = 'flex';
-                }
-
-                if (salvarCartao) {
-                    salvarCartao.checked = false;
-                }
-            }
-
-
-            abrirModalCartao();
-        });
-    });
-
-
-    // =========================================================
-    // EDITAR CARTÃO
-    // =========================================================
-
-    const botoesEditarCartao =
-        document.querySelectorAll('.editar-cartao');
-
-    botoesEditarCartao.forEach((botao) => {
-
-        botao.addEventListener('click', (event) => {
-
-            event.preventDefault();
-            event.stopPropagation();
-
-            modoCartao = 'editar';
-
-            const dados = botao.dataset;
-
-
-            if (numeroCartao) {
-                numeroCartao.value =
-                    dados.numero || '';
-            }
-
-            if (nomeCartao) {
-                nomeCartao.value =
-                    dados.nome || '';
-            }
-
-            if (bandeiraCartao) {
-                bandeiraCartao.value =
-                    dados.bandeira || '';
-            }
-
-            if (cvvCartao) {
-                cvvCartao.value =
-                    dados.cvv || '';
-            }
-
-            if (validadeCartao) {
-                validadeCartao.value =
-                    dados.validade || '';
-            }
-
-
-            if (tituloModalCartao) {
-                tituloModalCartao.textContent =
-                    'Editar cartão';
-            }
-
-            if (btnSalvarCartao) {
-                btnSalvarCartao.textContent =
-                    'Salvar alterações';
-            }
-
-
-            // =================================================
-            // ESCONDE "SALVAR NO PERFIL"
-            // =================================================
-
-            if (campoSalvarCartao) {
-                campoSalvarCartao.style.display = 'none';
-            }
-
-            if (salvarCartao) {
-                salvarCartao.checked = false;
-            }
-
-
-            abrirModalCartao();
-        });
-    });
-
-
-    // =========================================================
-    // FECHAR MODAL CARTÃO
-    // =========================================================
-
-    if (btnFecharModalCartao) {
-
-        btnFecharModalCartao.addEventListener(
-            'click',
-            fecharModalCartao
-        );
-    }
-
-
-    if (btnCancelarCartao) {
-
-        btnCancelarCartao.addEventListener(
-            'click',
-            fecharModalCartao
-        );
-    }
-
-
-    // =========================================================
-    // SALVAR / ADICIONAR CARTÃO
-    // =========================================================
-
-    if (formCartao) {
-
-        formCartao.addEventListener('submit', (event) => {
-
-            event.preventDefault();
-
-
-            if (modoCartao === 'adicionar') {
-
-                console.log(
-                    'Novo cartão cadastrado.'
-                );
-
-            } else if (modoCartao === 'editar') {
-
-                console.log(
-                    'Cartão editado.'
-                );
-            }
-
-
-            fecharModalCartao();
-        });
-    }
-
-
-    // =========================================================
-    // MÁSCARA CEP
-    // =========================================================
-
+    const btnFecharEndereco = document.getElementById('btnFecharModalEndereco');
+    const btnCancelarEndereco = document.getElementById('btnCancelarEndereco');
+    if (btnFecharEndereco) btnFecharEndereco.addEventListener('click', fecharEndereco);
+    if (btnCancelarEndereco) btnCancelarEndereco.addEventListener('click', fecharEndereco);
+
+    // CEP
     if (cep) {
-
-        cep.addEventListener('input', () => {
-
-            let valor =
-                cep.value.replace(/\D/g, '');
-
-            valor =
-                valor.substring(0, 8);
-
-            if (valor.length > 5) {
-
-                valor =
-                    valor.substring(0, 5) +
-                    '-' +
-                    valor.substring(5);
-            }
-
-            cep.value = valor;
+        cep.addEventListener('input', function() {
+            let v = this.value.replace(/\D/g, '').substring(0, 8);
+            if (v.length > 5) v = v.replace(/^(\d{5})(\d{0,3})$/, '$1-$2');
+            this.value = v;
         });
-    }
-
-
-    // =========================================================
-    // MÁSCARA NÚMERO DO CARTÃO
-    // =========================================================
-
-    if (numeroCartao) {
-
-        numeroCartao.addEventListener('input', () => {
-
-            let valor =
-                numeroCartao.value.replace(/\D/g, '');
-
-            valor =
-                valor.substring(0, 16);
-
-            valor =
-                valor.replace(
-                    /(\d{4})(?=\d)/g,
-                    '$1 '
-                );
-
-            numeroCartao.value = valor;
-        });
-    }
-
-
-    // =========================================================
-    // MÁSCARA CVV
-    // =========================================================
-
-    if (cvvCartao) {
-
-        cvvCartao.addEventListener('input', () => {
-
-            cvvCartao.value =
-                cvvCartao.value
-                    .replace(/\D/g, '')
-                    .substring(0, 4);
-        });
-    }
-
-
-    // =========================================================
-    // MÁSCARA VALIDADE
-    // =========================================================
-
-    if (validadeCartao) {
-
-        validadeCartao.addEventListener('input', () => {
-
-            let valor =
-                validadeCartao.value.replace(/\D/g, '');
-
-            valor =
-                valor.substring(0, 4);
-
-            if (valor.length > 2) {
-
-                valor =
-                    valor.substring(0, 2) +
-                    '/' +
-                    valor.substring(2);
-            }
-
-            validadeCartao.value = valor;
-        });
-    }
-
-
-    // =========================================================
-    // MODAL DE EXCLUSÃO
-    // =========================================================
-
-    const modalConfirmarExclusao =
-        document.getElementById('modalConfirmarExclusao');
-
-    const btnFecharModalExclusao =
-        document.getElementById('btnFecharModalExclusao');
-
-    const btnCancelarExclusao =
-        document.getElementById('btnCancelarExclusao');
-
-    const btnConfirmarExclusao =
-        document.getElementById('btnConfirmarExclusao');
-
-    const mensagemModalExclusao =
-        document.getElementById('mensagemModalExclusao');
-
-
-    let tipoExclusao = '';
-    let nomeExclusao = '';
-
-
-    // =========================================================
-    // ABRIR MODAL DE EXCLUSÃO
-    // =========================================================
-
-    const abrirModalExclusao = () => {
-
-        if (modalConfirmarExclusao) {
-            modalConfirmarExclusao.classList.add('active');
-        }
-    };
-
-
-    // =========================================================
-    // FECHAR MODAL DE EXCLUSÃO
-    // =========================================================
-
-    const fecharModalExclusao = () => {
-
-        if (modalConfirmarExclusao) {
-            modalConfirmarExclusao.classList.remove('active');
-        }
-    };
-
-
-    // =========================================================
-    // EXCLUIR ENDEREÇO
-    // =========================================================
-
-    const botoesExcluirEndereco =
-        document.querySelectorAll('.excluir-endereco');
-
-    botoesExcluirEndereco.forEach((botao) => {
-
-        botao.addEventListener('click', (event) => {
-
-            event.preventDefault();
-            event.stopPropagation();
-
-            tipoExclusao = 'endereco';
-
-            nomeExclusao =
-                botao.dataset.nome ||
-                'este endereço';
-
-
-            if (mensagemModalExclusao) {
-
-                mensagemModalExclusao.textContent =
-                    `Tem certeza de que deseja excluir o endereço "${nomeExclusao}"?`;
-            }
-
-
-            abrirModalExclusao();
-        });
-    });
-
-
-    // =========================================================
-    // EXCLUIR CARTÃO
-    // =========================================================
-
-    const botoesExcluirCartao =
-        document.querySelectorAll('.excluir-cartao');
-
-    botoesExcluirCartao.forEach((botao) => {
-
-        botao.addEventListener('click', (event) => {
-
-            event.preventDefault();
-            event.stopPropagation();
-
-            tipoExclusao = 'cartao';
-
-            nomeExclusao =
-                botao.dataset.nome ||
-                'este cartão';
-
-
-            if (mensagemModalExclusao) {
-
-                mensagemModalExclusao.textContent =
-                    `Tem certeza de que deseja excluir o cartão "${nomeExclusao}"?`;
-            }
-
-
-            abrirModalExclusao();
-        });
-    });
-
-
-    // =========================================================
-    // FECHAR MODAL DE EXCLUSÃO
-    // =========================================================
-
-    if (btnFecharModalExclusao) {
-
-        btnFecharModalExclusao.addEventListener(
-            'click',
-            fecharModalExclusao
-        );
-    }
-
-
-    if (btnCancelarExclusao) {
-
-        btnCancelarExclusao.addEventListener(
-            'click',
-            fecharModalExclusao
-        );
-    }
-
-
-    // =========================================================
-    // CONFIRMAR EXCLUSÃO
-    // =========================================================
-
-    if (btnConfirmarExclusao) {
-
-        btnConfirmarExclusao.addEventListener(
-            'click',
-            () => {
-
-                if (tipoExclusao === 'endereco') {
-
-                    console.log(
-                        'Endereço excluído:',
-                        nomeExclusao
-                    );
-
-                } else if (tipoExclusao === 'cartao') {
-
-                    console.log(
-                        'Cartão excluído:',
-                        nomeExclusao
-                    );
-                }
-
-
-                fecharModalExclusao();
-            }
-        );
-    }
-
-    // =========================================================
-    // VIA CEP
-    // =========================================================
-
-    if (cep) {
-
-        cep.addEventListener('blur', async () => {
-
-            const cepLimpo =
-                cep.value.replace(/\D/g, '');
-
-            // Verifica se possui 8 números
-            if (cepLimpo.length !== 8) {
-                return;
-            }
-
+        cep.addEventListener('blur', async function() {
+            const v = this.value.replace(/\D/g, '');
+            if (v.length !== 8) return;
             try {
-
-                const resposta =
-                    await fetch(`https://viacep.com.br/ws/${cepLimpo}/json/`);
-
-                if (!resposta.ok) {
-                    throw new Error('Erro ao consultar o CEP.');
-                }
-
-                const dados =
-                    await resposta.json();
-
-                // CEP não encontrado
+                const resposta = await fetch(`https://viacep.com.br/ws/${v}/json/`);
+                const dados = await resposta.json();
                 if (dados.erro) {
-
-                    alert('CEP não encontrado.');
-
-                    if (logradouro) {
-                        logradouro.value = '';
-                    }
-
-                    if (bairro) {
-                        bairro.value = '';
-                    }
-
-                    if (cidade) {
-                        cidade.value = '';
-                    }
-
-                    if (estado) {
-                        estado.value = '';
-                    }
-
+                    mostrarToast('CEP não encontrado.');
                     return;
                 }
-
-                // Preenche os campos automaticamente
-                if (logradouro) {
-                    logradouro.value =
-                        dados.logradouro || '';
-                }
-
-                if (bairro) {
-                    bairro.value =
-                        dados.bairro || '';
-                }
-
-                if (cidade) {
-                    cidade.value =
-                        dados.localidade || '';
-                }
-
-                if (estado) {
-                    estado.value =
-                        dados.uf || '';
-                }
-
-                if (pais) {
-                    pais.value = 'Brasil';
-                }
-
-            } catch (erro) {
-
-                console.error(
-                    'Erro ao consultar ViaCEP:',
-                    erro
-                );
-
-                alert(
-                    'Não foi possível consultar o CEP. Tente novamente.'
-                );
+                document.getElementById('logradouro').value = dados.logradouro || '';
+                document.getElementById('bairro').value = dados.bairro || '';
+                document.getElementById('cidade').value = dados.localidade || '';
+                document.getElementById('estado').value = dados.uf || '';
+                document.getElementById('pais').value = 'Brasil';
+            } catch {
+                mostrarToast('Erro ao consultar o CEP.');
             }
         });
     }
 
+    // Editar endereço
+    document.querySelectorAll('.editar-endereco').forEach(botao => {
+        botao.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            if (!modalEndereco) return;
+            tituloEndereco.textContent = 'Editar endereço';
+            document.getElementById('nomeIdentificacao').value = this.dataset.nome || '';
+            document.getElementById('tipoEndereco').value = this.dataset.tipoEndereco || '';
+            document.getElementById('tipoResidencia').value = this.dataset.tipoResidencia || '';
+            document.getElementById('tipoLogradouro').value = this.dataset.tipoLogradouro || '';
+            document.getElementById('cep').value = this.dataset.cep || '';
+            document.getElementById('logradouro').value = this.dataset.logradouro || '';
+            document.getElementById('bairro').value = this.dataset.bairro || '';
+            document.getElementById('numero').value = this.dataset.numero || '';
+            document.getElementById('estado').value = this.dataset.estado || '';
+            document.getElementById('cidade').value = this.dataset.cidade || '';
+            document.getElementById('pais').value = this.dataset.pais || 'Brasil';
+            document.getElementById('observacoes').value = this.dataset.observacoes || '';
+            abrirEndereco();
+        });
+    });
+
+    // Salvar endereço
+    if (formEndereco) {
+        formEndereco.addEventListener('submit', function(e) {
+            e.preventDefault();
+            if (!formEndereco.checkValidity()) {
+                formEndereco.reportValidity();
+                return;
+            }
+            mostrarToast('Endereço salvo com sucesso!');
+            fecharEndereco();
+        });
+    }
+
+    // Cartão
+    const modalCartao = document.getElementById('modalCadastrarCartao');
+    const formCartao = document.getElementById('formCartao');
+
+    // CORRIGIDO: era 'ativo', o CSS espera 'active'
+    function abrirCartao() {
+        if (modalCartao) modalCartao.classList.add('active');
+    }
+
+    // CORRIGIDO: era 'ativo', o CSS espera 'active'
+    function fecharCartao() {
+        if (modalCartao) modalCartao.classList.remove('active');
+    }
+
+    const btnAdicionarCartao = document.querySelector('.btn-adicionar-cartao');
+    if (btnAdicionarCartao) {
+        btnAdicionarCartao.addEventListener('click', function() {
+            if (!formCartao) return;
+            formCartao.reset();
+            document.getElementById('tituloModalCartao').textContent = 'Cadastrar cartão';
+            abrirCartao();
+        });
+    }
+
+    const btnFecharCartao = document.getElementById('btnFecharModalCartao');
+    const btnCancelarCartao = document.getElementById('btnCancelarCartao');
+    if (btnFecharCartao) btnFecharCartao.addEventListener('click', fecharCartao);
+    if (btnCancelarCartao) btnCancelarCartao.addEventListener('click', fecharCartao);
+
+    // Número cartão
+    const numeroCartao = document.getElementById('numeroCartao');
+    if (numeroCartao) {
+        numeroCartao.addEventListener('input', function() {
+            let v = this.value.replace(/\D/g, '').substring(0, 16);
+            v = v.replace(/(\d{4})(?=\d)/g, '$1 ');
+            this.value = v;
+        });
+    }
+
+    // CVV
+    const cvv = document.getElementById('cvvCartao');
+    if (cvv) {
+        cvv.addEventListener('input', function() {
+            this.value = this.value.replace(/\D/g, '').substring(0, 4);
+        });
+    }
+
+    // Validade
+    const validade = document.getElementById('validadeCartao');
+    if (validade) {
+        validade.addEventListener('input', function() {
+            let v = this.value.replace(/\D/g, '').substring(0, 4);
+            if (v.length > 2) v = v.substring(0, 2) + '/' + v.substring(2);
+            this.value = v;
+        });
+    }
+
+    // Nome cartão
+    const nomeCartao = document.getElementById('nomeCartao');
+    if (nomeCartao) {
+        nomeCartao.addEventListener('input', function() {
+            this.value = this.value.replace(/[^A-Za-zÀ-ÿ\s]/g, '');
+        });
+    }
+
+    // Editar cartão
+    document.querySelectorAll('.editar-cartao').forEach(botao => {
+        botao.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            if (!modalCartao) return;
+            document.getElementById('tituloModalCartao').textContent = 'Editar cartão';
+            document.getElementById('numeroCartao').value = '';
+            document.getElementById('nomeCartao').value = this.dataset.nome || '';
+            document.getElementById('bandeiraCartao').value = this.dataset.bandeira || '';
+            document.getElementById('cvvCartao').value = this.dataset.cvv || '';
+            document.getElementById('validadeCartao').value = this.dataset.validade || '';
+            abrirCartao();
+        });
+    });
+
+    // Salvar cartão
+    if (formCartao) {
+        formCartao.addEventListener('submit', function(e) {
+            e.preventDefault();
+            if (!formCartao.checkValidity()) {
+                formCartao.reportValidity();
+                return;
+            }
+            const numero = numeroCartao.value.replace(/\D/g, '');
+            if (numero.length !== 16) {
+                mostrarToast('Digite o número completo do cartão.');
+                return;
+            }
+            const partes = validade.value.split('/');
+            if (partes.length !== 2 || parseInt(partes[0]) < 1 || parseInt(partes[0]) > 12) {
+                mostrarToast('Digite uma validade válida.');
+                return;
+            }
+            mostrarToast('Cartão salvo com sucesso!');
+            fecharCartao();
+        });
+    }
+
+    // Exclusão
+    const modalExclusao = document.getElementById('modalConfirmarExclusao');
+    const tituloExclusao = document.getElementById('tituloModalExclusao');
+    const mensagemExclusao = document.getElementById('mensagemModalExclusao');
+
+    // CORRIGIDO: era 'ativo', o CSS espera 'active'
+    function fecharExclusao() {
+        if (modalExclusao) modalExclusao.classList.remove('active');
+    }
+
+    const btnFecharExclusao = document.getElementById('btnFecharModalExclusao');
+    const btnCancelarExclusao = document.getElementById('btnCancelarExclusao');
+    if (btnFecharExclusao) btnFecharExclusao.addEventListener('click', fecharExclusao);
+    if (btnCancelarExclusao) btnCancelarExclusao.addEventListener('click', fecharExclusao);
+
+    document.querySelectorAll('.excluir-endereco').forEach(botao => {
+        botao.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            if (!modalExclusao) return;
+            tituloExclusao.textContent = 'Excluir endereço';
+            mensagemExclusao.textContent = `Deseja excluir o endereço "${this.dataset.nome}"?`;
+            // CORRIGIDO: era 'ativo', o CSS espera 'active'
+            modalExclusao.classList.add('active');
+        });
+    });
+
+    document.querySelectorAll('.excluir-cartao').forEach(botao => {
+        botao.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            if (!modalExclusao) return;
+            tituloExclusao.textContent = 'Excluir cartão';
+            mensagemExclusao.textContent = `Deseja excluir o cartão "${this.dataset.nome}"?`;
+            // CORRIGIDO: era 'ativo', o CSS espera 'active'
+            modalExclusao.classList.add('active');
+        });
+    });
+
+    // Confirmar exclusão
+    const btnConfirmarExclusao = document.getElementById('btnConfirmarExclusao');
+    if (btnConfirmarExclusao) {
+        btnConfirmarExclusao.addEventListener('click', function() {
+            fecharExclusao();
+            mostrarToast('Item excluído com sucesso!');
+        });
+    }
 });

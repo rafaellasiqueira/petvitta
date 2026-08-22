@@ -16,11 +16,11 @@
 
     <!-- trocas css -->
     <link rel="stylesheet" th:href="@{/css/admin/trocas.css}">
-
 </head>
 <body>
 
 <div class="container">
+
     <!-- sidebar -->
     <div th:replace="~{fragments/admin/sidebar :: sidebar}"></div>
 
@@ -28,7 +28,9 @@
         <header class="cabecalho">
             <h1>Trocas</h1>
         </header>
+
         <main class="card">
+
             <!-- filtros -->
             <div class="filtros">
                 <div class="botoes">
@@ -36,7 +38,6 @@
                     <button class="btn-filtro">Solicitadas</button>
                     <button class="btn-filtro">Trocas aceitas</button>
                     <button class="btn-filtro">Itens enviados</button>
-                    <button class="btn-filtro">Itens recebidos</button>
                     <button class="btn-filtro">Trocas processadas</button>
                     <button class="btn-filtro">Recusadas</button>
                 </div>
@@ -79,11 +80,9 @@
                            data-codigo="PED001"
                            data-cliente="Larissa Lima"
                            data-produto="4x Ração Golden Cães Adultos 15kg, 5kg Ração Golden Gatos"
-                           data-motivo="Produto vencido"
+                           data-motivo="Produto vencido ou próximo do vencimento"
                            data-solicitado="18/08/2026"></i></td>
                 </tr>
-
-
                 </tbody>
             </table>
 
@@ -104,8 +103,8 @@
             <div id="modalTrocas" class="modal">
                 <div class="modalConteudo">
                     <div class="modalCabecalho">
-                        <h2>Detalhes</h2>
-                        <button class="btn-fechar" id="btnFecharModal">&times;</button> <!-- Exibe o simbolo x -->
+                        <h2 id="modalStatus"></h2>
+                        <button class="btn-fechar" id="btnFecharModal">&times;</button>
                     </div>
                     <div class="modal-body">
                         <p><strong>Codigo:</strong> <span id="modalCodigo"></span></p>
@@ -113,6 +112,7 @@
                         <p><strong>Produto:</strong> <span id="modalProduto"></span></p>
                         <p><strong>Motivo:</strong> <span id="modalMotivo"></span></p>
                         <p><strong>Solicitado em:</strong> <span id="modalSolicitado"></span></p>
+                        <p id="secaoStatus"><strong id="labelStatus"></strong><span id="modalDataStatus"></span></p>
                     </div>
                 </div>
             </div>
@@ -120,12 +120,15 @@
             <!-- modal estoque -->
             <div id="modalEstoque" class="modal">
                 <div class="modalConteudo">
+
                     <div class="modalCabecalho">
                         <h2>Retorno ao Estoque</h2>
                         <button class="btn-fechar" id="btnFecharEstoque">&times;</button>
                     </div>
+
                     <div class="modal-body">
                         <p>Selecione os itens que devem retornar ao estoque:</p>
+
                         <div id="listaItensEstoque" style="margin-bottom: 20px;"></div>
                         <button id="btnConfirmarEstoque" class="btn-confirmar">Confirmar</button>
                     </div>
@@ -147,11 +150,12 @@
                     </div>
                 </div>
             </div>
-
         </main>
     </div>
 </div>
-
 </body>
+
+<!-- Trocas JavaScript -->
 <script th:src="@{/js/admin/trocas.js}"></script>
+
 </html>

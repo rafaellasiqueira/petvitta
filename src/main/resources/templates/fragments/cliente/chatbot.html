@@ -1,13 +1,11 @@
 <!DOCTYPE html>
 <html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 
 <body>
-
 <div th:fragment="chatbot">
 
     <!-- Chatbot -->
@@ -15,7 +13,6 @@
 
         <!-- Cabeçalho -->
         <div class="chatbot-cabecalho">
-
             <div class="chatbot-titulo">
 
                 <div class="chatbot-logo">
@@ -23,17 +20,10 @@
                          src="/images/logo-icone-chatbot.svg"
                          alt="PetVitta">
                 </div>
-
                 <p>Assistente virtual</p>
-
             </div>
 
-            <button type="button"
-                    class="btn-fechar-chatbot"
-                    id="btnFecharChatbot">
-                &times;
-            </button>
-
+            <button type="button" class="btn-fechar-chatbot" id="btnFecharChatbot">&times;</button>
         </div>
 
         <!-- Conversa -->
@@ -49,45 +39,31 @@
                     É só me dizer o que você precisa!
                 </p>
             </div>
-
         </div>
 
         <!-- Campo de mensagem -->
         <form class="chatbot-form" id="formChatbot">
-
             <input type="text"
                    id="inputChatbot"
-                   placeholder="Digite sua mensagem"
-                   autocomplete="off">
+                   placeholder="Digite sua mensagem">
 
             <button type="submit"
-                    id="btnEnviarChatbot"
-                    aria-label="Enviar mensagem">
-
+                    id="btnEnviarChatbot">
                 <i class="fa-solid fa-paper-plane"></i>
-
             </button>
-
         </form>
-
     </div>
 
     <!-- Botão flutuante -->
     <button type="button"
             class="chatbot-botao"
-            id="btnAbrirChatbot"
-            aria-label="Abrir assistente virtual">
+            id="btnAbrirChatbot">
 
         <div class="chatbot-botao-icon">
 
-            <img th:src="@{/images/logo-icone-chatbot.svg}"
-                 src="/images/logo-icone-chatbot.svg"
-                 alt="PetVitta">
-
+            <img th:src="@{/images/logo-icone-chatbot.svg}">
         </div>
-
     </button>
-
 </div>
 
 </body>

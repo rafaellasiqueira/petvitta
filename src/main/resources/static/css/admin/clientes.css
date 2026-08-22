@@ -51,7 +51,6 @@
     text-decoration: none;
 }
 
-
 .inativo {
     color: #8FA3A0;
 }
@@ -81,27 +80,51 @@
     gap: 6px;
 }
 
-.campo-filtro label {
+.campo-filtro label,
+.campo-formulario label{
     display: block;
     font-family: 'Fredoka', sans-serif;
     font-weight: 400;
-    font-size: 16px;
+    font-size: 14px;
     margin-bottom: 4px;
     color: #3A4A48;
 }
 
 .campo-filtro input,
-.campo-filtro select {
+.campo-filtro select,
+.campo-formulario input,
+.campo-formulario select {
     width: 100%;
-    height: 48px;
+    height: 40px;
     border: 1px solid #D9E2E0;
     border-radius: 8px;
     outline: none;
     padding: 0 12px;
     font-family: 'Nunito', sans-serif;
-    font-size: 16px;
+    font-size: 14px;
     color: #1F2A29;
-    background: #ffffff;
+    background: #FFFFFF;
+}
+
+.campo-formulario textarea {
+    width: 100%;
+    height: 100px;
+    border: 1px solid #D9E2E0;
+    border-radius: 8px;
+    outline: none;
+    padding: 8px 12px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 14px;
+    color: #1F2A29;
+    background: #FFFFFF;
+}
+
+.campo-filtro input::placeholder,
+.campo-filtro select::placeholder,
+.campo-formulario input::placeholder,
+.campo-formulario select::placeholder,
+.campo-formulario textarea::placeholder {
+    color: #B8C7C3;
 }
 
 /* Botoes da acao do filtro */
@@ -143,3 +166,26 @@
 }
 
 
+.linha-acoes {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.btn-editar {
+    width: 24px;
+    height: 24px;
+    padding: 0;
+    border: none;
+    background: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.btn-editar .fa-pen {
+    font-size: 18px;
+    color: #E1CE8A;
+    margin: 0;
+}

@@ -1,232 +1,183 @@
-// =========================================================
-// MODAL DE DETALHES
-// =========================================================
-
 const modal = document.getElementById('modalTrocas');
 const btnFechar = document.getElementById('btnFecharModal');
 const botoesOlho = document.querySelectorAll('.btn-detalhes');
 
-
-// Abre o modal de detalhes
 botoesOlho.forEach(botao => {
 
     botao.addEventListener('click', function() {
 
-        document.getElementById('modalCodigo').innerText =
-            botao.dataset.codigo;
+        const linha = botao.closest('tr');
+        const status = linha.querySelector('.dropdown').value;
 
-        document.getElementById('modalCliente').innerText =
-            botao.dataset.cliente;
+        document.getElementById('modalCodigo').innerText = botao.dataset.codigo;
+        document.getElementById('modalCliente').innerText = botao.dataset.cliente;
+        document.getElementById('modalStatus').innerText = status;
+        document.getElementById('modalProduto').innerText = botao.dataset.produto;
+        document.getElementById('modalMotivo').innerText = botao.dataset.motivo;
+        document.getElementById('modalSolicitado').innerText = botao.dataset.solicitado;
 
-        document.getElementById('modalProduto').innerText =
-            botao.dataset.produto;
+        const secaoStatus = document.getElementById('secaoStatus');
+        const labelStatus = document.getElementById('labelStatus');
+        const dataStatus = document.getElementById('modalDataStatus');
 
-        document.getElementById('modalMotivo').innerText =
-            botao.dataset.motivo;
+        secaoStatus.style.display = 'none';
+        labelStatus.innerText = '';
+        dataStatus.innerText = '';
 
-        document.getElementById('modalSolicitado').innerText =
-            botao.dataset.solicitado;
+        if (status === 'Troca aceita') {
+            labelStatus.innerText = 'Troca aceita em: ';
+            dataStatus.innerText = dataHoje();
+            secaoStatus.style.display = 'block';
+        }
+
+        if (status === 'Item enviado') {
+            labelStatus.innerText = 'Item enviado em: ';
+            dataStatus.innerText = dataHoje();
+            secaoStatus.style.display = 'block';
+        }
+
+        if (status === 'Item recebido') {
+            labelStatus.innerText = 'Item recebido em: ';
+            dataStatus.innerText = dataHoje();
+            secaoStatus.style.display = 'block';
+        }
+
+        if (status === 'Troca processada') {
+            labelStatus.innerText = 'Troca processada em: ';
+            dataStatus.innerText = dataHoje();
+            secaoStatus.style.display = 'block';
+        }
+
+        if (status === 'Recusada') {
+                    labelStatus.innerText = 'Recusada em: ';
+                    dataStatus.innerText = dataHoje();
+                    secaoStatus.style.display = 'block';
+        }
 
         modal.classList.add('active');
     });
 });
 
-
-// Fecha o modal de detalhes
 btnFechar.addEventListener('click', function() {
-
     modal.classList.remove('active');
-
 });
 
+function dataHoje() {
+    return new Date().toLocaleDateString('pt-BR');
+}
 
-// =========================================================
-// MODAL DE ESTOQUE
-// =========================================================
 
+// Modal de estoque
 const modalEstoque = document.getElementById('modalEstoque');
 const btnFecharEstoque = document.getElementById('btnFecharEstoque');
 const btnConfirmarEstoque = document.getElementById('btnConfirmarEstoque');
 const listaItensEstoque = document.getElementById('listaItensEstoque');
-
-
-// Pega todos os dropdowns da tabela
 const dropdowns = document.querySelectorAll('.dropdown');
-
-
-// Guarda qual linha está sendo processada
 let linhaAtual = null;
-
 
 // Detecta alteração do status
 dropdowns.forEach(dropdown => {
-
     dropdown.addEventListener('change', function() {
-
         const novoStatus = dropdown.value;
-
-        // Encontra a linha do pedido
         const linha = dropdown.closest('tr');
-
-        // Guarda a linha atual
         linhaAtual = linha;
 
-
-        // =====================================================
-        // ITEM RECEBIDO
-        // =====================================================
-
+        // Item recebido
         if (novoStatus === 'Item recebido') {
 
-            // Pega o botão de detalhes da mesma linha
             const botaoOlho = linha.querySelector('.btn-detalhes');
-
-            // Pega os produtos
             const produto = botaoOlho.dataset.produto;
 
-
-            // Limpa a lista anterior
             listaItensEstoque.innerHTML = '';
 
-
-            // Separa os produtos pela vírgula
             const itens = produto.split(',');
 
-
-            // Cria os checkboxes
             itens.forEach(item => {
 
                 const div = document.createElement('div');
-
                 div.classList.add('item-estoque-linha');
 
-
                 const checkbox = document.createElement('input');
-
                 checkbox.type = 'checkbox';
-                checkbox.value = item.trim();
                 checkbox.checked = true;
-
-                checkbox.classList.add('checkbox');
-
+                checkbox.value = item.trim();
 
                 const texto = document.createElement('span');
-
                 texto.innerText = item.trim();
-                texto.classList.add('texto-item');
 
+                const quantidade = document.createElement('input');
+                quantidade.type = 'number';
+                quantidade.min = 1;
+                quantidade.max = parseInt(item.trim().match(/^\d+/)[0]);
+                quantidade.value = 1;
+                quantidade.classList.add('quantidade-item');
 
                 div.appendChild(checkbox);
                 div.appendChild(texto);
+                div.appendChild(quantidade);
 
                 listaItensEstoque.appendChild(div);
             });
 
 
-            // Abre o modal de estoque
             modalEstoque.classList.add('active');
         }
-
     });
-
 });
 
 
-// =========================================================
-// FECHAR MODAL DE ESTOQUE
-// =========================================================
-
+// Fecha o modal de estoque
 btnFecharEstoque.addEventListener('click', function() {
-
     modalEstoque.classList.remove('active');
-
 });
 
-
-// =========================================================
-// MODAL DE RESUMO
-// =========================================================
-
+// Modal de resumo
 const modalResumo = document.getElementById('modalResumo');
 const btnFecharResumo = document.getElementById('btnFecharResumo');
-
 const resumoItens = document.getElementById('resumoItens');
 const resumoCupom = document.getElementById('resumoCupom');
 
-
-// =========================================================
-// CONFIRMAR ESTOQUE
-// =========================================================
-
+// Confirmar estoque
 btnConfirmarEstoque.addEventListener('click', function() {
-
-    // Pega somente os itens marcados
-    const itensSelecionados =
-        listaItensEstoque.querySelectorAll(
+    const itensSelecionados = listaItensEstoque.querySelectorAll(
             'input[type="checkbox"]:checked'
-        );
+    );
 
-
-    // Limpa o resumo
     resumoItens.innerHTML = '';
 
-
-    // Adiciona os itens ao resumo
     itensSelecionados.forEach(item => {
 
-        const li = document.createElement('li');
+        const linha = item.parentElement;
 
+        const quantidade = linha.querySelector('.quantidade-item').value;
+
+        const li = document.createElement('li');
         li.innerText =
-            item.value + ' voltou para o estoque';
+            item.value + ' - Quantidade: ' + quantidade;
 
         resumoItens.appendChild(li);
-
     });
 
 
-    // =====================================================
-    // GERA CUPOM
-    // =====================================================
-
-    const numero =
-        Math.floor(10000 + Math.random() * 90000);
-
-    const cupom =
-        'TROCA-' + numero;
-
+    // Gera o cupom
+    const numero = Math.floor(10000 + Math.random() * 90000);
+    const cupom = 'TROCA-' + numero;
     resumoCupom.innerText = cupom;
 
-
-    // =====================================================
-    // ALTERA O STATUS
-    // =====================================================
-
+    // Altera o status
     if (linhaAtual) {
-
-        const dropdown =
-            linhaAtual.querySelector('.dropdown');
-
+        const dropdown = linhaAtual.querySelector('.dropdown');
         dropdown.value = 'Troca processada';
-
     }
-
 
     // Fecha modal de estoque
     modalEstoque.classList.remove('active');
 
-
     // Abre modal de resumo
     modalResumo.classList.add('active');
-
 });
 
-
-// =========================================================
-// FECHAR MODAL DE RESUMO
-// =========================================================
-
+// Fecha o modal de resumo
 btnFecharResumo.addEventListener('click', function() {
-
     modalResumo.classList.remove('active');
-
 });
