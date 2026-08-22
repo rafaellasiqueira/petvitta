@@ -30,6 +30,18 @@ public class AdminController {
         return "admin/clientes";
     }
 
+    @GetMapping("/admin/cadastrarCliente")
+    public String cadastrarCliente(Model model) {
+        model.addAttribute("paginaAtual", "clientes");
+        return "admin/cadastrarCliente";
+    }
+
+    @GetMapping("/admin/detalhesCliente")
+    public String detalhesCliente(Model model) {
+        model.addAttribute("paginaAtual", "clientes");
+        return "admin/detalhesCliente";
+    }
+
     @GetMapping("/admin/estoque")
     public String estoque(Model model) {
         model.addAttribute("paginaAtual", "estoque");
@@ -54,8 +66,4 @@ public class AdminController {
         return "admin/auditoria";
     }
 
-    @GetMapping("/admin/sair")
-    public String sair() {
-        return "redirect:/admin/login";
-    }
 }

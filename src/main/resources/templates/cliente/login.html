@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+
+    <!-- Font Awesome (Ícones) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+    <!-- Cabeçalho CSS -->
+    <link rel="stylesheet" th:href="@{/css/cliente/cabecalho.css}">
+
+    <!-- Global CSS -->
+    <link rel="stylesheet" th:href="@{/css/cliente/global.css}">
+
+    <!-- Login -->
+    <link rel="stylesheet" th:href="@{/css/cliente/login.css}">
+</head>
+<body>
+
+<div class="container">
+
+    <!-- Cabeçalho -->
+    <header class="login-cabecalho">
+        <div class="topo">
+            <div class="logo-container">
+                <img class="logo" th:src="@{/images/logo-horizontal-escura.svg}">
+            </div>
+        </div>
+    </header>
+
+    <main class="conteudo">
+
+        <div class="container-principal">
+            <h1>Seja bem-vindo!</h1>
+            <p>Faça login e aproveite tudo o que a PetVitta Club tem para oferecer!</p>
+
+            <form class="form-login" method="post">
+                <div class="campo-grupo">
+                    <label for="email">E-mail</label>
+
+                    <input type="email"
+                            id="email"
+                            name="email"
+                            placeholder="Digite seu e-mail"
+                            required>
+                </div>
+
+                <div class="campo-grupo">
+                    <label for="senha">Senha</label>
+
+                    <div class="senha-container">
+                        <input type="password"
+                               id="senha"
+                               name="senha"
+                               placeholder="Digite sua senha"
+                               required>
+
+                        <button type="button"
+                                class="btn-mostrar-senha"
+                                onclick="mostrarSenha()">
+                            <i id="icone-olho" class="fa-solid fa-eye"></i>
+                        </button>
+                    </div>
+                </div>
+                <a th:href="@{/cliente/produtos}" class="btnEntrar" id="btnEntrar">Entrar</a>
+            </form>
+        </div>
+    </main>
+</div>
+
+<!-- Login JavaScript -->
+<script th:src="@{/js/cliente/login.js}"></script>
+
+</body>
+</html>

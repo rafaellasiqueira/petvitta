@@ -1,52 +1,54 @@
-// Toast
-function adicionarCarrinho() {
-    const toast = document.getElementById("toast");
+function atualizarSubtotal() {
+    let tamanho = document.querySelector('.tamanho-opcao.active');
+    let quantidade = document.querySelector('.seletor-quantidade input');
+    let preco = document.querySelector('.preco');
 
-    toast.classList.add("ativo"); // Adiciona a classe CSS que o elemento está ativo
+    if (tamanho) {
+        let valor = parseFloat(tamanho.dataset.preco);
+        let qtd = parseInt(quantidade.value);
+        let total = valor * qtd;
 
-    setTimeout(function() {
-        toast.classList.remove("ativo");
-    }, 2000);
+        preco.innerText = total.toLocaleString('pt-BR', {
+            style: 'currency',
+            currency: 'BRL'
+        });
+    }
 }
 
-
-// Precos
-const precos = {
-    '10.1 KG': 156.75,
-    '15 KG': 199.90,
-    '20 KG': 249.90
-};
+// Quantidade
 
 const inputQtd = document.querySelector('.seletor-quantidade input');
-const [btnMenos, btnMais] = document.querySelectorAll('.btn-qtd');
-const elementoPreco = document.querySelector('.preco');
+const btnMenos = document.querySelector('.btn-qtd.menos');
+const btnMais = document.querySelector('.btn-qtd.mais');
 const botoesTamanho = document.querySelectorAll('.tamanho-opcao');
-
-let precoUnitario = precos['10.1 KG'];
-
-function calcularTotal() {
-    let valorTotal = precoUnitario * inputQtd.value;
-    elementoPreco.innerText = 'R$ ' + valorTotal.toFixed(2).replace('.', ',');
-}
 
 botoesTamanho.forEach(btn => {
     btn.onclick = function() {
         botoesTamanho.forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
-        let tamanho = btn.innerText;
-        precoUnitario = precos[tamanho];
-        calcularTotal();
+        atualizarSubtotal();
     };
 });
 
 btnMais.onclick = function() {
     inputQtd.value++;
-    calcularTotal();
+    atualizarSubtotal();
 };
 
 btnMenos.onclick = function() {
     if (inputQtd.value > 1) {
         inputQtd.value--;
-        calcularTotal();
+        atualizarSubtotal();
     }
 };
+
+// Toast
+function adicionarCarrinho() {
+    const toast = document.getElementById("toast");
+
+    toast.classList.add("ativo");
+
+    setTimeout(function() {
+        toast.classList.remove("ativo");
+    }, 2000);
+}

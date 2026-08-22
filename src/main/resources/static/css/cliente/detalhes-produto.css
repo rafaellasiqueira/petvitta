@@ -259,8 +259,5 @@ h3 {
     justify-content: center;
     width: 24px;
     height: 24px;
-    background-color: white;
-    color: #1C9B86;
-    border-radius: 50%;
-    font-size: 14px;
+    color: white;
 }

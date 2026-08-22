@@ -3,7 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <title>Produtos</title>
 
     <!-- Font Awesome (Ícones) -->
@@ -20,12 +19,10 @@
 
     <!-- Chatbot -->
     <link rel="stylesheet" th:href="@{/css/cliente/chatbot.css}">
-
 </head>
-
 <body>
-<div class="container">
 
+<div class="container">
     <!-- Cabeçalho -->
     <div th:replace="~{fragments/cliente/cabecalho :: cabecalho}"></div>
 
@@ -204,6 +201,7 @@
             <!-- Preço -->
             <div class="filtro-preco">
                 <h3>Preço</h3>
+
                 <div class="precos">
                     <div>
                         <label for="precoMinimo">Mínimo</label>
@@ -232,7 +230,7 @@
             <div class="produtos-linha">
                 <div class="produto">
                     <a th:href="@{/cliente/detalhes-produto}" class="produto-link">
-                        <img class="produto-imagem" th:src="@{/images/produtos/racao-1.png}" alt="Produto 1">
+                        <img class="produto-imagem" th:src="@{/images/produtos/racao-1.png}">
 
                         <div class="produto-info">
                             <p class="produto-titulo">Ração Cães Adultos Frango e Carne Choice</p>
@@ -245,7 +243,7 @@
 
                 <div class="produto">
                     <a th:href="@{/cliente/detalhes-produto}" class="produto-link">
-                        <img class="produto-imagem" th:src="@{/images/produtos/racao-2.png}" alt="Produto 1">
+                        <img class="produto-imagem" th:src="@{/images/produtos/racao-2.png}">
 
                         <div class="produto-info">
                             <p class="produto-titulo">Pedigree Ração Cães Carne Adulto</p>
@@ -258,7 +256,7 @@
 
                 <div class="produto">
                     <a th:href="@{/cliente/detalhes-produto}" class="produto-link">
-                        <img class="produto-imagem" th:src="@{/images/produtos/racao-3.png}" alt="Produto 1">
+                        <img class="produto-imagem" th:src="@{/images/produtos/racao-3.png}">
 
                         <div class="produto-info">
                             <p class="produto-titulo">Ração GoldeN Special Gatos Adultos Sabor Frango e Carne</p>
@@ -271,7 +269,7 @@
 
                 <div class="produto">
                     <a th:href="@{/cliente/detalhes-produto}" class="produto-link">
-                        <img class="produto-imagem" th:src="@{/images/produtos/racao-4.png}" alt="Produto 1">
+                        <img class="produto-imagem" th:src="@{/images/produtos/racao-4.png}">
 
                         <div class="produto-info">
                             <p class="produto-titulo">Ração Suprema Sabor Carne para Gatos Adultos</p>
@@ -286,7 +284,7 @@
             <div class="produtos-linha">
                 <div class="produto">
                     <a th:href="@{/cliente/detalhes-produto}" class="produto-link">
-                        <img class="produto-imagem" th:src="@{/images/produtos/petisco-1.png}" alt="Produto 1">
+                        <img class="produto-imagem" th:src="@{/images/produtos/petisco-1.png}">
 
                         <div class="produto-info">
                             <p class="produto-titulo">Petisco Cremoso True Creamy Sabor Atum para Gatos</p>
@@ -299,7 +297,7 @@
 
                 <div class="produto">
                     <a th:href="@{/cliente/detalhes-produto}" class="produto-link">
-                        <img class="produto-imagem" th:src="@{/images/produtos/petisco-2.png}" alt="Produto 1">
+                        <img class="produto-imagem" th:src="@{/images/produtos/petisco-2.png}">
 
                         <div class="produto-info">
                             <p class="produto-titulo">Petisco Dreamies Sabor Queijo para Gatos Adultos 40g</p>
@@ -312,7 +310,7 @@
 
                 <div class="produto">
                     <a th:href="@{/cliente/detalhes-produto}" class="produto-link">
-                        <img class="produto-imagem" th:src="@{/images/produtos/suplemento-1.png}" alt="Produto 1">
+                        <img class="produto-imagem" th:src="@{/images/produtos/suplemento-1.png}">
 
                         <div class="produto-info">
                             <p class="produto-titulo">Suplemento Gatos Nutrifull Organnact 30 ml</p>
@@ -325,7 +323,7 @@
 
                 <div class="produto">
                     <a th:href="@{/cliente/detalhes-produto}" class="produto-link">
-                        <img class="produto-imagem" th:src="@{/images/produtos/suplemento-2.png}" alt="Produto 1">
+                        <img class="produto-imagem" th:src="@{/images/produtos/suplemento-2.png}" >
 
                         <div class="produto-info">
                             <p class="produto-titulo">Organnact Eritrós Cat Pasta Suplemento para Gatos 27g</p>

@@ -22,7 +22,8 @@
 .chatbot.active {
     opacity: 1;
     visibility: visible;
-    pointer-events: auto; /* Reativa cliques quando visível */
+    pointer-events: auto;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.20);
 }
 
 /* Garante que o botão de fechar fique por cima e clicável */

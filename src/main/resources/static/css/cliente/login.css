@@ -1,0 +1,138 @@
+.conteudo {
+    padding: 100px;
+}
+
+.container-principal {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 60px 64px;
+    background: white;
+    border-radius: 20px;
+    gap: 20px;
+    width: 500px;
+}
+
+.container-principal h1 {
+    font-family: 'Fredoka', sans-serif;
+    font-size: 32px;
+    color: #1F2A29;
+    font-weight: 500;
+}
+
+.container-principal p {
+    font-family: 'Nunito', sans-serif;
+    font-size: 18px;
+    color: #1F2A29;
+    font-weight: 500;
+    text-align: center;
+}
+
+/* Inputs */
+.campo-grupo {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    width: 100%;
+}
+
+.campo-grupo label {
+    font-family: 'Fredoka', sans-serif;
+    font-size: 16px;
+    font-weight: 400;
+    color: #3A4A48;
+}
+
+.campo-grupo input {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 40px;
+    padding: 0 16px;
+    border: 1px solid #D9E2E0;
+    border-radius: 8px;
+    background-color: #FFFFFF;
+    font-family: 'Nunito', sans-serif;
+    font-size: 16px;
+    color: #3A4A48;
+    outline: none;
+    box-sizing: border-box;
+}
+
+.campo-grupo input::placeholder {
+    color: #B8C7C3;
+}
+
+.senha-container {
+    position: relative;
+    width: 100%;
+    display: flex;
+    align-items: center;
+}
+
+.senha-container input {
+    width: 100%;
+    padding-right: 48px;
+}
+
+/* Botão do olho */
+.btn-mostrar-senha {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    margin: 0;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+}
+
+.btn-mostrar-senha i {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    color: #4FD1B5;
+    font-size: 16px;
+}
+
+/* Formulário */
+.form-login {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    width: 100%;
+}
+
+/* Botão */
+.btnEntrar {
+    width: 100%;
+    height: 40px;
+    font-family: 'Fredoka', sans-serif;
+    background: #4FD1B5;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 400;
+    color: white;
+    text-decoration: none;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.btnEntrar:hover {
+    background: #37937F;
+}

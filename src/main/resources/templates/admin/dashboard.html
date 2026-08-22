@@ -1,34 +1,44 @@
 <!DOCTYPE html>
 <html lang="pt-BR" xmlns:th="http://www.w3.org/1999/xhtml">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Dashboard</title>
 
-    <!-- font awesome (icones) -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <!-- Font Awesome -->
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 
-    <!-- sidebar css -->
-    <link rel="stylesheet" th:href="@{/css/admin/sidebar.css}">
+    <!-- Sidebar -->
+    <link rel="stylesheet"
+          th:href="@{/css/admin/sidebar.css}">
 
-    <!-- Global CSS -->
-    <link rel="stylesheet" th:href="@{/css/admin/global.css}">
+    <!-- Global -->
+    <link rel="stylesheet"
+          th:href="@{/css/admin/global.css}">
 
-    <!-- Dashboard CSS -->
-    <link rel="stylesheet" th:href="@{/css/admin/dashboard.css}">
-
+    <!-- Dashboard -->
+    <link rel="stylesheet"
+          th:href="@{/css/admin/dashboard.css}">
 </head>
+
 <body>
 
 <div class="container">
-    <!-- sidebar -->
-    <div th:replace="~{admin/sidebar :: sidebar}"></div>
+
+    <!-- Sidebar -->
+    <div th:replace="~{fragments/admin/sidebar :: sidebar}"></div>
 
     <div class="conteudo">
+
+        <!-- Cabeçalho -->
         <header class="cabecalho">
             <h1>Dashboard</h1>
         </header>
 
+        <!-- Card do gráfico -->
         <main class="card">
 
             <div class="cabecalho-grafico">
@@ -37,47 +47,111 @@
 
                 <div class="filtros">
 
+                    <!-- Petiscos -->
                     <label class="checkbox">
-                        <input type="checkbox" checked>
-                        <h6>Petisco</h6>
+                        <input
+                                type="checkbox"
+                                id="filtroPetiscos"
+                                value="petiscos"
+                                checked>
+
+                        <span>Petiscos</span>
                     </label>
 
-                    <span class="separador">-</span>
+                    <span class="separador">|</span>
 
+                    <!-- Rações -->
                     <label class="checkbox">
-                        <input type="checkbox" checked>
-                        <h6>Ração</h6>
+                        <input
+                                type="checkbox"
+                                id="filtroRacoes"
+                                value="racoes"
+                                checked>
+
+                        <span>Rações</span>
                     </label>
 
-                    <span class="separador">-</span>
+                    <span class="separador">|</span>
 
+                    <!-- Suplementos -->
                     <label class="checkbox">
-                        <input type="checkbox" checked>
-                        <h6>Suplemento</h6>
+                        <input
+                                type="checkbox"
+                                id="filtroSuplementos"
+                                value="suplementos"
+                                checked>
+
+                        <span>Suplementos</span>
                     </label>
 
+                    <!-- Datas -->
                     <div class="data">
-                        <input type="date">
+
+                        <input
+                                type="date"
+                                id="dataInicio"
+                                aria-label="Data inicial">
+
                         <span class="separador">-</span>
-                        <input type="date">
+
+                        <input
+                                type="date"
+                                id="dataFim"
+                                aria-label="Data final">
+
                     </div>
 
-                    <button type="button" class="btn-exportar">
+                    <!-- Botão -->
+                    <button
+                            type="button"
+                            class="btn-aplicar"
+                            id="btnAplicar">
+
+                        Aplicar
+
+                    </button>
+
+                    <!-- Exportar -->
+                    <button
+                            type="button"
+                            class="btn-exportar"
+                            id="btnExportar">
+
+                        <i class="fa-solid fa-download"></i>
+
                         Exportar CSV
+
                     </button>
 
                 </div>
 
             </div>
 
-            <div class="grafico">
-                <!-- gráfico aqui -->
+            <!-- Mensagem de erro -->
+            <div
+                    id="mensagemErro"
+                    class="mensagem-erro"
+                    hidden>
+            </div>
+
+            <!-- Gráfico -->
+            <div class="grafico-container">
+
+                <canvas id="graficoVendas"></canvas>
+
             </div>
 
         </main>
+
     </div>
 
 </div>
+
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<!-- Dashboard JS -->
+<script th:src="@{/js/admin/dashboard.js}"></script>
 
 </body>
 </html>

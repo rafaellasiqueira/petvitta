@@ -3,7 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <title>Detalhes do produto</title>
 
     <!-- Font Awesome (Ícones) -->
@@ -20,17 +19,15 @@
 
     <!-- Chatbot -->
     <link rel="stylesheet" th:href="@{/css/cliente/chatbot.css}">
-
 </head>
-
 <body>
+
 <div class="container">
 
     <!-- Cabeçalho -->
     <div th:replace="~{fragments/cliente/cabecalho :: cabecalho}"></div>
 
     <main class="conteudo">
-
         <!-- Card esquerda -->
         <div class="produto-detalhes">
 
@@ -44,7 +41,7 @@
             <!-- Informação do produto -->
             <div class="produto-info">
                 <div class="imagem-container">
-                    <img th:src="@{/images/produtos/racao-1.png}" alt="GranPlus Choice Adulto">
+                    <img th:src="@{/images/produtos/racao-1.png}">
                 </div>
 
                 <div class="info-principal">
@@ -60,9 +57,9 @@
                     <div class="secao-tamanhos">
                         <h2>Tamanhos</h2>
                         <div class="opcoes-tamanho">
-                            <button type="button" class="tamanho-opcao active">10.1 KG</button>
-                            <button type="button" class="tamanho-opcao">15 KG</button>
-                            <button type="button" class="tamanho-opcao">20 KG</button>
+                            <button type="button" class="tamanho-opcao active" data-preco="156.75">10.1 KG</button>
+                            <button type="button" class="tamanho-opcao" data-preco="199.90">15 KG</button>
+                            <button type="button" class="tamanho-opcao" data-preco="249.90">20 KG</button>
                         </div>
                     </div>
                 </div>
@@ -150,24 +147,23 @@
             <div class="quantidade-container">
                 <label>Quantidade</label>
                 <div class="seletor-quantidade">
-                    <button type="button" class="btn-qtd">-</button>
+                    <button type="button" class="btn-qtd menos">-</button>
                     <input type="number" value="1" min="1">
-                    <button type="button" class="btn-qtd">+</button>
+                    <button type="button" class="btn-qtd mais">+</button>
                 </div>
             </div>
 
             <button type="button" class="btn-adicionar-carrinho" onclick="adicionarCarrinho()">Adicionar ao carrinho</button>
 
             <div id="toast" class="toast">
-                <span class="toast-icone">✓</span>
+                <i class="toast-icone fa-solid fa-check"></i>
                 <span>Produto adicionado ao carrinho com sucesso!</span>
             </div>
         </div>
-
     </main>
 </div>
 
-
+<!-- Detalhes do produto JavaScript -->
 <script th:src="@{/js/cliente/detalhes-produto.js}"></script>
 
 <!-- ChatBot -->

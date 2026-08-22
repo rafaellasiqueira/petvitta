@@ -1,0 +1,233 @@
+.voltar {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    font-size: 16px;
+    font-weight: 600;
+    color: #4FD1B5;
+}
+
+.cabecalho {
+    gap: 12px;
+}
+
+.container-principal {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+}
+
+/* Card */
+
+.card {
+    background: #FFFFFF;
+    border-radius: 8px;
+    padding: 16px 20px;
+    width: 600px;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    box-sizing: border-box;
+}
+
+
+/* Título do card */
+.card h1 {
+    font-family: 'Fredoka', sans-serif;
+    font-size: 16px;
+    font-weight: 500;
+    color: #1F2A29;
+    margin: 0;
+}
+
+
+/* Formulários */
+
+.form-dados-pessoais,
+.form-dados-acesso,
+.form-endereco {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+
+/* Campos */
+
+.campo-grupo {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    width: 100%;
+}
+
+
+.campo-grupo label {
+    font-family: 'Fredoka', sans-serif;
+    font-size: 14px;
+    font-weight: 400;
+    color: #3A4A48;
+}
+
+
+/* Linha com dois campos */
+
+.linha-campos {
+    display: flex;
+    gap: 16px;
+    width: 100%;
+}
+
+
+.linha-campos .campo-grupo {
+    flex: 1;
+}
+
+
+/* Inputs e selects  */
+
+.campo-grupo input,
+.campo-grupo select,
+.campo-grupo textarea {
+    width: 100%;
+    box-sizing: border-box;
+    border: 1px solid #D9E2E0;
+    border-radius: 8px;
+    background-color: #FFFFFF;
+    font-family: 'Nunito', sans-serif;
+    font-size: 14px;
+    color: #3A4A48;
+    outline: none;
+}
+
+.campo-grupo input,
+.campo-grupo select {
+    height: 40px;
+    padding: 0 16px;
+}
+
+.campo-grupo textarea {
+    min-height: 90px;
+    padding: 12px 16px;
+    resize: vertical;
+}
+
+/* Placeholder */
+.campo-grupo input::placeholder,
+.campo-grupo textarea::placeholder {
+    color: #B8C7C3;
+}
+
+
+/* Campo de senha */
+.campo-senha {
+    position: relative;
+    width: 100%;
+}
+
+.campo-senha input {
+    width: 100%;
+    height: 40px;
+    padding: 0 45px 0 16px;
+    border: 1px solid #D9E2E0;
+    border-radius: 8px;
+    background-color: #FFFFFF;
+    font-family: 'Nunito', sans-serif;
+    font-size: 14px;
+    color: #3A4A48;
+    outline: none;
+    box-sizing: border-box;
+}
+
+.campo-senha input:focus {
+    border-color: #4FD1B5;
+}
+
+/* Olho */
+.btn-mostrar-senha {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    border: none;
+    background: transparent;
+    color: #5F7370;
+    font-size: 15px;
+    cursor: pointer;
+}
+
+
+/* Requisitos da senha */
+
+.requisitos-senha {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.requisitos-senha li {
+    color: #5F7370;
+    font-family: 'Nunito', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+
+/* Opcional */
+.campo-grupo label span {
+    color: #8A9996;
+    font-family: 'Nunito', sans-serif;
+    font-size: 12px;
+}
+
+
+/* Mensagem de erro */
+
+.mensagem-erro {
+    display: block;
+    color: #d93025;
+    font-family: 'Nunito', sans-serif;
+    font-size: 13px;
+    margin: 3px 0 0;
+}
+
+
+/* Botão  */
+
+.container-btn-salvar {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 8px;
+}
+
+
+.btn-salvar {
+    width: auto;
+    min-width: 150px;
+    height: 38px;
+    padding: 0 16px;
+    background-color: #4FD1B5;
+    border: none;
+    border-radius: 8px;
+    font-family: 'Fredoka', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    color: #FFFFFF;
+    cursor: pointer;
+}
+
+.btn-salvar:hover {
+    background-color: #37937F;
+}
+

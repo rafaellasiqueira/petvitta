@@ -33,6 +33,9 @@
 
 /* Botão cadastrar */
 .btn-cadastrar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
     width: 200px;
     height: 36px;
     padding: 0 16px;
@@ -44,6 +47,8 @@
     font-family: 'Fredoka', sans-serif;
     font-weight: 500;
     cursor: pointer;
+    text-align: center;
+    text-decoration: none;
 }
 
 

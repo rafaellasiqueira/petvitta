@@ -3,7 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <title>Carrinho</title>
 
     <!-- Font awesome (icones) -->
@@ -20,19 +19,20 @@
 
     <!-- Chatbot -->
     <link rel="stylesheet" th:href="@{/css/cliente/chatbot.css}">
-
 </head>
-
 <body>
+
 <div class="container">
+
     <!-- Cabecalho -->
     <div th:replace="~{fragments/cliente/cabecalho :: cabecalho}"></div>
 
     <main class="conteudo">
+
         <div class="container-esquerdo">
                 <div class="carrinho-cabecalho">
                     <h1>Carrinho</h1>
-                    <button type="button" class="btn-limpar">Limpar carrinho</button>
+                    <button type="button" id="btn-limpar" class="btn-limpar">Limpar carrinho</button>
                 </div>
 
                 <div class="produtos-expirados">
@@ -53,9 +53,7 @@
                 <div class="selecionar-todos">
                     <input type="checkbox" id="todos">
 
-                    <label for="todos">
-                        Selecionar todos os itens
-                    </label>
+                    <label for="todos">Selecionar todos os itens</label>
                 </div>
 
             <span class="linha-cinza"></span>
@@ -67,7 +65,7 @@
 
                     <div class="imagem-container">
                         <a th:href="@{/cliente/detalhes-produto}" class="produto-link">
-                            <img th:src="@{/images/produtos/racao-1.png}" alt="GranPlus Choice Adulto">
+                            <img th:src="@{/images/produtos/racao-1.png}">
                         </a>
                     </div>
 
@@ -90,10 +88,8 @@
                                 <button type="button" class="tamanho-opcao" data-preco="249.90">20 KG</button>
                             </div>
                         </div>
-
                     </div>
                 </div>
-
                 <button class="btn-excluir" type="button"><i class="fa-solid fa-trash"></i></button>
             </div>
 
@@ -131,7 +127,6 @@
                         </div>
                     </div>
                 </div>
-
                 <button class="btn-excluir" type="button"><i class="fa-solid fa-trash"></i></button>
             </div>
         </div>
@@ -155,6 +150,7 @@
     </main>
 </div>
 
+<!-- Carrinho -->
 <script th:src="@{/js/cliente/carrinho.js}"></script>
 
 <!-- ChatBot -->

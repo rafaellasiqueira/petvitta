@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Detalhes do cliente</title>
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+    <!-- Sidebar CSS -->
+    <link rel="stylesheet" th:href="@{/css/admin/sidebar.css}">
+
+    <!-- Global CSS -->
+    <link rel="stylesheet" th:href="@{/css/admin/global.css}">
+
+    <!-- Clientes CSS (reaproveitando .card, tabela, etc.) -->
+    <link rel="stylesheet" th:href="@{/css/admin/clientes.css}">
+
+    <!-- NOVO: CSS próprio da tela de detalhes (crie reaproveitando as classes acima) -->
+    <link rel="stylesheet" th:href="@{/css/admin/detalhesCliente.css}">
+
+    <!-- Modal CSS (mesmo padrão do restante do projeto) -->
+    <link rel="stylesheet" th:href="@{/css/cliente/modal.css}">
+</head>
+
+<body>
+
+<div class="container">
+
+    <!-- Sidebar -->
+    <div th:replace="~{fragments/admin/sidebar :: sidebar}"></div>
+
+    <!-- Conteúdo -->
+    <div class="conteudo">
+
+        <!-- Cabeçalho -->
+        <header class="cabecalho">
+            <a th:href="@{/admin/clientes}" class="voltar"><i class="fa-solid fa-chevron-left"></i></a>
+            <h1>Detalhes do cliente</h1>
+        </header>
+
+
+        <!-- =====================================================
+             PERFIL
+        ====================================================== -->
+        <main class="card">
+
+            <div class="perfil-cliente">
+
+                <div class="perfil-cabecalho">
+                    <h2 id="detalheNome">-</h2>
+                    <span class="badge-ranking">
+                        Ranking: <span id="detalheRanking">0</span>
+                    </span>
+                </div>
+
+                <div class="grid-perfil">
+
+                    <div class="campo-perfil">
+                        <label>CPF</label>
+                        <p id="detalheCpf">-</p>
+                    </div>
+
+                    <div class="campo-perfil">
+                        <label>E-mail</label>
+                        <p id="detalheEmail">-</p>
+                    </div>
+
+                    <div class="campo-perfil">
+                        <label>Gênero</label>
+                        <p id="detalheGenero">-</p>
+                    </div>
+
+                    <div class="campo-perfil">
+                        <label>Data de nascimento</label>
+                        <p id="detalheNascimento">-</p>
+                    </div>
+
+                    <div class="campo-perfil">
+                        <label>Celular</label>
+                        <p id="detalheTelefone">-</p>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </main>
+
+
+        <!-- =====================================================
+             ENDEREÇO
+        ====================================================== -->
+        <main class="card">
+
+            <h2>Endereço</h2>
+
+            <div class="endereco-cliente">
+                <p id="detalheEndereco">-</p>
+                <span id="detalheCep">-</span>
+            </div>
+
+        </main>
+
+
+        <!-- =====================================================
+             TRANSAÇÕES
+             (dados fictícios direto no HTML, pois ainda não
+             existe consulta ao banco de pedidos)
+        ====================================================== -->
+        <main class="card">
+
+            <h2>Transações</h2>
+
+            <table>
+
+                <thead>
+                <tr>
+                    <th>Pedido</th>
+                    <th>Data</th>
+                    <th>Valor total</th>
+                    <th>Status</th>
+                    <th>Ações</th>
+                </tr>
+                </thead>
+
+                <tbody>
+
+                <tr>
+                    <td>PED-2031</td>
+                    <td>12/07/2026</td>
+                    <td>R$ 396,35</td>
+                    <td><span class="status status-concluido">Concluído</span></td>
+                    <td>
+                        <i class="fa-solid fa-eye btn-ver-pedido"
+                           title="Ver detalhes do pedido"
+                           data-pedido="PED-2031"
+                           data-data="12/07/2026"
+                           data-status="Concluído"
+                           data-pagamento="Cartão de crédito (Visa) + cupom PROMO80"
+                           data-itens="Ração Cães Adultos Choice 10.1KG (1); Ração GoldeN Gatos 10.1KG (2)"
+                           data-valor="R$ 396,35"></i>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>PED-1988</td>
+                    <td>02/06/2026</td>
+                    <td>R$ 89,90</td>
+                    <td><span class="status status-cancelado">Cancelado</span></td>
+                    <td>
+                        <i class="fa-solid fa-eye btn-ver-pedido"
+                           title="Ver detalhes do pedido"
+                           data-pedido="PED-1988"
+                           data-data="02/06/2026"
+                           data-status="Cancelado"
+                           data-pagamento="Cartão de crédito (Mastercard)"
+                           data-itens="Areia Higiênica para Gatos 4KG (1)"
+                           data-valor="R$ 89,90"></i>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>PED-1750</td>
+                    <td>15/03/2026</td>
+                    <td>R$ 210,00</td>
+                    <td><span class="status status-concluido">Concluído</span></td>
+                    <td>
+                        <i class="fa-solid fa-eye btn-ver-pedido"
+                           title="Ver detalhes do pedido"
+                           data-pedido="PED-1750"
+                           data-data="15/03/2026"
+                           data-status="Concluído"
+                           data-pagamento="2 cartões: Visa (R$150,00) + Mastercard (R$60,00)"
+                           data-itens="Brinquedo mordedor (2); Coleira ajustável (1)"
+                           data-valor="R$ 210,00"></i>
+                    </td>
+                </tr>
+
+                </tbody>
+
+            </table>
+
+        </main>
+
+    </div>
+
+</div>
+
+
+<!-- =====================================================
+     MODAL DETALHES DO PEDIDO
+     (adaptado do modelo modalAuditoria que você enviou)
+====================================================== -->
+<div id="modalDetalhesPedido" class="modal">
+    <div class="modalConteudo">
+        <div class="modalCabecalho">
+            <h2>Detalhes do pedido</h2>
+            <button class="btn-fechar" id="btnFecharModalPedido">&times;</button>
+        </div>
+        <div class="modal-body">
+            <p><strong>Pedido:</strong> <span id="modalPedidoId"></span></p>
+            <p><strong>Data:</strong> <span id="modalPedidoData"></span></p>
+            <p><strong>Status:</strong> <span id="modalPedidoStatus"></span></p>
+            <p><strong>Forma de pagamento:</strong> <span id="modalPedidoPagamento"></span></p>
+            <p><strong>Itens:</strong> <span id="modalPedidoItens"></span></p>
+            <p><strong>Valor total:</strong> <span id="modalPedidoValor"></span></p>
+        </div>
+    </div>
+</div>
+
+
+<script th:src="@{/js/admin/detalhesCliente.js}"></script>
+
+</body>
+</html>

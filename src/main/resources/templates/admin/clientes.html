@@ -1,158 +1,629 @@
 <!DOCTYPE html>
-<html lang="pt-BR" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+
 <head>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>Clientes</title>
 
-    <!-- font awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <!-- Font Awesome -->
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 
-    <!-- sidebar css -->
-    <link rel="stylesheet" th:href="@{/css/admin/sidebar.css}">
+    <!-- Sidebar CSS -->
+    <link rel="stylesheet"
+          th:href="@{/css/admin/sidebar.css}">
 
     <!-- Global CSS -->
-    <link rel="stylesheet" th:href="@{/css/admin/global.css}">
+    <link rel="stylesheet"
+          th:href="@{/css/admin/global.css}">
 
     <!-- Clientes CSS -->
-    <link rel="stylesheet" th:href="@{/css/admin/clientes.css}">
+    <link rel="stylesheet"
+          th:href="@{/css/admin/clientes.css}">
+
+    <!-- Modal CSS (mesmo padrão usado no checkout) -->
+    <link rel="stylesheet"
+          th:href="@{/css/cliente/modal.css}">
+
 </head>
 
 <body>
 
 <div class="container">
 
-    <!-- sidebar -->
-    <div th:replace="~{admin/sidebar :: sidebar}"></div>
+    <!-- =====================================================
+         SIDEBAR
+    ====================================================== -->
 
-    <!-- conteudo -->
+    <div th:replace="~{fragments/admin/sidebar :: sidebar}"></div>
+
+
+    <!-- =====================================================
+         CONTEÚDO
+    ====================================================== -->
+
     <div class="conteudo">
-        <!-- cabecalho -->
+
+        <!-- =================================================
+             CABEÇALHO
+        ================================================== -->
+
         <header class="cabecalho">
+
             <h1>Clientes</h1>
+
         </header>
 
+
+        <!-- =================================================
+             CARD PRINCIPAL
+        ================================================== -->
+
         <main class="card">
-            <!-- filtros -->
-            <!-- lado direito -->
+
+
+            <!-- =================================================
+                 AÇÕES
+            ================================================== -->
+
             <div class="direito">
-                <div class="pesquisa"><i class="fa-solid fa-magnifying-glass"></i>
+
+                <!-- Pesquisa -->
+
+                <div class="pesquisa">
+
+                    <i class="fa-solid fa-magnifying-glass"></i>
+
                     <input type="text"
                            id="inputPesquisa"
-                           placeholder="Buscar pelo nome do produto"></div>
-                <button type="button" class="btn-filtrar" id="btnfiltrar"><i class="fa-solid fa-filter"></i>Filtrar</button>
-                <button type="button" class="btn-cadastrar" id="btnCadastrar">Cadastrar cliente</button>
+                           placeholder="Buscar pelo nome do cliente">
+
+                </div>
+
+
+                <!-- Botão filtrar -->
+
+                <button type="button"
+                        class="btn-filtrar"
+                        id="btnfiltrar">
+
+                    <i class="fa-solid fa-filter"></i>
+
+                    Filtrar
+
+                </button>
+
+
+                <!-- Botão cadastrar -->
+
+                <a th:href="@{/admin/cadastrarCliente}"
+                   class="btn-cadastrar">Cadastrar cliente
+                </a>
+
             </div>
 
-            <!-- Painel filtros -->
-            <form id="painelFiltro" class="painel-filtro hidden" th:action="@{/admin/clientes}" method="GET">
+
+            <!-- =================================================
+                 PAINEL DE FILTROS
+            ================================================== -->
+
+            <form id="painelFiltro"
+                  class="painel-filtro hidden"
+                  th:action="@{/admin/clientes}"
+                  method="GET">
+
                 <div class="grid-filtros">
-                    <div class="campo-filtro">
-                        <label for="filtroCpf">CPF</label>
-                        <input type="text" id="filtroCpf" name="cpf" placeholder="000.000.000-00">
-                    </div>
+
+
+                    <!-- CPF -->
 
                     <div class="campo-filtro">
-                        <label for="filtroEmail">E-mail</label>
-                        <input type="email" id="filtroEmail" name="email" placeholder="cliente@email.com">
+
+                        <label for="filtroCpf">
+                            CPF
+                        </label>
+
+                        <input type="text"
+                               id="filtroCpf"
+                               name="cpf"
+                               placeholder="000.000.000-00">
+
                     </div>
 
-                    <div class="campo-filtro">
-                        <label for="filtroTelefone">Telefone</label>
-                        <input type="text" id="filtroTelefone" name="telefone" placeholder="(00) 00000-0000">
-                    </div>
+
+                    <!-- E-mail -->
 
                     <div class="campo-filtro">
-                        <label for="filtroDataNascimento">Data de Nascimento</label>
-                        <input type="date" id="filtroDataNascimento" name="dataNascimento">
+
+                        <label for="filtroEmail">
+                            E-mail
+                        </label>
+
+                        <input type="email"
+                               id="filtroEmail"
+                               name="email"
+                               placeholder="cliente@email.com">
+
                     </div>
 
+
+                    <!-- Telefone -->
+
                     <div class="campo-filtro">
-                        <label for="filtroGenero">Gênero</label>
-                        <select id="filtroGenero" name="genero">
-                            <option value="">Selecione o gênero</option>
-                            <option value="Feminino">Feminino</option>
-                            <option value="Masculino">Masculino</option>
-                            <option value="Outros">Outros</option>
+
+                        <label for="filtroTelefone">
+                            Telefone
+                        </label>
+
+                        <input type="text"
+                               id="filtroTelefone"
+                               name="telefone"
+                               placeholder="(00) 00000-0000">
+
+                    </div>
+
+
+                    <!-- Data de nascimento -->
+
+                    <div class="campo-filtro">
+
+                        <label for="filtroDataNascimento">
+                            Data de Nascimento
+                        </label>
+
+                        <input type="date"
+                               id="filtroDataNascimento"
+                               name="dataNascimento">
+
+                    </div>
+
+
+                    <!-- Gênero -->
+
+                    <div class="campo-filtro">
+
+                        <label for="filtroGenero">
+                            Gênero
+                        </label>
+
+                        <select id="filtroGenero"
+                                name="genero">
+
+                            <option value="">
+                                Selecione o gênero
+                            </option>
+
+                            <option value="Feminino">
+                                Feminino
+                            </option>
+
+                            <option value="Masculino">
+                                Masculino
+                            </option>
+
+                            <option value="Outros">
+                                Outros
+                            </option>
+
                         </select>
+
                     </div>
 
+
+                    <!-- Status -->
+
                     <div class="campo-filtro">
-                        <label for="filtroStatus">Status</label>
-                        <select id="filtroStatus" name="status">
-                            <option value="">Selecione o status</option>
-                            <option value="Ativo">Ativo</option>
-                            <option value="Inativo">Inativo</option>
+
+                        <label for="filtroStatus">
+                            Status
+                        </label>
+
+                        <select id="filtroStatus"
+                                name="status">
+
+                            <option value="">
+                                Selecione o status
+                            </option>
+
+                            <option value="Ativo">
+                                Ativo
+                            </option>
+
+                            <option value="Inativo">
+                                Inativo
+                            </option>
+
                         </select>
+
                     </div>
+
                 </div>
+
+
+                <!-- =================================================
+                     AÇÕES DOS FILTROS
+                ================================================== -->
 
                 <div class="acoes-filtro">
-                    <button type="button" class="btn-limpar" id="btnLimparFiltro">Limpar Filtros</button>
-                    <button type="submit" class="btn-aplicar">Aplicar Filtros</button>
+
+                    <button type="button"
+                            class="btn-limpar"
+                            id="btnLimparFiltro">
+
+                        Limpar Filtros
+
+                    </button>
+
+
+                    <button type="submit"
+                            class="btn-aplicar">
+
+                        Aplicar Filtros
+
+                    </button>
+
                 </div>
+
             </form>
 
-            <!-- tabela -->
+
+            <!-- =================================================
+                 TABELA
+            ================================================== -->
+
             <table>
+
                 <thead>
+
                 <tr>
+
                     <th>Código</th>
+
                     <th>Cliente</th>
+
                     <th>CPF</th>
+
                     <th>E-mail</th>
+
                     <th>Ranking</th>
-                    <th></th>
+
+                    <th>Ações</th>
+
                 </tr>
+
                 </thead>
+
+
                 <tbody>
+
+
+                <!-- =================================================
+                     CLIENTE 01
+                ================================================== -->
+
                 <tr>
-                    <td>CL-001</td>
-                    <td>Letícia Gomes de Souza</td>
-                    <td>123.456.789-00</td>
-                    <td>leticia@gmail.com</td>
-                    <td>0</td>
+
                     <td>
-                        <i class="fa-solid fa-eye btn-detalhes"></i>
-                        <i class="fa-solid fa-pen btn-editar"></i>
-                        <button type="button" class="btn-inativar">Inativar</button>
+                        CL-001
                     </td>
+
+                    <td>
+                        Letícia Gomes de Souza
+                    </td>
+
+                    <td>
+                        123.456.789-00
+                    </td>
+
+                    <td>
+                        leticia@gmail.com
+                    </td>
+
+                    <td>
+                        0
+                    </td>
+
+                    <td>
+
+                        <!-- Detalhes: dados fictícios completos p/ a tela de detalhes -->
+
+                        <i class="fa-solid fa-eye btn-detalhes"
+                           title="Visualizar cliente"
+                           data-codigo="CL-001"
+                           data-nome="Letícia Gomes de Souza"
+                           data-cpf="123.456.789-00"
+                           data-email="leticia@gmail.com"
+                           data-genero="Feminino"
+                           data-ranking="0"
+                           data-nascimento="20/05/1995"
+                           data-telefone="(11) 98765-4321"
+                           data-logradouro="Avenida Paulista"
+                           data-numero="1578"
+                           data-bairro="Bela Vista"
+                           data-cidade="São Paulo"
+                           data-estado="SP"
+                           data-cep="01310-100"
+                           data-pais="Brasil">
+                        </i>
+
+
+
+                        <!-- Editar Cliente 01 -->
+                        <button type="button"
+                                class="btn-editar"
+                                title="Editar cliente"
+                                data-codigo="CL-001"
+                                data-nome="Letícia Gomes de Souza"
+                                data-cpf="123.456.789-00"
+                                data-email="leticia@gmail.com">
+
+                            <i class="fa-solid fa-pen"></i>
+
+                        </button>
+
+
+                        <!-- Inativar -->
+
+                        <button type="button"
+                                class="btn-inativar">
+
+                            Inativar
+
+                        </button>
+
+                    </td>
+
                 </tr>
+
+
+                <!-- =================================================
+                     CLIENTE 02
+                ================================================== -->
+
                 <tr class="inativo">
-                    <td>CL-002</td>
-                    <td>Marcos Oliveira</td>
-                    <td>223.456.789-00</td>
-                    <td>marcos@gmail.com</td>
-                    <td>0</td>
+
                     <td>
-                        <i class="fa-solid fa-eye btn-detalhes"></i>
-                        <i class="fa-solid fa-pen btn-editar"></i>
-                        <button type="button" class="btn-ativar">Ativar</button>
+                        CL-002
                     </td>
+
+                    <td>
+                        Marcos Oliveira
+                    </td>
+
+                    <td>
+                        223.456.789-00
+                    </td>
+
+                    <td>
+                        marcos@gmail.com
+                    </td>
+
+                    <td>
+                        0
+                    </td>
+
+                    <td>
+
+                        <!-- Detalhes -->
+
+                        <i class="fa-solid fa-eye btn-detalhes"
+                           title="Visualizar cliente"
+                           data-codigo="CL-002"
+                           data-nome="Marcos Oliveira"
+                           data-cpf="223.456.789-00"
+                           data-email="marcos@gmail.com"
+                           data-genero="Masculino"
+                           data-ranking="0"
+                           data-nascimento="14/02/1990"
+                           data-telefone="(15) 99123-4567"
+                           data-logradouro="Rua das Acácias"
+                           data-numero="220"
+                           data-bairro="Centro"
+                           data-cidade="Sorocaba"
+                           data-estado="SP"
+                           data-cep="18010-000"
+                           data-pais="Brasil">
+                        </i>
+
+
+                        <!-- Editar Cliente 02 -->
+                        <a href="#"
+                           class="btn-editar"
+                           title="Editar cliente"
+                           data-codigo="CL-002"
+                           data-nome="Marcos Oliveira"
+                           data-cpf="223.456.789-00"
+                           data-email="marcos@gmail.com">
+
+                            <i class="fa-solid fa-pen"></i>
+
+                        </a>
+
+
+                        <!-- Ativar -->
+
+                        <button type="button"
+                                class="btn-ativar">
+
+                            Ativar
+
+                        </button>
+
+                    </td>
+
                 </tr>
+
 
                 </tbody>
+
             </table>
 
-            <!-- paginacao -->
+
+            <!-- =================================================
+                 PAGINAÇÃO
+            ================================================== -->
+
             <div class="paginacao">
-                <button type="button" class="btn-paginacao" disabled><i class="fa-solid fa-chevron-left"></i></button>
-                <span class="paginacao-item active">1</span>
-                <span class="paginacao-item">2</span>
-                <span class="paginacao-item">3</span>
-                <button type="button" class="btn-paginacao"><i class="fa-solid fa-chevron-right"></i></button>
+
+                <button type="button"
+                        class="btn-paginacao"
+                        disabled>
+
+                    <i class="fa-solid fa-chevron-left"></i>
+
+                </button>
+
+
+                <span class="paginacao-item active">
+                    1
+                </span>
+
+                <span class="paginacao-item">
+                    2
+                </span>
+
+                <span class="paginacao-item">
+                    3
+                </span>
+
+
+                <button type="button"
+                        class="btn-paginacao">
+
+                    <i class="fa-solid fa-chevron-right"></i>
+
+                </button>
+
             </div>
 
-            <!-- modal cadastro -->
-
-
         </main>
+
     </div>
+
 </div>
 
-<!-- JavaScript -->
+
+<!-- =====================================================
+     MODAL INATIVAR CLIENTE
+====================================================== -->
+
+<div id="modalInativarCliente" class="modal">
+
+    <div class="modalConteudo">
+
+        <div class="modalCabecalho">
+            <h2>Inativar cliente</h2>
+            <button type="button" class="btn-fechar" id="btnFecharModalInativar">&times;</button>
+        </div>
+
+        <form id="formInativarCliente">
+
+            <div class="modal-body">
+
+                <p class="texto-modal">
+                    Selecione o motivo e informe a justificativa para inativar este cliente.
+                </p>
+
+                <div class="campo-formulario">
+                    <label for="motivoInativar">Motivo</label>
+
+                    <select id="motivoInativar" required>
+                        <option value="" disabled selected hidden>Selecione o motivo</option>
+                        <option value="suspeita-fraude">Suspeita de fraude</option>
+                        <option value="uso-indevido">Uso indevido da plataforma</option>
+                        <option value="determinacao-administrativa">Determinação administrativa</option>
+                        <option value="outro">Outro</option>
+                    </select>
+                </div>
+
+                <div class="campo-formulario">
+                    <label for="justificativaInativar">Justificativa</label>
+
+                    <textarea id="justificativaInativar"
+                              placeholder="Descreva o motivo da inativação"
+                              maxlength="500"
+                              required></textarea>
+                </div>
+
+                <div class="modalBotoes">
+                    <button type="button" class="btn-cancelar" id="btnCancelarInativar">Cancelar</button>
+                    <button type="submit" class="btn-confirmar-exclusao">Inativar cliente</button>
+                </div>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+
+<!-- =====================================================
+     MODAL ATIVAR CLIENTE
+====================================================== -->
+
+<div id="modalAtivarCliente" class="modal">
+
+    <div class="modalConteudo">
+
+        <div class="modalCabecalho">
+            <h2>Ativar cliente</h2>
+            <button type="button" class="btn-fechar" id="btnFecharModalAtivar">&times;</button>
+        </div>
+
+        <form id="formAtivarCliente">
+
+            <div class="modal-body">
+
+                <p class="texto-modal">
+                    Selecione o motivo e informe a justificativa para ativar este cliente.
+                </p>
+
+                <div class="campo-formulario">
+                    <label for="motivoAtivar">Motivo</label>
+
+                    <select id="motivoAtivar" required>
+                        <option value="" disabled selected hidden>Selecione o motivo</option>
+                        <option value="revisao-administrativa">Revisão administrativa</option>
+                        <option value="fraude-descartada">Suspeita de fraude descartada</option>
+                        <option value="regularizacao-cadastral">Regularização cadastral</option>
+                        <option value="outro">Outro</option>
+                    </select>
+                </div>
+
+                <div class="campo-formulario">
+                    <label for="justificativaAtivar">Justificativa</label>
+
+                    <textarea id="justificativaAtivar"
+                              placeholder="Descreva o motivo da ativação"
+                              maxlength="500"
+                              required></textarea>
+                </div>
+
+                <div class="modalBotoes">
+                    <button type="button" class="btn-cancelar" id="btnCancelarAtivar">Cancelar</button>
+                    <button type="submit" class="btn-adicionar">Ativar cliente</button>
+                </div>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+
+<!-- =====================================================
+     JAVASCRIPT
+====================================================== -->
+
 <script th:src="@{/js/admin/clientes.js}"></script>
 
 </body>
+
 </html>
