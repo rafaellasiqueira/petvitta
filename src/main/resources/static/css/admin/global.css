@@ -316,7 +316,8 @@ h2 {
 }
 
 .btn-adicionar,
-.btn-confirmar-exclusao {
+.btn-confirmar-exclusao,
+.btn-confirmar {
     width: auto;
     padding: 0px 12px;
     height: 40px;
@@ -331,6 +332,7 @@ h2 {
 }
 
 .btn-adicionar:hover,
-.btn-confirmar-exclusao:hover {
+.btn-confirmar-exclusao:hover
+.btn-confirmar:hover{
     background: #157363;
 }

@@ -22,24 +22,6 @@
     padding: 4px 8px;
 }
 
-/* Modal */
-.btn-confirmar {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: auto;
-    height: 32px;
-    padding: 0 16px;
-    border: none;
-    border-radius: 8px;
-    background: #1C9B86;
-    color: #FFFFFF;
-    font-size: 14px;
-    font-family: 'Fredoka', sans-serif;
-    font-weight: 500;
-    cursor: pointer;
-}
-
 /* Linha */
 .item-estoque-linha {
     display: flex;
@@ -129,4 +111,34 @@
     white-space: nowrap;
 }
 
+/* Toast */
+.toast {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    display: none;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 20px;
+    background-color: #EA2B41;
+    color: white;
+    border-radius: 8px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    z-index: 1000;
+}
+
+.toast.ativo {
+    display: flex;
+}
+
+.toast-icone {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    color: white;
+}
 

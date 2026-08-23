@@ -6,8 +6,7 @@
     <title>Pedidos</title>
 
     <!-- font awesome -->
-    <link rel="stylesheet"
-          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 
     <!-- sidebar css -->
     <link rel="stylesheet" th:href="@{/css/admin/sidebar.css}">
@@ -36,12 +35,10 @@
         <main class="card">
 
             <!-- filtros -->
-
             <div class="filtros">
                 <!-- lado esquerdo -->
                 <div class="botoes">
                     <button class="btn-filtro active">Todos</button>
-                    <button class="btn-filtro">Em aberto</button>
                     <button class="btn-filtro">Em processamento</button>
                     <button class="btn-filtro">Pagamento realizado</button>
                     <button class="btn-filtro">Em trânsito</button>
@@ -77,28 +74,262 @@
                     <td>Letícia Gomes de Souza</td>
                     <td>2</td>
                     <td>16/08/2026</td>
-                    <td><select class="dropdown">
-                        <option value="Em aberto" selected>Em aberto</option>
-                        <option value="Em processamento">Em processamento</option>
-                        <option value="Pagamento realizado">Pagamento realizado</option>
-                        <option value="Em trânsito">Em trânsito</option>
-                        <option value="Entregue">Entregue</option>
-                        <option value="Cancelado">Cancelado</option>
-                        <option value="Pagamento recusado">Pagamento recusado</option>
-                    </select>
+                    <td>
+                        <select class="dropdown">
+                            <option value="Em aberto" selected>Em aberto</option>
+                            <option value="Em processamento">Em processamento</option>
+                            <option value="Pagamento realizado">Pagamento realizado</option>
+                            <option value="Em trânsito">Em trânsito</option>
+                            <option value="Entregue">Entregue</option>
+                            <option value="Cancelado">Cancelado</option>
+                            <option value="Pagamento recusado">Pagamento recusado</option>
+                        </select>
                     </td>
                     <td>
                         <i class="fa-solid fa-eye btn-detalhes"
                            data-codigo="PEDI001"
                            data-cliente="Letícia Gomes de Souza"
                            data-data="16/08/2026"
-                           data-produtos="Ração Golden 10kg|Petisco de Carne"
-                           data-subtotal="R$ 100,00"
+                           data-produtos="Ração Golden 10kg|Suplemento Vitamínico para Cães"
+                           data-subtotal="R$ 120,00"
                            data-descontos="R$ 10,00"
-                           data-total="R$ 90,00"
+                           data-total="R$ 110,00"
                            data-endereco="Rua das Flores, 123 - São Paulo/SP">
                         </i>
                     </td>
+                </tr>
+                <tr>
+                    <td>PEDI002</td>
+                    <td>Lucas Fernandes</td>
+                    <td>1</td>
+                    <td>17/08/2026</td>
+                    <td>
+                        <select class="dropdown">
+                            <option value="Em aberto">Em aberto</option>
+                            <option value="Em processamento" selected>Em processamento</option>
+                            <option value="Pagamento realizado">Pagamento realizado</option>
+                            <option value="Em trânsito">Em trânsito</option>
+                            <option value="Entregue">Entregue</option>
+                            <option value="Cancelado">Cancelado</option>
+                            <option value="Pagamento recusado">Pagamento recusado</option>
+                        </select>
+                    </td>
+                    <td>
+                        <i class="fa-solid fa-eye btn-detalhes"
+                           data-codigo="PEDI002"
+                           data-cliente="Lucas Fernandes"
+                           data-data="17/08/2026"
+                           data-produtos="Petisco Bifinho de Carne 500g"
+                           data-subtotal="R$ 45,00"
+                           data-descontos="R$ 0,00"
+                           data-total="R$ 45,00"
+                           data-endereco="Av. Paulista, 900 - São Paulo/SP">
+                        </i>
+                    </td>
+                </tr>
+                <tr>
+                    <td>PEDI003</td>
+                    <td>Mariana Ribeiro</td>
+                    <td>3</td>
+                    <td>17/08/2026</td>
+                    <td>
+                        <select class="dropdown">
+                            <option value="Em aberto">Em aberto</option>
+                            <option value="Em processamento">Em processamento</option>
+                            <option value="Pagamento realizado" selected>Pagamento realizado</option>
+                            <option value="Em trânsito">Em trânsito</option>
+                            <option value="Entregue">Entregue</option>
+                            <option value="Cancelado">Cancelado</option>
+                            <option value="Pagamento recusado">Pagamento recusado</option>
+                        </select>
+                    </td>
+                    <td>
+                        <i class="fa-solid fa-eye btn-detalhes"
+                           data-codigo="PEDI003"
+                           data-cliente="Mariana Ribeiro"
+                           data-data="17/08/2026"
+                           data-produtos="Ração Premier 10kg|Petisco Dental 300g|Suplemento Ômega 3"
+                           data-subtotal="R$ 185,00"
+                           data-descontos="R$ 15,00"
+                           data-total="R$ 170,00"
+                           data-endereco="Rua Augusta, 450 - São Paulo/SP">
+                        </i>
+                    </td>
+                </tr>
+                <tr>
+                    <td>PEDI004</td>
+                    <td>Gabriel Santos</td>
+                    <td>1</td>
+                    <td>18/08/2026</td>
+                    <td>
+                        <select class="dropdown">
+                            <option value="Em aberto">Em aberto</option>
+                            <option value="Em processamento">Em processamento</option>
+                            <option value="Pagamento realizado">Pagamento realizado</option>
+                            <option value="Em trânsito" selected>Em trânsito</option>
+                            <option value="Entregue">Entregue</option>
+                            <option value="Cancelado">Cancelado</option>
+                            <option value="Pagamento recusado">Pagamento recusado</option>
+                        </select>
+                    </td>
+                    <td>
+                        <i class="fa-solid fa-eye btn-detalhes"
+                           data-codigo="PEDI004"
+                           data-cliente="Gabriel Santos"
+                           data-data="18/08/2026"
+                           data-produtos="Ração Premier Gatos 7,5kg"
+                           data-subtotal="R$ 180,00"
+                           data-descontos="R$ 0,00"
+                           data-total="R$ 180,00"
+                           data-endereco="Rua Silva Bueno, 1020 - São Paulo/SP">
+                        </i>
+                    </td>
+                </tr>
+                <tr>
+                    <td>PEDI005</td>
+                    <td>Camila Rocha</td>
+                    <td>4</td>
+                    <td>18/08/2026</td>
+                    <td>
+                        <select class="dropdown">
+                            <option value="Em aberto">Em aberto</option>
+                            <option value="Em processamento">Em processamento</option>
+                            <option value="Pagamento realizado">Pagamento realizado</option>
+                            <option value="Em trânsito">Em trânsito</option>
+                            <option value="Entregue" selected>Entregue</option>
+                            <option value="Cancelado">Cancelado</option>
+                            <option value="Pagamento recusado">Pagamento recusado</option>
+                        </select>
+                    </td>
+                    <td>
+                        <i class="fa-solid fa-eye btn-detalhes"
+                           data-codigo="PEDI005"
+                           data-cliente="Camila Rocha"
+                           data-data="18/08/2026"
+                           data-produtos="Ração Golden 15kg|Petisco Bifinho 500g|Suplemento Articular|Petisco Dental 300g"
+                           data-subtotal="R$ 250,00"
+                           data-descontos="R$ 25,00"
+                           data-total="R$ 225,00"
+                           data-endereco="Rua Vergueiro, 3050 - São Paulo/SP">
+                        </i>
+                    </td>
+                </tr>
+                <tr>
+                    <td>PEDI006</td>
+                    <td>Thiago Martins</td>
+                    <td>2</td>
+                    <td>19/08/2026</td>
+                    <td>
+                        <select class="dropdown">
+                            <option value="Em aberto">Em aberto</option>
+                            <option value="Em processamento">Em processamento</option>
+                            <option value="Pagamento realizado">Pagamento realizado</option>
+                            <option value="Em trânsito">Em trânsito</option>
+                            <option value="Entregue">Entregue</option>
+                            <option value="Cancelado" selected>Cancelado</option>
+                            <option value="Pagamento recusado">Pagamento recusado</option>
+                        </select>
+                    </td>
+                    <td>
+                        <i class="fa-solid fa-eye btn-detalhes"
+                           data-codigo="PEDI006"
+                           data-cliente="Thiago Martins"
+                           data-data="19/08/2026"
+                           data-produtos="Ração Royal Canin 10kg|Suplemento Vitamínico"
+                           data-subtotal="R$ 220,00"
+                           data-descontos="R$ 0,00"
+                           data-total="R$ 220,00"
+                           data-endereco="Rua Domingos de Morais, 800 - São Paulo/SP">
+                        </i>
+                    </td>
+                </tr>
+                <tr>
+                    <td>PEDI007</td>
+                    <td>Amanda Lima</td>
+                    <td>1</td>
+                    <td>20/08/2026</td>
+                    <td>
+                        <select class="dropdown">
+                            <option value="Em aberto">Em aberto</option>
+                            <option value="Em processamento">Em processamento</option>
+                            <option value="Pagamento realizado">Pagamento realizado</option>
+                            <option value="Em trânsito">Em trânsito</option>
+                            <option value="Entregue">Entregue</option>
+                            <option value="Cancelado">Cancelado</option>
+                            <option value="Pagamento recusado" selected>Pagamento recusado</option>
+                        </select>
+                    </td>
+                    <td>
+                        <i class="fa-solid fa-eye btn-detalhes"
+                           data-codigo="PEDI007"
+                           data-cliente="Amanda Lima"
+                           data-data="20/08/2026"
+                           data-produtos="Ração Royal Canin 15kg"
+                           data-subtotal="R$ 340,00"
+                           data-descontos="R$ 0,00"
+                           data-total="R$ 340,00"
+                           data-endereco="Av. Rebouças, 1200 - São Paulo/SP">
+                        </i>
+                    </td>
+                </tr>
+                <tr>
+                    <td>PEDI008</td>
+                    <td>Bruno Alves</td>
+                    <td>2</td>
+                    <td>21/08/2026</td>
+                    <td>
+                        <select class="dropdown">
+                            <option value="Em aberto">Em aberto</option>
+                            <option value="Em processamento" selected>Em processamento</option>
+                            <option value="Pagamento realizado">Pagamento realizado</option>
+                            <option value="Em trânsito">Em trânsito</option>
+                            <option value="Entregue">Entregue</option>
+                            <option value="Cancelado">Cancelado</option>
+                            <option value="Pagamento recusado">Pagamento recusado</option>
+                        </select>
+                    </td>
+                    <td>
+                        <i class="fa-solid fa-eye btn-detalhes"
+                           data-codigo="PEDI008"
+                           data-cliente="Bruno Alves"
+                           data-data="21/08/2026"
+                           data-produtos="Ração Premier 15kg|Petisco de Frango 400g"
+                           data-subtotal="R$ 290,00"
+                           data-descontos="R$ 20,00"
+                           data-total="R$ 270,00"
+                           data-endereco="Rua Clélia, 500 - São Paulo/SP">
+                        </i>
+                    </td>
+                </tr>
+                <tr>
+                    <td>PEDI009</td>
+                    <td>Fernanda Costa</td>
+                    <td>3</td>
+                    <td>22/08/2026</td>
+                    <td>
+                        <select class="dropdown">
+                            <option value="Em aberto">Em aberto</option>
+                            <option value="Em processamento">Em processamento</option>
+                            <option value="Pagamento realizado" selected>Pagamento realizado</option>
+                            <option value="Em trânsito">Em trânsito</option>
+                            <option value="Entregue">Entregue</option>
+                            <option value="Cancelado">Cancelado</option>
+                            <option value="Pagamento recusado">Pagamento recusado</option>
+                        </select>
+                    </td>
+                    <td>
+                        <i class="fa-solid fa-eye btn-detalhes"
+                           data-codigo="PEDI009"
+                           data-cliente="Fernanda Costa"
+                           data-data="22/08/2026"
+                           data-produtos="Ração Golden 10kg|Suplemento Ômega 3|Petisco de Frango 400g"
+                           data-subtotal="R$ 130,00"
+                           data-descontos="R$ 5,00"
+                           data-total="R$ 125,00"
+                           data-endereco="Rua Teodoro Sampaio, 1800 - São Paulo/SP">
+                        </i>
+                    </td>
+                </tr>
                 </tbody>
             </table>
 
@@ -141,6 +372,30 @@
                         </div>
                     </div>
                 </div>
+            </div>
+
+            <!-- Modal de confirmação de cancelar pedido -->
+            <div id="modalCancelarPedido" class="modal">
+                <div class="modalConteudo">
+                    <div class="modalCabecalho">
+                        <h2>Atenção</h2>
+                        <button class="btn-fechar" id="btnFecharModalCancelarPedido">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <p>Tem certeza que deseja cancelar este pedido?</p>
+                        <p>Após o cancelamento, o status não poderá ser alterado.</p>
+                        <div class="botoes-modal">
+                            <button id="btnNaoCancelarPedido" class="btn-cancelar">Não cancelar</button>
+                            <button id="btnConfirmarCancelamento" class="btn-confirmar">Cancelar pedido</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div id="toast" class="toast">
+                <i class="toast-icone fa-solid fa-check"></i>
+                <p id="toastMensagem">Não é permitido voltar</p>
             </div>
         </main>
     </div>

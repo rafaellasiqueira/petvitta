@@ -1,17 +1,11 @@
 document.addEventListener('DOMContentLoaded', () => {
     const canvas = document.getElementById('graficoVendas');
-    const filtroPetiscos = document.getElementById('filtroPetiscos');
-    const filtroRacoes = document.getElementById('filtroRacoes');
-    const filtroSuplementos = document.getElementById('filtroSuplementos');
     const dataInicio = document.getElementById('dataInicio');
     const dataFim = document.getElementById('dataFim');
     const btnAplicar = document.getElementById('btnAplicar');
-    const btnExportar = document.getElementById('btnExportar');
     const mensagemErro = document.getElementById('mensagemErro');
     let grafico = null;
 
-
-    // Exemplo de dados
     const dadosVendas = {
         petiscos: {
             nome: 'Petiscos',
@@ -30,7 +24,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 21000
             ]
         },
-
         racoes: {
             nome: 'Rações',
             valores: [
@@ -48,7 +41,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 36500
             ]
         },
-
         suplementos: {
             nome: 'Suplementos',
             valores: [
@@ -66,10 +58,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 14800
             ]
         }
-
     };
 
-    // Meses
     const meses = [
         'Jan/2026',
         'Fev/2026',
@@ -85,45 +75,29 @@ document.addEventListener('DOMContentLoaded', () => {
         'Dez/2026'
     ];
 
-    // Formatação da moeda
     function formatarMoeda(valor) {
-
         return new Intl.NumberFormat('pt-BR', {
             style: 'currency',
             currency: 'BRL'
         }).format(valor);
-
     }
 
-    // Mensagem de erro
     function mostrarErro(mensagem) {
-
         mensagemErro.textContent = mensagem;
         mensagemErro.hidden = false;
-
     }
 
     function esconderErro() {
         mensagemErro.textContent = '';
         mensagemErro.hidden = true;
-
     }
 
-
-    // Validação das datas
     function validarDatas() {
         esconderErro();
-        if (!dataInicio.value || !dataFim.value) {
-            mostrarErro(
-                'Informe a data de início e a data de fim.'
-            );
-            return false;
-        }
 
         const inicio = new Date(dataInicio.value + 'T00:00:00');
         const fim = new Date(dataFim.value + 'T00:00:00');
 
-        // Data final não pode ser menor
         if (fim < inicio) {
             mostrarErro(
                 'A data de fim não pode ser anterior à data de início.'
@@ -131,12 +105,10 @@ document.addEventListener('DOMContentLoaded', () => {
             return false;
         }
 
-        // Calcula diferença aproximada em meses
         const mesesDiferenca =
             (fim.getFullYear() - inicio.getFullYear()) * 12 +
             (fim.getMonth() - inicio.getMonth());
 
-        // Mínimo de 1 mês
         if (mesesDiferenca < 1) {
             mostrarErro(
                 'O período de análise deve possuir no mínimo 1 mês.'
@@ -144,37 +116,16 @@ document.addEventListener('DOMContentLoaded', () => {
             return false;
         }
 
-        // Máximo de 24 meses
         if (mesesDiferenca > 24) {
             mostrarErro(
                 'O período de análise pode possuir no máximo 24 meses.'
             );
             return false;
         }
+
         return true;
     }
 
-
-    // Verifica a categoria
-    function obterCategoriasSelecionadas() {
-        const categorias = [];
-
-        if (filtroPetiscos.checked) {
-            categorias.push('petiscos');
-        }
-
-        if (filtroRacoes.checked) {
-            categorias.push('racoes');
-        }
-
-        if (filtroSuplementos.checked) {
-            categorias.push('suplementos');
-        }
-        return categorias;
-    }
-
-
-    // Cria o dataset
     function criarDataset(categoria) {
         const configuracao = dadosVendas[categoria];
 
@@ -182,40 +133,24 @@ document.addEventListener('DOMContentLoaded', () => {
             label: configuracao.nome,
             data: configuracao.valores,
             borderWidth: 2,
-            tension: 0.3,
             fill: false,
             pointRadius: 4,
             pointHoverRadius: 6
-
         };
     }
 
-
-    // Cria o gráfico
     function criarGrafico() {
-        const categorias = obterCategoriasSelecionadas();
-
-        if (categorias.length === 0) {
-            mostrarErro(
-                'Selecione pelo menos uma categoria para exibir no gráfico.'
-            );
-
-            if (grafico) {
-                grafico.destroy();
-                grafico = null;
-            }
-            return;
-        }
-
         esconderErro();
 
         if (grafico) {
             grafico.destroy();
         }
 
-        const datasets = categorias.map(categoria => {
-            return criarDataset(categoria);
-        });
+        const datasets = [
+            criarDataset('petiscos'),
+            criarDataset('racoes'),
+            criarDataset('suplementos')
+        ];
 
         grafico = new Chart(canvas, {
             type: 'line',
@@ -223,10 +158,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 labels: meses,
                 datasets: datasets
             },
-
             options: {
                 responsive: true,
-                maintainAspectRatio: false,
+                maintainAspectRatio: false, /* Preenche 100% da altura e largura do container */
                 interaction: {
                     mode: 'index',
                     intersect: false
@@ -243,17 +177,16 @@ document.addEventListener('DOMContentLoaded', () => {
                             usePointStyle: true
                         }
                     },
-
                     tooltip: {
                         callbacks: {
                             label: function(context) {
                                 const valor = context.parsed.y;
+
                                 return `${context.dataset.label}: ${formatarMoeda(valor)}`;
                             }
                         }
                     }
                 },
-
                 scales: {
                     x: {
                         title: {
@@ -272,19 +205,16 @@ document.addEventListener('DOMContentLoaded', () => {
                         beginAtZero: true,
                         title: {
                             display: true,
-
                             text: 'Valor de vendas',
-
                             font: {
                                 family: 'Nunito',
                                 size: 14
-                            }
+                            },
+                            padding: 20
                         },
-
                         ticks: {
                             callback: function(value) {
                                 return formatarMoeda(value);
-
                             },
                             font: {
                                 family: 'Nunito'
@@ -296,37 +226,16 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Eventos
     btnAplicar.addEventListener('click', () => {
         if (!validarDatas()) {
             return;
         }
+
         criarGrafico();
     });
 
-    btnExportar.addEventListener('click', () => {
-        exportarCSV();
-    });
-
-    filtroPetiscos.addEventListener('change', () => {
-        criarGrafico();
-    });
-
-    filtroRacoes.addEventListener('change', () => {
-        criarGrafico();
-    });
-
-    filtroSuplementos.addEventListener('change', () => {
-        criarGrafico();
-    });
-
-    // Datas iniciais
     dataInicio.value = '2026-01-01';
     dataFim.value = '2026-12-31';
 
-
-    // Iniciar gráfico
-
     criarGrafico();
-
 });
