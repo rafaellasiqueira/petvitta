@@ -1,10 +1,4 @@
 @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@400;500;600;700&display=swap');
-/*
-400 → normal
-500 → médio
-600 → semi-negrito
-700 → negrito
-*/
 
 * {
     margin: 0;
@@ -102,16 +96,4 @@ span {
 /* espaco entre a opcao auditoria e sair */
 .menu-espaco {
     flex: 1;
-}
-
-/* Responsividade */
-@media (max-width: 700px) {
-    .sidebar {
-        width: 230px;
-    }
-
-    .logo {
-        width: 100%;
-    }
-
 }

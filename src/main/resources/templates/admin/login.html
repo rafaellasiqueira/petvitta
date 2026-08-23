@@ -4,6 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login administrador</title>
+
+    <!-- Font Awesome (Ícones) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+    <!-- Login CSS -->
     <link rel="stylesheet" th:href="@{/css/admin/login.css}">
 </head>
 <body>
@@ -11,17 +16,16 @@
 <div class="conteudo">
 
     <div class="lado-esquerdo">
-        <img class="logo" th:src="@{/images/logo-horizontal-branca.svg}" alt="Logo">
+        <img class="logo" th:src="@{/images/logo-horizontal-branca.svg}">
 
         <div class="container-principal">
             <h1>Seja bem-vindo!</h1>
             <p>Administre com inteligência e precisão</p>
 
-            <form method="POST">
+            <form method="post">
                 <div class="input-grupo">
                     <label for="email">E-mail</label>
-                    <input
-                            type="email"
+                    <input type="email"
                             id="email"
                             name="email"
                             placeholder="Digite seu e-mail"
@@ -42,7 +46,7 @@
                                 class="mostrar-senha"
                                 onclick="mostrarSenha()"
                         >
-                            <img id="icone-senha" th:src="@{/icons/eye-off.svg}" alt="Mostrar senha">
+                            <i id="icone-senha" class="fa-solid fa-eye"></i>
                         </button>
 
                     </div>
@@ -55,12 +59,12 @@
     </div>
 
     <div class="lado-direito">
-        <img th:src="@{/images/login-lado-direito.png}" alt="Ilustração">
+        <img th:src="@{/images/login-lado-direito.png}">
     </div>
 
 </div>
 
+<!-- Login JavaScript -->
 <script th:src="@{/js/admin/login.js}"></script>
-
 </body>
 </html>

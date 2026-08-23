@@ -1,91 +1,99 @@
+// ==============================
+// MODAL DE DETALHES DA TROCA
+// ==============================
+
 const modal = document.getElementById('modalTrocas');
 const btnFechar = document.getElementById('btnFecharModal');
 const botoesOlho = document.querySelectorAll('.btn-detalhes');
 
 botoesOlho.forEach(botao => {
 
-    botao.addEventListener('click', function() {
+    botao.addEventListener('click', function () {
 
         const linha = botao.closest('tr');
         const status = linha.querySelector('.dropdown').value;
 
         document.getElementById('modalCodigo').innerText = botao.dataset.codigo;
         document.getElementById('modalCliente').innerText = botao.dataset.cliente;
-        document.getElementById('modalStatus').innerText = status;
         document.getElementById('modalProduto').innerText = botao.dataset.produto;
         document.getElementById('modalMotivo').innerText = botao.dataset.motivo;
+        document.getElementById('modalJustificativa').innerText = botao.dataset.justificativa;
         document.getElementById('modalSolicitado').innerText = botao.dataset.solicitado;
 
+        // Status da troca
         const secaoStatus = document.getElementById('secaoStatus');
         const labelStatus = document.getElementById('labelStatus');
         const dataStatus = document.getElementById('modalDataStatus');
 
         secaoStatus.style.display = 'none';
-        labelStatus.innerText = '';
-        dataStatus.innerText = '';
+
+        let mensagemStatus = '';
 
         if (status === 'Troca aceita') {
-            labelStatus.innerText = 'Troca aceita em: ';
-            dataStatus.innerText = dataHoje();
-            secaoStatus.style.display = 'block';
+            mensagemStatus = 'Troca aceita em: ';
         }
 
         if (status === 'Item enviado') {
-            labelStatus.innerText = 'Item enviado em: ';
-            dataStatus.innerText = dataHoje();
-            secaoStatus.style.display = 'block';
+            mensagemStatus = 'Item enviado em: ';
         }
 
         if (status === 'Item recebido') {
-            labelStatus.innerText = 'Item recebido em: ';
-            dataStatus.innerText = dataHoje();
-            secaoStatus.style.display = 'block';
+            mensagemStatus = 'Item recebido em: ';
         }
 
         if (status === 'Troca processada') {
-            labelStatus.innerText = 'Troca processada em: ';
-            dataStatus.innerText = dataHoje();
-            secaoStatus.style.display = 'block';
+            mensagemStatus = 'Troca processada em: ';
         }
 
         if (status === 'Recusada') {
-                    labelStatus.innerText = 'Recusada em: ';
-                    dataStatus.innerText = dataHoje();
-                    secaoStatus.style.display = 'block';
+            mensagemStatus = 'Recusada em: ';
+        }
+
+        if (mensagemStatus !== '') {
+            labelStatus.innerText = mensagemStatus;
+            dataStatus.innerText = dataHoje();
+            secaoStatus.style.display = 'block';
         }
 
         modal.classList.add('active');
     });
 });
 
-btnFechar.addEventListener('click', function() {
+
+// Fecha o modal
+
+btnFechar.addEventListener('click', function () {
     modal.classList.remove('active');
 });
+
+
+// Data atual
 
 function dataHoje() {
     return new Date().toLocaleDateString('pt-BR');
 }
 
 
-// Modal de estoque
+// ==============================
+// MODAL DE ESTOQUE
+// ==============================
+
 const modalEstoque = document.getElementById('modalEstoque');
 const btnFecharEstoque = document.getElementById('btnFecharEstoque');
 const btnConfirmarEstoque = document.getElementById('btnConfirmarEstoque');
 const listaItensEstoque = document.getElementById('listaItensEstoque');
+
 const dropdowns = document.querySelectorAll('.dropdown');
-let linhaAtual = null;
 
-// Detecta alteração do status
 dropdowns.forEach(dropdown => {
-    dropdown.addEventListener('change', function() {
-        const novoStatus = dropdown.value;
-        const linha = dropdown.closest('tr');
-        linhaAtual = linha;
 
-        // Item recebido
-        if (novoStatus === 'Item recebido') {
+    dropdown.addEventListener('change', function () {
 
+        if (dropdown.value === 'Item recebido') {
+
+            const linha = dropdown.closest('tr');
             const botaoOlho = linha.querySelector('.btn-detalhes');
+
             const produto = botaoOlho.dataset.produto;
 
             listaItensEstoque.innerHTML = '';
@@ -97,28 +105,20 @@ dropdowns.forEach(dropdown => {
                 const div = document.createElement('div');
                 div.classList.add('item-estoque-linha');
 
-                const checkbox = document.createElement('input');
-                checkbox.type = 'checkbox';
-                checkbox.checked = true;
-                checkbox.value = item.trim();
-
                 const texto = document.createElement('span');
                 texto.innerText = item.trim();
 
                 const quantidade = document.createElement('input');
                 quantidade.type = 'number';
-                quantidade.min = 1;
-                quantidade.max = parseInt(item.trim().match(/^\d+/)[0]);
-                quantidade.value = 1;
+                quantidade.min = '1';
+                quantidade.value = '1';
                 quantidade.classList.add('quantidade-item');
 
-                div.appendChild(checkbox);
                 div.appendChild(texto);
                 div.appendChild(quantidade);
 
                 listaItensEstoque.appendChild(div);
             });
-
 
             modalEstoque.classList.add('active');
         }
@@ -126,58 +126,59 @@ dropdowns.forEach(dropdown => {
 });
 
 
-// Fecha o modal de estoque
-btnFecharEstoque.addEventListener('click', function() {
+// ==============================
+// FECHAR MODAL DE ESTOQUE
+// ==============================
+
+btnFecharEstoque.addEventListener('click', function () {
     modalEstoque.classList.remove('active');
 });
 
-// Modal de resumo
+
+// ==============================
+// MODAL DE RESUMO
+// ==============================
+
 const modalResumo = document.getElementById('modalResumo');
 const btnFecharResumo = document.getElementById('btnFecharResumo');
+
 const resumoItens = document.getElementById('resumoItens');
 const resumoCupom = document.getElementById('resumoCupom');
 
-// Confirmar estoque
-btnConfirmarEstoque.addEventListener('click', function() {
-    const itensSelecionados = listaItensEstoque.querySelectorAll(
-            'input[type="checkbox"]:checked'
-    );
+
+// Confirmar recebimento
+
+btnConfirmarEstoque.addEventListener('click', function () {
 
     resumoItens.innerHTML = '';
 
-    itensSelecionados.forEach(item => {
+    const itens = listaItensEstoque.querySelectorAll('.item-estoque-linha');
 
-        const linha = item.parentElement;
+    itens.forEach(item => {
 
-        const quantidade = linha.querySelector('.quantidade-item').value;
+        const produto = item.querySelector('span').innerText;
+        const quantidade = item.querySelector('.quantidade-item').value;
 
         const li = document.createElement('li');
-        li.innerText =
-            item.value + ' - Quantidade: ' + quantidade;
+
+        li.innerText = produto + ' - Quantidade: ' + quantidade;
 
         resumoItens.appendChild(li);
     });
 
 
-    // Gera o cupom
-    const numero = Math.floor(10000 + Math.random() * 90000);
-    const cupom = 'TROCA-' + numero;
-    resumoCupom.innerText = cupom;
+    // Cupom fictício para o protótipo
 
-    // Altera o status
-    if (linhaAtual) {
-        const dropdown = linhaAtual.querySelector('.dropdown');
-        dropdown.value = 'Troca processada';
-    }
+    resumoCupom.innerText = 'TROCA-2026-001';
 
-    // Fecha modal de estoque
+
     modalEstoque.classList.remove('active');
-
-    // Abre modal de resumo
     modalResumo.classList.add('active');
 });
 
-// Fecha o modal de resumo
-btnFecharResumo.addEventListener('click', function() {
+
+// Fechar modal de resumo
+
+btnFecharResumo.addEventListener('click', function () {
     modalResumo.classList.remove('active');
 });

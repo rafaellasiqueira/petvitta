@@ -4,12 +4,12 @@ function mostrarSenha() {
 
     if (senha.type === "password") {
         senha.type = "text";
-        icone.src = "/icons/eye.svg";
-        icone.alt = "Ocultar senha";
+        icone.classList.remove("fa-eye");
+        icone.classList.add("fa-eye-slash");
     } else {
         senha.type = "password";
-        icone.src = "/icons/eye-off.svg";
-        icone.alt = "Mostrar senha";
+        icone.classList.remove("fa-eye-slash");
+        icone.classList.add("fa-eye");
     }
 }
 

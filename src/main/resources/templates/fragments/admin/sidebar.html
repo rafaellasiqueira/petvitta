@@ -8,11 +8,13 @@
 <body>
 <aside class="sidebar" th:fragment="sidebar">
     <div class="logo-container">
-        <img class="logo" th:src="@{/images/logo-horizontal-escura.svg}" alt="Petvitta Club">
+        <img class="logo" th:src="@{/images/logo-horizontal-escura.svg}">
     </div>
 
     <div class="linha"></div>
+
     <nav class="menu">
+
         <!-- Dashboard -->
         <a th:if="${paginaAtual == 'dashboard'}"
            th:href="@{/admin/dashboard}"

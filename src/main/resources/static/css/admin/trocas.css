@@ -64,3 +64,69 @@
     cursor: pointer;
 }
 
+/* Tabela */
+.tabela-trocas {
+    width: 100%;
+    table-layout: fixed;
+    border: 1px solid #E8EFEE;
+    border-radius: 12px;
+    border-spacing: 0;
+    overflow: hidden;
+    color: #1F2A29;
+    text-align: left;
+}
+
+/* Bordas inferiores arredondadas */
+.tabela-trocas tbody tr:last-child td:first-child {
+    border-bottom-left-radius: 12px;
+}
+
+.tabela-trocas tbody tr:last-child td:last-child {
+    border-bottom-right-radius: 12px;
+}
+
+/* Largura das colunas */
+.col-codigo {
+    width: 10%;
+}
+
+.col-cliente {
+    width: 15%;
+}
+
+.col-produto {
+    width: 24%;
+}
+
+.col-motivo {
+    width: 20%;
+}
+
+.col-data {
+    width: 13%;
+}
+
+.col-acao {
+    width: 13%;
+}
+
+.col-detalhes {
+    width: 5%;
+}
+
+/* Células */
+.tabela-trocas th,
+.tabela-trocas td {
+    padding: 12px;
+    text-align: left;
+}
+
+/* Cortar texto grande */
+.col-produto,
+.col-motivo {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+
