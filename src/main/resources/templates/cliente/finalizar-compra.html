@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>Finalizar a compra</title>
+
     <!-- Font awesome (icones) -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 
@@ -30,6 +31,7 @@
 
 
     <main class="conteudo">
+
         <!-- Coluna esquerda -->
         <div class="container-esquerdo">
 
@@ -109,7 +111,6 @@
 
 
             <!-- Pagamento -->
-            <!-- Pagamento -->
             <div class="card">
                 <div class="titulo-com-link">
                     <h2>Pagamento</h2>
@@ -146,8 +147,8 @@
                             <input type="number"
                                    id="valorVisa"
                                    name="valorVisa"
-                                   min="10"
-                                   step="0.01"
+                                   min="0"
+                                   step="0.1"
                                    placeholder="Digite o valor">
                         </div>
                     </div>
@@ -180,8 +181,8 @@
                             <input type="number"
                                    id="valorMastercard"
                                    name="valorMastercard"
-                                   min="10"
-                                   step="0.01"
+                                   min="0"
+                                   step="0.1"
                                    placeholder="Digite o valor">
                         </div>
                     </div>
@@ -194,12 +195,12 @@
         <div class="direito">
             <div class="linha-resumo">
                 <h3>Subtotal</h3>
-                <h3>R$ 55,00</h3>
+                <h3>R$ 10,00</h3>
             </div>
 
             <div class="linha-resumo">
                 <h3>Frete</h3>
-                <h3>R$ 10,00</h3>
+                <h3>R$ 0,00</h3>
             </div>
 
             <div class="linha-resumo cupom-resumo">
@@ -218,9 +219,9 @@
         </div>
     </main>
 
-    <div id="toast" class="toast">
-        <span class="toast-icone">✓</span>
-        <span>Pedido feito com sucesso!</span>
+    <div id="toast" class="toast certo">
+        <i class="toast-icone fa-solid fa-check"></i>
+        <p id="toastMensagem"></p>
     </div>
 
     <!-- Modal de alterar endereço -->
@@ -236,6 +237,7 @@
     <div th:replace="~{fragments/cliente/modais :: modal-cadastrar-cartao}"></div>
 </div>
 
+<!-- Finalizar compra JavaScript -->
 <script th:src="@{/js/cliente/finalizar-compra.js}"></script>
 
 </body>

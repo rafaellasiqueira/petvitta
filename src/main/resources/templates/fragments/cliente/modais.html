@@ -9,11 +9,10 @@
 <body>
 
 <!-- Modal alterar endereço-->
-<div th:fragment="modal-alterar-endereco"
-     id="modalAlterarEndereco"
-     class="modal">
+<div th:fragment="modal-alterar-endereco" id="modalAlterarEndereco" class="modal">
 
     <div class="modalConteudo">
+
         <!-- Cabeçalho -->
         <div class="modalCabecalho">
             <h2>Endereços</h2>
@@ -22,6 +21,7 @@
 
         <!-- Corpo -->
         <div class="modal-body">
+
             <!-- Endereço 1 -->
             <label class="modalEndereco">
 
@@ -32,8 +32,11 @@
                 <div class="radio-custom"></div>
 
                 <div class="dados-endereco">
+
                     <h3>Escritório</h3>
+
                     <span class="tipo-residencia">Casa</span>
+
                     <div class="linha-endereco">
                         <span class="logradouro">Rua João Batista</span>
                         <span>,</span>
@@ -317,11 +320,10 @@
 </div>
 
 <!-- Modal cupons-->
-<div th:fragment="modal-cupons"
-     id="modalCupons"
-     class="modal">
+<div th:fragment="modal-cupons" id="modalCupons" class="modal">
 
     <div class="modalConteudo">
+
         <!-- Cabeçalho -->
         <div class="modalCabecalho">
             <h2>Cupons</h2>
@@ -382,12 +384,8 @@
 </div>
 
 <!-- Modal cadastrar cartão -->
-<div th:fragment="modal-cadastrar-cartao"
-     id="modalCadastrarCartao"
-     class="modal">
-
+<div th:fragment="modal-cadastrar-cartao" id="modalCadastrarCartao" class="modal">
     <form id="formCartao">
-
         <div class="modalConteudo">
 
             <!-- Cabeçalho -->
@@ -407,13 +405,11 @@
                 <!-- Número do cartão -->
                 <div class="campo-formulario">
                     <label for="numeroCartao">Número do cartão</label>
-
                     <input type="text"
                            id="numeroCartao"
                            placeholder="0000 0000 0000 0000"
-                           maxlength="19"
-                           inputmode="numeric"
                            required>
+                    <p id="mensagemErroNumero" class="mensagem-erro-cartao"></p>
                 </div>
 
                 <!-- Nome impresso no cartão -->
@@ -459,13 +455,13 @@
                 <!-- Validade -->
                 <div class="campo-formulario">
                     <label for="validadeCartao">Validade</label>
-
                     <input type="text"
                            id="validadeCartao"
                            placeholder="MM/AA"
                            maxlength="5"
                            inputmode="numeric"
                            required>
+                    <p id="mensagemErroValidade" class="mensagem-erro-cartao"></p>
                 </div>
 
                 <!-- Salvar no perfil -->
@@ -511,7 +507,6 @@
 
 <!-- Modal solicitar troca -->
 <div th:fragment="modal-solicitar-troca" id="modalSolicitarTroca" class="modal">
-
     <form id="formSolicitarTroca">
 
         <div class="modalConteudo">
@@ -738,18 +733,13 @@
                     <button type="button" class="btn-cancelar" id="btnCancelarItensRecebidos">Cancelar</button>
                     <button type="button" class="btn-adicionar" id="btnConfirmarItensRecebidos">Confirmar recebimento</button>
                 </div>
-
             </div>
-
         </div>
-
     </form>
-
 </div>
 
 <!-- Modal confirmar exclusão -->
 <div th:fragment="modal-confirmar-exclusao" id="modalConfirmarExclusao" class="modal">
-
     <div class="modalConteudo">
 
         <!-- Cabeçalho -->
@@ -769,9 +759,7 @@
 
         <!-- Corpo -->
         <div class="modal-body">
-
             <div class="mensagem-exclusao">
-
                 <p id="mensagemModalExclusao">
                     Tem certeza de que deseja excluir este item?
                 </p>
@@ -792,7 +780,7 @@
                 </button>
 
                 <button type="button"
-                        class="btn-confirmar-exclusao"
+                        class="btn-confirmar"
                         id="btnConfirmarExclusao">
                     Excluir
                 </button>

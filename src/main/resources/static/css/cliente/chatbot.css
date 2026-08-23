@@ -36,7 +36,6 @@
 }
 
 /* Cabeçalho */
-
 .chatbot-cabecalho {
     width: 100%;
     height: 52px;
@@ -87,10 +86,8 @@
     display: flex;
     flex-direction: column;
     gap: 10px;
-
-    /* ADICIONE ESTAS DUAS LINHAS: */
-    overflow-y: auto;   /* Adiciona a barra de rolagem vertical apenas aqui */
-    min-height: 0;      /* Impede que o container estique o layout pai */
+    overflow-y: auto;
+    min-height: 0;
 }
 
 /* Mensagem */

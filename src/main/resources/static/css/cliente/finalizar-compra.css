@@ -424,7 +424,6 @@ h3 {
     align-items: center;
     gap: 10px;
     padding: 14px 20px;
-    background-color: #1C9B86;
     color: white;
     border-radius: 8px;
     font-family: 'Nunito', sans-serif;
@@ -433,11 +432,19 @@ h3 {
     z-index: 1000;
 }
 
+.certo {
+    background-color: #1C9B86;
+}
+
+.atencao {
+    background-color: #F4AC2D;
+}
+
 .toast.ativo {
     display: flex;
 }
 
-.toast-icone {
+.toast.certo .toast-icone {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -448,3 +455,16 @@ h3 {
     border-radius: 50%;
     font-size: 14px;
 }
+
+.toast.atencao .toast-icone {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    background-color: white;
+    color: #F4AC2D;
+    border-radius: 50%;
+    font-size: 14px;
+}
+

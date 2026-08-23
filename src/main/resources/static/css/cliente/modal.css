@@ -56,7 +56,7 @@
 
 /* Mensagem de erro */
 .mensagem-erro-troca,
- .mensagem-erro-CEP {
+.mensagem-erro-cartao {
     margin: 2px 0 0;
     font-family: 'Nunito', sans-serif;
     font-size: 12px;

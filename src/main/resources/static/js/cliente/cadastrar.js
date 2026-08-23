@@ -1,5 +1,4 @@
 document.addEventListener('DOMContentLoaded', function () {
-    const form = document.getElementById('formCadastroCliente');
     const tipoTelefone = document.getElementById('tipoTelefone');
     const telefone = document.getElementById('telefone');
 
@@ -131,7 +130,6 @@ function adicionarEndereco() {
         botaoRemover.style.display = 'flex';
     }
 
-    const quantidade = lista.querySelectorAll('.endereco-item').length + 1;
     lista.appendChild(novo);
     configurarCEP();
     configurarNumero();
@@ -203,7 +201,6 @@ function adicionarCartao() {
         botaoRemover.style.display = 'flex';
     }
 
-    const quantidade = lista.querySelectorAll('.cartao-item').length + 1;
     lista.appendChild(novo);
     configurarCartao(novo);
 }
@@ -285,14 +282,62 @@ function configurarCartao(cartao) {
 
 // Cadastrar cliente
 function cadastrarCliente() {
-
-/* Colocar validacao dos cartoes para o usuario n colocar menos do q é */
-
     let valido = true;
 
     // Limpa as mensagens
     document.querySelectorAll('.mensagem-erro').forEach(function(erro) {
         erro.textContent = '';
+    });
+
+    // Cartões
+    document.querySelectorAll('.cartao-item').forEach(function(cartao) {
+
+        const numero = cartao.querySelector('input[name="numeroCartao"]');
+        const cvv = cartao.querySelector('input[name="cvvCartao"]');
+        const validade = cartao.querySelector('input[name="validadeCartao"]');
+
+        const erroNumero = cartao.querySelector('.erroNumeroCartao');
+        const erroCvv = cartao.querySelector('.erroCvvCartao');
+        const erroValidade = cartao.querySelector('.erroValidadeCartao');
+
+        if (numero.value.replace(/\D/g, '').length !== 16) {
+            erroNumero.textContent = 'Digite o número completo do cartão.';
+            valido = false;
+        }
+
+        if (cvv.value.replace(/\D/g, '').length < 3) {
+            erroCvv.textContent = 'Digite um CVV válido.';
+            valido = false;
+        }
+
+        const valorValidade = validade.value.replace(/\D/g, '');
+
+        if (valorValidade.length !== 4) {
+
+            erroValidade.textContent = 'Digite a validade no formato MM/AA.';
+            valido = false;
+
+        } else {
+
+            const mes = parseInt(valorValidade.substring(0, 2));
+            const ano = parseInt(valorValidade.substring(2, 4));
+
+            const hoje = new Date();
+            const anoAtual = parseInt(
+                hoje.getFullYear().toString().slice(-2)
+            );
+            const mesAtual = hoje.getMonth() + 1;
+
+            if (
+                mes < 1 ||
+                mes > 12 ||
+                ano < anoAtual ||
+                (ano === anoAtual && mes < mesAtual)
+            ) {
+                erroValidade.textContent = 'Digite uma validade válida.';
+                valido = false;
+            }
+        }
     });
 
     // Nome

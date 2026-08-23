@@ -1,87 +1,19 @@
-document.addEventListener('DOMContentLoaded', () => {
 
-    let enderecoSelecionadoId = null;
-    let contadorCartaoNovo = 0;
-    const btnFinalizarCompra = document.getElementById('btnFinalizarCompra');
-
-    // ===================== AUXILIARES =====================
-
-    function parseMoeda(valor) {
-        if (valor === null || valor === undefined || valor === '') return 0;
-        if (typeof valor === 'number') return Number.isFinite(valor) ? valor : 0;
-        let texto = String(valor).trim().replace(/[^\d,.-]/g, '');
-        if (texto.includes(',')) texto = texto.replace(/\./g, '').replace(',', '.');
-        const numero = parseFloat(texto);
-        return Number.isFinite(numero) ? numero : 0;
-    }
-
-    function formatarMoeda(valor) {
-        return Number(valor || 0).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-    }
-
-    function formatarReal(valor) {
-        return `R$ ${formatarMoeda(valor)}`;
-    }
-
-    function mostrarMensagem(mensagem) {
-        const toast = document.getElementById('toast');
-        if (!toast) { alert(mensagem); return; }
-        toast.querySelector('span:last-child').textContent = mensagem;
-        toast.classList.add('ativo');
-        clearTimeout(toast._timeout);
-        toast._timeout = setTimeout(() => toast.classList.remove('ativo'), 3000);
-    }
-
-    // Erro simples: um alert de uma linha só. Usado só onde não existe campo de erro na tela.
-    function mostrarErro(mensagem) {
-        alert(mensagem);
-    }
-
-    // Erro do CEP: escreve embaixo do campo, não usa alert.
-    function mostrarErroCEP(mensagem) {
-        const erro = document.getElementById('mensagemErroCEP');
-        if (erro) erro.textContent = mensagem;
-    }
-
-    function limparErroCEP() {
-        mostrarErroCEP('');
-    }
-
-    // ===================== RESUMO DA COMPRA =====================
-
-    function lerValorResumo(nome) {
-        const linhas = document.querySelectorAll('.linha-resumo');
-        for (const linha of linhas) {
-            const titulo = linha.querySelector('h3:first-child');
-            if (titulo && titulo.textContent.trim().toLowerCase() === nome) {
-                return parseMoeda(linha.querySelector('h3:last-child')?.textContent);
-            }
-        }
-        return 0;
-    }
-
-    const resumoCompra = {
-        get subtotal() { return lerValorResumo('subtotal'); },
-        get frete() { return lerValorResumo('frete'); },
-        get total() { return Number((this.subtotal + this.frete).toFixed(2)); }
-    };
-
-    const elementoDesconto = document.querySelector('.cupom-resumo h3:last-child');
-    const elementoTotal = document.querySelector('.linha-total h3:last-child');
-
-    // ===================== MODAIS DE ENDEREÇO =====================
-
-    const modalListar = document.getElementById('modalAlterarEndereco');
-    const modalForm = document.getElementById('modalAdicionarEditarEndereco');
+document.addEventListener('DOMContentLoaded', function () {
+    // Endereço
+    const modalAlterarEndereco = document.getElementById('modalAlterarEndereco');
     const btnAlterarEndereco = document.getElementById('btnAlterarEndereco');
-    const btnFecharListar = document.getElementById('btnFecharModalAlterarEndereco');
-    const btnFecharForm = document.getElementById('btnFecharModalEndereco');
-    const btnAdicionar = document.getElementById('btnAdicionarEndereco');
-    const btnCancelarForm = document.getElementById('btnCancelarEndereco');
+    const btnFecharModalAlterarEndereco = document.getElementById('btnFecharModalAlterarEndereco');
+    const btnAdicionarEndereco = document.getElementById('btnAdicionarEndereco');
     const btnConfirmarEndereco = document.getElementById('btnConfirmarEndereco');
-    const btnsEditar = document.querySelectorAll('.editar-endereco');
+
+    const modalEndereco = document.getElementById('modalAdicionarEditarEndereco');
     const formEndereco = document.getElementById('formEndereco');
-    const tituloModal = document.getElementById('tituloModalEndereco');
+    const tituloEndereco = document.getElementById('tituloModalEndereco');
+    const btnFecharEndereco = document.getElementById('btnFecharModalEndereco');
+    const btnCancelarEndereco = document.getElementById('btnCancelarEndereco');
+    const campoSalvarPerfil = document.getElementById('campoSalvarPerfil');
+    const btnSalvarEndereco = document.getElementById('btnSalvarEndereco');
 
     const nomeIdentificacao = document.getElementById('nomeIdentificacao');
     const tipoEndereco = document.getElementById('tipoEndereco');
@@ -90,634 +22,677 @@ document.addEventListener('DOMContentLoaded', () => {
     const cep = document.getElementById('cep');
     const logradouro = document.getElementById('logradouro');
     const bairro = document.getElementById('bairro');
-    const numero = document.getElementById('numero');
+    const numeroEndereco = document.getElementById('numero');
     const estado = document.getElementById('estado');
     const cidade = document.getElementById('cidade');
     const pais = document.getElementById('pais');
     const observacoes = document.getElementById('observacoes');
-    const salvarPerfil = document.getElementById('salvarPerfil');
-    const campoSalvarPerfil = document.getElementById('campoSalvarPerfil');
 
-    // ===================== VIA CEP =====================
+    let enderecoEmEdicao = null;
 
-    let buscandoCep = false;
+    // Toast
+    function mostrarToast(mensagem, tipo) {
+        const toast = document.getElementById('toast');
+        const icone = toast.querySelector('.toast-icone');
+        const texto = document.getElementById('toastMensagem');
 
-    function formatarCEP(valor) {
-        let numeros = String(valor || '').replace(/\D/g, '').substring(0, 8);
-        if (numeros.length > 5) numeros = numeros.substring(0, 5) + '-' + numeros.substring(5);
-        return numeros;
-    }
+        texto.textContent = mensagem;
 
-    function limparCamposViaCEP() {
-        if (logradouro) logradouro.value = '';
-        if (bairro) bairro.value = '';
-        if (cidade) cidade.value = '';
-        if (estado) estado.value = '';
-    }
+        toast.classList.remove('atencao', 'certo', 'ativo');
+        toast.classList.add(tipo);
 
-    async function buscarCEP() {
-        if (!cep) return;
-        const cepNumeros = cep.value.replace(/\D/g, '');
-        if (cepNumeros.length !== 8 || buscandoCep) return;
-
-        buscandoCep = true;
-        limparErroCEP();
-        limparCamposViaCEP();
-
-        try {
-            const resposta = await fetch(`https://viacep.com.br/ws/${cepNumeros}/json/`);
-            if (!resposta.ok) throw new Error('Falha na consulta.');
-            const dados = await resposta.json();
-
-            if (dados.erro) {
-                mostrarErroCEP('CEP não encontrado.');
-                return;
-            }
-
-            if (logradouro) logradouro.value = dados.logradouro || '';
-            if (bairro) bairro.value = dados.bairro || '';
-            if (cidade) cidade.value = dados.localidade || '';
-            if (estado) estado.value = dados.uf || '';
-            if (pais) pais.value = 'Brasil';
-
-        } catch (erro) {
-            mostrarErroCEP('Não foi possível consultar o CEP.');
-        } finally {
-            buscandoCep = false;
+        if (tipo === 'atencao') {
+            icone.className = 'toast-icone fa-solid fa-triangle-exclamation';
+        } else {
+            icone.className = 'toast-icone fa-solid fa-check';
         }
+
+        toast.classList.add('ativo');
+
+        setTimeout(function () {
+            toast.classList.remove('ativo');
+        }, 2500);
     }
 
-    if (cep) {
-        cep.addEventListener('input', () => {
-            cep.value = formatarCEP(cep.value);
-            limparErroCEP();
-            if (cep.value.replace(/\D/g, '').length < 8) limparCamposViaCEP();
-            if (cep.value.replace(/\D/g, '').length === 8) buscarCEP();
-        });
-
-        cep.addEventListener('blur', () => {
-            const qtd = cep.value.replace(/\D/g, '').length;
-            if (qtd > 0 && qtd !== 8) mostrarErroCEP('CEP deve ter 8 números.');
-        });
-    }
-
-    // ===================== FORMULÁRIO DE ENDEREÇO =====================
-
-    function limparFormularioEndereco() {
-        if (!formEndereco) return;
-        formEndereco.reset();
-        limparErroCEP();
-        if (pais) pais.value = 'Brasil';
-        if (salvarPerfil) salvarPerfil.checked = false;
-    }
-
-    function fecharModalFormEndereco() {
-        modalForm?.classList.remove('active');
-        modalListar?.classList.add('active');
-    }
-
-    if (btnAlterarEndereco && modalListar) {
-        btnAlterarEndereco.addEventListener('click', (e) => {
+    // Abrir modal de endereços
+    if (btnAlterarEndereco) {
+        btnAlterarEndereco.addEventListener('click', function (e) {
             e.preventDefault();
-            modalListar.classList.add('active');
+            modalAlterarEndereco.classList.add('active');
         });
     }
 
-    if (btnAdicionar && modalForm && modalListar) {
-        btnAdicionar.addEventListener('click', () => {
-            limparFormularioEndereco();
-            if (tituloModal) tituloModal.textContent = 'Adicionar endereço';
-            if (campoSalvarPerfil) campoSalvarPerfil.style.display = 'flex';
-            const btnSalvar = document.getElementById('btnSalvarEndereco');
-            if (btnSalvar) btnSalvar.textContent = 'Adicionar';
-            modalListar.classList.remove('active');
-            modalForm.classList.add('active');
+    // Fechar modal de endereços
+    if (btnFecharModalAlterarEndereco) {
+        btnFecharModalAlterarEndereco.addEventListener('click', function () {
+            modalAlterarEndereco.classList.remove('active');
         });
     }
 
-    btnsEditar.forEach(botao => {
-        botao.addEventListener('click', (e) => {
+    // Adicionar endereço
+    if (btnAdicionarEndereco) {
+        btnAdicionarEndereco.addEventListener('click', function () {
+            formEndereco.reset();
+
+            tituloEndereco.textContent = 'Adicionar endereço';
+            btnSalvarEndereco.textContent = 'Adicionar';
+
+            pais.value = 'Brasil';
+            campoSalvarPerfil.style.display = '';
+
+            enderecoEmEdicao = null;
+
+            modalAlterarEndereco.classList.remove('active');
+            modalEndereco.classList.add('active');
+        });
+    }
+
+    // Editar endereço
+    document.querySelectorAll('.editar-endereco').forEach(function (botao) {
+        botao.addEventListener('click', function (e) {
             e.preventDefault();
             e.stopPropagation();
-            const d = botao.dataset;
-            limparErroCEP();
-            if (nomeIdentificacao) nomeIdentificacao.value = d.nome || '';
-            if (tipoEndereco) tipoEndereco.value = d.tipoEndereco || '';
-            if (tipoResidencia) tipoResidencia.value = d.tipoResidencia || '';
-            if (tipoLogradouro) tipoLogradouro.value = d.tipoLogradouro || '';
-            if (cep) cep.value = formatarCEP(d.cep || '');
-            if (logradouro) logradouro.value = d.logradouro || '';
-            if (bairro) bairro.value = d.bairro || '';
-            if (numero) numero.value = d.numero || '';
-            if (estado) estado.value = d.estado || '';
-            if (cidade) cidade.value = d.cidade || '';
-            if (pais) pais.value = d.pais || 'Brasil';
-            if (observacoes) observacoes.value = d.observacoes || '';
-            if (salvarPerfil) salvarPerfil.checked = false;
-            if (campoSalvarPerfil) campoSalvarPerfil.style.display = 'none';
-            if (tituloModal) tituloModal.textContent = 'Editar endereço';
-            const btnSalvar = document.getElementById('btnSalvarEndereco');
-            if (btnSalvar) btnSalvar.textContent = 'Salvar';
-            modalListar?.classList.remove('active');
-            modalForm?.classList.add('active');
+
+            enderecoEmEdicao = this.closest('.modalEndereco');
+
+            tituloEndereco.textContent = 'Editar endereço';
+            btnSalvarEndereco.textContent = 'Salvar';
+
+            nomeIdentificacao.value = this.dataset.nome || '';
+            tipoEndereco.value = this.dataset.tipoEndereco || '';
+            tipoResidencia.value = this.dataset.tipoResidencia || '';
+            tipoLogradouro.value = this.dataset.tipoLogradouro || '';
+            cep.value = this.dataset.cep || '';
+            logradouro.value = this.dataset.logradouro || '';
+            bairro.value = this.dataset.bairro || '';
+            numeroEndereco.value = this.dataset.numero || '';
+            estado.value = this.dataset.estado || '';
+            cidade.value = this.dataset.cidade || '';
+            pais.value = this.dataset.pais || 'Brasil';
+            observacoes.value = this.dataset.observacoes || '';
+
+            campoSalvarPerfil.style.display = 'none';
+
+            modalAlterarEndereco.classList.remove('active');
+            modalEndereco.classList.add('active');
         });
     });
 
-    if (btnFecharListar) btnFecharListar.addEventListener('click', () => modalListar?.classList.remove('active'));
-    if (btnFecharForm) btnFecharForm.addEventListener('click', fecharModalFormEndereco);
-    if (btnCancelarForm) btnCancelarForm.addEventListener('click', fecharModalFormEndereco);
-
-    function validarEndereco() {
-        const cepNumeros = cep?.value.replace(/\D/g, '') || '';
-        if (!nomeIdentificacao?.value.trim()) return 'Informe o nome de identificação.';
-        if (!tipoEndereco?.value) return 'Selecione o tipo de endereço.';
-        if (!tipoResidencia?.value) return 'Selecione o tipo de residência.';
-        if (!tipoLogradouro?.value) return 'Selecione o tipo de logradouro.';
-        if (cepNumeros.length !== 8) return 'Informe um CEP válido.';
-        if (!logradouro?.value.trim()) return 'Informe o logradouro.';
-        if (!bairro?.value.trim()) return 'Informe o bairro.';
-        if (!numero?.value.trim()) return 'Informe o número.';
-        if (!estado?.value) return 'Informe o estado.';
-        if (!cidade?.value.trim()) return 'Informe a cidade.';
-        if (!pais?.value.trim()) return 'Informe o país.';
-        return null;
+    // Fechar modal de endereço
+    if (btnFecharEndereco) {
+        btnFecharEndereco.addEventListener('click', function () {
+            modalEndereco.classList.remove('active');
+            modalAlterarEndereco.classList.add('active');
+        });
     }
 
+    // Cancelar endereço
+    if (btnCancelarEndereco) {
+        btnCancelarEndereco.addEventListener('click', function () {
+            modalEndereco.classList.remove('active');
+            modalAlterarEndereco.classList.add('active');
+        });
+    }
+
+    // Salvar endereço
     if (formEndereco) {
-        formEndereco.addEventListener('submit', (e) => {
+        formEndereco.addEventListener('submit', function (e) {
             e.preventDefault();
-            const erro = validarEndereco();
-            if (erro) { mostrarErro(erro); return; }
-            if (buscandoCep) { mostrarErro('Aguarde a consulta do CEP terminar.'); return; }
-            mostrarMensagem('Endereço salvo com sucesso!');
-            modalForm?.classList.remove('active');
-            modalListar?.classList.add('active');
-        });
-    }
 
-    if (btnConfirmarEndereco && modalListar) {
-        btnConfirmarEndereco.addEventListener('click', () => {
-            const radio = modalListar.querySelector('input[name="endereco"]:checked');
-            if (!radio) { mostrarErro('Selecione um endereço.'); return; }
-
-            const item = radio.closest('.modalEndereco');
-            const botaoEditar = item?.querySelector('.editar-endereco');
-            if (!botaoEditar) { mostrarErro('Não foi possível obter os dados do endereço.'); return; }
-
-            const d = botaoEditar.dataset;
-            enderecoSelecionadoId = d.id || d.nome;
-
-            const nomeEl = document.getElementById('enderecoNome');
-            const tipoEl = document.getElementById('enderecoTipo');
-            const logradouroEl = document.getElementById('enderecoLogradouro');
-            const cepEl = document.getElementById('enderecoCep');
-
-            if (nomeEl) nomeEl.textContent = d.nome || '';
-            if (tipoEl) tipoEl.textContent = d.tipoResidencia || '';
-            if (logradouroEl) logradouroEl.textContent = `${d.logradouro || ''}, ${d.numero || ''} - ${d.bairro || ''}, ${d.cidade || ''} - ${d.estado || ''}`;
-            if (cepEl) cepEl.textContent = `CEP: ${d.cep || ''}, ${d.pais || 'Brasil'}.`;
-
-            modalListar.classList.remove('active');
-        });
-    }
-
-    // ===================== MODAL DE CUPONS =====================
-
-    const modalCupons = document.getElementById('modalCupons');
-    const btnMeusCupons = document.getElementById('btnMeusCupons');
-    const btnFecharModalCupom = document.getElementById('btnFecharModalCupom');
-
-    if (btnMeusCupons && modalCupons) {
-        btnMeusCupons.addEventListener('click', (e) => { e.preventDefault(); modalCupons.classList.add('active'); });
-    }
-    if (btnFecharModalCupom && modalCupons) {
-        btnFecharModalCupom.addEventListener('click', () => modalCupons.classList.remove('active'));
-    }
-    if (modalCupons) {
-        modalCupons.addEventListener('click', (e) => { if (e.target === modalCupons) modalCupons.classList.remove('active'); });
-    }
-
-    // ===================== CUPONS =====================
-
-    const cupons = document.querySelectorAll('.checkbox-cupom');
-    const cuponsSelecionadosContainer = document.getElementById('cuponsSelecionados');
-
-    function obterCuponsSelecionados() {
-        return Array.from(cupons).filter(c => c.checked);
-    }
-
-    function calcularTotalCupons() {
-        return Number(obterCuponsSelecionados().reduce((t, c) => t + parseMoeda(c.dataset.valor), 0).toFixed(2));
-    }
-
-    // Quantos cupons (do maior pro menor) são realmente necessários pra cobrir a compra.
-    function cuponsNecessarios(selecionados, totalPedido) {
-        const ordenados = [...selecionados].sort((a, b) => parseMoeda(b.dataset.valor) - parseMoeda(a.dataset.valor));
-        let acumulado = 0, necessarios = 0;
-        for (const cupom of ordenados) {
-            acumulado += parseMoeda(cupom.dataset.valor);
-            necessarios++;
-            if (acumulado >= totalPedido) break;
-        }
-        return necessarios;
-    }
-
-    function atualizarCuponsSelecionados() {
-        if (!cuponsSelecionadosContainer) return;
-        cuponsSelecionadosContainer.innerHTML = '';
-
-        obterCuponsSelecionados().forEach(cupom => {
-            const codigo = cupom.dataset.codigo || '';
-            const valor = parseMoeda(cupom.dataset.valor);
-
-            const elemento = document.createElement('div');
-            elemento.classList.add('cupom-selecionado');
-            elemento.innerHTML = `<span>${codigo} (${formatarReal(valor)})</span><button type="button" class="remover-cupom" data-codigo="${codigo}"><i class="fa-solid fa-xmark"></i></button>`;
-            cuponsSelecionadosContainer.appendChild(elemento);
-        });
-
-        document.querySelectorAll('.remover-cupom').forEach(botao => {
-            botao.addEventListener('click', () => {
-                cupons.forEach(c => { if (c.dataset.codigo === botao.dataset.codigo) c.checked = false; });
-                atualizarCuponsSelecionados();
-                atualizarResumoValores();
-                validarCartoesEmTempoReal();
-            });
-        });
-    }
-
-    cupons.forEach(cupom => {
-        cupom.addEventListener('change', () => {
-
-            // Regra: só 1 cupom promocional. Desmarca o anterior direto, sem alert.
-            if (cupom.checked && cupom.dataset.tipo === 'promocional') {
-                cupons.forEach(outro => {
-                    if (outro !== cupom && outro.dataset.tipo === 'promocional' && outro.checked) outro.checked = false;
-                });
+            if (!formEndereco.checkValidity()) {
+                formEndereco.reportValidity();
+                return;
             }
 
-            // Regra: não deixa usar mais cupons do que o necessário pra cobrir a compra.
-            if (cupom.checked) {
-                const selecionados = obterCuponsSelecionados();
-                const necessarios = cuponsNecessarios(selecionados, resumoCompra.total);
+            if (enderecoEmEdicao) {
+                const dados = enderecoEmEdicao.querySelector('.dados-endereco');
 
-                if (necessarios < selecionados.length) {
-                    cupom.checked = false;
-                    mostrarErro('Esse cupom não é necessário para esta compra.');
+                if (dados) {
+                    const nome = dados.querySelector('h3');
+                    const residencia = dados.querySelector('.tipo-residencia');
+                    const logradouroElemento = dados.querySelector('.logradouro');
+                    const numero = dados.querySelector('.numero');
+                    const bairroElemento = dados.querySelector('.bairro');
+                    const cidadeElemento = dados.querySelector('.cidade');
+                    const estadoElemento = dados.querySelector('.estado');
+                    const cepElemento = dados.querySelector('.cep');
+
+                    if (nome) nome.textContent = nomeIdentificacao.value;
+                    if (residencia) residencia.textContent = tipoResidencia.options[tipoResidencia.selectedIndex].text;
+                    if (logradouroElemento) logradouroElemento.textContent = logradouro.value;
+                    if (numero) numero.textContent = numeroEndereco.value;
+                    if (bairroElemento) bairroElemento.textContent = bairro.value;
+                    if (cidadeElemento) cidadeElemento.textContent = cidade.value;
+                    if (estadoElemento) estadoElemento.textContent = estado.options[estado.selectedIndex].text;
+                    if (cepElemento) cepElemento.textContent = cep.value;
+                }
+
+                const radio = enderecoEmEdicao.querySelector('input[type="radio"]');
+
+                if (radio) {
+                    radio.checked = true;
+                }
+
+                mostrarToast('Endereço alterado com sucesso!', 'certo');
+            } else {
+                mostrarToast('Endereço adicionado com sucesso!', 'certo');
+            }
+
+            modalEndereco.classList.remove('active');
+            modalAlterarEndereco.classList.add('active');
+        });
+    }
+
+    // Confirmar endereço
+    if (btnConfirmarEndereco) {
+        btnConfirmarEndereco.addEventListener('click', function () {
+            const enderecoSelecionado = document.querySelector('input[name="endereco"]:checked');
+
+            if (!enderecoSelecionado) {
+                mostrarToast('Selecione um endereço.', 'atencao');
+                return;
+            }
+
+            const endereco = enderecoSelecionado.closest('.modalEndereco');
+
+            if (!endereco) {
+                return;
+            }
+
+            const dados = endereco.querySelector('.dados-endereco');
+
+            if (!dados) {
+                return;
+            }
+
+            const nome = dados.querySelector('h3');
+            const residencia = dados.querySelector('.tipo-residencia');
+            const logradouroElemento = dados.querySelector('.logradouro');
+            const numero = dados.querySelector('.numero');
+            const bairroElemento = dados.querySelector('.bairro');
+            const cidadeElemento = dados.querySelector('.cidade');
+            const estadoElemento = dados.querySelector('.estado');
+            const cepElemento = dados.querySelector('.cep');
+
+            const enderecoNome = document.getElementById('enderecoNome');
+            const enderecoTipo = document.getElementById('enderecoTipo');
+            const enderecoLogradouro = document.getElementById('enderecoLogradouro');
+            const enderecoCep = document.getElementById('enderecoCep');
+
+            if (enderecoNome && nome) {
+                enderecoNome.textContent = nome.textContent;
+            }
+
+            if (enderecoTipo && residencia) {
+                enderecoTipo.textContent = residencia.textContent;
+            }
+
+            if (enderecoLogradouro) {
+                enderecoLogradouro.textContent =
+                    (logradouroElemento ? logradouroElemento.textContent : '') +
+                    ', ' +
+                    (numero ? numero.textContent : '') +
+                    ' - ' +
+                    (bairroElemento ? bairroElemento.textContent : '') +
+                    ', ' +
+                    (cidadeElemento ? cidadeElemento.textContent : '') +
+                    ' - ' +
+                    (estadoElemento ? estadoElemento.textContent : '');
+            }
+
+            if (enderecoCep && cepElemento) {
+                enderecoCep.textContent = 'CEP: ' + cepElemento.textContent + ', Brasil.';
+            }
+
+            modalAlterarEndereco.classList.remove('active');
+
+            mostrarToast('Endereço selecionado com sucesso!', 'certo');
+        });
+    }
+
+    // CEP
+    if (cep) {
+        cep.addEventListener('input', function () {
+            let valor = this.value.replace(/\D/g, '').slice(0, 8);
+
+            if (valor.length > 5) {
+                valor = valor.replace(/(\d{5})(\d)/, '$1-$2');
+            }
+
+            this.value = valor;
+        });
+
+        cep.addEventListener('keypress', function (e) {
+            if (!/[0-9]/.test(e.key)) {
+                e.preventDefault();
+            }
+        });
+    }
+
+    // Número
+    if (numeroEndereco) {
+        numeroEndereco.addEventListener('input', function () {
+            this.value = this.value.replace(/\D/g, '');
+        });
+
+        numeroEndereco.addEventListener('keypress', function (e) {
+            if (!/[0-9]/.test(e.key)) {
+                e.preventDefault();
+            }
+        });
+    }
+
+    // Cupons
+    const modalCupons = document.getElementById('modalCupons');
+    const btnAbrirModalCupom = document.getElementById('btnMeusCupons');
+    const btnFecharModalCupom = document.getElementById('btnFecharModalCupom');
+    const checkboxesCupom = document.querySelectorAll('.checkbox-cupom');
+    const cuponsSelecionados = document.getElementById('cuponsSelecionados');
+
+    if (btnAbrirModalCupom) {
+        btnAbrirModalCupom.addEventListener('click', function (e) {
+            e.preventDefault();
+            modalCupons.classList.add('active');
+        });
+    }
+
+    if (btnFecharModalCupom) {
+        btnFecharModalCupom.addEventListener('click', function () {
+            modalCupons.classList.remove('active');
+        });
+    }
+
+    checkboxesCupom.forEach(function (checkbox) {
+        checkbox.addEventListener('change', function () {
+            const codigo = this.dataset.codigo;
+
+            if (!this.checked) {
+                const cupom = cuponsSelecionados.querySelector('[data-codigo="' + codigo + '"]');
+
+                if (cupom) {
+                    cupom.remove();
+                }
+
+                atualizarResumoPagamento();
+                return;
+            }
+
+            if (this.dataset.tipo === 'promocional') {
+                const promocionaisSelecionados = document.querySelectorAll(
+                    '.checkbox-cupom[data-tipo="promocional"]:checked'
+                );
+
+                if (promocionaisSelecionados.length > 1) {
+                    this.checked = false;
+                    mostrarToast('Apenas um cupom promocional pode ser utilizado por compra.', 'atencao');
+                    return;
                 }
             }
 
-            atualizarCuponsSelecionados();
-            atualizarResumoValores();
-            validarCartoesEmTempoReal();
+            const cupomExistente = cuponsSelecionados.querySelector(
+                '[data-codigo="' + codigo + '"]'
+            );
+
+            if (cupomExistente) {
+                return;
+            }
+
+            const cupom = document.createElement('div');
+            cupom.classList.add('cupom-selecionado');
+            cupom.dataset.codigo = codigo;
+
+            cupom.innerHTML =
+                '<span>' + codigo + '</span>' +
+                '<button type="button" class="remover-cupom">×</button>';
+
+            cuponsSelecionados.appendChild(cupom);
+
+            cupom.querySelector('.remover-cupom').addEventListener('click', function () {
+                checkbox.checked = false;
+                cupom.remove();
+                atualizarResumoPagamento();
+            });
+
+            atualizarResumoPagamento();
         });
     });
 
-    function atualizarResumoValores() {
-        const totalPedido = resumoCompra.total;
-        const totalCupons = calcularTotalCupons();
-        const descontoAplicado = Math.min(totalCupons, totalPedido);
-        const valorRestante = Math.max(0, totalPedido - totalCupons);
-
-        if (elementoDesconto) elementoDesconto.textContent = `-${formatarReal(descontoAplicado)}`;
-        if (elementoTotal) elementoTotal.textContent = formatarReal(valorRestante);
-        atualizarValoresMaximosCartoes();
-    }
-
-    // ===================== MODAL DE CARTÃO =====================
-
+    // Cartão
     const modalCartao = document.getElementById('modalCadastrarCartao');
-    const btnAbrirCartao = document.getElementById('btnAbrirCartao');
+    const formCartao = document.getElementById('formCartao');
+    const btnAdicionarCartao = document.getElementById('btnAbrirCartao');
     const btnFecharCartao = document.getElementById('btnFecharModalCartao');
     const btnCancelarCartao = document.getElementById('btnCancelarCartao');
-    const listaCartoesContainer = document.querySelector('.titulo-com-link')?.parentElement;
+    const numeroCartao = document.getElementById('numeroCartao');
+    const cvv = document.getElementById('cvvCartao');
+    const validade = document.getElementById('validadeCartao');
+    const mensagemErroNumero = document.getElementById('mensagemErroNumero');
+    const mensagemErroValidade = document.getElementById('mensagemErroValidade');
 
-    if (btnAbrirCartao && modalCartao) {
-        btnAbrirCartao.addEventListener('click', (e) => { e.preventDefault(); modalCartao.classList.add('active'); });
-    }
-    if (btnFecharCartao && modalCartao) btnFecharCartao.addEventListener('click', () => modalCartao.classList.remove('active'));
-    if (btnCancelarCartao && modalCartao) btnCancelarCartao.addEventListener('click', () => modalCartao.classList.remove('active'));
-    if (modalCartao) {
-        modalCartao.addEventListener('click', (e) => { if (e.target === modalCartao) modalCartao.classList.remove('active'); });
-    }
-
-    function aplicarMascaraReal(input) {
-        let valor = input.value.replace(/\D/g, '');
-        if (!valor) { input.value = ''; return; }
-        valor = valor.replace(/^0+(?=\d)/, '');
-        input.value = formatarReal(parseInt(valor, 10) / 100);
-    }
-
-    function obterValorInputCartao(input) {
-        return input && input.value ? parseMoeda(input.value) : 0;
-    }
-
-    function configurarInputValorCartao(input) {
-        input.type = 'text';
-        input.inputMode = 'numeric';
-        input.autocomplete = 'off';
-        input.removeAttribute('min');
-        input.removeAttribute('step');
-
-        input.addEventListener('input', () => { aplicarMascaraReal(input); validarCartoesEmTempoReal(); });
-        input.addEventListener('blur', () => {
-            if (input.value) input.value = formatarReal(obterValorInputCartao(input));
-            validarCartoesEmTempoReal();
-        });
-    }
-
-    function configurarCheckboxCartao(checkbox) {
-        checkbox.addEventListener('change', function () {
-            const container = this.closest('.cartao-container');
-            if (!container) return;
-            const inputValor = container.querySelector('.input-valor input');
-
-            if (this.checked) {
-                container.classList.add('selecionado');
-            } else {
-                container.classList.remove('selecionado');
-                if (inputValor) inputValor.value = '';
-            }
-
-            atualizarValoresMaximosCartoes();
-            validarCartoesEmTempoReal();
-        });
-    }
-
-    function configurarCartaoContainer(container) {
-        const checkbox = container.querySelector('.checkbox-cartao');
-        const input = container.querySelector('.input-valor input');
-        if (checkbox) configurarCheckboxCartao(checkbox);
-        if (input) configurarInputValorCartao(input);
-    }
-
-    document.querySelectorAll('.cartao-container').forEach(configurarCartaoContainer);
-
-    function validarValidadeCartao(valor) {
-        if (!/^\d{2}\/\d{2}$/.test(valor)) return false;
-        const [mesStr, anoStr] = valor.split('/');
-        const mes = parseInt(mesStr, 10);
-        const ano = parseInt(anoStr, 10);
-        if (mes < 1 || mes > 12) return false;
-
-        const agora = new Date();
-        const anoAtual = agora.getFullYear() % 100;
-        const mesAtual = agora.getMonth() + 1;
-        if (ano < anoAtual) return false;
-        if (ano === anoAtual && mes < mesAtual) return false;
-        return true;
-    }
-
-    const formCartao = document.getElementById('formCartao');
-
-    if (formCartao) {
-        formCartao.addEventListener('submit', (e) => {
+    // Abrir cartão
+    if (btnAdicionarCartao) {
+        btnAdicionarCartao.addEventListener('click', function (e) {
             e.preventDefault();
 
-            const numeroInput = document.getElementById('numeroCartao');
-            const nomeInput = document.getElementById('nomeCartao');
-            const bandeiraInput = document.getElementById('bandeiraCartao');
-            const validadeInput = document.getElementById('validadeCartao');
-            const cvvInput = document.getElementById('cvvCartao');
-
-            const numeroDigitado = (numeroInput?.value || '').replace(/\D/g, '');
-
-            if (numeroDigitado.length !== 16) { mostrarErro('Informe um número de cartão com 16 dígitos.'); return; }
-            if (!nomeInput?.value.trim()) { mostrarErro('Informe o nome impresso no cartão.'); return; }
-            if (!bandeiraInput?.value) { mostrarErro('Selecione a bandeira do cartão.'); return; }
-            if (!validarValidadeCartao(validadeInput?.value || '')) { mostrarErro('Informe uma validade de cartão válida.'); return; }
-            if (!/^\d{3,4}$/.test(cvvInput?.value || '')) { mostrarErro('Informe um CVV válido.'); return; }
-
-            const ultimosDigitos = numeroDigitado.slice(-4);
-            contadorCartaoNovo++;
-            const idUnico = `novoCartao${contadorCartaoNovo}`;
-            const bandeiraTexto = bandeiraInput.selectedOptions?.[0]?.textContent || 'Cartão';
-
-            const container = document.createElement('div');
-            container.className = 'cartao-container';
-            container.innerHTML = `
-                <label class="cartao">
-                    <input type="checkbox" name="cartao" value="${bandeiraInput.value}" class="checkbox-cartao">
-                    <div class="dados-cartao">
-                        <h3>${bandeiraTexto}</h3>
-                        <span>**** **** **** ${ultimosDigitos}</span>
-                        <span>${nomeInput.value}</span>
-                        <span>Vencimento: ${validadeInput.value}</span>
-                    </div>
-                </label>
-                <div class="campo-valor-cartao">
-                    <label for="${idUnico}">Valor a pagar com este cartão</label>
-                    <div class="input-valor">
-                        <span>R$</span>
-                        <input type="text" id="${idUnico}" name="${idUnico}" inputmode="numeric" autocomplete="off" placeholder="Digite o valor">
-                    </div>
-                </div>`;
-
-            listaCartoesContainer?.appendChild(container);
-            configurarCartaoContainer(container);
             formCartao.reset();
-            modalCartao?.classList.remove('active');
-            mostrarMensagem('Cartão cadastrado com sucesso!');
+
+            mensagemErroNumero.textContent = '';
+            mensagemErroValidade.textContent = '';
+
+            modalCartao.classList.add('active');
         });
     }
 
-    const numeroCartao = document.getElementById('numeroCartao');
-    const cvvCartao = document.getElementById('cvvCartao');
-    const validadeCartao = document.getElementById('validadeCartao');
+    // Fechar cartão
+    if (btnFecharCartao) {
+        btnFecharCartao.addEventListener('click', function () {
+            modalCartao.classList.remove('active');
+        });
+    }
 
+    if (btnCancelarCartao) {
+        btnCancelarCartao.addEventListener('click', function () {
+            modalCartao.classList.remove('active');
+        });
+    }
+
+    // Número do cartão
     if (numeroCartao) {
-        numeroCartao.addEventListener('input', () => {
-            let v = numeroCartao.value.replace(/\D/g, '').substring(0, 16);
-            numeroCartao.value = v.replace(/(\d{4})(?=\d)/g, '$1 ');
+        numeroCartao.addEventListener('input', function () {
+            let valor = this.value.replace(/\D/g, '').slice(0, 16);
+
+            if (valor.length > 12) {
+                valor = valor.replace(/(\d{4})(\d{4})(\d{4})(\d{1,4})/, '$1 $2 $3 $4');
+            } else if (valor.length > 8) {
+                valor = valor.replace(/(\d{4})(\d{4})(\d{1,4})/, '$1 $2 $3');
+            } else if (valor.length > 4) {
+                valor = valor.replace(/(\d{4})(\d{1,4})/, '$1 $2');
+            }
+
+            this.value = valor;
         });
     }
 
-    if (cvvCartao) {
-        cvvCartao.addEventListener('input', () => { cvvCartao.value = cvvCartao.value.replace(/\D/g, '').substring(0, 4); });
-    }
-
-    if (validadeCartao) {
-        validadeCartao.addEventListener('input', () => {
-            let v = validadeCartao.value.replace(/\D/g, '').substring(0, 4);
-            if (v.length > 2) v = v.substring(0, 2) + '/' + v.substring(2);
-            validadeCartao.value = v;
-        });
-        validadeCartao.addEventListener('blur', () => {
-            if (validadeCartao.value && !validarValidadeCartao(validadeCartao.value)) mostrarErro('Validade do cartão inválida ou vencida.');
+    // CVV
+    if (cvv) {
+        cvv.addEventListener('input', function () {
+            this.value = this.value.replace(/\D/g, '').slice(0, 4);
         });
     }
 
-    // ===================== VALOR MÁXIMO DOS CARTÕES =====================
+    // Validade
+    if (validade) {
+        validade.addEventListener('input', function () {
+            let valor = this.value.replace(/\D/g, '').slice(0, 4);
 
-    function calcularValorMaximoCartoes() {
-        return Math.max(0, resumoCompra.total - calcularTotalCupons());
-    }
+            if (valor.length > 2) {
+                valor = valor.replace(/(\d{2})(\d{1,2})/, '$1/$2');
+            }
 
-    function atualizarValoresMaximosCartoes() {
-        const maximo = calcularValorMaximoCartoes();
-        document.querySelectorAll('.input-valor input').forEach(input => {
-            const checkbox = input.closest('.cartao-container')?.querySelector('.checkbox-cartao');
-            if (checkbox?.checked) input.title = `Valor máximo: ${formatarReal(maximo)}`;
+            this.value = valor;
         });
     }
 
-    function mostrarErroNoCartao(container, mensagem) {
-        if (!container) return;
-        let elemento = container.querySelector('.mensagem-erro-cartao');
-        if (!elemento) {
-            elemento = document.createElement('span');
-            elemento.classList.add('mensagem-erro-cartao');
-            container.appendChild(elemento);
-        }
-        elemento.textContent = mensagem;
-    }
+    // Validar cartão
+    if (formCartao) {
+        formCartao.addEventListener('submit', function (e) {
+            e.preventDefault();
 
-    // ===================== VALIDAR CARTÕES EM TEMPO REAL =====================
+            mensagemErroNumero.textContent = '';
+            mensagemErroValidade.textContent = '';
 
-    function validarCartoesEmTempoReal() {
-        const totalPedido = resumoCompra.total;
-        const totalCupons = calcularTotalCupons();
-        const valorRestante = Math.max(0, totalPedido - totalCupons);
-        const cartoesMarcados = Array.from(document.querySelectorAll('.checkbox-cartao:checked'));
+            const numero = numeroCartao.value.replace(/\D/g, '');
+            const valorValidade = validade.value;
+            const partes = valorValidade.split('/');
 
-        let valorTotalCartoes = 0;
-        let temErro = false;
+            const mes = parseInt(partes[0], 10);
+            const ano = parseInt(partes[1], 10);
 
-        document.querySelectorAll('.mensagem-erro-cartao').forEach(m => m.remove());
+            const dataAtual = new Date();
+            const anoAtual = dataAtual.getFullYear() % 100;
+            const mesAtual = dataAtual.getMonth() + 1;
 
-        cartoesMarcados.forEach(cartao => {
-            const container = cartao.closest('.cartao-container');
-            const input = container?.querySelector('.input-valor input');
-            if (!input) return;
-
-            const valor = obterValorInputCartao(input);
-            valorTotalCartoes += valor;
-
-            if (valor <= 0) {
-                mostrarErroNoCartao(container, 'Informe o valor deste cartão.');
-                temErro = true;
+            if (numero.length !== 16) {
+                mensagemErroNumero.textContent = 'Digite o número completo do cartão.';
                 return;
             }
 
-            if (valor > valorRestante) {
-                mostrarErroNoCartao(container, `Valor máximo: ${formatarReal(valorRestante)}.`);
-                temErro = true;
+            if (
+                partes.length !== 2 ||
+                partes[0].length !== 2 ||
+                partes[1].length !== 2 ||
+                isNaN(mes) ||
+                isNaN(ano) ||
+                mes < 1 ||
+                mes > 12
+            ) {
+                mensagemErroValidade.textContent = 'Digite uma validade válida.';
                 return;
             }
 
-            // Mínimo de R$ 10 por cartão, exceto se cupom + cartão juntos e o restante for menor que R$ 10.
-            if (valor < 10 && (totalCupons === 0 || valorRestante >= 10)) {
-                mostrarErroNoCartao(container, 'O valor mínimo por cartão é R$ 10,00.');
-                temErro = true;
+            if (ano < anoAtual || (ano === anoAtual && mes < mesAtual)) {
+                mensagemErroValidade.textContent = 'O cartão está vencido.';
+                return;
             }
+
+            if (cvv.value.length < 3 || cvv.value.length > 4) {
+                mostrarToast('Digite um CVV válido.', 'atencao');
+                return;
+            }
+
+            if (!formCartao.checkValidity()) {
+                formCartao.reportValidity();
+                return;
+            }
+
+            modalCartao.classList.remove('active');
+
+            mostrarToast('Cartão cadastrado com sucesso!', 'certo');
         });
-
-        if (valorTotalCartoes > valorRestante) {
-            const excesso = valorTotalCartoes - valorRestante;
-            const ultimo = cartoesMarcados[cartoesMarcados.length - 1];
-            const container = ultimo?.closest('.cartao-container');
-            if (container) mostrarErroNoCartao(container, `Cartões ultrapassam o restante em ${formatarReal(excesso)}.`);
-            temErro = true;
-        }
-
-        const valorPago = Math.min(totalCupons, totalPedido) + valorTotalCartoes;
-        const faltaPagar = Math.max(0, totalPedido - valorPago);
-
-        const aviso = document.getElementById('avisoPagamentoIncompleto');
-        if (aviso) {
-            aviso.style.display = faltaPagar > 0 ? 'block' : 'none';
-            aviso.textContent = faltaPagar > 0 ? `Ainda falta pagar ${formatarReal(faltaPagar)}.` : '';
-        }
-
-        atualizarEstadoBotaoFinalizar(temErro, faltaPagar);
-        return { valorTotalCartoes, valorRestante, faltaPagar, temErro };
     }
 
-    function atualizarEstadoBotaoFinalizar(temErro, faltaPagar) {
-        if (!btnFinalizarCompra) return;
-        const existeCartao = document.querySelectorAll('.checkbox-cartao:checked').length > 0;
-        btnFinalizarCompra.disabled = existeCartao && (temErro || faltaPagar > 0);
-    }
+    // Pagamento
+    const cartoes = document.querySelectorAll('.cartao-container');
+    const btnFinalizarCompra = document.getElementById('btnFinalizarCompra');
 
-    // ===================== VALIDAÇÃO FINAL =====================
+    const subtotalElemento = document.querySelector('.linha-resumo:nth-child(1) h3:last-child');
+    const freteElemento = document.querySelector('.linha-resumo:nth-child(2) h3:last-child');
+    const descontoElemento = document.querySelector('.cupom-resumo h3:last-child');
+    const totalElemento = document.querySelector('.linha-total h3:last-child');
 
-    function validarRegrasDeNegocio() {
-        const totalPedido = resumoCompra.total;
-        const cuponsSelecionados = obterCuponsSelecionados();
-        const totalCupons = calcularTotalCupons();
-        const valorCuponsUtilizado = Math.min(totalCupons, totalPedido);
-
-        const promocionais = cuponsSelecionados.filter(c => c.dataset.tipo === 'promocional');
-        if (promocionais.length > 1) { mostrarErro('Apenas um cupom promocional pode ser utilizado.'); return false; }
-
-        if (cuponsSelecionados.length > 0) {
-            const necessarios = cuponsNecessarios(cuponsSelecionados, totalPedido);
-            if (necessarios < cuponsSelecionados.length) { mostrarErro('Existem cupons desnecessários selecionados.'); return false; }
-        }
-
-        const valorRestante = Math.max(0, totalPedido - totalCupons);
-        const cartoesMarcados = Array.from(document.querySelectorAll('.checkbox-cartao:checked'));
-        let valorTotalCartoes = 0;
-
-        for (const cartao of cartoesMarcados) {
-            const container = cartao.closest('.cartao-container');
-            const input = container?.querySelector('.input-valor input');
-            const valor = obterValorInputCartao(input);
-            valorTotalCartoes += valor;
-
-            if (valor <= 0) { mostrarErro('Informe o valor de todos os cartões selecionados.'); return false; }
-            if (valor > valorRestante) { mostrarErro(`Um cartão não pode passar de ${formatarReal(valorRestante)}.`); return false; }
-            if (valor < 10 && (totalCupons <= 0 || valorRestante >= 10)) { mostrarErro('O valor mínimo por cartão é R$ 10,00.'); return false; }
-        }
-
-        if (valorTotalCartoes > valorRestante) { mostrarErro('O valor dos cartões passa do valor restante.'); return false; }
-
-        const valorPago = valorCuponsUtilizado + valorTotalCartoes;
-        if (valorPago < totalPedido) { mostrarErro(`Ainda faltam ${formatarReal(totalPedido - valorPago)}.`); return false; }
-
-        if (totalCupons > totalPedido) mostrarMensagem(`Será gerado um cupom de troca de ${formatarReal(totalCupons - totalPedido)}.`);
-
-        return true;
-    }
-
-    function montarPayloadCheckout() {
-        const cuponsSelecionados = obterCuponsSelecionados().map(c => c.dataset.codigo);
-        const cartoes = Array.from(document.querySelectorAll('.checkbox-cartao:checked')).map(checkbox => {
-            const input = checkbox.closest('.cartao-container')?.querySelector('.input-valor input');
-            return { identificador: checkbox.value, valor: obterValorInputCartao(input) };
+    function converterMoeda(valor) {
+        return valor.toLocaleString('pt-BR', {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
         });
-        return { enderecoId: enderecoSelecionadoId, cupons: cuponsSelecionados, cartoes };
     }
 
-    // ===================== FINALIZAR COMPRA =====================
+    function pegarValor(texto) {
+        if (!texto) {
+            return 0;
+        }
 
-    if (btnFinalizarCompra) {
-        btnFinalizarCompra.addEventListener('click', () => {
-            if (!validarRegrasDeNegocio()) return;
-            if (!enderecoSelecionadoId) { mostrarErro('Selecione um endereço para continuar.'); return; }
+        return parseFloat(
+            texto
+                .replace('R$', '')
+                .replace(/\./g, '')
+                .replace(',', '.')
+                .replace(/[^\d.-]/g, '')
+        ) || 0;
+    }
 
-            const payload = montarPayloadCheckout();
-            console.log('Payload do checkout:', payload);
+    const subtotal = pegarValor(subtotalElemento ? subtotalElemento.textContent : '55,00');
+    const frete = pegarValor(freteElemento ? freteElemento.textContent : '10,00');
+    const totalCompra = subtotal + frete;
 
-            // TODO (BACKEND): enviar payload para POST /cliente/checkout/finalizar
-            // e validar tudo de novo no servidor antes de confirmar o pedido.
+    if (totalElemento) {
+        totalElemento.textContent = 'R$ ' + converterMoeda(totalCompra);
+    }
 
-            const toast = document.getElementById('toast');
-            if (toast) {
-                toast.querySelector('span:last-child').textContent = 'Pedido feito com sucesso!';
-                toast.classList.add('ativo');
-                setTimeout(() => { window.location.href = '/cliente/pedido'; }, 2000);
+    // Mostrar/ocultar valor do cartão
+    cartoes.forEach(function (cartao) {
+        const checkbox = cartao.querySelector('.checkbox-cartao');
+        const campo = cartao.querySelector('.campo-valor-cartao');
+        const input = campo ? campo.querySelector('input') : null;
+
+        if (!checkbox || !campo || !input) {
+            return;
+        }
+
+        campo.style.display = 'none';
+
+        checkbox.addEventListener('change', function () {
+            if (this.checked) {
+                campo.style.display = 'block';
             } else {
-                window.location.href = '/cliente/pedido';
+                campo.style.display = 'none';
+                input.value = '';
             }
         });
+    });
+
+    // Atualizar resumo
+    function atualizarResumoPagamento() {
+        let totalCupons = 0;
+
+        document.querySelectorAll('.checkbox-cupom:checked').forEach(function (cupom) {
+            const valor = parseFloat(cupom.dataset.valor) || 0;
+            totalCupons += valor;
+        });
+
+        const desconto = Math.min(totalCupons, totalCompra);
+        const totalFinal = totalCompra - desconto;
+
+        if (descontoElemento) {
+            descontoElemento.textContent = '-R$ ' + converterMoeda(desconto);
+        }
+
+        if (totalElemento) {
+            totalElemento.textContent = 'R$ ' + converterMoeda(totalFinal);
+        }
+
+        return {
+            totalCupons: totalCupons,
+            desconto: desconto,
+            totalFinal: totalFinal
+        };
     }
 
-    // ===================== INICIALIZAÇÃO =====================
+    atualizarResumoPagamento();
 
-    atualizarCuponsSelecionados();
-    atualizarResumoValores();
-    atualizarValoresMaximosCartoes();
-    validarCartoesEmTempoReal();
+    // Finalizar compra
+    if (btnFinalizarCompra) {
+        btnFinalizarCompra.addEventListener('click', function () {
+            const pagamento = atualizarResumoPagamento();
 
+            const totalCupons = pagamento.totalCupons;
+            const valorRestante = pagamento.totalFinal;
+
+            let quantidadeCartoes = 0;
+            let totalCartoes = 0;
+            let valorCartaoInvalido = false;
+            let cartaoMenorQue10 = false;
+
+            // Verificar cartões
+            cartoes.forEach(function (cartao) {
+                const checkbox = cartao.querySelector('.checkbox-cartao');
+
+                if (!checkbox || !checkbox.checked) {
+                    return;
+                }
+
+                quantidadeCartoes++;
+
+                const input = cartao.querySelector('input[type="number"]');
+                const valor = parseFloat(input.value);
+
+                if (isNaN(valor) || valor <= 0) {
+                    valorCartaoInvalido = true;
+                    return;
+                }
+
+                totalCartoes += valor;
+
+                if (valorRestante >= 10 && valor < 10) {
+                    cartaoMenorQue10 = true;
+                }
+            });
+
+            // Compra já paga pelos cupons
+            if (valorRestante <= 0) {
+                if (quantidadeCartoes > 0) {
+                    mostrarToast('Remova os cartões, pois os cupons já cobrem o valor da compra.', 'atencao');
+                    return;
+                }
+
+                let mensagem = 'Compra realizada com sucesso!';
+
+                if (totalCupons > totalCompra) {
+                    const valorTroca = totalCupons - totalCompra;
+
+                    mensagem +=
+                        ' Foi gerado um cupom de troca de R$ ' +
+                        converterMoeda(valorTroca) +
+                        '.';
+                }
+
+                mostrarToast(mensagem, 'certo');
+
+                setTimeout(function () {
+                    window.location.href = '/cliente/pedidos';
+                }, 2500);
+
+                return;
+            }
+
+            // Precisa de cartão
+            if (quantidadeCartoes === 0) {
+                mostrarToast('Selecione um cartão para completar o pagamento.', 'atencao');
+                return;
+            }
+
+            // Todos os cartões precisam ter valor
+            if (valorCartaoInvalido) {
+                mostrarToast('Digite o valor de todos os cartões selecionados.', 'atencao');
+                return;
+            }
+
+            // Cartões não podem ultrapassar o restante
+            if (totalCartoes > valorRestante) {
+                mostrarToast('O valor dos cartões é maior que o valor restante.', 'atencao');
+                return;
+            }
+
+            // Cartões precisam completar o pagamento
+            if (totalCartoes < valorRestante) {
+                mostrarToast('O valor dos cartões não completa o pagamento.', 'atencao');
+                return;
+            }
+
+            // Mínimo de R$ 10 por cartão
+            if (cartaoMenorQue10) {
+                mostrarToast('Cada cartão deve ter no mínimo R$ 10,00.', 'atencao');
+                return;
+            }
+
+            // Compra paga
+            let mensagem = 'Compra realizada com sucesso!';
+
+            if (totalCupons > totalCompra) {
+                const valorTroca = totalCupons - totalCompra;
+
+                mensagem +=
+                    ' Foi gerado um cupom de troca de R$ ' +
+                    converterMoeda(valorTroca) +
+                    '.';
+            }
+
+            mostrarToast(mensagem, 'certo');
+
+            setTimeout(function () {
+                window.location.href = '/cliente/pedido';
+            }, 2500);
+        });
+    }
 });
+
