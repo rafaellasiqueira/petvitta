@@ -1,8 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
-
 <head>
-
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -13,21 +11,17 @@
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 
     <!-- Cabeçalho CSS -->
-    <link rel="stylesheet"
-          th:href="@{/css/cliente/cabecalho.css}">
+    <link rel="stylesheet" th:href="@{/css/cliente/cabecalho.css}">
 
     <!-- Global CSS -->
-    <link rel="stylesheet"
-          th:href="@{/css/cliente/global.css}">
+    <link rel="stylesheet" th:href="@{/css/cliente/global.css}">
 
     <!-- Cadastro CSS -->
-    <link rel="stylesheet"
-          th:href="@{/css/cliente/cadastrar.css}">
+    <link rel="stylesheet" th:href="@{/css/cliente/cadastrar.css}">
 
 </head>
 
 <body>
-
 <div class="container">
 
     <header class="login-cabecalho">
@@ -42,8 +36,10 @@
     <main class="conteudo">
 
         <form class="form-cadastrar-cliente" method="post" id="formCadastroCliente">
+
             <!-- Dados pessoais -->
             <div class="card">
+
                 <div class="titulo-card">
                     <h1>Dados pessoais</h1>
                 </div>
@@ -69,7 +65,6 @@
                            id="cpf"
                            name="cpf"
                            placeholder="000.000.000-00"
-                           maxlength="14"
                            required>
 
                     <p class="mensagem-erro" id="erroCpf"></p>
@@ -80,17 +75,8 @@
                     <div class="campo-grupo">
                         <label for="tipoTelefone">Tipo de telefone</label>
 
-                        <select id="tipoTelefone"
-                                name="tipoTelefone"
-                                required>
-
-                            <option value=""
-                                    disabled
-                                    selected
-                                    hidden>
-                                Selecione
-                            </option>
-
+                        <select id="tipoTelefone" name="tipoTelefone" required>
+                            <option value="" disabled selected hidden>Selecione</option>
                             <option value="celular">Celular</option>
                             <option value="fixo">Fixo</option>
                         </select>
@@ -105,7 +91,6 @@
                                id="telefone"
                                name="telefone"
                                placeholder="(00) 00000-0000"
-                               maxlength="15"
                                required>
 
                         <p class="mensagem-erro" id="erroTelefone"></p>
@@ -117,28 +102,17 @@
                     <div class="campo-grupo">
                         <label for="genero">Gênero</label>
 
-                        <select id="genero"
-                                name="genero"
-                                required>
-
-                            <option value=""
-                                    disabled
-                                    selected
-                                    hidden>
-                                Selecione
-                            </option>
-
+                        <select id="genero" name="genero" required>
+                            <option value="" disabled selected hidden>Selecione</option>
                             <option value="feminino">Feminino</option>
-
                             <option value="masculino">Masculino</option>
-
                             <option value="outro">Outro</option>
                         </select>
+
                         <p class="mensagem-erro" id="erroGenero"></p>
                     </div>
 
                     <div class="campo-grupo">
-
                         <label for="dataNascimento">Data de nascimento</label>
 
                         <input type="date"
@@ -270,16 +244,9 @@
                         <div class="campo-grupo">
                             <label>Tipo de endereço</label>
 
-                            <select name="tipoEndereco"
-                                    required>
+                            <select name="tipoEndereco" required>
 
-                                <option value=""
-                                        disabled
-                                        selected
-                                        hidden>
-                                    Selecione o tipo de endereço
-                                </option>
-
+                                <option value="" disabled selected hidden>Selecione o tipo de endereço</option>
                                 <option value="cobranca">Cobrança</option>
                                 <option value="entrega">Entrega</option>
                                 <option value="cobranca-entrega">Cobrança e entrega</option>
@@ -288,19 +255,10 @@
 
                         <!-- Tipo residência -->
                         <div class="campo-grupo">
-
                             <label>Tipo de residência</label>
 
-                            <select name="tipoResidencia"
-                                    required>
-
-                                <option value=""
-                                        disabled
-                                        selected
-                                        hidden>
-                                    Selecione
-                                </option>
-
+                            <select name="tipoResidencia" required>
+                                <option value="" disabled selected hidden>Selecione</option>
                                 <option value="casa">Casa</option>
                                 <option value="apartamento">Apartamento</option>
                                 <option value="sobrado">Sobrado</option>
@@ -312,16 +270,8 @@
                         <div class="campo-grupo">
                             <label>Tipo de logradouro</label>
 
-                            <select name="tipoLogradouro"
-                                    required>
-
-                                <option value=""
-                                        disabled
-                                        selected
-                                        hidden>
-                                    Selecione
-                                </option>
-
+                            <select name="tipoLogradouro" required>
+                                <option value="" disabled selected hidden>Selecione</option>
                                 <option value="rua">Rua</option>
                                 <option value="avenida">Avenida</option>
                                 <option value="praca">Praça</option>
@@ -335,7 +285,6 @@
 
                         <!-- CEP -->
                         <div class="campo-grupo">
-
                             <label>CEP</label>
 
                             <input type="text"
@@ -344,7 +293,6 @@
                                    maxlength="9"
                                    required>
                         </div>
-
 
                         <!-- Logradouro -->
                         <div class="campo-grupo">
@@ -468,8 +416,6 @@
 
                 <div id="listaCartoes">
 
-
-                    <!-- Catão 1 -->
                     <div class="item-cartao cartao-item">
                         <div class="subtitulo-item">
                             <h2>Cartão</h2>
@@ -492,7 +438,8 @@
                                    placeholder="0000 0000 0000 0000"
                                    maxlength="19"
                                    inputmode="numeric"
-                                   required>
+                                   required
+                                   id="numeroCartao">
                         </div>
 
                         <!-- Nome -->
@@ -513,32 +460,12 @@
                             <select name="bandeiraCartao"
                                     required>
 
-                                <option value=""
-                                        disabled
-                                        selected
-                                        hidden>
-                                    Selecione a bandeira
-                                </option>
-
-                                <option value="visa">
-                                    Visa
-                                </option>
-
-                                <option value="mastercard">
-                                    Mastercard
-                                </option>
-
-                                <option value="elo">
-                                    Elo
-                                </option>
-
-                                <option value="american-express">
-                                    American Express
-                                </option>
-
-                                <option value="hipercard">
-                                    Hipercard
-                                </option>
+                                <option value="" disabled selected hidden>Selecione a bandeira</option>
+                                <option value="visa">Visa</option>
+                                <option value="mastercard">Mastercard</option>
+                                <option value="elo">Elo</option>
+                                <option value="american-express">American Express</option>
+                                <option value="hipercard">Hipercard</option>
                             </select>
                         </div>
 
@@ -551,7 +478,7 @@
                                        name="cvvCartao"
                                        placeholder="000"
                                        maxlength="4"
-                                       inputmode="numeric"
+                                       id="cvvCartao"
                                        required>
                             </div>
 
@@ -561,7 +488,7 @@
                                        name="validadeCartao"
                                        placeholder="MM/AA"
                                        maxlength="5"
-                                       inputmode="numeric"
+                                       id="validadeCartao"
                                        required>
                             </div>
                         </div>
@@ -598,8 +525,8 @@
         </form>
     </main>
 
-    <div id="toast"
-         class="toast">
+    <!-- Toast -->
+    <div id="toast" class="toast">
         <i class="toast-icone fa-solid fa-check"></i>
         <p id="toastMensagem">
             Cadastrado concluído com sucesso!
@@ -608,7 +535,7 @@
 
 </div>
 
-<!-- Login JavaScript -->
+<!-- Cadastrar JavaScript -->
 <script th:src="@{/js/cliente/cadastrar.js}"></script>
 </body>
 

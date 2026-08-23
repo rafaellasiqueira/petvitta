@@ -64,10 +64,6 @@
     margin-bottom: 20px;
 }
 
-.painel-filtro.hidden {
-    display: none;
-}
-
 .grid-filtros {
     display: grid;
     grid-template-columns: repeat(3, 1fr);

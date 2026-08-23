@@ -3,23 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Clientes</title>
 
     <!-- Font Awesome -->
-    <link rel="stylesheet"
-          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 
     <!-- Sidebar CSS -->
-    <link rel="stylesheet"
-          th:href="@{/css/admin/sidebar.css}">
+    <link rel="stylesheet" th:href="@{/css/admin/sidebar.css}">
 
     <!-- Global CSS -->
-    <link rel="stylesheet"
-          th:href="@{/css/admin/global.css}">
+    <link rel="stylesheet" th:href="@{/css/admin/global.css}">
 
     <!-- Clientes CSS -->
-    <link rel="stylesheet"
-          th:href="@{/css/admin/clientes.css}">
+    <link rel="stylesheet" th:href="@{/css/admin/clientes.css}">
 </head>
 <body>
 
@@ -60,7 +57,8 @@
 
             <!-- Painel de filtros -->
             <form id="painelFiltro"
-                  class="painel-filtro hidden"
+                  class="painel-filtro"
+                  hidden
                   th:action="@{/admin/clientes}"
                   method="GET">
 
@@ -191,7 +189,23 @@
                                 data-codigo="CL-001"
                                 data-nome="Letícia Gomes de Souza"
                                 data-cpf="123.456.789-00"
-                                data-email="leticia@gmail.com">
+                                data-email="leticia@gmail.com"
+                                data-genero="Feminino"
+                                data-ranking="0"
+                                data-nascimento="1995.05.20"
+                                data-telefone="(11) 98765-4321"
+                                data-nome-identificacao="Minha casa"
+                                data-tipo-endereco="Cobrança e entrega"
+                                data-tipo-residencia="Apartamento"
+                                data-tipo-logradouro="Avenida"
+                                data-cep="01310-100"
+                                data-logradouro="Avenida Paulista"
+                                data-bairro="Bela Vista"
+                                data-numero="1578"
+                                data-estado="São Paulo"
+                                data-cidade="São Paulo"
+                                data-pais="Brasil"
+                                data-observacoes="Entregar na portaria">
                             <i class="fa-solid fa-pen"></i>
                         </button>
 
@@ -370,7 +384,6 @@
     </div>
 </div>
 
-
 <!-- Modal inativar -->
 <div id="modalInativarCliente" class="modal">
     <div class="modalConteudo">
@@ -416,7 +429,6 @@
         </form>
     </div>
 </div>
-
 
 <!-- Ativar -->
 <div id="modalAtivarCliente" class="modal">

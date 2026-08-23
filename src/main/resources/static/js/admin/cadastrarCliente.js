@@ -49,26 +49,27 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Máscaras
     // Máscara CPF
-    document.getElementById('cpf').addEventListener('input', function() {
-        let cpf = this.value.replace(/\D/g, '');
-        cpf = cpf.substring(0, 11);
-        cpf = cpf.replace(/(\d{3})(\d)/, '$1.$2');
-        cpf = cpf.replace(/(\d{3})(\d)/, '$1.$2');
-        cpf = cpf.replace(/(\d{3})(\d{1,2})$/, '$1-$2');
-        this.value = cpf;
+    document.getElementById('cpf').addEventListener('input', function () {
+        let valor = this.value.replace(/\D/g, '').slice(0, 11); /* Remove oq nao e numero e limita a 11 caracteres */
+
+        if (valor.length > 9) {
+            valor = valor.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4');
+        } else if (valor.length > 6) {
+            valor = valor.replace(/(\d{3})(\d{3})(\d{1,3})/, '$1.$2.$3');
+        } else if (valor.length > 3) {
+            valor = valor.replace(/(\d{3})(\d{1,3})/, '$1.$2');
+        }
+
+        this.value = valor;
     });
 
     // Máscara telefone
     document.getElementById('telefone').addEventListener('input', function() {
-
         let telefone = this.value.replace(/\D/g, '');
         const tipo = document.getElementById('tipoTelefone').value;
 
         if (tipo === 'fixo') {
-
-            // Fixo: (00) 0000-0000
-            telefone = telefone.substring(0, 10);
-
+            telefone = telefone.slice(0, 10);
             if (telefone.length > 2) {
                 telefone = telefone.replace(
                     /(\d{2})(\d{4})(\d{0,4})/,
@@ -77,10 +78,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
         } else {
-
-            // Celular: (00) 00000-0000
-            telefone = telefone.substring(0, 11);
-
+            telefone = telefone.slice(0, 11);
             if (telefone.length > 2) {
                 telefone = telefone.replace(
                     /(\d{2})(\d{5})(\d{0,4})/,
@@ -94,7 +92,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Mudar placeholder do telefone
     document.getElementById('tipoTelefone').addEventListener('change', function() {
-
         const telefone = document.getElementById('telefone');
 
         if (this.value === 'fixo') {
@@ -109,7 +106,6 @@ document.addEventListener('DOMContentLoaded', () => {
 function cadastrarCliente() {
     const params = new URLSearchParams(window.location.search);
     const editar = params.get('editar') === 'true';
-
     let valido = true;
 
     // Limpa as mensagens

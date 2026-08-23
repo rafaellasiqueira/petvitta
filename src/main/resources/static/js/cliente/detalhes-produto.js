@@ -16,7 +16,6 @@ function atualizarSubtotal() {
 }
 
 // Quantidade
-
 const inputQtd = document.querySelector('.seletor-quantidade input');
 const btnMenos = document.querySelector('.btn-qtd.menos');
 const btnMais = document.querySelector('.btn-qtd.mais');

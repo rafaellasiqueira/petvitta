@@ -11,7 +11,6 @@ const data = document.getElementById('dataEntrada');
 const valorCusto = document.getElementById('valorCusto');
 const valorVenda = document.getElementById('valorVenda');
 
-
 // Abrir modal para cadastrar
 btnCadastrar.addEventListener('click', function () {
     tituloModal.textContent = 'Registrar entrada';
@@ -23,7 +22,6 @@ btnCadastrar.addEventListener('click', function () {
     valorVenda.value = '';
     modal.classList.add('active');
 });
-
 
 // Fechar pelo X
 btnFechar.addEventListener('click', function () {

@@ -5,7 +5,6 @@
     box-sizing: border-box;
 }
 
-
 /* Formulário */
 .form-cadastrar-cliente {
     width: 600px;
@@ -13,7 +12,6 @@
     flex-direction: column;
     gap: 20px;
 }
-
 
 /* Card */
 .card {
@@ -88,7 +86,6 @@
 }
 
 /* Inputs */
-
 .campo-grupo input,
 .campo-grupo select,
 .campo-grupo textarea {
@@ -121,22 +118,13 @@
     color: #B8C7C3;
 }
 
-
-/* =====================================================
-   MENSAGEM DE ERRO
-===================================================== */
-
+/* Mensagem de erro */
 .mensagem-erro {
-
     margin: 2px 0 0;
-
     font-family: 'Nunito', sans-serif;
-
     font-size: 12px;
-
     color: #D9534F;
 }
-
 
 /* Requisitos da senha */
 .requisitos-senha {
@@ -154,7 +142,6 @@
     font-size: 14px;
     font-weight: 500;
 }
-
 
 /* Campo senha */
 .campo-senha {
@@ -217,6 +204,7 @@
     padding: 18px;
     box-sizing: border-box;
     background: #FFFFFF;
+    margin-bottom: 12px;
 }
 
 /* Preferencial */
@@ -240,7 +228,6 @@
     color: #3A4A48;
     cursor: pointer;
 }
-
 
 /* Botão adicionar cartão e endereço */
 .btn-adicionar-card {
@@ -266,7 +253,6 @@
     border-color: #37937F;
 }
 
-
 /* Remover */
 .btn-remover-item {
     width: 32px;
@@ -274,7 +260,7 @@
     padding: 0;
     border: none;
     border-radius: 6px;
-    background-color: #FFF1F0;
+    background: none;
     color: #D9534F;
     display: flex;
     align-items: center;
@@ -282,13 +268,8 @@
     cursor: pointer;
 }
 
-.btn-remover-item:hover {
-    background-color: #D9534F;
-    color: #FFFFFF;
-}
-
 .btn-remover-item i {
-    font-size: 13px;
+    font-size: 14px;
 }
 
 

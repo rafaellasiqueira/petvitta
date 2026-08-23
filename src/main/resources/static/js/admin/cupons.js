@@ -10,7 +10,6 @@ const labelDesconto = document.getElementById('labelDesconto');
 const desconto = document.getElementById('desconto');
 const validade = document.getElementById('validade');
 
-
 // Abrir modal para cadastrar
 btnCadastrar.addEventListener('click', function () {
     tituloModal.textContent = 'Cadastrar cupom';
@@ -22,7 +21,6 @@ btnCadastrar.addEventListener('click', function () {
     desconto.placeholder = 'Digite o percentual';
     modal.classList.add('active');
 });
-
 
 // Abrir modal para editar
 botoesEditar.forEach(botao => {
@@ -41,14 +39,12 @@ botoesEditar.forEach(botao => {
             desconto.placeholder = 'Digite o valor';
 
         }
-
         modal.classList.add('active');
     });
 });
 
 // Trocar entre Percentual e Valor
 tipoDesconto.addEventListener('change', function () {
-
     if (tipoDesconto.value === 'percentual') {
         labelDesconto.textContent = 'Percentual';
         desconto.placeholder = 'Digite o percentual';
@@ -60,12 +56,10 @@ tipoDesconto.addEventListener('change', function () {
 
 });
 
-
 // Fechar pelo X
 btnFechar.addEventListener('click', function () {
     modal.classList.remove('active');
 });
-
 
 // Fechar pelo botão Cancelar
 btnCancelar.addEventListener('click', function () {

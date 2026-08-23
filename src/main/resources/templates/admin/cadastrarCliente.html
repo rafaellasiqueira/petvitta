@@ -1,14 +1,13 @@
 <!DOCTYPE html>
 <html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
-
 <head>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cadastrar cliente</title>
 
     <!-- Font Awesome -->
-    <link rel="stylesheet"
-          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 
     <!-- Sidebar CSS -->
     <link rel="stylesheet" th:href="@{/css/admin/sidebar.css}">
@@ -62,7 +61,6 @@
                                id="cpf"
                                name="cpf"
                                placeholder="000.000.000-00"
-                               maxlength="14"
                                required>
 
                         <p class="mensagem-erro" id="erroCpf"></p>
@@ -99,18 +97,15 @@
                                    id="telefone"
                                    name="telefone"
                                    placeholder="(00) 00000-0000"
-                                   maxlength="15"
                                    required>
 
                             <p class="mensagem-erro" id="erroTelefone"></p>
                         </div>
                     </div>
 
-
                     <!-- Gênero + nascimento -->
                     <div class="linha-campos">
                         <div class="campo-grupo">
-
                             <label for="genero">Gênero</label>
 
                             <select id="genero"

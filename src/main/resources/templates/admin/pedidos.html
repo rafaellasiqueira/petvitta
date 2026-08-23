@@ -330,6 +330,36 @@
                         </i>
                     </td>
                 </tr>
+
+                <tr>
+                    <td>PEDI010</td>
+                    <td>Fernanda Batista</td>
+                    <td>3</td>
+                    <td>22/08/2026</td>
+                    <td>
+                        <select class="dropdown">
+                            <option value="Em aberto">Em aberto</option>
+                            <option value="Em processamento">Em processamento</option>
+                            <option value="Pagamento realizado" selected>Pagamento realizado</option>
+                            <option value="Em trânsito">Em trânsito</option>
+                            <option value="Entregue">Entregue</option>
+                            <option value="Cancelado">Cancelado</option>
+                            <option value="Pagamento recusado">Pagamento recusado</option>
+                        </select>
+                    </td>
+                    <td>
+                        <i class="fa-solid fa-eye btn-detalhes"
+                           data-codigo="PEDI009"
+                           data-cliente="Fernanda Costa"
+                           data-data="22/08/2026"
+                           data-produtos="Ração Golden 10kg|Suplemento Ômega 3|Petisco de Frango 400g"
+                           data-subtotal="R$ 130,00"
+                           data-descontos="R$ 5,00"
+                           data-total="R$ 125,00"
+                           data-endereco="Rua Teodoro Sampaio, 1800 - São Paulo/SP">
+                        </i>
+                    </td>
+                </tr>
                 </tbody>
             </table>
 
@@ -384,7 +414,7 @@
                     <div class="modal-body">
                         <p>Tem certeza que deseja cancelar este pedido?</p>
                         <p>Após o cancelamento, o status não poderá ser alterado.</p>
-                        <div class="botoes-modal">
+                        <div class="modalBotoes">
                             <button id="btnNaoCancelarPedido" class="btn-cancelar">Não cancelar</button>
                             <button id="btnConfirmarCancelamento" class="btn-confirmar">Cancelar pedido</button>
                         </div>
@@ -392,10 +422,9 @@
                 </div>
             </div>
 
-
             <div id="toast" class="toast">
-                <i class="toast-icone fa-solid fa-check"></i>
-                <p id="toastMensagem">Não é permitido voltar</p>
+                <i class="fa-solid fa-circle-xmark"></i>
+                <p id="toastMensagem"></p>
             </div>
         </main>
     </div>

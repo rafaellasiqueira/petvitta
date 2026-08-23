@@ -8,16 +8,13 @@ const status = {
 };
 
 const dropdowns = document.querySelectorAll(".dropdown");
-
 let trocaRecusa;
 
-// Alterar status
+// Guarda o status anterior
 dropdowns.forEach(function(dropdown) {
-
     dropdown.dataset.anterior = dropdown.value;
 
     dropdown.addEventListener("change", function() {
-
         let anterior = this.dataset.anterior;
         let novo = this.value;
 
@@ -37,7 +34,6 @@ dropdowns.forEach(function(dropdown) {
 
         // Recusar troca
         if (novo === "Recusada") {
-
             if (anterior !== "Solicitada") {
                 mostrarToast("Essa troca não pode mais ser recusada.");
                 this.value = anterior;
@@ -59,50 +55,53 @@ dropdowns.forEach(function(dropdown) {
     });
 });
 
-
 // Mostrar mensagem
 function mostrarToast(mensagem) {
     const toast = document.getElementById("toast");
-
     document.getElementById("toastMensagem").innerText = mensagem;
-
     toast.classList.add("ativo");
-
     setTimeout(function() {
         toast.classList.remove("ativo");
     }, 3000);
 }
 
-
 // Abrir modal de estoque
 function abrirEstoque(dropdown) {
-
     const linha = dropdown.closest("tr");
     const botao = linha.querySelector(".btn-detalhes");
 
     const produtos = botao.dataset.produto.split(",");
     const lista = document.getElementById("listaItensEstoque");
-
-    lista.innerHTML = "";
+    lista.innerHTML = ""; /* Limpa o conteúdo do modal */
 
     produtos.forEach(function(produto) {
-
         lista.innerHTML += `
             <div class="item-estoque-linha">
-                <span>${produto.trim()}</span>
+                <span>${produto.trim()}</span> <!-- Remove espaço em branco -->
                 <input type="number" min="1" value="1"
                        class="quantidade-item">
             </div>
         `;
     });
-
     document.getElementById("modalEstoque").classList.add("active");
 }
 
 
-// Cancelar recusa
-function cancelarRecusa() {
+// Modal recusar
 
+// Confirmar recusa
+document.getElementById("btnConfirmarRecusa").addEventListener("click", function() {
+        if (trocaRecusa) {
+            trocaRecusa.value = "Recusada";
+            trocaRecusa.dataset.anterior = "Recusada";
+        }
+
+        document.getElementById("modalRecusa").classList.remove("active");
+        trocaRecusa = null;
+    });
+
+// Cancelar
+function cancelarRecusa() {
     document.getElementById("modalRecusa").classList.remove("active");
 
     if (trocaRecusa) {
@@ -111,6 +110,7 @@ function cancelarRecusa() {
     }
 }
 
+// Fecha o modal de recusa
 document.getElementById("btnFecharRecusa")
     .addEventListener("click", cancelarRecusa);
 
@@ -118,31 +118,16 @@ document.getElementById("btnCancelarRecusa")
     .addEventListener("click", cancelarRecusa);
 
 
-// Confirmar recusa
-document.getElementById("btnConfirmarRecusa")
-    .addEventListener("click", function() {
-
-        if (trocaRecusa) {
-            trocaRecusa.value = "Recusada";
-            trocaRecusa.dataset.anterior = "Recusada";
-        }
-
-        document.getElementById("modalRecusa").classList.remove("active");
-
-        trocaRecusa = null;
-    });
-
-
 // Modal de detalhes
 const modalDetalhes = document.getElementById("modalTrocas");
 
 document.querySelectorAll(".btn-detalhes").forEach(function(botao) {
-
     botao.addEventListener("click", function() {
 
         const linha = botao.closest("tr");
         const statusAtual = linha.querySelector(".dropdown").value;
 
+        document.getElementById("modalStatus").innerText = statusAtual;
         document.getElementById("modalCodigo").innerText = botao.dataset.codigo;
         document.getElementById("modalCliente").innerText = botao.dataset.cliente;
         document.getElementById("modalProduto").innerText = botao.dataset.produto;
@@ -154,9 +139,10 @@ document.querySelectorAll(".btn-detalhes").forEach(function(botao) {
 
         if (statusAtual === "Solicitada") {
             secaoStatus.style.display = "none";
+
         } else {
             document.getElementById("labelStatus").innerText =
-                statusAtual + " em:";
+                statusAtual + " em: ";
 
             document.getElementById("modalDataStatus").innerText =
                 new Date().toLocaleDateString("pt-BR");
@@ -189,11 +175,9 @@ document.getElementById("btnConfirmarEstoque")
 
         const lista = document.getElementById("listaItensEstoque");
         const resumo = document.getElementById("resumoItens");
-
         resumo.innerHTML = "";
 
         lista.querySelectorAll(".item-estoque-linha").forEach(function(item) {
-
             const produto = item.querySelector("span").innerText;
             const quantidade = item.querySelector(".quantidade-item").value;
 
@@ -201,8 +185,7 @@ document.getElementById("btnConfirmarEstoque")
                 `<li>${produto} - Quantidade: ${quantidade}</li>`;
         });
 
-        document.getElementById("resumoCupom").innerText =
-            "TROCA-2026-001";
+        document.getElementById("resumoCupom").innerText = "TROCA-2026-001";
 
         document.getElementById("modalEstoque").classList.remove("active");
         document.getElementById("modalResumo").classList.add("active");
