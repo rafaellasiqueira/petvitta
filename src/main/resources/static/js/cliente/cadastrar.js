@@ -76,32 +76,39 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     // Máscara CEP
-    document.querySelectorAll('input[name="cep"]').forEach(function(cep) {
-        cep.addEventListener('input', function() {
-            let valor = this.value.replace(/\D/g, '').slice(0, 8);
+    document.getElementById('cep').addEventListener('input', function() {
+        let valor = this.value.replace(/\D/g, '').slice(0, 8);
 
-            if (valor.length > 5) {
-                valor = valor.replace(/(\d{5})(\d)/, '$1-$2');
-            }
-            this.value = valor;
-        });
+        if (valor.length > 5) {
+            valor = valor.replace(/(\d{5})(\d)/, '$1-$2');
+        }
+
+        this.value = valor;
     });
 
     // Número do endereço
-    document.querySelectorAll('input[name="numero"]').forEach(function(numero) {
-        numero.addEventListener('input', function() {
-            this.value = this.value.replace(/\D/g, '');
-        });
+    document.getElementById('numero').addEventListener('input', function() {
+        this.value = this.value.replace(/\D/g, '');
+    });
+
+    // CVV
+    document.getElementById('cvvCartao').addEventListener('input', function () {
+        this.value = this.value.replace(/\D/g, '').slice(0, 4);
     });
 
     // Máscara número do cartão
     document.getElementById('numeroCartao').addEventListener('input', function() {
+        const mensagem = document.querySelector('.erroNumeroCartao');
         let numero = this.value.replace(/\D/g, '');
         numero = numero.slice(0, 16);
         numero = numero.replace(/(\d{4})(?=\d)/g, '$1 ');
         this.value = numero;
-    });
 
+        if (numero.length !== 16) {
+            mensagem.textContent = 'Digite o número completo do cartão.';
+            return;
+        }
+    });
 
     // Máscara validade do cartão
     document.getElementById('validadeCartao').addEventListener('input', function() {
@@ -136,7 +143,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 mensagem.textContent = 'Digite uma validade válida.';
             } else {
 
-                const dataValidade = new Date(ano, mes - 1, 1);
+                const dataValidade = new Date(ano, mes - 1, 1); /* Menos 1 pq javascript começa com 0 o primeiro mês */
                 const hoje = new Date();
 
                 hoje.setHours(0, 0, 0, 0);
@@ -146,6 +153,16 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             }
         }
+    });
+
+    // Não deixar entrar números ou caracteres especiais no nome
+    document.getElementById('nome').addEventListener('input', function() {
+        this.value = this.value.replace(/[^A-Za-zÀ-ÿ\s]/g, '');
+    });
+
+    // Não deixa entrar números ou caracteres especiais no nome do cartão
+    document.getElementById('nomeCartao').addEventListener('input', function() {
+        this.value = this.value.replace(/[^A-Za-zÀ-ÿ\s]/g, '');
     });
 });
 

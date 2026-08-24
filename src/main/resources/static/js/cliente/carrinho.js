@@ -11,10 +11,8 @@ function atualizarSubtotal() {
             let quantidade = parseInt(input.value);
             let tamanho = produto.querySelector('.tamanho-opcao.active');
 
-            if (tamanho) {
-                let preco = parseFloat(tamanho.dataset.preco);
-                total = total + (preco * quantidade);
-            }
+            let preco = parseFloat(tamanho.dataset.preco);
+            total = total + (preco * quantidade);
         }
     });
 
@@ -44,6 +42,14 @@ document.querySelectorAll('.seletor-quantidade').forEach(seletor => {
         }
     };
 
+    inputQtd.addEventListener('input', function() {
+        if (this.value < 1) {
+            this.value = 1;
+        }
+
+        atualizarSubtotal();
+    });
+
 });
 
 // Mudar o tamanho
@@ -60,10 +66,11 @@ document.querySelectorAll('.produto').forEach(produto => {
     });
 });
 
-// Selecionar todos
+// Checkbox
 const checkboxTodos = document.getElementById("todos");
 const checkboxesProdutos = document.querySelectorAll(".checkbox-produto");
 
+// Checkbox de produto
 checkboxesProdutos.forEach(checkbox => {
     checkbox.onclick = function() {
         atualizarSubtotal();
@@ -74,64 +81,55 @@ checkboxesProdutos.forEach(checkbox => {
     };
 });
 
-if (checkboxTodos) {
-    checkboxTodos.onclick = function() {
-        checkboxesProdutos.forEach(checkbox => {
-            checkbox.checked = checkboxTodos.checked;
-        });
-        atualizarSubtotal();
-    };
-}
+// Checkbox todos
+checkboxTodos.onclick = function() {
+    checkboxesProdutos.forEach(checkbox => {
+        checkbox.checked = checkboxTodos.checked;
+    });
+    atualizarSubtotal();
+};
+
 
 // Excluir produto
 const botoesExcluir = document.querySelectorAll(".btn-excluir");
-
 botoesExcluir.forEach(btn => {
     btn.onclick = function() {
         const produto = btn.closest(".produto");
-        if (produto) {
-            produto.remove();
-            atualizarSubtotal();
-        }
+        produto.remove();
+        atualizarSubtotal();
     };
 });
 
 // Limpar carrinho
 const btnLimpar = document.getElementById("btn-limpar");
-
-if (btnLimpar) {
     btnLimpar.onclick = function() {
-        const produtos = document.querySelectorAll(".produto");
-        produtos.forEach(produto => produto.remove());
-        atualizarSubtotal();
-    };
+    const produtos = document.querySelectorAll(".produto");
+    produtos.forEach(produto => produto.remove());
+    atualizarSubtotal();
 }
+
+
+// Finalizar a compra
+const btnFinalizarCompra = document.querySelector('.btn-finalizar-a-compra');
+
+btnFinalizarCompra.addEventListener('click', function(event) {
+    const produtosSelecionados = document.querySelectorAll('.checkbox-produto:checked');
+
+    // Se nenhum produto estiver selecionado, impede o redirecionamento e exibe o toast
+    if (produtosSelecionados.length === 0) {
+        event.preventDefault();
+        mostrarToast();
+    }
+});
 
 // Toast
 function mostrarToast() {
     const toast = document.getElementById("toast");
-    if (!toast) return;
-
     toast.classList.add("ativo");
 
     setTimeout(function() {
         toast.classList.remove("ativo");
     }, 3000);
-}
-
-// Finalizar a compra
-const btnFinalizarCompra = document.querySelector('.btn-finalizar-a-compra');
-
-if (btnFinalizarCompra) {
-    btnFinalizarCompra.addEventListener('click', function(event) {
-        const produtosSelecionados = document.querySelectorAll('.checkbox-produto:checked');
-
-        // Se nenhum produto estiver selecionado, impede o redirecionamento e exibe o toast
-        if (produtosSelecionados.length === 0) {
-            event.preventDefault();
-            mostrarToast();
-        }
-    });
 }
 
 

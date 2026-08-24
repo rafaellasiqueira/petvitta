@@ -14,6 +14,18 @@ function mostrarSenha() {
 }
 
 document.getElementById("btnEntrar").addEventListener("click", function (event) {
-    event.preventDefault();
-    window.location.href = "/admin/dashboard";
+    const email = document.getElementById("email");
+    const senha = document.getElementById("senha");
+    const mensagemErro = document.getElementById("erroDadosAcesso");
+
+    if (email.value === "admin@petvittaclub.com" && senha.value === "@Admin123") {
+        event.preventDefault();
+        window.location.href = "/admin/dashboard";
+    } else {
+        event.preventDefault();
+        mensagemErro.textContent = "E-mail ou senha incorretos. Verifique os dados e tente novamente.";
+        mensagemErro.hidden = false;
+    }
+
 });
+

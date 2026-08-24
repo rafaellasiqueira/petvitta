@@ -3,24 +3,24 @@ function atualizarSubtotal() {
     let quantidade = document.querySelector('.seletor-quantidade input');
     let preco = document.querySelector('.preco');
 
-    if (tamanho) {
-        let valor = parseFloat(tamanho.dataset.preco);
-        let qtd = parseInt(quantidade.value);
-        let total = valor * qtd;
+    let valor = parseFloat(tamanho.dataset.preco);
+    let qtd = parseInt(quantidade.value);
+    let total = valor * qtd;
 
-        preco.innerText = total.toLocaleString('pt-BR', {
-            style: 'currency',
-            currency: 'BRL'
-        });
-    }
+    preco.innerText = total.toLocaleString('pt-BR', {
+        style: 'currency',
+        currency: 'BRL'
+    });
+
 }
 
-// Quantidade
+// Quantidade e tamanho
 const inputQtd = document.querySelector('.seletor-quantidade input');
 const btnMenos = document.querySelector('.btn-qtd.menos');
 const btnMais = document.querySelector('.btn-qtd.mais');
 const botoesTamanho = document.querySelectorAll('.tamanho-opcao');
 
+// Tamanho
 botoesTamanho.forEach(btn => {
     btn.onclick = function() {
         botoesTamanho.forEach(b => b.classList.remove('active'));
@@ -40,6 +40,14 @@ btnMenos.onclick = function() {
         atualizarSubtotal();
     }
 };
+
+inputQtd.addEventListener('input', function() {
+    if (this.value < 1) {
+        this.value = 1;
+    }
+
+    atualizarSubtotal();
+});
 
 // Toast
 function adicionarCarrinho() {

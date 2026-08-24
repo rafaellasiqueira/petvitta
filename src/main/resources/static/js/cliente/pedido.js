@@ -52,7 +52,7 @@ document.addEventListener("DOMContentLoaded", function () {
         // Adiciona mensagem
         const mensagem = document.createElement("p");
         mensagem.textContent = "Pedido cancelado";
-        informacoesPedido.appendChild(mensagem);
+        informacoesPedido.appendChild(mensagem); /* Coloca a mensagem dentro de informações pedidos */
 
         // Fecha modal
         modalCancelar.classList.remove("active");
@@ -70,12 +70,7 @@ document.addEventListener("DOMContentLoaded", function () {
     // Abrir modal itens recebidos
     botoesItensRecebidos.forEach(function (botao) {
         botao.addEventListener("click", function () {
-            const card = botao.closest(".card-pedido");
-            const status = card.querySelector(".status-pedido");
-
-            if (status.textContent.trim() !== "Em trânsito") return;
-
-            pedidoSelecionadoItensRecebidos = card;
+            pedidoSelecionadoItensRecebidos = botao.closest(".card-pedido");
             modalItensRecebidos.classList.add("active");
         });
     });
@@ -94,16 +89,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Confirmar itens recebidos
     btnConfirmarItensRecebidos.addEventListener("click", function () {
-        const card = pedidoSelecionadoItensRecebidos;
-        const status = card.querySelector(".status-pedido");
-        const informacoesPedido = card.querySelector(".informacoes-pedido");
-        const containerStatus = card.querySelector(".container-status-troca");
-
-        if (status.textContent.trim() !== "Em trânsito") {
-            modalItensRecebidos.classList.remove("active");
-            pedidoSelecionadoItensRecebidos = null;
-            return;
-        }
+        const status = pedidoSelecionadoItensRecebidos.querySelector(".status-pedido");
+        const informacoesPedido = pedidoSelecionadoItensRecebidos.querySelector(".informacoes-pedido");
+        const containerStatus = pedidoSelecionadoItensRecebidos.querySelector(".container-status-troca");
 
         // Altera status para entregue
         status.textContent = "Entregue";
@@ -120,19 +108,17 @@ document.addEventListener("DOMContentLoaded", function () {
         });
 
         // Remove botão itens recebidos
-        const botaoItensRecebidos = card.querySelector(".btn-itens-recebidos");
+        const botaoItensRecebidos = pedidoSelecionadoItensRecebidos.querySelector(".btn-itens-recebidos");
         botaoItensRecebidos.remove();
 
         // Adiciona botão solicitar troca
         const trocaExistente = containerStatus.querySelector(".btn-solicitar-troca");
 
-        if (!trocaExistente) {
-            const botaoTroca = document.createElement("button");
-            botaoTroca.type = "button";
-            botaoTroca.classList.add("btn-branco", "btn-solicitar-troca");
-            botaoTroca.textContent = "Solicitar troca";
-            containerStatus.appendChild(botaoTroca);
-        }
+        const botaoTroca = document.createElement("button");
+        botaoTroca.type = "button";
+        botaoTroca.classList.add("btn-branco", "btn-solicitar-troca");
+        botaoTroca.textContent = "Solicitar troca";
+        containerStatus.appendChild(botaoTroca);
 
         // Adiciona data de entrega
         const mensagemEntrega = document.createElement("p");
@@ -165,30 +151,24 @@ document.addEventListener("DOMContentLoaded", function () {
         const camposQuantidade = modalSolicitarTroca.querySelectorAll("input[type='number']");
 
         camposQuantidade.forEach(function (campo) {
-            campo.value = campo.defaultValue !== "" ? campo.defaultValue : "";
+            if (campo.defaultValue !== "") {
+                campo.value = campo.defaultValue;
+            } else {
+                campo.value = "";
+            }
         });
 
         const justificativa = modalSolicitarTroca.querySelector("#justificativaTroca");
         justificativa.value = "";
 
         mensagemErroTroca.textContent = "";
-
-        const mensagensErro = modalSolicitarTroca.querySelectorAll(".mensagem-erro");
-
-        mensagensErro.forEach(function (mensagem) {
-            mensagem.textContent = "";
-        });
     }
 
     // Abrir modal solicitar troca
     document.addEventListener("click", function (event) {
         const botao = event.target.closest(".btn-solicitar-troca");
-        if (!botao) return;
-
         const card = botao.closest(".card-pedido");
         const status = card.querySelector(".status-pedido");
-
-        if (status.textContent.trim() !== "Entregue") return;
 
         limparModalTroca();
         pedidoSelecionadoTroca = card;
@@ -225,7 +205,7 @@ document.addEventListener("DOMContentLoaded", function () {
         const status = pedidoSelecionadoTroca.querySelector(".status-pedido");
         const containerStatus = pedidoSelecionadoTroca.querySelector(".container-status-troca");
 
-        // Entregue → troca aceita
+        // Muda o status
         status.textContent = "Troca aceita";
         status.classList.remove("entregue", "troca-finalizada");
         status.classList.add("troca-autorizada");

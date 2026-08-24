@@ -157,11 +157,10 @@ p {
     width: 100%;
     height: auto;
     padding: 8px;
-    font-family: 'Nunito', sans-serif;
+    font-family: 'Fredoka', sans-serif !important;
     font-size: 14px;
-    font-weight: 500;
-    color: #EA2B41;
+    font-weight: 400;
+    color: #EA2B41 !important;
     border-radius: 8px;
-    background-color: #fad1d6;
-
+    background-color: #FEF7F8;
 }

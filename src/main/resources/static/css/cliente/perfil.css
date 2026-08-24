@@ -93,7 +93,7 @@ h1 {
 .btn-salvar,
 .btn-salvar-senha,
 .btn-adicionar-endereco,
-.btn-adicionar-cartao {
+.btn-abrir-cartao {
     width: auto;
     padding: 0px 12px;
     height: 38px;
@@ -110,7 +110,7 @@ h1 {
 .btn-salvar:hover,
 .btn-salvar-senha:hover,
 .btn-adicionar-endereco:hover,
-.btn-adicionar-cartao:hover {
+.btn-abrir-cartao:hover {
     background-color: #37937F;
 }
 

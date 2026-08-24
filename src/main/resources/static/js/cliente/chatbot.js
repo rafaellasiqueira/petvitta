@@ -56,7 +56,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 'bot'
             );
 
-
         // Suplemento
         } else if (mensagem.includes('suplemento')) {
 
