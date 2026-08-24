@@ -152,3 +152,16 @@ p {
     font-size: 16px;
     color: #4FD1B5;
 }
+
+.mensagem-erro-dados-de-acesso {
+    width: 100%;
+    height: auto;
+    padding: 8px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    color: #EA2B41;
+    border-radius: 8px;
+    background-color: #fad1d6;
+
+}
