@@ -6,13 +6,14 @@ const painelFiltro = document.getElementById('painelFiltro');
 const btnLimpar = document.getElementById('btnLimparFiltro');
 
 btnFiltro.addEventListener('click', () => {
-    painelFiltro.hidden = !painelFiltro.hidden;
-});
 
-btnLimpar.addEventListener('click', () => {
-    painelFiltro.reset();
-});
+    if (painelFiltro.style.display === 'none') {
+        painelFiltro.style.display = 'block';
+    } else {
+        painelFiltro.style.display = 'none';
+    }
 
+});
 
 // Máscaras
 // Máscara CPF

@@ -97,11 +97,6 @@
     background: #FFFFFF;
 }
 
-.data input:focus {
-    border-color: #1C9B86;
-}
-
-
 .filtros button {
     height: 34px;
     margin-left: 8px;
@@ -135,7 +130,6 @@
 
 
 /* Mensagem de erro */
-
 .mensagem-erro {
     width: 100%;
     padding: 10px 14px;

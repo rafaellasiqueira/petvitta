@@ -2,12 +2,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Editar
     const params = new URLSearchParams(window.location.search);
-    const editar = params.get('editar');
+    const editar = params.get('editar'); /* FIca true se achar */
     if (editar === 'true') {
 
         // Pega os dados do cliente
         const dados = localStorage.getItem('clienteParaEditar');
-        const cliente = JSON.parse(dados);
+        const cliente = JSON.parse(dados); /* transforma de novo o dado em objeto em javascript */
 
         // Muda o título e o botão
         document.getElementById('tituloPagina').textContent = 'Editar cliente';
@@ -183,20 +183,20 @@ function cadastrarCliente() {
     });
 
 
-    // Mostra o toast
-    const toast = document.getElementById('toast');
-    const toastMensagem = document.getElementById('toastMensagem');
+        // Mostra o toast
+        const toast = document.getElementById('toast');
+        const toastMensagem = document.getElementById('toastMensagem');
 
-    if (editar) {
-        toastMensagem.textContent = 'Cliente alterado com sucesso!';
-    } else {
-        toastMensagem.textContent = 'Cliente cadastrado com sucesso!';
-    }
+        if (editar) {
+            toastMensagem.textContent = 'Cliente alterado com sucesso!';
+        } else {
+            toastMensagem.textContent = 'Cliente cadastrado com sucesso!';
+        }
 
-    toast.classList.add('ativo');
+        toast.classList.add('ativo');
 
-    // Vai para a página de clientes
-    setTimeout(function() {
-        window.location.href = '/admin/clientes';
-    }, 2000);
+        // Vai para a página de clientes
+        setTimeout(function() {
+            window.location.href = '/admin/clientes';
+        }, 2000);
 }

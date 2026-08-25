@@ -92,7 +92,7 @@ document.addEventListener('DOMContentLoaded', () => {
             },
             options: {
                 responsive: true,
-                maintainAspectRatio: false,
+                maintainAspectRatio: false, /* Para caber no container pai */
                 plugins: {
                     legend: {
                         position: 'bottom'
@@ -100,7 +100,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 },
                 scales: {
                     y: {
-                        beginAtZero: true
+                        beginAtZero: true,
+                        ticks: {
+                            callback: function(valor) {
+                                return valor.toLocaleString('pt-BR', {
+                                    style: 'currency',
+                                    currency: 'BRL'
+                                });
+                            }
+                        }
                     }
                 }
             }

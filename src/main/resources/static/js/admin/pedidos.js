@@ -116,7 +116,6 @@ dropdowns.forEach(function(dropdown) {
             return;
         }
 
-
         // Pagamento recusado
         if (novo === "Pagamento recusado") {
             if (anterior !== "Em aberto" && anterior !== "Em processamento") {

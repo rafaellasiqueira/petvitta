@@ -106,7 +106,7 @@ h2 {
     border-radius: 8px;
     font-size: 16px;
     font-weight: 500;
-    color: #3A4A48
+    color: #3A4A48;
     text-decoration: none;
     cursor: pointer;
 }
@@ -134,22 +134,22 @@ h2 {
 
 th {
     font-family: 'Fredoka', sans-serif;
-    width: 250px;
+    width: 100px;
     font-size: 16px;
     font-weight: 500;
     color: #1F2A29;
     text-align: left;
     vertical-align: top;
-    padding-bottom: 12px;
+    padding-bottom: 6px;
 }
 
 td {
     font-family: 'Nunito', sans-serif;
-    width: 100%px;
+    width: 100px;
     font-size: 16px;
     font-weight: 500;
     color: #1F2A29;
-    padding-bottom: 12px;
+    padding-bottom: 6px;
 }
 
 h3 {
