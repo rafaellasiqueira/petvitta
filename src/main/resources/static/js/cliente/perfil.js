@@ -35,10 +35,8 @@ document.addEventListener('DOMContentLoaded', function() {
     const formDados = document.querySelector('.form-dados-pessoais');
     const cpf = document.getElementById('cpf');
     const telefone = document.getElementById('telefone');
-    const tipo = document.getElementById('tipoTelefone');
-    const dataNascimento = document.getElementById('dataNascimento');
+    const tipoTelefone = document.getElementById('tipoTelefone');
 
-    // Validação do CPF
     cpf.addEventListener('input', function() {
         let valor = this.value.replace(/\D/g, '').slice(0, 11);
 
@@ -53,32 +51,24 @@ document.addEventListener('DOMContentLoaded', function() {
         this.value = valor;
     });
 
-    // Telefone
     telefone.addEventListener('input', function() {
-        let telefone = this.value.replace(/\D/g, '');
+        let valor = this.value.replace(/\D/g, '');
 
-        if (tipo.value === 'fixo') {
-            telefone = telefone.slice(0, 10);
+        if (tipoTelefone.value === 'fixo') {
+            valor = valor.slice(0, 10);
 
-            if (telefone.length > 2) {
-                telefone = telefone.replace(
-                    /(\d{2})(\d{4})(\d{0,4})/,
-                    '($1) $2-$3'
-                );
+            if (valor.length > 2) {
+                valor = valor.replace(/(\d{2})(\d{4})(\d{0,4})/, '($1) $2-$3');
             }
-
         } else {
-            telefone = telefone.slice(0, 11);
+            valor = valor.slice(0, 11);
 
-            if (telefone.length > 2) {
-                telefone = telefone.replace(
-                    /(\d{2})(\d{5})(\d{0,4})/,
-                    '($1) $2-$3'
-                );
+            if (valor.length > 2) {
+                valor = valor.replace(/(\d{2})(\d{5})(\d{0,4})/, '($1) $2-$3');
             }
         }
 
-        this.value = telefone;
+        this.value = valor;
     });
 
     tipoTelefone.addEventListener('change', function() {
@@ -86,6 +76,27 @@ document.addEventListener('DOMContentLoaded', function() {
             telefone.placeholder = '(00) 0000-0000';
         } else {
             telefone.placeholder = '(00) 00000-0000';
+        }
+    });
+
+    // Validar data de nascimento
+    const dataNascimento = document.getElementById('dataNascimento');
+    const erroDataNascimento = document.getElementById('erroDataNascimento');
+
+    dataNascimento.addEventListener('change', function() {
+        erroDataNascimento.textContent = '';
+
+        if (this.value === '') {
+            return;
+        }
+
+        const data = new Date(this.value + 'T00:00:00');
+        const hoje = new Date();
+
+        hoje.setHours(0, 0, 0, 0);
+
+        if (data > hoje) {
+            erroDataNascimento.textContent = 'A data de nascimento não pode ser futura.';
         }
     });
 
@@ -103,54 +114,92 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Alterar senha
     const formSenha = document.querySelector('.form-alterar-senha');
+    const atual = document.getElementById('senhaAtual');
+    const nova = document.getElementById('novaSenha');
+    const confirmar = document.getElementById('confirmarSenha');
 
+    const erroSenhaAtual = document.getElementById('erroSenhaAtual');
+    const erroNovaSenha = document.getElementById('erroNovaSenha');
+    const erroConfirmarSenha = document.getElementById('erroConfirmarSenha');
+
+    // Validar senha atual
+    atual.addEventListener('input', function() {
+        erroSenhaAtual.textContent = '';
+
+        if (this.value === '') {
+            erroSenhaAtual.textContent = 'Digite sua senha atual.';
+        }
+    });
+
+    // Validar nova senha enquanto digita
+    nova.addEventListener('input', function() {
+        erroNovaSenha.textContent = '';
+
+        if (this.value.length < 8) {
+            erroNovaSenha.textContent = 'A senha deve ter pelo menos 8 caracteres.';
+        } else if (!/[A-Z]/.test(this.value)) {
+            erroNovaSenha.textContent = 'A senha deve ter pelo menos uma letra maiúscula.';
+        } else if (!/[a-z]/.test(this.value)) {
+            erroNovaSenha.textContent = 'A senha deve ter pelo menos uma letra minúscula.';
+        } else if (!/[^A-Za-z0-9]/.test(this.value)) {
+            erroNovaSenha.textContent = 'A senha deve ter pelo menos um caractere especial.';
+        }
+
+        if (confirmar.value !== '') {
+            erroConfirmarSenha.textContent = '';
+
+            if (confirmar.value !== this.value) {
+                erroConfirmarSenha.textContent = 'As senhas não coincidem.';
+            }
+        }
+    });
+
+    // Validar confirmação enquanto digita
+    confirmar.addEventListener('input', function() {
+        erroConfirmarSenha.textContent = '';
+
+        if (this.value !== nova.value) {
+            erroConfirmarSenha.textContent = 'As senhas não coincidem.';
+        }
+    });
+
+    // Enviar formulário
     formSenha.addEventListener('submit', function(e) {
         e.preventDefault();
 
-        const atual = document.getElementById('senhaAtual');
-        const nova = document.getElementById('novaSenha');
-        const confirmar = document.getElementById('confirmarSenha');
-
-        document.querySelectorAll('.form-alterar-senha .mensagem-erro').forEach(function(erro) {
-            erro.textContent = '';
-        });
-
         let valido = true;
 
-        if (!atual.value) {
-            document.getElementById('erroSenhaAtual').textContent = 'Digite sua senha atual.';
+        if (atual.value === '') {
+            erroSenhaAtual.textContent = 'Digite sua senha atual.';
             valido = false;
         }
 
-        if (!nova.value) {
-            document.getElementById('erroNovaSenha').textContent = 'Digite uma nova senha.';
+        if (nova.value === '') {
+            erroNovaSenha.textContent = 'Digite uma nova senha.';
             valido = false;
-        } else if (nova.value.length < 8) {
-            document.getElementById('erroNovaSenha').textContent = 'A senha deve ter pelo menos 8 caracteres.';
-            valido = false;
-        } else if (!/[A-Z]/.test(nova.value)) {
-            document.getElementById('erroNovaSenha').textContent = 'A senha deve ter pelo menos uma letra maiúscula.';
-            valido = false;
-        } else if (!/[a-z]/.test(nova.value)) {
-            document.getElementById('erroNovaSenha').textContent = 'A senha deve ter pelo menos uma letra minúscula.';
-            valido = false;
-        } else if (!/[^A-Za-z0-9]/.test(nova.value)) {
-            document.getElementById('erroNovaSenha').textContent = 'A senha deve ter pelo menos um caractere especial.';
+        } else if (
+            nova.value.length < 8 ||
+            !/[A-Z]/.test(nova.value) ||
+            !/[a-z]/.test(nova.value) ||
+            !/[^A-Za-z0-9]/.test(nova.value)
+        ) {
             valido = false;
         }
 
-        if (!confirmar.value) {
-            document.getElementById('erroConfirmarSenha').textContent = 'Confirme a nova senha.';
+        if (confirmar.value === '') {
+            erroConfirmarSenha.textContent = 'Confirme a nova senha.';
             valido = false;
         } else if (nova.value !== confirmar.value) {
-            document.getElementById('erroConfirmarSenha').textContent = 'As senhas não coincidem.';
+            erroConfirmarSenha.textContent = 'As senhas não coincidem.';
             valido = false;
         }
 
-        if (valido) {
-            mostrarToast('Senha alterada com sucesso!');
-            formSenha.reset();
+        if (!valido) {
+            return;
         }
+
+        mostrarToast('Senha alterada com sucesso!');
+        formSenha.reset();
     });
 
     // Endereço
@@ -319,21 +368,24 @@ document.addEventListener('DOMContentLoaded', function() {
         this.value = valor;
     });
 
-    // Validar cartão
-    formCartao.addEventListener('submit', function (e) {
-        e.preventDefault();
+    // Validar cartão enquanto digita
+    numeroCartao.addEventListener('input', function() {
         mensagemErroNumero.textContent = '';
-        mensagemErroValidade.textContent = '';
-        const numero = numeroCartao.value.replace(/\D/g, '');
-        const valorValidade = validade.value;
 
-        if (numero.length !== 16) {
+        const numero = this.value.replace(/\D/g, '');
+
+        if (numero.length > 0 && numero.length < 16) {
             mensagemErroNumero.textContent = 'Digite o número completo do cartão.';
-            return;
         }
+    });
 
-        if (valorValidade.length === 5) {
-            const partes = valorValidade.split('/');
+    validade.addEventListener('input', function() {
+        mensagemErroValidade.textContent = '';
+
+        const valor = this.value;
+
+        if (valor.length === 5) {
+            const partes = valor.split('/');
             const mes = parseInt(partes[0]);
             const ano = parseInt('20' + partes[1]);
 
@@ -349,10 +401,52 @@ document.addEventListener('DOMContentLoaded', function() {
 
             if (dataValidade < hoje) {
                 mensagemErroValidade.textContent = 'Cartão vencido.';
-                return;
             }
-        } else {
+        }
+    });
+
+// Validar cartão
+    formCartao.addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        mensagemErroNumero.textContent = '';
+        mensagemErroValidade.textContent = '';
+
+        const numero = numeroCartao.value.replace(/\D/g, '');
+        const valorValidade = validade.value;
+
+        let valido = true;
+
+        if (numero.length !== 16) {
+            mensagemErroNumero.textContent = 'Digite o número completo do cartão.';
+            valido = false;
+        }
+
+        if (valorValidade.length !== 5) {
             mensagemErroValidade.textContent = 'Digite uma validade válida.';
+            valido = false;
+        } else {
+            const partes = valorValidade.split('/');
+            const mes = parseInt(partes[0]);
+            const ano = parseInt('20' + partes[1]);
+
+            if (mes < 1 || mes > 12) {
+                mensagemErroValidade.textContent = 'Digite uma validade válida.';
+                valido = false;
+            } else {
+                const dataValidade = new Date(ano, mes - 1, 1);
+                const hoje = new Date();
+
+                hoje.setHours(0, 0, 0, 0);
+
+                if (dataValidade < hoje) {
+                    mensagemErroValidade.textContent = 'Cartão vencido.';
+                    valido = false;
+                }
+            }
+        }
+
+        if (!valido) {
             return;
         }
 

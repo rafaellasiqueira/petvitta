@@ -159,11 +159,8 @@ document.getElementById("btnNaoCancelarPedido")
 // Confirmar cancelamento
 document.getElementById("btnConfirmarCancelamento")
     .addEventListener("click", function() {
-
-        if (pedidoCancelamento) {
-            pedidoCancelamento.value = "Cancelado";
-            pedidoCancelamento.dataset.anterior = "Cancelado";
-        }
+        pedidoCancelamento.value = "Cancelado";
+        pedidoCancelamento.dataset.anterior = "Cancelado";
 
         modalCancelarPedido.classList.remove("active");
         pedidoCancelamento = null;
@@ -175,8 +172,6 @@ document.getElementById("btnConfirmarCancelamento")
 function cancelarCancelamento() {
     modalCancelarPedido.classList.remove("active");
 
-    if (pedidoCancelamento) {
         pedidoCancelamento.value = pedidoCancelamento.dataset.anterior;
         pedidoCancelamento = null;
-    }
 }

@@ -101,13 +101,15 @@ document.addEventListener('DOMContentLoaded', function() {
         const mensagem = document.querySelector('.erroNumeroCartao');
         let numero = this.value.replace(/\D/g, '');
         numero = numero.slice(0, 16);
-        numero = numero.replace(/(\d{4})(?=\d)/g, '$1 ');
-        this.value = numero;
 
         if (numero.length !== 16) {
             mensagem.textContent = 'Digite o número completo do cartão.';
-            return;
+        } else {
+            mensagem.textContent = '';
         }
+
+        numero = numero.replace(/(\d{4})(?=\d)/g, '$1 ');
+        this.value = numero;
     });
 
     // Máscara validade do cartão
@@ -164,6 +166,61 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('nomeCartao').addEventListener('input', function() {
         this.value = this.value.replace(/[^A-Za-zÀ-ÿ\s]/g, '');
     });
+
+    // Validar senha enquanto digita
+    const senha = document.getElementById('senha');
+    const confirmarSenha = document.getElementById('confirmarSenha');
+    const erroSenha = document.getElementById('erroSenha');
+    const erroConfirmarSenha = document.getElementById('erroConfirmarSenha');
+
+    senha.addEventListener('input', function() {
+        erroSenha.textContent = '';
+
+        if (this.value.length < 8) {
+            erroSenha.textContent = 'A senha deve ter pelo menos 8 caracteres.';
+        } else if (!/[A-Z]/.test(this.value)) {
+            erroSenha.textContent = 'A senha deve ter pelo menos uma letra maiúscula.';
+        } else if (!/[a-z]/.test(this.value)) {
+            erroSenha.textContent = 'A senha deve ter pelo menos uma letra minúscula.';
+        } else if (!/[^A-Za-z0-9]/.test(this.value)) {
+            erroSenha.textContent = 'A senha deve ter pelo menos um caractere especial.';
+        }
+    });
+
+    confirmarSenha.addEventListener('input', function() {
+        erroConfirmarSenha.textContent = '';
+
+        if (this.value !== senha.value) {
+            erroConfirmarSenha.textContent = 'As senhas não coincidem.';
+        }
+    });
+
+    // Validar data de nascimento
+    const dataNascimento = document.getElementById('dataNascimento');
+    const erroDataNascimento = document.getElementById('erroDataNascimento');
+
+    dataNascimento.addEventListener('change', function() {
+        erroDataNascimento.textContent = '';
+
+        if (this.value === '') {
+            return;
+        }
+
+        const data = new Date(this.value + 'T00:00:00');
+        const hoje = new Date();
+
+        hoje.setHours(0, 0, 0, 0);
+
+        if (data > hoje) {
+            erroDataNascimento.textContent = 'A data de nascimento não pode ser futura.';
+        }
+    });
+
+    // Submit
+    document.getElementById('formCadastroCliente').addEventListener('submit', function(event) {
+        event.preventDefault();
+        cadastrarCliente();
+    });
 });
 
 // Cadastrar cliente
@@ -173,87 +230,6 @@ function cadastrarCliente() {
     document.querySelectorAll('.mensagem-erro').forEach(function(erro) {
         erro.textContent = '';
     });
-
-    const nome = document.getElementById('nome');
-    const cpf = document.getElementById('cpf');
-    const tipoTelefone = document.getElementById('tipoTelefone');
-    const telefone = document.getElementById('telefone');
-    const genero = document.getElementById('genero');
-    const dataNascimento = document.getElementById('dataNascimento');
-    const email = document.getElementById('email');
-    const senha = document.getElementById('senha');
-    const confirmarSenha = document.getElementById('confirmarSenha');
-
-    if (nome.value.trim() === '') {
-        document.getElementById('erroNome').textContent = 'Digite o nome do cliente.';
-        valido = false;
-    }
-
-    if (cpf.value.trim() === '') {
-        document.getElementById('erroCpf').textContent = 'Digite o CPF.';
-        valido = false;
-    }
-
-    if (tipoTelefone.value === '') {
-        document.getElementById('erroTipoTelefone').textContent = 'Selecione o tipo de telefone.';
-        valido = false;
-    }
-
-    if (telefone.value.trim() === '') {
-        document.getElementById('erroTelefone').textContent = 'Digite o telefone.';
-        valido = false;
-    }
-
-    if (genero.value === '') {
-        document.getElementById('erroGenero').textContent = 'Selecione o gênero.';
-        valido = false;
-    }
-
-    if (dataNascimento.value === '') {
-        document.getElementById('erroDataNascimento').textContent = 'Informe a data de nascimento.';
-        valido = false;
-    } else {
-        const data = new Date(dataNascimento.value + 'T00:00:00');
-        const hoje = new Date();
-        hoje.setHours(0, 0, 0, 0);
-
-        if (data > hoje) {
-            document.getElementById('erroDataNascimento').textContent = 'A data de nascimento não pode ser futura.';
-            valido = false;
-        }
-    }
-
-    if (email.value.trim() === '') {
-        document.getElementById('erroEmail').textContent = 'Digite o e-mail.';
-        valido = false;
-    }
-
-    if (senha.value === '') {
-        document.getElementById('erroSenha').textContent = 'Digite uma senha.';
-        valido = false;
-    } else if (senha.value.length < 8) {
-        document.getElementById('erroSenha').textContent = 'A senha deve ter pelo menos 8 caracteres.';
-        valido = false;
-    } else if (!/[A-Z]/.test(senha.value)) {
-        document.getElementById('erroSenha').textContent = 'A senha deve ter pelo menos uma letra maiúscula.';
-        valido = false;
-    } else if (!/[a-z]/.test(senha.value)) {
-        document.getElementById('erroSenha').textContent = 'A senha deve ter pelo menos uma letra minúscula.';
-        valido = false;
-    } else if (!/[^A-Za-z0-9]/.test(senha.value)) {
-        document.getElementById('erroSenha').textContent = 'A senha deve ter pelo menos um caractere especial.';
-        valido = false;
-    }
-
-    if (confirmarSenha.value === '') {
-        document.getElementById('erroConfirmarSenha').textContent = 'Confirme a senha.';
-        valido = false;
-    } else if (senha.value !== confirmarSenha.value) {
-        document.getElementById('erroConfirmarSenha').textContent = 'As senhas não coincidem.';
-        valido = false;
-    }
-
-    if (!valido) return;
 
     const toast = document.getElementById('toast');
     const toastMensagem = document.getElementById('toastMensagem');

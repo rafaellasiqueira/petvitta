@@ -38,6 +38,14 @@
             <!-- Cabecalho -->
             <div class="cabecalho-container">
                 <h1>Meus pedidos</h1>
+
+                <div class="pesquisa">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+
+                    <input type="text"
+                           id="inputPesquisa"
+                           placeholder="Buscar pelo código do pedido..">
+                </div>
             </div>
 
             <!-- Pagamento recusado  -->
@@ -125,7 +133,8 @@
 
                     <div class="container-status-troca">
                         <span class="status-pedido entregue">Entregue</span>
-                        <button type="button" class="btn-branco btn-solicitar-troca" id="btnAbrirModalTroca">Solicitar troca</button>
+                        <button type="button" class="btn-branco btn-solicitar-troca" hidden id="btnAbrirModalTroca">Solicitar troca</button>
+                        <button type="button" class="btn-branco btn-itens-recebidos">Itens recebidos</button>
                     </div>
                 </div>
 
@@ -200,7 +209,6 @@
                     </div>
                     <div class="container-status-troca">
                         <span class="status-pedido em-transito">Em trânsito</span>
-                        <button type="button" class="btn-branco btn-itens-recebidos">Itens recebidos</button>
                     </div>
                 </div>
 
@@ -275,7 +283,6 @@
 
                     <div class="container-status-troca">
                         <span class="status-pedido aprovado">Aprovado</span>
-                        <button type="button" class="btn-cancelar-pedido">Cancelar pedido</button>
                     </div>
                 </div>
 

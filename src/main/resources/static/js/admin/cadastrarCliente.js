@@ -100,149 +100,103 @@ document.addEventListener('DOMContentLoaded', () => {
             telefone.placeholder = '(00) 00000-0000';
         }
     });
+
+    // Validar data de nascimento enquanto digita
+    const dataNascimento = document.getElementById('dataNascimento');
+    const erroDataNascimento = document.getElementById('erroDataNascimento');
+
+    dataNascimento.addEventListener('input', function() {
+        erroDataNascimento.textContent = '';
+
+        if (this.value === '') {
+            return;
+        }
+
+        const data = new Date(this.value + 'T00:00:00');
+        const hoje = new Date();
+
+        hoje.setHours(0, 0, 0, 0);
+
+        if (data > hoje) {
+            erroDataNascimento.textContent = 'A data de nascimento não pode ser futura.';
+        }
+    });
+
+    // Validar senha enquanto digita
+    const senha = document.getElementById('senha');
+    const confirmarSenha = document.getElementById('confirmarSenha');
+    const erroSenha = document.getElementById('erroSenha');
+    const erroConfirmarSenha = document.getElementById('erroConfirmarSenha');
+
+    senha.addEventListener('input', function() {
+        erroSenha.textContent = '';
+
+        if (this.value === '') {
+            return;
+        }
+
+        if (this.value.length < 8) {
+            erroSenha.textContent = 'A senha deve ter pelo menos 8 caracteres.';
+        } else if (!/[A-Z]/.test(this.value)) {
+            erroSenha.textContent = 'A senha deve ter pelo menos uma letra maiúscula.';
+        } else if (!/[a-z]/.test(this.value)) {
+            erroSenha.textContent = 'A senha deve ter pelo menos uma letra minúscula.';
+        } else if (!/[^A-Za-z0-9]/.test(this.value)) {
+            erroSenha.textContent = 'A senha deve ter pelo menos um caractere especial.';
+        }
+
+        if (confirmarSenha.value !== '') {
+            if (confirmarSenha.value !== this.value) {
+                erroConfirmarSenha.textContent = 'As senhas não coincidem.';
+            } else {
+                erroConfirmarSenha.textContent = '';
+            }
+        }
+    });
+
+    confirmarSenha.addEventListener('input', function() {
+        erroConfirmarSenha.textContent = '';
+
+        if (this.value === '') {
+            return;
+        }
+
+        if (this.value !== senha.value) {
+            erroConfirmarSenha.textContent = 'As senhas não coincidem.';
+        }
+    });
+
+    document.getElementById('formCadastroCliente').addEventListener('submit', function(event) {
+        event.preventDefault();
+        cadastrarCliente();
+    });
 });
 
 // Cadastrar cliente
 function cadastrarCliente() {
     const params = new URLSearchParams(window.location.search);
     const editar = params.get('editar') === 'true';
-    let valido = true;
 
     // Limpa as mensagens
     document.querySelectorAll('.mensagem-erro').forEach(function(erro) {
         erro.textContent = '';
     });
 
-    // Nome
-    if (document.getElementById('nome').value.trim() === '') {
-        document.getElementById('erroNome').textContent =
-            'Digite o nome do cliente.';
-        valido = false;
-    }
 
-    // CPF
-    if (document.getElementById('cpf').value.trim() === '') {
-        document.getElementById('erroCpf').textContent =
-            'Digite o CPF.';
-        valido = false;
-    }
+    // Mostra o toast
+    const toast = document.getElementById('toast');
+    const toastMensagem = document.getElementById('toastMensagem');
 
-    // Tipo telefone
-    if (document.getElementById('tipoTelefone').value === '') {
-        document.getElementById('erroTipoTelefone').textContent =
-            'Selecione o tipo de telefone.';
-        valido = false;
-    }
-
-    // Telefone
-    if (document.getElementById('telefone').value.trim() === '') {
-        document.getElementById('erroTelefone').textContent =
-            'Digite o telefone.';
-        valido = false;
-    }
-
-    // Gênero
-    if (document.getElementById('genero').value === '') {
-        document.getElementById('erroGenero').textContent =
-            'Selecione o gênero.';
-        valido = false;
-    }
-
-
-    // Data de nascimento
-    if (document.getElementById('dataNascimento').value === '') {
-        document.getElementById('erroDataNascimento').textContent =
-            'Informe a data de nascimento.';
-        valido = false;
-    }
-
-    // E-mail
-    if (document.getElementById('email').value.trim() === '') {
-        document.getElementById('erroEmail').textContent =
-            'Digite o e-mail.';
-        valido = false;
-    }
-
-    // Senha
-    const senha = document.getElementById('senha').value;
-    const confirmarSenha = document.getElementById('confirmarSenha').value;
-
-    const erroSenha = document.getElementById('erroSenha');
-    const erroConfirmar = document.getElementById('erroConfirmarSenha');
-
-    if (editar && senha === '' && confirmarSenha === '') {
-
+    if (editar) {
+        toastMensagem.textContent = 'Cliente alterado com sucesso!';
     } else {
-
-        // Senha vazia
-        if (senha === '') {
-            erroSenha.textContent =
-                'Digite uma senha.';
-            valido = false;
-        }
-
-        // Menos de 8 caracteres
-        else if (senha.length < 8) {
-            erroSenha.textContent =
-                'A senha deve ter pelo menos 8 caracteres.';
-            valido = false;
-        }
-
-        // Sem letra maiúscula
-        else if (!/[A-Z]/.test(senha)) {
-            erroSenha.textContent =
-                'A senha deve ter pelo menos uma letra maiúscula.';
-            valido = false;
-        }
-
-        // Sem letra minúscula
-        else if (!/[a-z]/.test(senha)) {
-            erroSenha.textContent =
-                'A senha deve ter pelo menos uma letra minúscula.';
-            valido = false;
-        }
-
-        // Sem caractere especial
-        else if (!/[^A-Za-z0-9]/.test(senha)) {
-            erroSenha.textContent =
-                'A senha deve ter pelo menos um caractere especial.';
-            valido = false;
-        }
-
-        // Confirmar senha
-        if (confirmarSenha === '') {
-            erroConfirmar.textContent =
-                'Confirme a senha.';
-            valido = false;
-        }
-
-        // Senhas diferentes
-        else if (senha !== confirmarSenha) {
-            erroConfirmar.textContent =
-                'As senhas não coincidem.';
-            valido = false;
-        }
+        toastMensagem.textContent = 'Cliente cadastrado com sucesso!';
     }
 
-        // Se tiver algum erro, não continua
-        if (!valido) {
-            return;
-        }
+    toast.classList.add('ativo');
 
-        // Mostra o toast
-        const toast = document.getElementById('toast');
-        const toastMensagem = document.getElementById('toastMensagem');
-
-        if (editar) {
-            toastMensagem.textContent = 'Cliente alterado com sucesso!';
-        } else {
-            toastMensagem.textContent = 'Cliente cadastrado com sucesso!';
-        }
-
-        toast.classList.add('ativo');
-
-        // Vai para a página de clientes
-        setTimeout(function() {
-            window.location.href = '/admin/clientes';
-        }, 2000);
+    // Vai para a página de clientes
+    setTimeout(function() {
+        window.location.href = '/admin/clientes';
+    }, 2000);
 }

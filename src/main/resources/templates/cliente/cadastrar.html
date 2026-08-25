@@ -210,13 +210,10 @@
             <!-- Endereços -->
             <div class="card">
                 <div class="titulo-card">
-                    <h1>Endereços</h1>
+                    <h1>Endereço</h1>
                 </div>
                     <!-- Endereço -->
                     <div class="item-endereco endereco-item">
-                        <div class="subtitulo-item">
-                            <h2>Endereço</h2>
-                        </div>
 
                         <!-- Nome identificação -->
                         <div class="campo-grupo">
@@ -224,15 +221,14 @@
 
                             <input type="text"
                                    name="nomeIdentificacao"
-                                   placeholder="Ex.: Casa, Trabalho..."
-                                   required>
+                                   placeholder="Ex.: Casa, Trabalho...">
                         </div>
 
                         <!-- Tipo endereço -->
                         <div class="campo-grupo">
                             <label>Tipo de endereço</label>
 
-                            <select name="tipoEndereco" required>
+                            <select name="tipoEndereco">
 
                                 <option value="" disabled selected hidden>Selecione o tipo de endereço</option>
                                 <option value="cobranca">Cobrança</option>
@@ -245,7 +241,7 @@
                         <div class="campo-grupo">
                             <label>Tipo de residência</label>
 
-                            <select name="tipoResidencia" required>
+                            <select name="tipoResidencia">
                                 <option value="" disabled selected hidden>Selecione</option>
                                 <option value="casa">Casa</option>
                                 <option value="apartamento">Apartamento</option>
@@ -258,7 +254,7 @@
                         <div class="campo-grupo">
                             <label>Tipo de logradouro</label>
 
-                            <select name="tipoLogradouro" required>
+                            <select name="tipoLogradouro">
                                 <option value="" disabled selected hidden>Selecione</option>
                                 <option value="rua">Rua</option>
                                 <option value="avenida">Avenida</option>
@@ -279,7 +275,6 @@
                                    name="cep"
                                    placeholder="00000-000"
                                    maxlength="9"
-                                   required
                                    id="cep">
                         </div>
 
@@ -289,8 +284,7 @@
 
                             <input type="text"
                                    name="logradouro"
-                                   placeholder="Digite o nome do logradouro"
-                                   required>
+                                   placeholder="Digite o nome do logradouro">
                         </div>
 
                         <!-- Bairro -->
@@ -299,8 +293,7 @@
 
                             <input type="text"
                                    name="bairro"
-                                   placeholder="Digite o bairro"
-                                   required>
+                                   placeholder="Digite o bairro">
                         </div>
 
                         <!-- Número -->
@@ -310,7 +303,6 @@
                             <input type="text"
                                    name="numero"
                                    placeholder="Digite o número"
-                                   required
                                    id="numero">
                         </div>
 
@@ -318,8 +310,7 @@
                         <div class="linha-campos">
                             <div class="campo-grupo">
                                 <label>Estado</label>
-                                <select name="estado"
-                                        required>
+                                <select name="estado">
 
                                     <option value=""
                                             disabled
@@ -363,8 +354,7 @@
 
                                 <input type="text"
                                        name="cidade"
-                                       placeholder="Digite a cidade"
-                                       required>
+                                       placeholder="Digite a cidade">
                             </div>
                         </div>
 
@@ -374,8 +364,7 @@
 
                             <input type="text"
                                    name="pais"
-                                   value="Brasil"
-                                   required>
+                                   value="Brasil">
 
                         </div>
 
@@ -393,14 +382,10 @@
             <!-- Cartões -->
             <div class="card">
                 <div class="titulo-card">
-                    <h1>Cartões</h1>
+                    <h1>Cartão</h1>
                 </div>
 
                     <div class="item-cartao cartao-item">
-                        <div class="subtitulo-item">
-                            <h2>Cartão</h2>
-                        </div>
-
                         <!-- Número -->
                         <div class="campo-grupo">
                             <label>Número do cartão</label>
@@ -409,8 +394,6 @@
                                    name="numeroCartao"
                                    placeholder="0000 0000 0000 0000"
                                    maxlength="19"
-                                   inputmode="numeric"
-                                   required
                                    id="numeroCartao">
                             <p class="mensagem-erro erroNumeroCartao"></p>
                         </div>
@@ -423,7 +406,6 @@
                                    name="nomeCartao"
                                    placeholder="Digite o nome impresso no cartão"
                                    maxlength="50"
-                                   required
                                    id="nomeCartao">
                         </div>
 
@@ -431,8 +413,7 @@
                         <div class="campo-grupo">
                             <label>Bandeira</label>
 
-                            <select name="bandeiraCartao"
-                                    required>
+                            <select name="bandeiraCartao">
 
                                 <option value="" disabled selected hidden>Selecione a bandeira</option>
                                 <option value="visa">Visa</option>
@@ -452,8 +433,7 @@
                                        name="cvvCartao"
                                        placeholder="000"
                                        maxlength="4"
-                                       id="cvvCartao"
-                                       required>
+                                       id="cvvCartao">
                                 <p class="mensagem-erro erroCvvCartao"></p>
                             </div>
 
@@ -463,8 +443,7 @@
                                        name="validadeCartao"
                                        placeholder="MM/AA"
                                        maxlength="5"
-                                       id="validadeCartao"
-                                       required>
+                                       id="validadeCartao">
                                 <p class="mensagem-erro erroValidadeCartao"></p>
                             </div>
                         </div>
@@ -482,10 +461,9 @@
                 </div>
 
             <div class="container-btn-salvar">
-                <button type="button"
+                <button type="submit"
                         class="btn-salvar"
-                        id="btnSalvarCliente"
-                        onclick="cadastrarCliente()">
+                        id="btnSalvarCliente">
                     Cadastrar cliente
                 </button>
             </div>

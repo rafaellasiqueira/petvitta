@@ -36,18 +36,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
         // Altera status
         status.textContent = "Cancelado";
-        status.classList.remove("aprovado", "em-processamento");
+        status.classList.remove("em-processamento");
         status.classList.add("pedido-cancelado");
 
         // Remove botão cancelar
         botaoCancelar.remove();
-
-        // Remove mensagem de aprovação
-        informacoesPedido.querySelectorAll("p").forEach(function (mensagem) {
-            if (mensagem.textContent.includes("Aprovado em")) {
-                mensagem.remove();
-            }
-        });
 
         // Adiciona mensagem
         const mensagem = document.createElement("p");
@@ -89,41 +82,20 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Confirmar itens recebidos
     btnConfirmarItensRecebidos.addEventListener("click", function () {
-        const status = pedidoSelecionadoItensRecebidos.querySelector(".status-pedido");
-        const informacoesPedido = pedidoSelecionadoItensRecebidos.querySelector(".informacoes-pedido");
-        const containerStatus = pedidoSelecionadoItensRecebidos.querySelector(".container-status-troca");
+        const pedido = pedidoSelecionadoItensRecebidos;
+        const status = pedido.querySelector(".status-pedido");
+        const botaoItensRecebidos = pedido.querySelector(".btn-itens-recebidos");
+        const botaoTroca = pedido.querySelector(".btn-solicitar-troca");
 
         // Altera status para entregue
         status.textContent = "Entregue";
-        status.classList.remove("em-transito");
         status.classList.add("entregue");
 
-        // Remove mensagem de entrega prevista
-        const mensagens = informacoesPedido.querySelectorAll("p");
-
-        mensagens.forEach(function (mensagem) {
-            if (mensagem.textContent.includes("Entrega prevista")) {
-                mensagem.remove();
-            }
-        });
-
         // Remove botão itens recebidos
-        const botaoItensRecebidos = pedidoSelecionadoItensRecebidos.querySelector(".btn-itens-recebidos");
         botaoItensRecebidos.remove();
 
-        // Adiciona botão solicitar troca
-        const trocaExistente = containerStatus.querySelector(".btn-solicitar-troca");
-
-        const botaoTroca = document.createElement("button");
-        botaoTroca.type = "button";
-        botaoTroca.classList.add("btn-branco", "btn-solicitar-troca");
-        botaoTroca.textContent = "Solicitar troca";
-        containerStatus.appendChild(botaoTroca);
-
-        // Adiciona data de entrega
-        const mensagemEntrega = document.createElement("p");
-        mensagemEntrega.textContent = "Entregue em " + new Date().toLocaleDateString("pt-BR");
-        informacoesPedido.appendChild(mensagemEntrega);
+        // Mostra botão solicitar troca
+        botaoTroca.hidden = false;
 
         // Fecha modal
         modalItensRecebidos.classList.remove("active");

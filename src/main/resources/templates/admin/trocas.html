@@ -56,7 +56,7 @@
                         <th class="col-produto">Produto</th>
                         <th class="col-motivo">Motivo</th>
                         <th class="col-data">Solicitado em</th>
-                        <th class="col-acao"> </th>
+                        <th class="col-acao">Status</th>
                         <th class="col-detalhes"></th>
                     </tr>
                     </thead>
@@ -377,6 +377,44 @@
 
                     <tr>
                         <td class="col-codigo">TROC009</td>
+                        <td class="col-cliente">Ana Rodrigues</td>
+
+                        <td class="col-produto"
+                            title="3x Ração Premier Gatos Adultos 10kg">
+                            3x Ração Premier Gatos Adultos 10kg
+                        </td>
+
+                        <td class="col-motivo"
+                            title="Produto diferente do enunciado">
+                            Produto diferente do enunciado
+                        </td>
+
+                        <td class="col-data">22/08/2026</td>
+
+                        <td class="col-acao">
+                            <select class="dropdown">
+                                <option value="Solicitada" selected>Solicitada</option>
+                                <option value="Troca aceita">Troca aceita</option>
+                                <option value="Item enviado">Item enviado</option>
+                                <option value="Item recebido">Item recebido</option>
+                                <option value="Troca processada">Troca processada</option>
+                                <option value="Recusada">Recusada</option>
+                            </select>
+                        </td>
+
+                        <td class="col-detalhes">
+                            <i class="fa-solid fa-eye btn-detalhes"
+                               data-codigo="TROC009"
+                               data-cliente="Ana Rodrigues"
+                               data-produto="3x Ração Premier Gatos Adultos 10kg"
+                               data-motivo="Produto diferente do enunciado"
+                               data-justificativa="A embalagem e as informações do produto recebido não correspondem às informações apresentadas no anúncio."
+                               data-solicitado="22/08/2026"></i>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td class="col-codigo">TROC010</td>
                         <td class="col-cliente">Ana Rodrigues</td>
 
                         <td class="col-produto"
