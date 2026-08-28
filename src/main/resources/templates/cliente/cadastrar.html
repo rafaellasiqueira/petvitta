@@ -1,16 +1,12 @@
 <!DOCTYPE html>
 <html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
-
 <head>
-
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <title>Cadastrar cliente</title>
 
     <!-- Font Awesome -->
-    <link rel="stylesheet"
-          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 
     <!-- Cabeçalho CSS -->
     <link rel="stylesheet" th:href="@{/css/cliente/cabecalho.css}">
@@ -22,561 +18,290 @@
     <link rel="stylesheet" th:href="@{/css/cliente/cadastrar.css}">
 
 </head>
-
 <body>
 
 <div class="container">
 
     <!-- Cabeçalho -->
     <header class="login-cabecalho">
-
         <div class="topo">
-
             <div class="logo-container">
-
-                <img class="logo"
-                     th:src="@{/images/logo-horizontal-escura.svg}">
-
+                <img class="logo" th:src="@{/images/logo-horizontal-escura.svg}">
             </div>
-
         </div>
-
     </header>
-
 
     <!-- Conteúdo -->
     <main class="conteudo">
+        <form class="form-cadastrar-cliente" method="post" id="formCadastroCliente">
 
-        <form class="form-cadastrar-cliente"
-              method="post"
-              id="formCadastroCliente">
-
-
-            <!-- ================================================= -->
-            <!-- DADOS PESSOAIS -->
-            <!-- ================================================= -->
-
+            <!-- Dados pessoais -->
             <div class="card">
-
                 <div class="titulo-card">
                     <h1>Dados pessoais</h1>
                 </div>
 
-
                 <!-- Nome -->
                 <div class="campo-grupo">
-
                     <label for="nome">Nome</label>
-
                     <input type="text"
                            id="nome"
                            name="nome"
                            placeholder="Digite seu nome completo"
+                           minlength="3"
+                           maxlength="100"
                            required>
-
-                    <p class="mensagem-erro"
-                       id="erroNome"></p>
-
+                    <p class="mensagem-erro" id="erroNome"></p>
                 </div>
-
 
                 <!-- CPF -->
                 <div class="campo-grupo">
-
                     <label for="cpf">CPF</label>
-
                     <input type="text"
                            id="cpf"
                            name="cpf"
                            placeholder="000.000.000-00"
+                           minlength="14"
+                           maxlength="14"
+                           inputmode="numeric"
                            required>
-
-                    <p class="mensagem-erro"
-                       id="erroCpf"></p>
-
+                    <p class="mensagem-erro" id="erroCpf"></p>
                 </div>
-
 
                 <!-- Telefone -->
                 <div class="linha-campos">
-
                     <div class="campo-grupo">
+                        <label for="tipoTelefone">Tipo de telefone</label>
 
-                        <label for="tipoTelefone">
-                            Tipo de telefone
-                        </label>
-
-                        <select id="tipoTelefone"
-                                name="tipoTelefone"
-                                required>
-
-                            <option value=""
-                                    disabled
-                                    selected
-                                    hidden>
-                                Selecione
-                            </option>
-
-                            <option value="celular">
-                                Celular
-                            </option>
-
-                            <option value="fixo">
-                                Fixo
-                            </option>
-
+                        <select id="tipoTelefone" name="tipoTelefone" required>
+                            <option value="" disabled selected hidden>Selecione</option>
+                            <option value="celular">Celular</option>
+                            <option value="fixo">Fixo</option>
                         </select>
-
-                        <p class="mensagem-erro"
-                           id="erroTipoTelefone"></p>
-
                     </div>
 
-
                     <div class="campo-grupo">
-
-                        <label for="telefone">
-                            Telefone
-                        </label>
-
+                        <label for="telefone">Telefone</label>
                         <input type="text"
                                id="telefone"
                                name="telefone"
                                placeholder="(00) 00000-0000"
+                               maxlength="15"
                                required>
-
-                        <p class="mensagem-erro"
-                           id="erroTelefone"></p>
-
+                        <p class="mensagem-erro" id="erroTelefone"></p>
                     </div>
-
                 </div>
-
 
                 <!-- Gênero + nascimento -->
                 <div class="linha-campos">
-
                     <div class="campo-grupo">
+                        <label for="genero">Gênero</label>
 
-                        <label for="genero">
-                            Gênero
-                        </label>
-
-                        <select id="genero"
-                                name="genero"
-                                required>
-
-                            <option value=""
-                                    disabled
-                                    selected
-                                    hidden>
-                                Selecione
-                            </option>
-
-                            <option value="feminino">
-                                Feminino
-                            </option>
-
-                            <option value="masculino">
-                                Masculino
-                            </option>
-
-                            <option value="outro">
-                                Outro
-                            </option>
-
+                        <select id="genero" name="genero" required>
+                            <option value="" disabled selected hidden>Selecione</option>
+                            <option value="feminino">Feminino</option>
+                            <option value="masculino">Masculino</option>
+                            <option value="outro">Outro</option>
                         </select>
-
-                        <p class="mensagem-erro"
-                           id="erroGenero"></p>
-
                     </div>
 
-
                     <div class="campo-grupo">
-
-                        <label for="dataNascimento">
-                            Data de nascimento
-                        </label>
-
+                        <label for="dataNascimento">Data de nascimento</label>
                         <input type="date"
                                id="dataNascimento"
                                name="dataNascimento"
                                required>
-
-                        <p class="mensagem-erro"
-                           id="erroDataNascimento"></p>
-
+                        <p class="mensagem-erro" id="erroDataNascimento"></p>
                     </div>
-
                 </div>
-
             </div>
 
-
-            <!-- ================================================= -->
-            <!-- DADOS DE ACESSO -->
-            <!-- ================================================= -->
-
+            <!-- Dados de acesso -->
             <div class="card">
-
                 <div class="titulo-card">
                     <h1>Dados de acesso</h1>
                 </div>
 
-
                 <!-- E-mail -->
                 <div class="campo-grupo">
-
-                    <label for="email">
-                        E-mail
-                    </label>
-
+                    <label for="email">E-mail</label>
                     <input type="email"
                            id="email"
                            name="email"
                            placeholder="Digite o e-mail"
                            required>
-
-                    <p class="mensagem-erro"
-                       id="erroEmail"></p>
-
+                    <p class="mensagem-erro" id="erroEmail"></p>
                 </div>
-
 
                 <!-- Senha -->
                 <div class="campo-grupo">
-
-                    <label for="senha">
-                        Senha
-                    </label>
-
+                    <label for="senha">Senha</label>
                     <div class="campo-senha">
-
                         <input type="password"
                                id="senha"
                                name="senha"
                                placeholder="Digite a senha"
                                required>
-
-                        <button type="button"
-                                class="btn-mostrar-senha"
-                                data-input="senha">
-
+                        <button type="button" class="btn-mostrar-senha" data-input="senha">
                             <i class="fa-solid fa-eye"></i>
-
                         </button>
-
                     </div>
-
-                    <p class="mensagem-erro"
-                       id="erroSenha"></p>
-
+                    <p class="mensagem-erro" id="erroSenha"></p>
                 </div>
-
 
                 <!-- Confirmar senha -->
                 <div class="campo-grupo">
-
-                    <label for="confirmarSenha">
-                        Confirmar senha
-                    </label>
-
+                    <label for="confirmarSenha">Confirmar senha</label>
                     <div class="campo-senha">
-
                         <input type="password"
                                id="confirmarSenha"
                                name="confirmarSenha"
                                placeholder="Digite a senha novamente"
                                required>
-
-                        <button type="button"
-                                class="btn-mostrar-senha"
-                                data-input="confirmarSenha">
-
+                        <button type="button" class="btn-mostrar-senha" data-input="confirmarSenha">
                             <i class="fa-solid fa-eye"></i>
-
                         </button>
-
                     </div>
-
-                    <p class="mensagem-erro"
-                       id="erroConfirmarSenha"></p>
-
+                    <p class="mensagem-erro" id="erroConfirmarSenha"></p>
                 </div>
-
 
                 <!-- Requisitos -->
                 <ul class="requisitos-senha">
-
                     <li>
                         - Conter no mínimo 8 caracteres
                     </li>
-
                     <li>
                         - Conter pelo menos uma letra maiúscula e uma letra minúscula
                     </li>
-
                     <li>
                         - Conter pelo menos um caractere especial
                     </li>
-
                 </ul>
-
             </div>
 
-
-            <!-- ================================================= -->
-            <!-- ENDEREÇOS -->
-            <!-- ================================================= -->
-
+            <!-- Endereços -->
             <div class="card">
-
                 <div class="titulo-card">
-
                     <h1>Endereços</h1>
-
                 </div>
-
 
                 <!-- Lista de endereços -->
                 <div id="listaEnderecos">
 
-
-                    <!-- PRIMEIRO ENDEREÇO -->
+                    <!-- Primeiro Endereço -->
                     <div class="item-endereco endereco-item">
-
 
                         <!-- Título + remover -->
                         <div class="subtitulo-item">
-
-                            <h2>Endereço 1</h2>
-
-                            <button type="button"
-                                    class="btn-remover-item"
-                                    title="Remover endereço">
-
+                            <h2>Endereço</h2>
+                            <button type="button" class="btn-remover-item" style="display: none;">
                                 <i class="fa-solid fa-trash"></i>
-
                             </button>
-
                         </div>
-
 
                         <!-- Nome identificação -->
                         <div class="campo-grupo">
-
-                            <label>
-                                Nome de identificação
-                            </label>
-
+                            <label>Nome de identificação</label>
                             <input type="text"
+                                   id="nomeIdentificacao"
                                    name="nomeIdentificacao"
-                                   placeholder="Ex.: Casa, Trabalho...">
-
+                                   class="nome-identificacao"
+                                   placeholder="Ex.: Casa, Trabalho..."
+                                   minlength="3"
+                                   maxlength="100"
+                                   required>
+                            <p class="mensagem-erro erroNomeIdentificacao"></p>
                         </div>
-
 
                         <!-- Tipo endereço -->
                         <div class="campo-grupo">
-
-                            <label>
-                                Tipo de endereço
-                            </label>
-
-                            <select name="tipoEndereco">
-
-                                <option value=""
-                                        disabled
-                                        selected
-                                        hidden>
-                                    Selecione o tipo de endereço
-                                </option>
-
-                                <option value="cobranca">
-                                    Cobrança
-                                </option>
-
-                                <option value="entrega">
-                                    Entrega
-                                </option>
-
-                                <option value="cobranca-entrega">
-                                    Cobrança e entrega
-                                </option>
-
+                            <label>Tipo de endereço</label>
+                            <select name="tipoEndereco" required>
+                                <option value="" disabled selected hidden>Selecione o tipo de endereço</option>
+                                <option value="cobranca">Cobrança</option>
+                                <option value="entrega">Entrega</option>
+                                <option value="cobranca-entrega">Cobrança e entrega</option>
                             </select>
-
                         </div>
-
 
                         <!-- Tipo residência -->
                         <div class="campo-grupo">
-
-                            <label>
-                                Tipo de residência
-                            </label>
-
-                            <select name="tipoResidencia">
-
-                                <option value=""
-                                        disabled
-                                        selected
-                                        hidden>
-                                    Selecione
-                                </option>
-
-                                <option value="casa">
-                                    Casa
-                                </option>
-
-                                <option value="apartamento">
-                                    Apartamento
-                                </option>
-
-                                <option value="sobrado">
-                                    Sobrado
-                                </option>
-
-                                <option value="outro">
-                                    Outro
-                                </option>
-
+                            <label>Tipo de residência</label>
+                            <select name="tipoResidencia" required>
+                                <option value="" disabled selected hidden>Selecione</option>
+                                <option value="casa">Casa</option>
+                                <option value="apartamento">Apartamento</option>
+                                <option value="sobrado">Sobrado</option>
+                                <option value="outro">Outro</option>
                             </select>
-
                         </div>
-
 
                         <!-- Tipo logradouro -->
                         <div class="campo-grupo">
-
-                            <label>
-                                Tipo de logradouro
-                            </label>
-
-                            <select name="tipoLogradouro">
-
-                                <option value=""
-                                        disabled
-                                        selected
-                                        hidden>
-                                    Selecione
-                                </option>
-
-                                <option value="rua">
-                                    Rua
-                                </option>
-
-                                <option value="avenida">
-                                    Avenida
-                                </option>
-
-                                <option value="praca">
-                                    Praça
-                                </option>
-
-                                <option value="alameda">
-                                    Alameda
-                                </option>
-
-                                <option value="travessa">
-                                    Travessa
-                                </option>
-
-                                <option value="estrada">
-                                    Estrada
-                                </option>
-
-                                <option value="rodovia">
-                                    Rodovia
-                                </option>
-
-                                <option value="outro">
-                                    Outro
-                                </option>
-
+                            <label>Tipo de logradouro</label>
+                            <select name="tipoLogradouro" required>
+                                <option value="" disabled selected hidden>Selecione</option>
+                                <option value="rua">Rua</option>
+                                <option value="avenida">Avenida</option>
+                                <option value="praca">Praça</option>
+                                <option value="alameda">Alameda</option>
+                                <option value="travessa">Travessa</option>
+                                <option value="estrada">Estrada</option>
+                                <option value="rodovia">Rodovia</option>
+                                <option value="outro">Outro</option>
                             </select>
-
                         </div>
-
 
                         <!-- CEP -->
                         <div class="campo-grupo">
-
-                            <label>
-                                CEP
-                            </label>
-
+                            <label for="cep">CEP</label>
                             <input type="text"
+                                   id="cep"
                                    name="cep"
                                    class="cep"
                                    placeholder="00000-000"
-                                   maxlength="9">
-
+                                   maxlength="9"
+                                   inputmode="numeric"
+                                   required>
+                            <p class="mensagem-erro erroCep"></p>
                         </div>
-
 
                         <!-- Logradouro -->
                         <div class="campo-grupo">
-
-                            <label>
-                                Logradouro
-                            </label>
-
+                            <label>Logradouro</label>
                             <input type="text"
                                    name="logradouro"
-                                   placeholder="Digite o nome do logradouro">
-
+                                   placeholder="Digite o nome do logradouro"
+                                   required>
                         </div>
-
 
                         <!-- Bairro -->
                         <div class="campo-grupo">
-
-                            <label>
-                                Bairro
-                            </label>
-
+                            <label>Bairro</label>
                             <input type="text"
                                    name="bairro"
-                                   placeholder="Digite o bairro">
-
+                                   placeholder="Digite o bairro"
+                                   required>
                         </div>
-
 
                         <!-- Número -->
                         <div class="campo-grupo">
-
-                            <label>
-                                Número
-                            </label>
-
+                            <label for="numero">Número</label>
                             <input type="text"
+                                   id="numero"
                                    name="numero"
-                                   class="numero-endereco"
-                                   placeholder="Digite o número">
-
+                                   class="numero"
+                                   placeholder="Digite o número"
+                                   inputmode="numeric"
+                                   required>
                         </div>
-
 
                         <!-- Estado + cidade -->
                         <div class="linha-campos">
-
                             <div class="campo-grupo">
-
-                                <label>
-                                    Estado
-                                </label>
-
-                                <select name="estado">
-
-                                    <option value=""
-                                            disabled
-                                            selected
-                                            hidden>
-                                        Selecione
-                                    </option>
-
+                                <label>Estado</label>
+                                <select name="estado" required>
+                                    <option value="" disabled selected hidden>Selecione</option>
                                     <option value="AC">Acre</option>
                                     <option value="AL">Alagoas</option>
                                     <option value="AP">Amapá</option>
@@ -604,298 +329,162 @@
                                     <option value="SP">São Paulo</option>
                                     <option value="SE">Sergipe</option>
                                     <option value="TO">Tocantins</option>
-
                                 </select>
-
                             </div>
-
 
                             <div class="campo-grupo">
-
-                                <label>
-                                    Cidade
-                                </label>
-
+                                <label>Cidade</label>
                                 <input type="text"
                                        name="cidade"
-                                       placeholder="Digite a cidade">
-
+                                       placeholder="Digite a cidade"
+                                       required>
                             </div>
-
                         </div>
-
 
                         <!-- País -->
                         <div class="campo-grupo">
-
-                            <label>
-                                País
-                            </label>
-
+                            <label>País</label>
                             <input type="text"
                                    name="pais"
-                                   value="Brasil">
-
+                                   value="Brasil"
+                                   placeholder="Digite o nome do país"
+                                   required>
                         </div>
-
 
                         <!-- Observações -->
                         <div class="campo-grupo">
-
                             <label>
                                 Observações
                                 <span>(Opcional)</span>
                             </label>
-
-                            <textarea name="observacoes"
-                                      placeholder="Digite alguma observação sobre o endereço"></textarea>
-
+                            <textarea name="observacoes" placeholder="Digite alguma observação sobre o endereço"></textarea>
                         </div>
-
                     </div>
 
                 </div>
-
-
                 <!-- Adicionar endereço -->
-                <button type="button"
-                        class="btn-adicionar-card"
-                        id="btnAdicionarEndereco">
-
-                    <i class="fa-solid fa-plus"></i>
-
+                <button type="button" class="btn-adicionar-card" id="btnAdicionarEndereco">
                     Adicionar outro endereço
-
                 </button>
-
             </div>
 
-
-            <!-- ================================================= -->
-            <!-- CARTÕES -->
-            <!-- ================================================= -->
-
+            <!-- Cartões -->
             <div class="card">
-
                 <div class="titulo-card">
-
                     <h1>Cartões</h1>
-
                 </div>
-
 
                 <!-- Lista de cartões -->
                 <div id="listaCartoes">
 
-
-                    <!-- PRIMEIRO CARTÃO -->
+                    <!-- Primeiro cartão -->
                     <div class="item-cartao cartao-item">
-
 
                         <!-- Título + remover -->
                         <div class="subtitulo-item">
-
-                            <h2>Cartão 1</h2>
-
-                            <button type="button"
-                                    class="btn-remover-item"
-                                    title="Remover cartão">
-
+                            <h2>Cartão</h2>
+                            <button type="button" class="btn-remover-item" style="display: none;">
                                 <i class="fa-solid fa-trash"></i>
-
                             </button>
-
                         </div>
-
 
                         <!-- Número -->
                         <div class="campo-grupo">
-
-                            <label>
-                                Número do cartão
-                            </label>
-
+                            <label>Número do cartão</label>
                             <input type="text"
                                    name="numeroCartao"
                                    class="numero-cartao"
                                    placeholder="0000 0000 0000 0000"
-                                   maxlength="19">
-
+                                   maxlength="19"
+                                   required>
                             <p class="mensagem-erro erroNumeroCartao"></p>
-
                         </div>
-
 
                         <!-- Nome -->
                         <div class="campo-grupo">
-
-                            <label>
-                                Nome impresso no cartão
-                            </label>
-
+                            <label>Nome impresso no cartão</label>
                             <input type="text"
                                    name="nomeCartao"
                                    class="nome-cartao"
                                    placeholder="Digite o nome impresso no cartão"
-                                   maxlength="50">
-
+                                   maxlength="50"
+                                   required>
                         </div>
-
 
                         <!-- Bandeira -->
                         <div class="campo-grupo">
-
-                            <label>
-                                Bandeira
-                            </label>
-
-                            <select name="bandeiraCartao">
-
-                                <option value=""
-                                        disabled
-                                        selected
-                                        hidden>
-                                    Selecione a bandeira
-                                </option>
-
-                                <option value="visa">
-                                    Visa
-                                </option>
-
-                                <option value="mastercard">
-                                    Mastercard
-                                </option>
-
-                                <option value="elo">
-                                    Elo
-                                </option>
-
-                                <option value="american-express">
-                                    American Express
-                                </option>
-
-                                <option value="hipercard">
-                                    Hipercard
-                                </option>
-
+                            <label>Bandeira</label>
+                            <select name="bandeiraCartao" required>
+                                <option value="" disabled selected hidden>Selecione a bandeira</option>
+                                <option value="visa">Visa</option>
+                                <option value="mastercard">Mastercard</option>
+                                <option value="elo">Elo</option>
+                                <option value="american-express">American Express</option>
+                                <option value="hipercard">Hipercard</option>
                             </select>
-
                         </div>
-
 
                         <!-- CVV + validade -->
                         <div class="linha-campos">
-
                             <div class="campo-grupo">
-
-                                <label>
-                                    CVV
-                                </label>
-
+                                <label>CVV</label>
                                 <input type="text"
                                        name="cvvCartao"
                                        class="cvv-cartao"
                                        placeholder="000"
-                                       maxlength="4">
-
+                                       maxlength="4"
+                                       required>
                                 <p class="mensagem-erro erroCvvCartao"></p>
-
                             </div>
 
-
                             <div class="campo-grupo">
-
-                                <label>
-                                    Validade
-                                </label>
-
+                                <label>Validade</label>
                                 <input type="text"
                                        name="validadeCartao"
                                        class="validade-cartao"
                                        placeholder="MM/AA"
-                                       maxlength="5">
-
+                                       maxlength="5"
+                                       required>
                                 <p class="mensagem-erro erroValidadeCartao"></p>
-
                             </div>
-
                         </div>
-
-
                         <!-- Preferencial -->
                         <div class="preferencial">
-
                             <input type="radio"
                                    name="cartaoPreferencial"
                                    value="0"
                                    checked>
-
-                            <label>
-                                Definir como cartão preferencial
-                            </label>
-
+                            <label>Definir como cartão preferencial</label>
                         </div>
-
-
                     </div>
-
                 </div>
 
-
                 <!-- Adicionar cartão -->
-                <button type="button"
-                        class="btn-adicionar-card"
-                        id="btnAdicionarCartao">
-
-                    <i class="fa-solid fa-plus"></i>
-
+                <button type="button" class="btn-adicionar-card" id="btnAdicionarCartao">
                     Adicionar outro cartão
-
                 </button>
-
             </div>
 
-
-            <!-- ================================================= -->
-            <!-- SALVAR -->
-            <!-- ================================================= -->
-
+            <!-- Salvar -->
             <div class="container-btn-salvar">
-
-                <button type="submit"
-                        class="btn-salvar"
-                        id="btnSalvarCliente">
-
+                <button type="submit" class="btn-salvar" id="btnSalvarCliente">
                     Cadastrar cliente
-
                 </button>
-
             </div>
-
-
         </form>
-
     </main>
-
 
     <!-- Toast -->
     <div id="toast"
          class="toast">
-
         <i class="toast-icone fa-solid fa-check"></i>
-
-        <p id="toastMensagem">
-            Cadastrado concluído com sucesso!
-        </p>
-
+        <p id="toastMensagem">Cadastrado concluído com sucesso!</p>
     </div>
 
 </div>
 
-
 <!-- JavaScript -->
-<script th:src="@{/js/cliente/cadastrar.js}"></script>
+<script th:src="@{/js/cliente/cadastro.js}"></script>
 
 </body>
-
 </html>
