@@ -1,9 +1,0 @@
-/* Filtros */
-.filtros {
-    width: fit-content;
-    display: flex;
-    gap: 16px;
-    background: #D9E2E0;
-    border-radius: 8px;
-    padding:4px;
-}

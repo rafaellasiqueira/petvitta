@@ -9,7 +9,6 @@ public class AdminController {
 
     @GetMapping("/admin/login")
     public String login() {
-
         return "admin/login";
     }
 
@@ -49,22 +48,10 @@ public class AdminController {
         return "admin/estoque";
     }
 
-    @GetMapping("/admin/cupons")
-    public String cupons(Model model) {
-        model.addAttribute("paginaAtual", "cupons");
-        return "admin/cupons";
-    }
-
     @GetMapping("/admin/trocas")
     public String trocas(Model model) {
         model.addAttribute("paginaAtual", "trocas");
         return "admin/trocas";
-    }
-
-    @GetMapping("/admin/auditoria")
-    public String auditoria(Model model) {
-        model.addAttribute("paginaAtual", "auditoria");
-        return "admin/auditoria";
     }
 
 }

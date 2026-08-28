@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+
 <head>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -22,29 +24,48 @@
 </head>
 
 <body>
+
 <div class="container">
 
+    <!-- Cabeçalho -->
     <header class="login-cabecalho">
+
         <div class="topo">
+
             <div class="logo-container">
-                <img class="logo" th:src="@{/images/logo-horizontal-escura.svg}">
+
+                <img class="logo"
+                     th:src="@{/images/logo-horizontal-escura.svg}">
+
             </div>
+
         </div>
+
     </header>
+
 
     <!-- Conteúdo -->
     <main class="conteudo">
-        <form class="form-cadastrar-cliente" method="post" id="formCadastroCliente">
 
-            <!-- Dados pessoais -->
+        <form class="form-cadastrar-cliente"
+              method="post"
+              id="formCadastroCliente">
+
+
+            <!-- ================================================= -->
+            <!-- DADOS PESSOAIS -->
+            <!-- ================================================= -->
+
             <div class="card">
 
                 <div class="titulo-card">
                     <h1>Dados pessoais</h1>
                 </div>
 
+
                 <!-- Nome -->
                 <div class="campo-grupo">
+
                     <label for="nome">Nome</label>
 
                     <input type="text"
@@ -53,11 +74,15 @@
                            placeholder="Digite seu nome completo"
                            required>
 
-                    <p class="mensagem-erro" id="erroNome"></p>
+                    <p class="mensagem-erro"
+                       id="erroNome"></p>
+
                 </div>
+
 
                 <!-- CPF -->
                 <div class="campo-grupo">
+
                     <label for="cpf">CPF</label>
 
                     <input type="text"
@@ -66,25 +91,53 @@
                            placeholder="000.000.000-00"
                            required>
 
-                    <p class="mensagem-erro" id="erroCpf"></p>
+                    <p class="mensagem-erro"
+                       id="erroCpf"></p>
+
                 </div>
+
 
                 <!-- Telefone -->
                 <div class="linha-campos">
-                    <div class="campo-grupo">
-                        <label for="tipoTelefone">Tipo de telefone</label>
 
-                        <select id="tipoTelefone" name="tipoTelefone" required>
-                            <option value="" disabled selected hidden>Selecione</option>
-                            <option value="celular">Celular</option>
-                            <option value="fixo">Fixo</option>
+                    <div class="campo-grupo">
+
+                        <label for="tipoTelefone">
+                            Tipo de telefone
+                        </label>
+
+                        <select id="tipoTelefone"
+                                name="tipoTelefone"
+                                required>
+
+                            <option value=""
+                                    disabled
+                                    selected
+                                    hidden>
+                                Selecione
+                            </option>
+
+                            <option value="celular">
+                                Celular
+                            </option>
+
+                            <option value="fixo">
+                                Fixo
+                            </option>
+
                         </select>
 
-                        <p class="mensagem-erro" id="erroTipoTelefone"></p>
+                        <p class="mensagem-erro"
+                           id="erroTipoTelefone"></p>
+
                     </div>
 
+
                     <div class="campo-grupo">
-                        <label for="telefone">Telefone</label>
+
+                        <label for="telefone">
+                            Telefone
+                        </label>
 
                         <input type="text"
                                id="telefone"
@@ -92,27 +145,59 @@
                                placeholder="(00) 00000-0000"
                                required>
 
-                        <p class="mensagem-erro" id="erroTelefone"></p>
+                        <p class="mensagem-erro"
+                           id="erroTelefone"></p>
+
                     </div>
+
                 </div>
+
 
                 <!-- Gênero + nascimento -->
                 <div class="linha-campos">
-                    <div class="campo-grupo">
-                        <label for="genero">Gênero</label>
 
-                        <select id="genero" name="genero" required>
-                            <option value="" disabled selected hidden>Selecione</option>
-                            <option value="feminino">Feminino</option>
-                            <option value="masculino">Masculino</option>
-                            <option value="outro">Outro</option>
+                    <div class="campo-grupo">
+
+                        <label for="genero">
+                            Gênero
+                        </label>
+
+                        <select id="genero"
+                                name="genero"
+                                required>
+
+                            <option value=""
+                                    disabled
+                                    selected
+                                    hidden>
+                                Selecione
+                            </option>
+
+                            <option value="feminino">
+                                Feminino
+                            </option>
+
+                            <option value="masculino">
+                                Masculino
+                            </option>
+
+                            <option value="outro">
+                                Outro
+                            </option>
+
                         </select>
 
-                        <p class="mensagem-erro" id="erroGenero"></p>
+                        <p class="mensagem-erro"
+                           id="erroGenero"></p>
+
                     </div>
 
+
                     <div class="campo-grupo">
-                        <label for="dataNascimento">Data de nascimento</label>
+
+                        <label for="dataNascimento">
+                            Data de nascimento
+                        </label>
 
                         <input type="date"
                                id="dataNascimento"
@@ -121,20 +206,31 @@
 
                         <p class="mensagem-erro"
                            id="erroDataNascimento"></p>
+
                     </div>
+
                 </div>
+
             </div>
 
 
-            <!-- Dados de acesso -->
+            <!-- ================================================= -->
+            <!-- DADOS DE ACESSO -->
+            <!-- ================================================= -->
+
             <div class="card">
+
                 <div class="titulo-card">
                     <h1>Dados de acesso</h1>
                 </div>
 
+
                 <!-- E-mail -->
                 <div class="campo-grupo">
-                    <label for="email">E-mail</label>
+
+                    <label for="email">
+                        E-mail
+                    </label>
 
                     <input type="email"
                            id="email"
@@ -142,13 +238,19 @@
                            placeholder="Digite o e-mail"
                            required>
 
-                    <p class="mensagem-erro" id="erroEmail"></p>
+                    <p class="mensagem-erro"
+                       id="erroEmail"></p>
+
                 </div>
+
 
                 <!-- Senha -->
                 <div class="campo-grupo">
 
-                    <label for="senha">Senha</label>
+                    <label for="senha">
+                        Senha
+                    </label>
+
                     <div class="campo-senha">
 
                         <input type="password"
@@ -162,18 +264,26 @@
                                 data-input="senha">
 
                             <i class="fa-solid fa-eye"></i>
+
                         </button>
+
                     </div>
 
-                    <p class="mensagem-erro" id="erroSenha"></p>
+                    <p class="mensagem-erro"
+                       id="erroSenha"></p>
+
                 </div>
 
 
                 <!-- Confirmar senha -->
                 <div class="campo-grupo">
 
-                    <label for="confirmarSenha">Confirmar senha</label>
+                    <label for="confirmarSenha">
+                        Confirmar senha
+                    </label>
+
                     <div class="campo-senha">
+
                         <input type="password"
                                id="confirmarSenha"
                                name="confirmarSenha"
@@ -185,13 +295,20 @@
                                 data-input="confirmarSenha">
 
                             <i class="fa-solid fa-eye"></i>
+
                         </button>
+
                     </div>
-                    <p class="mensagem-erro" id="erroConfirmarSenha"></p>
+
+                    <p class="mensagem-erro"
+                       id="erroConfirmarSenha"></p>
+
                 </div>
+
 
                 <!-- Requisitos -->
                 <ul class="requisitos-senha">
+
                     <li>
                         - Conter no mínimo 8 caracteres
                     </li>
@@ -203,113 +320,254 @@
                     <li>
                         - Conter pelo menos um caractere especial
                     </li>
+
                 </ul>
+
             </div>
 
 
-            <!-- Endereços -->
+            <!-- ================================================= -->
+            <!-- ENDEREÇOS -->
+            <!-- ================================================= -->
+
             <div class="card">
+
                 <div class="titulo-card">
-                    <h1>Endereço</h1>
+
+                    <h1>Endereços</h1>
+
                 </div>
-                    <!-- Endereço -->
+
+
+                <!-- Lista de endereços -->
+                <div id="listaEnderecos">
+
+
+                    <!-- PRIMEIRO ENDEREÇO -->
                     <div class="item-endereco endereco-item">
+
+
+                        <!-- Título + remover -->
+                        <div class="subtitulo-item">
+
+                            <h2>Endereço 1</h2>
+
+                            <button type="button"
+                                    class="btn-remover-item"
+                                    title="Remover endereço">
+
+                                <i class="fa-solid fa-trash"></i>
+
+                            </button>
+
+                        </div>
+
 
                         <!-- Nome identificação -->
                         <div class="campo-grupo">
-                            <label>Nome de identificação</label>
+
+                            <label>
+                                Nome de identificação
+                            </label>
 
                             <input type="text"
                                    name="nomeIdentificacao"
                                    placeholder="Ex.: Casa, Trabalho...">
+
                         </div>
+
 
                         <!-- Tipo endereço -->
                         <div class="campo-grupo">
-                            <label>Tipo de endereço</label>
+
+                            <label>
+                                Tipo de endereço
+                            </label>
 
                             <select name="tipoEndereco">
 
-                                <option value="" disabled selected hidden>Selecione o tipo de endereço</option>
-                                <option value="cobranca">Cobrança</option>
-                                <option value="entrega">Entrega</option>
-                                <option value="cobranca-entrega">Cobrança e entrega</option>
+                                <option value=""
+                                        disabled
+                                        selected
+                                        hidden>
+                                    Selecione o tipo de endereço
+                                </option>
+
+                                <option value="cobranca">
+                                    Cobrança
+                                </option>
+
+                                <option value="entrega">
+                                    Entrega
+                                </option>
+
+                                <option value="cobranca-entrega">
+                                    Cobrança e entrega
+                                </option>
+
                             </select>
+
                         </div>
+
 
                         <!-- Tipo residência -->
                         <div class="campo-grupo">
-                            <label>Tipo de residência</label>
+
+                            <label>
+                                Tipo de residência
+                            </label>
 
                             <select name="tipoResidencia">
-                                <option value="" disabled selected hidden>Selecione</option>
-                                <option value="casa">Casa</option>
-                                <option value="apartamento">Apartamento</option>
-                                <option value="sobrado">Sobrado</option>
-                                <option value="outro">Outro</option>
+
+                                <option value=""
+                                        disabled
+                                        selected
+                                        hidden>
+                                    Selecione
+                                </option>
+
+                                <option value="casa">
+                                    Casa
+                                </option>
+
+                                <option value="apartamento">
+                                    Apartamento
+                                </option>
+
+                                <option value="sobrado">
+                                    Sobrado
+                                </option>
+
+                                <option value="outro">
+                                    Outro
+                                </option>
+
                             </select>
+
                         </div>
+
 
                         <!-- Tipo logradouro -->
                         <div class="campo-grupo">
-                            <label>Tipo de logradouro</label>
+
+                            <label>
+                                Tipo de logradouro
+                            </label>
 
                             <select name="tipoLogradouro">
-                                <option value="" disabled selected hidden>Selecione</option>
-                                <option value="rua">Rua</option>
-                                <option value="avenida">Avenida</option>
-                                <option value="praca">Praça</option>
-                                <option value="alameda">Alameda</option>
-                                <option value="travessa">Travessa</option>
-                                <option value="estrada">Estrada</option>
-                                <option value="rodovia">Rodovia</option>
-                                <option value="outro">Outro</option>
+
+                                <option value=""
+                                        disabled
+                                        selected
+                                        hidden>
+                                    Selecione
+                                </option>
+
+                                <option value="rua">
+                                    Rua
+                                </option>
+
+                                <option value="avenida">
+                                    Avenida
+                                </option>
+
+                                <option value="praca">
+                                    Praça
+                                </option>
+
+                                <option value="alameda">
+                                    Alameda
+                                </option>
+
+                                <option value="travessa">
+                                    Travessa
+                                </option>
+
+                                <option value="estrada">
+                                    Estrada
+                                </option>
+
+                                <option value="rodovia">
+                                    Rodovia
+                                </option>
+
+                                <option value="outro">
+                                    Outro
+                                </option>
+
                             </select>
+
                         </div>
+
 
                         <!-- CEP -->
                         <div class="campo-grupo">
-                            <label>CEP</label>
+
+                            <label>
+                                CEP
+                            </label>
 
                             <input type="text"
                                    name="cep"
+                                   class="cep"
                                    placeholder="00000-000"
-                                   maxlength="9"
-                                   id="cep">
+                                   maxlength="9">
+
                         </div>
+
 
                         <!-- Logradouro -->
                         <div class="campo-grupo">
-                            <label>Logradouro</label>
+
+                            <label>
+                                Logradouro
+                            </label>
 
                             <input type="text"
                                    name="logradouro"
                                    placeholder="Digite o nome do logradouro">
+
                         </div>
+
 
                         <!-- Bairro -->
                         <div class="campo-grupo">
-                            <label>Bairro</label>
+
+                            <label>
+                                Bairro
+                            </label>
 
                             <input type="text"
                                    name="bairro"
                                    placeholder="Digite o bairro">
+
                         </div>
+
 
                         <!-- Número -->
                         <div class="campo-grupo">
-                            <label>Número</label>
+
+                            <label>
+                                Número
+                            </label>
 
                             <input type="text"
                                    name="numero"
-                                   placeholder="Digite o número"
-                                   id="numero">
+                                   class="numero-endereco"
+                                   placeholder="Digite o número">
+
                         </div>
 
-                        <!-- Estado + Cidade -->
+
+                        <!-- Estado + cidade -->
                         <div class="linha-campos">
+
                             <div class="campo-grupo">
-                                <label>Estado</label>
+
+                                <label>
+                                    Estado
+                                </label>
+
                                 <select name="estado">
 
                                     <option value=""
@@ -346,21 +604,33 @@
                                     <option value="SP">São Paulo</option>
                                     <option value="SE">Sergipe</option>
                                     <option value="TO">Tocantins</option>
+
                                 </select>
+
                             </div>
 
+
                             <div class="campo-grupo">
-                                <label>Cidade</label>
+
+                                <label>
+                                    Cidade
+                                </label>
 
                                 <input type="text"
                                        name="cidade"
                                        placeholder="Digite a cidade">
+
                             </div>
+
                         </div>
+
 
                         <!-- País -->
                         <div class="campo-grupo">
-                            <label>País</label>
+
+                            <label>
+                                País
+                            </label>
 
                             <input type="text"
                                    name="pais"
@@ -368,120 +638,264 @@
 
                         </div>
 
+
                         <!-- Observações -->
                         <div class="campo-grupo">
 
-                            <label>Observações<span>(Opcional)</span></label>
+                            <label>
+                                Observações
+                                <span>(Opcional)</span>
+                            </label>
 
                             <textarea name="observacoes"
                                       placeholder="Digite alguma observação sobre o endereço"></textarea>
+
                         </div>
+
                     </div>
+
                 </div>
 
-            <!-- Cartões -->
+
+                <!-- Adicionar endereço -->
+                <button type="button"
+                        class="btn-adicionar-card"
+                        id="btnAdicionarEndereco">
+
+                    <i class="fa-solid fa-plus"></i>
+
+                    Adicionar outro endereço
+
+                </button>
+
+            </div>
+
+
+            <!-- ================================================= -->
+            <!-- CARTÕES -->
+            <!-- ================================================= -->
+
             <div class="card">
+
                 <div class="titulo-card">
-                    <h1>Cartão</h1>
+
+                    <h1>Cartões</h1>
+
                 </div>
 
+
+                <!-- Lista de cartões -->
+                <div id="listaCartoes">
+
+
+                    <!-- PRIMEIRO CARTÃO -->
                     <div class="item-cartao cartao-item">
+
+
+                        <!-- Título + remover -->
+                        <div class="subtitulo-item">
+
+                            <h2>Cartão 1</h2>
+
+                            <button type="button"
+                                    class="btn-remover-item"
+                                    title="Remover cartão">
+
+                                <i class="fa-solid fa-trash"></i>
+
+                            </button>
+
+                        </div>
+
+
                         <!-- Número -->
                         <div class="campo-grupo">
-                            <label>Número do cartão</label>
+
+                            <label>
+                                Número do cartão
+                            </label>
 
                             <input type="text"
                                    name="numeroCartao"
+                                   class="numero-cartao"
                                    placeholder="0000 0000 0000 0000"
-                                   maxlength="19"
-                                   id="numeroCartao">
+                                   maxlength="19">
+
                             <p class="mensagem-erro erroNumeroCartao"></p>
+
                         </div>
+
 
                         <!-- Nome -->
                         <div class="campo-grupo">
-                            <label>Nome impresso no cartão</label>
+
+                            <label>
+                                Nome impresso no cartão
+                            </label>
 
                             <input type="text"
                                    name="nomeCartao"
+                                   class="nome-cartao"
                                    placeholder="Digite o nome impresso no cartão"
-                                   maxlength="50"
-                                   id="nomeCartao">
+                                   maxlength="50">
+
                         </div>
+
 
                         <!-- Bandeira -->
                         <div class="campo-grupo">
-                            <label>Bandeira</label>
+
+                            <label>
+                                Bandeira
+                            </label>
 
                             <select name="bandeiraCartao">
 
-                                <option value="" disabled selected hidden>Selecione a bandeira</option>
-                                <option value="visa">Visa</option>
-                                <option value="mastercard">Mastercard</option>
-                                <option value="elo">Elo</option>
-                                <option value="american-express">American Express</option>
-                                <option value="hipercard">Hipercard</option>
+                                <option value=""
+                                        disabled
+                                        selected
+                                        hidden>
+                                    Selecione a bandeira
+                                </option>
+
+                                <option value="visa">
+                                    Visa
+                                </option>
+
+                                <option value="mastercard">
+                                    Mastercard
+                                </option>
+
+                                <option value="elo">
+                                    Elo
+                                </option>
+
+                                <option value="american-express">
+                                    American Express
+                                </option>
+
+                                <option value="hipercard">
+                                    Hipercard
+                                </option>
+
                             </select>
+
                         </div>
+
 
                         <!-- CVV + validade -->
                         <div class="linha-campos">
+
                             <div class="campo-grupo">
-                                <label>CVV</label>
+
+                                <label>
+                                    CVV
+                                </label>
 
                                 <input type="text"
                                        name="cvvCartao"
+                                       class="cvv-cartao"
                                        placeholder="000"
-                                       maxlength="4"
-                                       id="cvvCartao">
+                                       maxlength="4">
+
                                 <p class="mensagem-erro erroCvvCartao"></p>
+
                             </div>
 
+
                             <div class="campo-grupo">
-                                <label>Validade</label>
+
+                                <label>
+                                    Validade
+                                </label>
+
                                 <input type="text"
                                        name="validadeCartao"
+                                       class="validade-cartao"
                                        placeholder="MM/AA"
-                                       maxlength="5"
-                                       id="validadeCartao">
+                                       maxlength="5">
+
                                 <p class="mensagem-erro erroValidadeCartao"></p>
+
                             </div>
+
                         </div>
+
 
                         <!-- Preferencial -->
                         <div class="preferencial">
 
                             <input type="radio"
                                    name="cartaoPreferencial"
-                                   value="0">
+                                   value="0"
+                                   checked>
 
-                            <label>Definir como cartão preferencial</label>
+                            <label>
+                                Definir como cartão preferencial
+                            </label>
+
                         </div>
+
+
                     </div>
+
                 </div>
 
+
+                <!-- Adicionar cartão -->
+                <button type="button"
+                        class="btn-adicionar-card"
+                        id="btnAdicionarCartao">
+
+                    <i class="fa-solid fa-plus"></i>
+
+                    Adicionar outro cartão
+
+                </button>
+
+            </div>
+
+
+            <!-- ================================================= -->
+            <!-- SALVAR -->
+            <!-- ================================================= -->
+
             <div class="container-btn-salvar">
+
                 <button type="submit"
                         class="btn-salvar"
                         id="btnSalvarCliente">
+
                     Cadastrar cliente
+
                 </button>
+
             </div>
+
+
         </form>
+
     </main>
 
+
     <!-- Toast -->
-    <div id="toast" class="toast">
+    <div id="toast"
+         class="toast">
+
         <i class="toast-icone fa-solid fa-check"></i>
+
         <p id="toastMensagem">
             Cadastrado concluído com sucesso!
         </p>
+
     </div>
 
 </div>
 
-<!-- Cadastrar JavaScript -->
+
+<!-- JavaScript -->
 <script th:src="@{/js/cliente/cadastrar.js}"></script>
+
 </body>
 
 </html>

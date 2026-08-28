@@ -30,8 +30,8 @@ h2 {
      text-align: center;
  }
 
-h3,
-.perfil-cabecalho span{
+.perfil-cabecalho span
+.perfil-cabecalho h3 {
       font-family: 'Fredoka', sans-serif;
       font-size: 16px;
       font-weight: 500;
@@ -64,31 +64,63 @@ h3,
     color: #1F2A29;
 }
 
-.endereco-cliente p,
-.endereco-cliente span {
-    margin: 0;
-    font-family: 'Nunito', sans-serif;
-    font-size: 16px;
+/* Endereços */
+.lista-enderecos {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.item-endereco {
+    border: 1px solid #D9E2E0;
+    border-radius: 8px;
+    padding: 14px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.cabecalho-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: auto;
+}
+
+.cabecalho-item h3 {
+    margin: 0 0 6px 0;
+    font-family: 'Fredoka', sans-serif;
+    font-size: 15px;
+    font-weight: 500;
     color: #1F2A29;
 }
 
-.container-endereco {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    border: 1px solid #E8EFEE;
-    gap: 8px;
-    padding: 12px;
+.item-endereco p {
+    margin: 0;
     font-family: 'Nunito', sans-serif;
     font-size: 14px;
-    color: #1F2A29;
+    color: #5F7370;
+    font-weight: 500;
 }
 
-.campo-endereco label {
-    font-weight: bold;
-    display: block;
-    margin-bottom: 5px;
+
+/* Status do endereço */
+.status-endereco {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 9px;
+    border-radius: 20px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
 }
 
-.campo-endereco p {
-    margin: 0;
+.entrega {
+    background-color: #1C9B86;
+    color: white;
+}
+
+.cobranca {
+    background-color: #E1CE8A;
+    color: white;
 }

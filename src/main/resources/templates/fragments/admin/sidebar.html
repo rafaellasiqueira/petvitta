@@ -95,23 +95,6 @@
             <span>Estoque</span>
         </a>
 
-
-        <!-- Cupons -->
-        <a th:if="${paginaAtual == 'cupons'}"
-           th:href="@{/admin/cupons}"
-           class="menu-item ativo">
-            <i class="fa-solid fa-percent"></i>
-            <span>Cupons</span>
-        </a>
-
-        <a th:unless="${paginaAtual == 'cupons'}"
-           th:href="@{/admin/cupons}"
-           class="menu-item">
-            <i class="fa-solid fa-percent"></i>
-            <span>Cupons</span>
-        </a>
-
-
         <!-- Trocas -->
         <a th:if="${paginaAtual == 'trocas'}"
            th:href="@{/admin/trocas}"
@@ -126,23 +109,6 @@
             <i class="fa-solid fa-right-left"></i>
             <span>Trocas</span>
         </a>
-
-
-        <!-- Auditoria -->
-        <a th:if="${paginaAtual == 'auditoria'}"
-           th:href="@{/admin/auditoria}"
-           class="menu-item ativo">
-            <i class="fa-solid fa-book"></i>
-            <span>Auditoria</span>
-        </a>
-
-        <a th:unless="${paginaAtual == 'auditoria'}"
-           th:href="@{/admin/auditoria}"
-           class="menu-item">
-            <i class="fa-solid fa-book"></i>
-            <span>Auditoria</span>
-        </a>
-
     </nav>
 
     <div class="menu-espaco"></div>
