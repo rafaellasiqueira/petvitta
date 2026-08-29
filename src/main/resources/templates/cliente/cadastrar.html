@@ -33,9 +33,12 @@
 
     <!-- Conteúdo -->
     <main class="conteudo">
-        <form class="form-cadastrar-cliente" method="post" id="formCadastroCliente">
+        <form class="form-cadastrar-cliente"
+              th:action="@{/cliente/cadastrar}"
+              method="post"
+              id="formCadastroCliente">
 
-            <!-- Dados pessoais -->
+        <!-- Dados pessoais -->
             <div class="card">
                 <div class="titulo-card">
                     <h1>Dados pessoais</h1>
@@ -203,8 +206,7 @@
                         <div class="campo-grupo">
                             <label>Nome de identificação</label>
                             <input type="text"
-                                   id="nomeIdentificacao"
-                                   name="nomeIdentificacao"
+                                   name="enderecos[0].nomeIdentificacao"
                                    class="nome-identificacao"
                                    placeholder="Ex.: Casa, Trabalho..."
                                    minlength="3"
@@ -216,7 +218,7 @@
                         <!-- Tipo endereço -->
                         <div class="campo-grupo">
                             <label>Tipo de endereço</label>
-                            <select name="tipoEndereco" required>
+                            <select name="enderecos[0].tipoEndereco" required>
                                 <option value="" disabled selected hidden>Selecione o tipo de endereço</option>
                                 <option value="cobranca">Cobrança</option>
                                 <option value="entrega">Entrega</option>
@@ -227,7 +229,7 @@
                         <!-- Tipo residência -->
                         <div class="campo-grupo">
                             <label>Tipo de residência</label>
-                            <select name="tipoResidencia" required>
+                            <select name="enderecos[0].tipoResidencia" required>
                                 <option value="" disabled selected hidden>Selecione</option>
                                 <option value="casa">Casa</option>
                                 <option value="apartamento">Apartamento</option>
@@ -239,7 +241,7 @@
                         <!-- Tipo logradouro -->
                         <div class="campo-grupo">
                             <label>Tipo de logradouro</label>
-                            <select name="tipoLogradouro" required>
+                            <select name="enderecos[0].tipoLogradouro" required>
                                 <option value="" disabled selected hidden>Selecione</option>
                                 <option value="rua">Rua</option>
                                 <option value="avenida">Avenida</option>
@@ -254,10 +256,9 @@
 
                         <!-- CEP -->
                         <div class="campo-grupo">
-                            <label for="cep">CEP</label>
+                            <label>CEP</label>
                             <input type="text"
-                                   id="cep"
-                                   name="cep"
+                                   name="enderecos[0].cep"
                                    class="cep"
                                    placeholder="00000-000"
                                    maxlength="9"
@@ -270,7 +271,7 @@
                         <div class="campo-grupo">
                             <label>Logradouro</label>
                             <input type="text"
-                                   name="logradouro"
+                                   name="enderecos[0].logradouro"
                                    placeholder="Digite o nome do logradouro"
                                    required>
                         </div>
@@ -279,17 +280,16 @@
                         <div class="campo-grupo">
                             <label>Bairro</label>
                             <input type="text"
-                                   name="bairro"
+                                   name="enderecos[0].bairro"
                                    placeholder="Digite o bairro"
                                    required>
                         </div>
 
                         <!-- Número -->
                         <div class="campo-grupo">
-                            <label for="numero">Número</label>
+                            <label>Número</label>
                             <input type="text"
-                                   id="numero"
-                                   name="numero"
+                                   name="enderecos[0].numero"
                                    class="numero"
                                    placeholder="Digite o número"
                                    inputmode="numeric"
@@ -300,7 +300,7 @@
                         <div class="linha-campos">
                             <div class="campo-grupo">
                                 <label>Estado</label>
-                                <select name="estado" required>
+                                <select name="enderecos[0].estado" required>
                                     <option value="" disabled selected hidden>Selecione</option>
                                     <option value="AC">Acre</option>
                                     <option value="AL">Alagoas</option>
@@ -335,7 +335,7 @@
                             <div class="campo-grupo">
                                 <label>Cidade</label>
                                 <input type="text"
-                                       name="cidade"
+                                       name="enderecos[0].cidade"
                                        placeholder="Digite a cidade"
                                        required>
                             </div>
@@ -345,7 +345,7 @@
                         <div class="campo-grupo">
                             <label>País</label>
                             <input type="text"
-                                   name="pais"
+                                   name="enderecos[0].pais"
                                    value="Brasil"
                                    placeholder="Digite o nome do país"
                                    required>
@@ -357,7 +357,7 @@
                                 Observações
                                 <span>(Opcional)</span>
                             </label>
-                            <textarea name="observacoes" placeholder="Digite alguma observação sobre o endereço"></textarea>
+                            <textarea name="enderecos[0].observacoes" placeholder="Digite alguma observação sobre o endereço"></textarea>
                         </div>
                     </div>
 
@@ -392,7 +392,7 @@
                         <div class="campo-grupo">
                             <label>Número do cartão</label>
                             <input type="text"
-                                   name="numeroCartao"
+                                   name="cartoes[0].numero"
                                    class="numero-cartao"
                                    placeholder="0000 0000 0000 0000"
                                    maxlength="19"
@@ -404,7 +404,7 @@
                         <div class="campo-grupo">
                             <label>Nome impresso no cartão</label>
                             <input type="text"
-                                   name="nomeCartao"
+                                   name="cartoes[0].nomeImpresso"
                                    class="nome-cartao"
                                    placeholder="Digite o nome impresso no cartão"
                                    maxlength="50"
@@ -414,7 +414,7 @@
                         <!-- Bandeira -->
                         <div class="campo-grupo">
                             <label>Bandeira</label>
-                            <select name="bandeiraCartao" required>
+                            <select name="cartoes[0].bandeira" required>
                                 <option value="" disabled selected hidden>Selecione a bandeira</option>
                                 <option value="visa">Visa</option>
                                 <option value="mastercard">Mastercard</option>
@@ -424,35 +424,22 @@
                             </select>
                         </div>
 
-                        <!-- CVV + validade -->
-                        <div class="linha-campos">
+                        <!-- CVV  -->
                             <div class="campo-grupo">
                                 <label>CVV</label>
                                 <input type="text"
-                                       name="cvvCartao"
+                                       name="cartoes[0].codigoSeguranca"
                                        class="cvv-cartao"
                                        placeholder="000"
                                        maxlength="4"
                                        required>
                                 <p class="mensagem-erro erroCvvCartao"></p>
                             </div>
-
-                            <div class="campo-grupo">
-                                <label>Validade</label>
-                                <input type="text"
-                                       name="validadeCartao"
-                                       class="validade-cartao"
-                                       placeholder="MM/AA"
-                                       maxlength="5"
-                                       required>
-                                <p class="mensagem-erro erroValidadeCartao"></p>
-                            </div>
-                        </div>
                         <!-- Preferencial -->
                         <div class="preferencial">
                             <input type="radio"
-                                   name="cartaoPreferencial"
-                                   value="0"
+                                   name="cartoes[0].preferencial"
+                                   value="true"
                                    checked>
                             <label>Definir como cartão preferencial</label>
                         </div>

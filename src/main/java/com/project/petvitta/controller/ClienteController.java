@@ -1,18 +1,38 @@
 package com.project.petvitta.controller;
 
+import com.project.petvitta.model.Cliente;
+import com.project.petvitta.service.ClienteService;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import com.project.petvitta.dto.ClienteCadastroDTO;
 
 @Controller
-public class clienteController {
+public class ClienteController {
+
+    private final ClienteService clienteService;
+
+    public ClienteController(ClienteService clienteService) {
+        this.clienteService = clienteService;
+    }
+
     @GetMapping("/cliente/login")
     public String login() {
         return "cliente/login";
     }
 
     @GetMapping("/cliente/cadastrar")
-    public String cadastrar() {
+    public String cadastrar(Model model) {
+        model.addAttribute("cliente", new ClienteCadastroDTO());
         return "cliente/cadastrar";
+    }
+
+    @PostMapping("/cliente/cadastrar")
+    public String salvar(@ModelAttribute ClienteCadastroDTO dto) {
+        clienteService.cadastrar(dto);
+        return "redirect:/cliente/login";
     }
 
     @GetMapping("/cliente/produtos")

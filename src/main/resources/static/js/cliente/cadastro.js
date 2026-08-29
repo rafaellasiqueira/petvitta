@@ -2,6 +2,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const form = document.getElementById('formCadastroCliente');
 
+    document.querySelectorAll('.cep').forEach(function (input) {
+        input.value = input.value.replace(/\D/g, '').slice(0, 8);
+    });
+
     // Validação nome
     const inputNome = document.getElementById('nome');
     const erroNome = document.getElementById('erroNome');
@@ -280,11 +284,11 @@ document.addEventListener('DOMContentLoaded', () => {
         const nome = cartao.querySelector('.nome-cartao');
         const bandeira = cartao.querySelector('[name="bandeiraCartao"]');
         const cvv = cartao.querySelector('.cvv-cartao');
-        const validade = cartao.querySelector('.validade-cartao');
+
 
         const erroNumero = cartao.querySelector('.erroNumeroCartao');
         const erroCvv = cartao.querySelector('.erroCvvCartao');
-        const erroValidade = cartao.querySelector('.erroValidadeCartao');
+
 
         // Número do cartão
         numero.addEventListener('input', function() {
@@ -324,27 +328,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 erroCvv.textContent = '';
             }
         });
-
-        // Validade
-        validade.addEventListener('input', function () {
-            let valor = validade.value.replace(/\D/g, '');
-
-            if (valor.length > 4) {
-                valor = valor.slice(0, 4);
-            }
-
-            if (valor.length > 2) {
-                valor = valor.replace(/(\d{2})(\d)/, '$1/$2');
-            }
-
-            validade.value = valor;
-
-            if (!validadeValida(valor)) {
-                erroValidade.textContent = 'Digite uma validade válida.';
-            } else {
-                erroValidade.textContent = '';
-            }
-        });
     }
 
     function numeroValido(numero, bandeira) {
@@ -381,34 +364,6 @@ document.addEventListener('DOMContentLoaded', () => {
         } else {
             return false;
         }
-    }
-
-    function validadeValida(valor) {
-        if (!/^\d{2}\/\d{2}$/.test(valor)) {
-            return false;
-        }
-
-        const partes = valor.split('/');
-        const mes = Number(partes[0]);
-        const ano = Number('20' + partes[1]);
-
-        if (mes < 1 || mes > 12) {
-            return false;
-        }
-
-        const hoje = new Date();
-        const anoAtual = hoje.getFullYear();
-        const mesAtual = hoje.getMonth() + 1;
-
-        if (ano < anoAtual) {
-            return false;
-        }
-
-        if (ano === anoAtual && mes < mesAtual) {
-            return false;
-        }
-
-        return true;
     }
 
     document.querySelectorAll('.cartao-item').forEach(function (cartao) {
@@ -464,17 +419,12 @@ document.addEventListener('DOMContentLoaded', () => {
             const numero = cartao.querySelector('.numero-cartao');
             const bandeira = cartao.querySelector('[name="bandeiraCartao"]');
             const cvv = cartao.querySelector('.cvv-cartao');
-            const validade = cartao.querySelector('.validade-cartao');
 
             if (!numeroValido(numero.value, bandeira.value)) {
                 event.preventDefault();
             }
 
             if (cvv.value.length < 3 || cvv.value.length > 4) {
-                event.preventDefault();
-            }
-
-            if (!validadeValida(validade.value)) {
                 event.preventDefault();
             }
         });
@@ -486,15 +436,41 @@ document.addEventListener('DOMContentLoaded', () => {
 
     btnAdicionarEndereco.addEventListener('click', function () {
         const endereco = listaEnderecos.querySelector('.endereco-item').cloneNode(true);
+        const indice = listaEnderecos.querySelectorAll('.endereco-item').length;
 
         endereco.querySelector('.btn-remover-item').style.display = 'block';
 
         endereco.querySelectorAll('input').forEach(function (input) {
             input.value = '';
+
+            if (input.name) {
+                input.name = input.name.replace(
+                    /enderecos\[\d+\]/,
+                    `enderecos[${indice}]`
+                );
+            }
         });
 
         endereco.querySelectorAll('select').forEach(function (select) {
             select.selectedIndex = 0;
+
+            if (select.name) {
+                select.name = select.name.replace(
+                    /enderecos\[\d+\]/,
+                    `enderecos[${indice}]`
+                );
+            }
+        });
+
+        endereco.querySelectorAll('textarea').forEach(function (textarea) {
+            textarea.value = '';
+
+            if (textarea.name) {
+                textarea.name = textarea.name.replace(
+                    /enderecos\[\d+\]/,
+                    `enderecos[${indice}]`
+                );
+            }
         });
 
         endereco.querySelectorAll('.mensagem-erro').forEach(function (erro) {
@@ -506,17 +482,22 @@ document.addEventListener('DOMContentLoaded', () => {
         configurarEndereco(endereco);
     });
 
-    // Adicionar cartao
+    // Adicionar cartão
     const listaCartoes = document.getElementById('listaCartoes');
     const btnAdicionarCartao = document.getElementById('btnAdicionarCartao');
 
     btnAdicionarCartao.addEventListener('click', function () {
         const cartao = listaCartoes.querySelector('.cartao-item').cloneNode(true);
+        const indice = listaCartoes.querySelectorAll('.cartao-item').length;
 
         cartao.querySelector('.btn-remover-item').style.display = 'block';
 
         cartao.querySelectorAll('input').forEach(function (input) {
             input.value = '';
+
+            if (input.type === 'radio') {
+                input.checked = false;
+            }
         });
 
         cartao.querySelectorAll('select').forEach(function (select) {
@@ -525,6 +506,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
         cartao.querySelectorAll('.mensagem-erro').forEach(function (erro) {
             erro.textContent = '';
+        });
+
+        cartao.querySelectorAll('[name]').forEach(function (campo) {
+            campo.name = campo.name.replace(/\[\d+\]/, `[${indice}]`);
         });
 
         listaCartoes.appendChild(cartao);
