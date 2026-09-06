@@ -2,16 +2,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const form = document.getElementById('formCadastroCliente');
 
-    document.querySelectorAll('.cep').forEach(function (input) {
-        input.value = input.value.replace(/\D/g, '').slice(0, 8);
-    });
-
     // Validação nome
     const inputNome = document.getElementById('nome');
     const erroNome = document.getElementById('erroNome');
 
     inputNome.addEventListener('input', function() {
         this.value = this.value.replace(/[^A-Za-zÀ-ÿ\s]/g, '');
+
+        if (this.value.trim().length < 3) {
+            erroNome.textContent = 'Digite um nome com pelo menos de 3 caracteres.';
+        } else {
+            erroNome.textContent = '';
+        }
     });
 
     // Validação CPF + máscara
@@ -49,13 +51,14 @@ document.addEventListener('DOMContentLoaded', () => {
             soma += Number(cpf[i]) * (10 - i);
         }
 
-        let resto = (soma * 10) % 11;
+        let resto = soma % 11;
+        let resultado = 11 - resto;
 
-        if (resto === 10) {
-            resto = 0;
+        if (resultado >= 10) {
+            resultado = 0;
         }
 
-        if (resto !== Number(cpf[9])) {
+        if (resultado !== Number(cpf[9])) {
             return false;
         }
 
@@ -65,13 +68,14 @@ document.addEventListener('DOMContentLoaded', () => {
             soma += Number(cpf[i]) * (11 - i);
         }
 
-        resto = (soma * 10) % 11;
+        resto = soma % 11;
+        let resultado2 = 11 - resto;
 
-        if (resto === 10) {
-            resto = 0;
+        if (resultado2 >= 10) {
+            resultado2 = 0;
         }
 
-        return resto === Number(cpf[10]);
+        return resultado2 === Number(cpf[10]);
     }
 
     // Validação telefone + máscara
@@ -83,7 +87,7 @@ document.addEventListener('DOMContentLoaded', () => {
         let telefone = inputTelefone.value.replace(/\D/g, '');
         const tipo = tipoTelefone.value;
 
-        if (tipo === 'fixo') {
+        if (tipo === '2') { // Fixo
             telefone = telefone.slice(0, 10);
             if (telefone.length > 2) telefone = telefone.replace(/(\d{2})(\d{4})(\d{0,4})/, '($1) $2-$3');
         } else {
@@ -102,7 +106,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function telefoneValido(telefone) {
         telefone = telefone.replace(/\D/g, '');
-        if (tipoTelefone.value === 'fixo') {
+        if (tipoTelefone.value === '2') {
             return telefone.length === 10;
         } else {
             return telefone.length === 11;
@@ -112,7 +116,7 @@ document.addEventListener('DOMContentLoaded', () => {
     tipoTelefone.addEventListener('change', function () {
         inputTelefone.value = '';
         erroTelefone.textContent = '';
-        if (this.value === 'fixo') {
+        if (this.value === '2') {
             inputTelefone.placeholder = '(00) 0000-0000';
         } else {
             inputTelefone.placeholder = '(00) 00000-0000';
@@ -126,25 +130,14 @@ document.addEventListener('DOMContentLoaded', () => {
     function validarDataNascimento() {
         const valor = inputDataNascimento.value;
 
-        if (!valor) {
-            erroDataNascimento.textContent = 'Informe a data de nascimento.';
+        if (valor.split('-')[0].length !== 4) {
+            erroDataNascimento.textContent = 'Digite um ano com 4 dígitos.';
             return false;
         }
 
-        const [ano, mes, dia] = valor.split('-').map(Number);
-        const data = new Date(ano, mes - 1, dia);
+        const data = new Date(valor);
         const hoje = new Date();
 
-        hoje.setHours(0, 0, 0, 0);
-
-        if (
-            data.getFullYear() !== ano ||
-            data.getMonth() !== mes - 1 ||
-            data.getDate() !== dia
-        ) {
-            erroDataNascimento.textContent = 'Digite uma data válida.';
-            return false;
-        }
 
         if (data > hoje) {
             erroDataNascimento.textContent = 'A data não pode ser futura.';
@@ -193,22 +186,19 @@ document.addEventListener('DOMContentLoaded', () => {
     const erroSenha = document.getElementById('erroSenha');
     const erroConfirmarSenha = document.getElementById('erroConfirmarSenha');
 
-    function senhaValida() {
-        return senha.value.length >= 8 &&
-               /[A-Z]/.test(senha.value) &&
-               /[a-z]/.test(senha.value) &&
-               /[^A-Za-z0-9]/.test(senha.value);
-    }
-
     senha.addEventListener('input', function () {
+
         erroSenha.textContent = '';
 
         if (this.value.length < 8) {
             erroSenha.textContent = 'A senha deve ter pelo menos 8 caracteres.';
+
         } else if (!/[A-Z]/.test(this.value)) {
             erroSenha.textContent = 'A senha deve ter pelo menos uma letra maiúscula.';
+
         } else if (!/[a-z]/.test(this.value)) {
             erroSenha.textContent = 'A senha deve ter pelo menos uma letra minúscula.';
+
         } else if (!/[^A-Za-z0-9]/.test(this.value)) {
             erroSenha.textContent = 'A senha deve ter pelo menos um caractere especial.';
         }
@@ -235,13 +225,13 @@ document.addEventListener('DOMContentLoaded', () => {
             this.value = this.value.replace(/[^A-Za-zÀ-ÿ\s]/g, '');
 
             if (this.value.trim().length < 3) {
-                erroNomeIdentificacao.textContent = 'Digite um nome válido.';
+                erroNomeIdentificacao.textContent = 'Digite um nome com pelo menos 3 caracteres.';
             } else {
                 erroNomeIdentificacao.textContent = '';
             }
         });
 
-        // Validação CEP + máscara
+        // Validação CEP + máscara + API ViaCEP
         inputCep.addEventListener('input', function () {
             let cep = inputCep.value.replace(/\D/g, '').slice(0, 8);
 
@@ -250,28 +240,57 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             inputCep.value = cep;
-
-            if (!cepValido(cep)) {
-                erroCep.textContent = 'Digite o CEP completo.';
+            erroCep.textContent = '';
+            if (cep.replace(/\D/g, '').length === 8) {
+                buscarCep(cep);
             } else {
-                erroCep.textContent = '';
+                erroCep.textContent = 'Digite um CEP válido.';
+                return false;
             }
         });
+
+        function buscarCep(cep) {
+            cep = cep.replace(/\D/g, '');
+
+            fetch(`https://viacep.com.br/ws/${cep}/json/`)
+                .then(response => response.json())
+                .then(dados => {
+
+                    if (dados.erro) {
+                        erroCep.textContent = 'CEP não encontrado.';
+                        return;
+                    }
+
+                    erroCep.textContent = '';
+
+                    const logradouro = endereco.querySelector('.logradouro');
+                    const bairro = endereco.querySelector('.bairro');
+                    const cidade = endereco.querySelector('.cidade');
+                    const estado = endereco.querySelector('.estado');
+
+                    logradouro.value = dados.logradouro || '';
+
+                    bairro.value = dados.bairro || '';
+
+                    cidade.value = dados.localidade || '';
+
+                    for (let i = 0; i < estado.options.length; i++) {
+
+                        if (estado.options[i].textContent.startsWith(dados.uf)) {
+                            estado.value = estado.options[i].value;
+                            break;
+                        }
+                    }
+                })
+                .catch(() => {
+                    erroCep.textContent = 'Não foi possível consultar o CEP.';
+                });
+        }
 
         // Validação número do endereço
         inputNumero.addEventListener('input', function () {
             this.value = this.value.replace(/\D/g, '');
         });
-    }
-
-    function cepValido(cep) {
-        cep = cep.replace(/\D/g, '');
-
-        if (cep.length === 8) {
-            return true;
-        } else {
-            return false;
-        }
     }
 
     document.querySelectorAll('.endereco-item').forEach(function (endereco) {
@@ -282,10 +301,8 @@ document.addEventListener('DOMContentLoaded', () => {
     function configurarCartao(cartao) {
         const numero = cartao.querySelector('.numero-cartao');
         const nome = cartao.querySelector('.nome-cartao');
-        const bandeira = cartao.querySelector('[name="bandeiraCartao"]');
+        const erroNomeCartao = cartao.querySelector('.erroNomeCartao');
         const cvv = cartao.querySelector('.cvv-cartao');
-
-
         const erroNumero = cartao.querySelector('.erroNumeroCartao');
         const erroCvv = cartao.querySelector('.erroCvvCartao');
 
@@ -302,7 +319,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             numero.value = valor;
 
-            if (!numeroValido(valor, bandeira.value)) {
+            if (!numeroValido(valor)) {
                 erroNumero.textContent = 'Digite um número de cartão válido.';
             } else {
                 erroNumero.textContent = '';
@@ -312,15 +329,17 @@ document.addEventListener('DOMContentLoaded', () => {
         // Nome do cartão
         nome.addEventListener('input', function() {
             this.value = this.value.replace(/[^A-Za-zÀ-ÿ\s]/g, '');
+
+            if (this.value.trim().length < 3) {
+                erroNomeCartao.textContent = 'Digite um nome com pelo menos 3 caracteres.';
+            } else {
+                erroNomeCartao.textContent = '';
+            }
         });
 
         // CVV
         cvv.addEventListener('input', function() {
             this.value = this.value.replace(/\D/g, '');
-
-            if (this.value.length > 4) {
-                this.value = this.value.slice(0, 4);
-            }
 
             if (this.value.length < 3) {
                 erroCvv.textContent = 'Digite um CVV válido.';
@@ -330,25 +349,19 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    function numeroValido(numero, bandeira) {
+    function numeroValido(numero) {
         numero = numero.replace(/\D/g, '');
 
-        let tamanho = 16;
-
-        if (bandeira === 'american-express') {
-            tamanho = 15;
-        }
-
-        if (numero.length !== tamanho) {
+        if (numero.length !== 16) {
             return false;
         }
 
         let soma = 0;
 
-        for (let i = 0; i < numero.length; i++) {
+        for (let i = 0; i < 16; i++) {
             let digito = Number(numero[i]);
 
-            if ((numero.length - i) % 2 === 0) {
+            if (i % 2 === 0) {
                 digito = digito * 2;
 
                 if (digito > 9) {
@@ -359,11 +372,7 @@ document.addEventListener('DOMContentLoaded', () => {
             soma = soma + digito;
         }
 
-        if (soma % 10 === 0) {
-            return true;
-        } else {
-            return false;
-        }
+        return soma % 10 === 0;
     }
 
     document.querySelectorAll('.cartao-item').forEach(function (cartao) {
@@ -373,61 +382,191 @@ document.addEventListener('DOMContentLoaded', () => {
     // Impedir envio se houver erro
     form.addEventListener('submit', function (event) {
 
-        if (inputNome.value.trim().length < 3) {
-            erroNome.textContent = 'O nome deve ter pelo menos 3 caracteres.';
-            event.preventDefault();
+        let formularioValido = true;
+
+        // Nome
+        if (inputNome.value.trim() === '') {
+            erroNome.textContent = 'Preencha o nome.';
+            formularioValido = false;
         }
 
-        if (!cpfValido(inputCpf.value)) {
-            event.preventDefault();
+        // CPF
+        if (inputCpf.value.trim() === '') {
+            erroCpf.textContent = 'Preencha o CPF.';
+            formularioValido = false;
         }
 
-        if (!telefoneValido(inputTelefone.value)) {
-            event.preventDefault();
+        // Telefone
+        if (inputTelefone.value.trim() === '') {
+            erroTelefone.textContent = 'Preencha o telefone.';
+            formularioValido = false;
         }
 
-        if (!validarDataNascimento()) {
-            event.preventDefault();
+        // Data de nascimento
+        if (inputDataNascimento.value === '') {
+            erroDataNascimento.textContent = 'Preencha a data de nascimento.';
+            formularioValido = false;
         }
 
-        if (!inputEmail.checkValidity()) {
-            event.preventDefault();
+        // E-mail
+        if (inputEmail.value.trim() === '') {
+            erroEmail.textContent = 'Preencha o e-mail.';
+            formularioValido = false;
         }
 
-        if (!senhaValida()) {
-            event.preventDefault();
+        // Senha
+        if (senha.value === '') {
+            erroSenha.textContent = 'Preencha a senha.';
+            formularioValido = false;
         }
 
-        if (confirmarSenha.value !== senha.value) {
-            event.preventDefault();
+        // Confirmar senha
+        if (confirmarSenha.value === '') {
+            erroConfirmarSenha.textContent = 'Confirme a senha.';
+            formularioValido = false;
         }
 
+        // Endereços
         document.querySelectorAll('.endereco-item').forEach(function (endereco) {
-            const inputNomeIdentificacao = endereco.querySelector('.nome-identificacao');
-            const inputCep = endereco.querySelector('.cep');
 
-            if (inputNomeIdentificacao.value.trim().length < 3) {
-                event.preventDefault();
+            const nome = endereco.querySelector('.nome-identificacao');
+            const erroNome = endereco.querySelector('.erroNomeIdentificacao');
+
+            const tipoEndereco = endereco.querySelector('[name*=".tipoEndereco"]');
+            const erroTipoEndereco = endereco.querySelector('.erroTipoEndereco');
+
+            const tipoResidencia = endereco.querySelector('[name*=".tipoResidencia"]');
+            const erroTipoResidencia = endereco.querySelector('.erroTipoResidencia');
+
+            const tipoLogradouro = endereco.querySelector('[name*=".tipoLogradouro"]');
+            const erroTipoLogradouro = endereco.querySelector('.erroTipoLogradouro');
+
+            const estado = endereco.querySelector('.estado');
+            const erroEstado = endereco.querySelector('.erroEstado');
+
+            const cep = endereco.querySelector('.cep');
+            const erroCep = endereco.querySelector('.erroCep');
+
+            const logradouro = endereco.querySelector('.logradouro');
+            const erroLogradouro = endereco.querySelector('.erroLogradouro');
+
+            const bairro = endereco.querySelector('.bairro');
+            const erroBairro = endereco.querySelector('.erroBairro');
+
+            const numero = endereco.querySelector('.numero');
+            const erroNumero = endereco.querySelector('.erroNumero');
+
+            const cidade = endereco.querySelector('.cidade');
+            const erroCidade = endereco.querySelector('.erroCidade');
+
+            const pais = endereco.querySelector('.pais');
+            const erroPais = endereco.querySelector('.erroPais');
+
+
+            // Nome de identificação
+            if (nome.value.trim() === '') {
+                erroNome.textContent = 'Preencha o nome de identificação.';
+                formularioValido = false;
             }
 
-            if (!cepValido(inputCep.value)) {
-                event.preventDefault();
+            // Tipo de endereço
+            if (tipoEndereco.value === '') {
+                erroTipoEndereco.textContent = 'Selecione o tipo de endereço.';
+                formularioValido = false;
+            }
+
+            // Tipo de residência
+            if (tipoResidencia.value === '') {
+                erroTipoResidencia.textContent = 'Selecione o tipo de residência.';
+                formularioValido = false;
+            }
+
+            // Tipo de logradouro
+            if (tipoLogradouro.value === '') {
+                erroTipoLogradouro.textContent = 'Selecione o tipo de logradouro.';
+                formularioValido = false;
+            }
+
+            // CEP
+            if (cep.value.trim() === '') {
+                erroCep.textContent = 'Preencha o CEP.';
+                formularioValido = false;
+            }
+
+            // Logradouro
+            if (logradouro.value.trim() === '') {
+                erroLogradouro.textContent = 'Preencha o logradouro.';
+                formularioValido = false;
+            }
+
+            // Bairro
+            if (bairro.value.trim() === '') {
+                erroBairro.textContent = 'Preencha o nome do bairro.';
+                formularioValido = false;
+            }
+
+            // Número
+            if (numero.value.trim() === '') {
+                erroNumero.textContent = 'Preencha o número.';
+                formularioValido = false;
+            }
+
+            // Estado
+            if (estado.value === '') {
+                erroEstado.textContent = 'Selecione o estado.';
+                formularioValido = false;
+            }
+
+            // Cidade
+            if (cidade.value.trim() === '') {
+                erroCidade.textContent = 'Preencha o nome da cidade.';
+                formularioValido = false;
+            }
+
+            // País
+            if (pais.value.trim() === '') {
+                erroPais.textContent = 'Preencha o nome do país.';
+                formularioValido = false;
             }
         });
 
+        // Cartões
         document.querySelectorAll('.cartao-item').forEach(function (cartao) {
+
             const numero = cartao.querySelector('.numero-cartao');
-            const bandeira = cartao.querySelector('[name="bandeiraCartao"]');
+            const nome = cartao.querySelector('.nome-cartao');
+            const bandeira = cartao.querySelector('[name*=".bandeira"]');
             const cvv = cartao.querySelector('.cvv-cartao');
 
-            if (!numeroValido(numero.value, bandeira.value)) {
-                event.preventDefault();
+            const erroNumero = cartao.querySelector('.erroNumeroCartao');
+            const erroNome = cartao.querySelector('.erroNomeCartao');
+            const erroBandeiraCartao = cartao.querySelector('.erroBandeiraCartao');
+            const erroCvv = cartao.querySelector('.erroCvvCartao');
+
+            if (numero.value.trim() === '') {
+                erroNumero.textContent = 'Preencha o número do cartão.';
+                formularioValido = false;
             }
 
-            if (cvv.value.length < 3 || cvv.value.length > 4) {
-                event.preventDefault();
+            if (nome.value.trim() === '') {
+                erroNome.textContent = 'Preencha o nome do cartão.';
+                formularioValido = false;
+            }
+
+            if (bandeira.value === '') {
+                erroBandeiraCartao.textContent = 'Selecione a bandeira do cartão.';
+                formularioValido = false;
+            }
+
+            if (cvv.value.trim() === '') {
+                erroCvv.textContent = 'Preencha o CVV.';
+                formularioValido = false;
             }
         });
+
+        if (!formularioValido) {
+            event.preventDefault();
+        }
     });
 
     // Adicionar endereco
@@ -521,13 +660,8 @@ document.addEventListener('DOMContentLoaded', () => {
     document.addEventListener('click', function (event) {
         const botao = event.target.closest('.btn-remover-item');
 
-        if (!botao) return;
-
         const item = botao.closest('.endereco-item, .cartao-item');
 
-        if (item) {
-            item.remove();
-        }
+        item.remove();
     });
-
 });

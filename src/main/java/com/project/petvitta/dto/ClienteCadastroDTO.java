@@ -14,9 +14,9 @@ public class ClienteCadastroDTO {
 
     private String nome;
     private String cpf;
-    private String tipoTelefone;
+    private Long tipoTelefone;
     private String telefone;
-    private String genero;
+    private Long genero;
     private LocalDate dataNascimento;
     private String email;
 

@@ -1,6 +1,8 @@
 package com.project.petvitta.controller;
 
 import com.project.petvitta.model.Cliente;
+import com.project.petvitta.repository.dominio.GeneroRepository;
+import com.project.petvitta.repository.dominio.TipoTelefoneRepository;
 import com.project.petvitta.service.ClienteService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,7 +16,9 @@ public class ClienteController {
 
     private final ClienteService clienteService;
 
-    public ClienteController(ClienteService clienteService) {
+    public ClienteController(
+            ClienteService clienteService)
+    {
         this.clienteService = clienteService;
     }
 
@@ -25,14 +29,45 @@ public class ClienteController {
 
     @GetMapping("/cliente/cadastrar")
     public String cadastrar(Model model) {
-        model.addAttribute("cliente", new ClienteCadastroDTO());
-        return "cliente/cadastrar";
-    }
 
-    @PostMapping("/cliente/cadastrar")
-    public String salvar(@ModelAttribute ClienteCadastroDTO dto) {
-        clienteService.cadastrar(dto);
-        return "redirect:/cliente/login";
+        model.addAttribute("cliente", new ClienteCadastroDTO());
+
+        model.addAttribute(
+                "tiposTelefone",
+                clienteService.listarTiposTelefone()
+        );
+
+        model.addAttribute(
+                "generos",
+                clienteService.listarGeneros()
+        );
+
+        model.addAttribute(
+                "tiposEndereco",
+                clienteService.listarTiposEndereco()
+        );
+
+        model.addAttribute(
+                "tiposResidencia",
+                clienteService.listarTiposResidencia()
+        );
+
+        model.addAttribute(
+                "tiposLogradouro",
+                clienteService.listarTiposLogradouro()
+        );
+
+        model.addAttribute(
+                "estados",
+                clienteService.listarEstados()
+        );
+
+        model.addAttribute(
+                "bandeiras",
+                clienteService.listarBandeiras()
+        );
+
+        return "cliente/cadastrar";
     }
 
     @GetMapping("/cliente/produtos")

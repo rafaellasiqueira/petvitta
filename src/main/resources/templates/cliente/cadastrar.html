@@ -35,6 +35,7 @@
     <main class="conteudo">
         <form class="form-cadastrar-cliente"
               th:action="@{/cliente/cadastrar}"
+              th:object="${cliente}"
               method="post"
               id="formCadastroCliente">
 
@@ -50,10 +51,7 @@
                     <input type="text"
                            id="nome"
                            name="nome"
-                           placeholder="Digite seu nome completo"
-                           minlength="3"
-                           maxlength="100"
-                           required>
+                           placeholder="Digite seu nome completo">
                     <p class="mensagem-erro" id="erroNome"></p>
                 </div>
 
@@ -66,20 +64,22 @@
                            placeholder="000.000.000-00"
                            minlength="14"
                            maxlength="14"
-                           inputmode="numeric"
-                           required>
+                           inputmode="numeric">
                     <p class="mensagem-erro" id="erroCpf"></p>
                 </div>
 
                 <!-- Telefone -->
                 <div class="linha-campos">
                     <div class="campo-grupo">
-                        <label for="tipoTelefone">Tipo de telefone</label>
-
-                        <select id="tipoTelefone" name="tipoTelefone" required>
+                        <label>Tipo de telefone</label>
+                        <select th:field="*{tipoTelefone}" id="tipoTelefone">
                             <option value="" disabled selected hidden>Selecione</option>
-                            <option value="celular">Celular</option>
-                            <option value="fixo">Fixo</option>
+
+                            <option
+                                    th:each="tipo : ${tiposTelefone}"
+                                    th:value="${tipo.id}"
+                                    th:text="${tipo.descricao}">
+                            </option>
                         </select>
                     </div>
 
@@ -89,8 +89,7 @@
                                id="telefone"
                                name="telefone"
                                placeholder="(00) 00000-0000"
-                               maxlength="15"
-                               required>
+                               maxlength="15">
                         <p class="mensagem-erro" id="erroTelefone"></p>
                     </div>
                 </div>
@@ -98,13 +97,14 @@
                 <!-- Gênero + nascimento -->
                 <div class="linha-campos">
                     <div class="campo-grupo">
-                        <label for="genero">Gênero</label>
-
-                        <select id="genero" name="genero" required>
+                        <label>Gênero</label>
+                        <select th:field="*{genero}">
                             <option value="" disabled selected hidden>Selecione</option>
-                            <option value="feminino">Feminino</option>
-                            <option value="masculino">Masculino</option>
-                            <option value="outro">Outro</option>
+                            <option
+                                    th:each="genero : ${generos}"
+                                    th:value="${genero.id}"
+                                    th:text="${genero.descricao}">
+                            </option>
                         </select>
                     </div>
 
@@ -112,8 +112,7 @@
                         <label for="dataNascimento">Data de nascimento</label>
                         <input type="date"
                                id="dataNascimento"
-                               name="dataNascimento"
-                               required>
+                               name="dataNascimento">
                         <p class="mensagem-erro" id="erroDataNascimento"></p>
                     </div>
                 </div>
@@ -131,8 +130,7 @@
                     <input type="email"
                            id="email"
                            name="email"
-                           placeholder="Digite o e-mail"
-                           required>
+                           placeholder="Digite o e-mail">
                     <p class="mensagem-erro" id="erroEmail"></p>
                 </div>
 
@@ -143,8 +141,7 @@
                         <input type="password"
                                id="senha"
                                name="senha"
-                               placeholder="Digite a senha"
-                               required>
+                               placeholder="Digite a senha">
                         <button type="button" class="btn-mostrar-senha" data-input="senha">
                             <i class="fa-solid fa-eye"></i>
                         </button>
@@ -159,8 +156,7 @@
                         <input type="password"
                                id="confirmarSenha"
                                name="confirmarSenha"
-                               placeholder="Digite a senha novamente"
-                               required>
+                               placeholder="Digite a senha novamente">
                         <button type="button" class="btn-mostrar-senha" data-input="confirmarSenha">
                             <i class="fa-solid fa-eye"></i>
                         </button>
@@ -210,48 +206,53 @@
                                    class="nome-identificacao"
                                    placeholder="Ex.: Casa, Trabalho..."
                                    minlength="3"
-                                   maxlength="100"
-                                   required>
+                                   maxlength="100">
                             <p class="mensagem-erro erroNomeIdentificacao"></p>
                         </div>
 
                         <!-- Tipo endereço -->
                         <div class="campo-grupo">
                             <label>Tipo de endereço</label>
-                            <select name="enderecos[0].tipoEndereco" required>
-                                <option value="" disabled selected hidden>Selecione o tipo de endereço</option>
-                                <option value="cobranca">Cobrança</option>
-                                <option value="entrega">Entrega</option>
-                                <option value="cobranca-entrega">Cobrança e entrega</option>
+                            <select th:field="*{enderecos[0].tipoEndereco}">
+                                <option value="" disabled selected hidden>Selecione</option>
+
+                                <option
+                                        th:each="tipo : ${tiposEndereco}"
+                                        th:value="${tipo.id}"
+                                        th:text="${tipo.descricao}">
+                                </option>
                             </select>
+                            <p class="mensagem-erro erroTipoEndereco"></p>
                         </div>
 
                         <!-- Tipo residência -->
                         <div class="campo-grupo">
                             <label>Tipo de residência</label>
-                            <select name="enderecos[0].tipoResidencia" required>
+                            <select th:field="*{enderecos[0].tipoResidencia}">
                                 <option value="" disabled selected hidden>Selecione</option>
-                                <option value="casa">Casa</option>
-                                <option value="apartamento">Apartamento</option>
-                                <option value="sobrado">Sobrado</option>
-                                <option value="outro">Outro</option>
+
+                                <option
+                                        th:each="tipo : ${tiposResidencia}"
+                                        th:value="${tipo.id}"
+                                        th:text="${tipo.descricao}">
+                                </option>
                             </select>
+                            <p class="mensagem-erro erroTipoResidencia"></p>
                         </div>
 
                         <!-- Tipo logradouro -->
                         <div class="campo-grupo">
                             <label>Tipo de logradouro</label>
-                            <select name="enderecos[0].tipoLogradouro" required>
+                            <select th:field="*{enderecos[0].tipoLogradouro}">
                                 <option value="" disabled selected hidden>Selecione</option>
-                                <option value="rua">Rua</option>
-                                <option value="avenida">Avenida</option>
-                                <option value="praca">Praça</option>
-                                <option value="alameda">Alameda</option>
-                                <option value="travessa">Travessa</option>
-                                <option value="estrada">Estrada</option>
-                                <option value="rodovia">Rodovia</option>
-                                <option value="outro">Outro</option>
+
+                                <option
+                                        th:each="tipo : ${tiposLogradouro}"
+                                        th:value="${tipo.id}"
+                                        th:text="${tipo.descricao}">
+                                </option>
                             </select>
+                            <p class="mensagem-erro erroTipoLogradouro"></p>
                         </div>
 
                         <!-- CEP -->
@@ -262,8 +263,7 @@
                                    class="cep"
                                    placeholder="00000-000"
                                    maxlength="9"
-                                   inputmode="numeric"
-                                   required>
+                                   inputmode="numeric">
                             <p class="mensagem-erro erroCep"></p>
                         </div>
 
@@ -272,8 +272,9 @@
                             <label>Logradouro</label>
                             <input type="text"
                                    name="enderecos[0].logradouro"
-                                   placeholder="Digite o nome do logradouro"
-                                   required>
+                                   class="logradouro"
+                                   placeholder="Digite o nome do logradouro">
+                            <p class="mensagem-erro erroLogradouro"></p>
                         </div>
 
                         <!-- Bairro -->
@@ -281,8 +282,9 @@
                             <label>Bairro</label>
                             <input type="text"
                                    name="enderecos[0].bairro"
-                                   placeholder="Digite o bairro"
-                                   required>
+                                   class="bairro"
+                                   placeholder="Digite o bairro">
+                            <p class="mensagem-erro erroBairro"></p>
                         </div>
 
                         <!-- Número -->
@@ -292,52 +294,32 @@
                                    name="enderecos[0].numero"
                                    class="numero"
                                    placeholder="Digite o número"
-                                   inputmode="numeric"
-                                   required>
+                                   inputmode="numeric">
+                            <p class="mensagem-erro erroNumero"></p>
                         </div>
 
                         <!-- Estado + cidade -->
                         <div class="linha-campos">
                             <div class="campo-grupo">
                                 <label>Estado</label>
-                                <select name="enderecos[0].estado" required>
+                                <select th:field="*{enderecos[0].estado}" class="estado">
                                     <option value="" disabled selected hidden>Selecione</option>
-                                    <option value="AC">Acre</option>
-                                    <option value="AL">Alagoas</option>
-                                    <option value="AP">Amapá</option>
-                                    <option value="AM">Amazonas</option>
-                                    <option value="BA">Bahia</option>
-                                    <option value="CE">Ceará</option>
-                                    <option value="DF">Distrito Federal</option>
-                                    <option value="ES">Espírito Santo</option>
-                                    <option value="GO">Goiás</option>
-                                    <option value="MA">Maranhão</option>
-                                    <option value="MT">Mato Grosso</option>
-                                    <option value="MS">Mato Grosso do Sul</option>
-                                    <option value="MG">Minas Gerais</option>
-                                    <option value="PA">Pará</option>
-                                    <option value="PB">Paraíba</option>
-                                    <option value="PR">Paraná</option>
-                                    <option value="PE">Pernambuco</option>
-                                    <option value="PI">Piauí</option>
-                                    <option value="RJ">Rio de Janeiro</option>
-                                    <option value="RN">Rio Grande do Norte</option>
-                                    <option value="RS">Rio Grande do Sul</option>
-                                    <option value="RO">Rondônia</option>
-                                    <option value="RR">Roraima</option>
-                                    <option value="SC">Santa Catarina</option>
-                                    <option value="SP">São Paulo</option>
-                                    <option value="SE">Sergipe</option>
-                                    <option value="TO">Tocantins</option>
+                                    <option
+                                            th:each="estado : ${estados}"
+                                            th:value="${estado.id}"
+                                            th:text="|${estado.sigla} - ${estado.nome}|">
+                                    </option>
                                 </select>
+                                <p class="mensagem-erro erroEstado"></p>
                             </div>
 
                             <div class="campo-grupo">
                                 <label>Cidade</label>
                                 <input type="text"
                                        name="enderecos[0].cidade"
-                                       placeholder="Digite a cidade"
-                                       required>
+                                       class="cidade"
+                                       placeholder="Digite a cidade">
+                                <p class="mensagem-erro erroCidade"></p>
                             </div>
                         </div>
 
@@ -346,9 +328,10 @@
                             <label>País</label>
                             <input type="text"
                                    name="enderecos[0].pais"
+                                   class="pais"
                                    value="Brasil"
-                                   placeholder="Digite o nome do país"
-                                   required>
+                                   placeholder="Digite o nome do país">
+                            <p class="mensagem-erro erroPais"></p>
                         </div>
 
                         <!-- Observações -->
@@ -395,8 +378,7 @@
                                    name="cartoes[0].numero"
                                    class="numero-cartao"
                                    placeholder="0000 0000 0000 0000"
-                                   maxlength="19"
-                                   required>
+                                   maxlength="19">
                             <p class="mensagem-erro erroNumeroCartao"></p>
                         </div>
 
@@ -407,21 +389,23 @@
                                    name="cartoes[0].nomeImpresso"
                                    class="nome-cartao"
                                    placeholder="Digite o nome impresso no cartão"
-                                   maxlength="50"
-                                   required>
+                                   maxlength="50">
+                            <p class="mensagem-erro erroNomeCartao"></p>
                         </div>
 
                         <!-- Bandeira -->
                         <div class="campo-grupo">
                             <label>Bandeira</label>
-                            <select name="cartoes[0].bandeira" required>
-                                <option value="" disabled selected hidden>Selecione a bandeira</option>
-                                <option value="visa">Visa</option>
-                                <option value="mastercard">Mastercard</option>
-                                <option value="elo">Elo</option>
-                                <option value="american-express">American Express</option>
-                                <option value="hipercard">Hipercard</option>
+                            <select th:field="*{cartoes[0].bandeira}">
+                                <option value="" disabled selected hidden>Selecione</option>
+
+                                <option
+                                        th:each="bandeira : ${bandeiras}"
+                                        th:value="${bandeira.id}"
+                                        th:text="${bandeira.descricao}">
+                                </option>
                             </select>
+                            <p class="mensagem-erro erroBandeiraCartao"></p>
                         </div>
 
                         <!-- CVV  -->
@@ -431,8 +415,7 @@
                                        name="cartoes[0].codigoSeguranca"
                                        class="cvv-cartao"
                                        placeholder="000"
-                                       maxlength="4"
-                                       required>
+                                       maxlength="4">
                                 <p class="mensagem-erro erroCvvCartao"></p>
                             </div>
                         <!-- Preferencial -->

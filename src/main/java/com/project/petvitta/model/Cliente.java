@@ -1,5 +1,7 @@
 package com.project.petvitta.model;
 
+import com.project.petvitta.model.dominio.Genero;
+import com.project.petvitta.model.dominio.TipoTelefone;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -11,7 +13,6 @@ import lombok.Setter;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-
 
 @Entity
 @Table(name = "cliente")
@@ -34,17 +35,9 @@ public class Cliente {
     @NotBlank(message = "O CPF é obrigatório")
     private String cpf;
 
-    @Column(nullable = false)
-    @NotBlank(message = "O Tipo de telefone é obrigatório")
-    private String tipoTelefone;
-
     @Column(nullable = false, length = 15)
     @NotBlank(message = "O telefone é obrigatório")
     private String telefone;
-
-    @Column(nullable = false)
-    @NotBlank(message = "O gênero é obrigatório")
-    private String genero;
 
     @Column(nullable = false)
     @NotNull(message = "A data de nascimento é obrigatória")
@@ -77,12 +70,20 @@ public class Cliente {
     // Um cliente pode ter vários cartões
     @OneToMany(
             mappedBy = "cliente",
-            cascade = CascadeType.ALL,
-            orphanRemoval = true
+            cascade = CascadeType.ALL, // Operacoes feitas no cliente podem ser propagadas para os cartoes relacionados que nem salvar o cadastro
+            orphanRemoval = true // Se um cartao for removido remove no banco
     )
     private List<Cartao> cartoes = new ArrayList<>();
 
-    // Construtor vazio necessário para o JPA
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "tipo_telefone_id", nullable = false)
+    private TipoTelefone tipoTelefone;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "genero_id", nullable = false)
+    private Genero genero;
+
+    // Construtor vazio necessário para o hibernate
     public Cliente() {
     }
 }

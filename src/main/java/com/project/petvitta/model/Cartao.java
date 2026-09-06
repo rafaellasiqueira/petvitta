@@ -1,5 +1,6 @@
 package com.project.petvitta.model;
 
+import com.project.petvitta.model.dominio.BandeiraCartao;
 import jakarta.persistence.*;
 import jakarta.persistence.Entity;
 import jakarta.validation.constraints.NotBlank;
@@ -24,10 +25,6 @@ public class Cartao {
     @NotBlank(message = "O nome impresso no cartão é obrigatório.")
     private String nomeImpresso;
 
-    @Column(nullable = false)
-    @NotBlank(message = "A bandeira é obrigatória.")
-    private String bandeira;
-
     @Column(nullable = false, length = 4)
     @NotBlank(message = "O código de segurança é obrigatório.")
     private String codigoSeguranca;
@@ -38,6 +35,10 @@ public class Cartao {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "cliente_id", nullable = false)
     private Cliente cliente;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "bandeira_id", nullable = false)
+    private BandeiraCartao bandeira;
 
     // Construtor vazio necessário para o JPA
     public Cartao() {

@@ -1,5 +1,9 @@
 package com.project.petvitta.model;
 
+import com.project.petvitta.model.dominio.Estado;
+import com.project.petvitta.model.dominio.TipoEndereco;
+import com.project.petvitta.model.dominio.TipoLogradouro;
+import com.project.petvitta.model.dominio.TipoResidencia;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
@@ -19,18 +23,6 @@ public class Endereco {
     @NotBlank(message = "O nome de indentificação é obrigatório.")
     private String nomeIdentificacao;
 
-    @Column(nullable = false)
-    @NotBlank(message = "O tipo de endereço é obrigatório")
-    private String tipoEndereco;
-
-    @Column(nullable = false)
-    @NotBlank(message = "O tipo de residência é obrigatório")
-    private String tipoResidencia;
-
-    @Column(nullable = false)
-    @NotBlank(message = "O tipo de logradouro é obrigatório")
-    private String tipoLogradouro;
-
     @Column(nullable = false, length = 9)
     @NotBlank(message = "O CEP é obrigatório.")
     private String cep;
@@ -48,10 +40,6 @@ public class Endereco {
     private String numero;
 
     @Column(nullable = false)
-    @NotBlank(message = "O estado é obrigatório.")
-    private String estado;
-
-    @Column(nullable = false)
     @NotBlank(message = "A cidade é obrigatória.")
     private String cidade;
 
@@ -65,7 +53,23 @@ public class Endereco {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "cliente_id", nullable = false)
     private Cliente cliente;
-    
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "tipo_endereco_id", nullable = false)
+    private TipoEndereco tipoEndereco;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "tipo_residencia_id", nullable = false)
+    private TipoResidencia tipoResidencia;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "tipo_logradouro_id", nullable = false)
+    private TipoLogradouro tipoLogradouro;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "estado_id", nullable = false)
+    private Estado estado;
+
     // Construtor vazio necessário para o JPA
     public Endereco() {
     }
