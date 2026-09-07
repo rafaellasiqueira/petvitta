@@ -313,6 +313,11 @@
     display: flex;
 }
 
+/* Toast de erro */
+.toast.toast-erro {
+    background-color: #EA2B41;
+}
+
 .toast-icone {
     display: flex;
     align-items: center;

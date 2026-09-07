@@ -446,10 +446,20 @@
 
     <!-- Toast -->
     <div id="toast"
-         class="toast">
-        <i class="toast-icone fa-solid fa-check"></i>
-        <p id="toastMensagem">Cadastrado concluído com sucesso!</p>
+         class="toast"
+         th:if="${mensagemToast}"
+         th:classappend="${tipoToast == 'erro'} ? ' toast-erro' : ''">
+
+        <i class="toast-icone"
+           th:classappend="${tipoToast == 'erro'} ?
+       ' fa-solid fa-circle-xmark' :
+       ' fa-solid fa-check'">
+        </i>
+
+        <p th:text="${mensagemToast}"></p>
+
     </div>
+
 
 </div>
 

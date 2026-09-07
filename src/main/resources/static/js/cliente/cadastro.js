@@ -2,6 +2,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const form = document.getElementById('formCadastroCliente');
 
+    // Toast
+    const toast = document.getElementById('toast');
+
+    if (toast) {
+        toast.classList.add('ativo');
+
+        setTimeout(() => {
+            toast.classList.remove('ativo');
+        }, 6000);
+    }
+
     // Validação nome
     const inputNome = document.getElementById('nome');
     const erroNome = document.getElementById('erroNome');

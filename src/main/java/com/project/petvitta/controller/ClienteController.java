@@ -1,16 +1,13 @@
 package com.project.petvitta.controller;
 
-import com.project.petvitta.model.Cliente;
-import com.project.petvitta.repository.dominio.GeneroRepository;
-import com.project.petvitta.repository.dominio.TipoTelefoneRepository;
+import com.project.petvitta.dto.ClienteCadastroDTO;
 import com.project.petvitta.service.ClienteService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import com.project.petvitta.dto.ClienteCadastroDTO;
-
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @Controller
 public class ClienteController {
 
@@ -68,6 +65,26 @@ public class ClienteController {
         );
 
         return "cliente/cadastrar";
+    }
+
+    @PostMapping("/cliente/cadastrar")
+    public String cadastrar(
+            @ModelAttribute("cliente") ClienteCadastroDTO dto,
+            RedirectAttributes redirectAttributes) {
+
+        clienteService.cadastrar(dto);
+
+        redirectAttributes.addFlashAttribute(
+                "tipoToast",
+                "sucesso"
+        );
+
+        redirectAttributes.addFlashAttribute(
+                "mensagemToast",
+                "Cadastro concluído com sucesso!"
+        );
+
+        return "redirect:/cliente/cadastrar";
     }
 
     @GetMapping("/cliente/produtos")
