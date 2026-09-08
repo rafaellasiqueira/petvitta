@@ -1,11 +1,20 @@
 package com.project.petvitta.controller;
 
+import com.project.petvitta.model.Cliente;
+import com.project.petvitta.service.ClienteService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 
 @Controller
 public class AdminController {
+
+    private final ClienteService clienteService;
+
+    public AdminController(ClienteService clienteService) {
+        this.clienteService = clienteService;
+    }
 
     @GetMapping("/admin/login")
     public String login() {
@@ -26,19 +35,25 @@ public class AdminController {
 
     @GetMapping("/admin/clientes")
     public String clientes(Model model) {
+
         model.addAttribute("paginaAtual", "clientes");
+
+        model.addAttribute("clientes", clienteService.listarTodos());
+
         return "admin/clientes";
     }
 
-    @GetMapping("/admin/cadastrarCliente")
-    public String cadastrarCliente(Model model) {
-        model.addAttribute("paginaAtual", "clientes");
-        return "admin/cadastrarCliente";
-    }
+    @GetMapping("/admin/detalhesCliente/{id}")
+    public String detalhesCliente(
+            @PathVariable Long id,
+            Model model
+    ) {
+        Cliente cliente = clienteService.buscarPorId(id);
 
-    @GetMapping("/admin/detalhesCliente")
-    public String detalhesCliente(Model model) {
         model.addAttribute("paginaAtual", "clientes");
+        model.addAttribute("cliente", cliente);
+        model.addAttribute("enderecos", cliente.getEnderecos());
+
         return "admin/detalhesCliente";
     }
 

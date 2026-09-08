@@ -36,8 +36,11 @@
         <!-- Perfil -->
         <div class="card">
             <div class="perfil-cabecalho">
-                <h2 id="detalheNome">-</h2>
-                <h3 class="ranking">Ranking: <span id="detalheRanking">0 pts</span>
+                <h2 th:text="${cliente.nome}">Nome do cliente</h2>
+
+                <h3 class="ranking">
+                    Ranking:
+                    <span th:text="${cliente.ranking + ' pts'}">0 pts</span>
                 </h3>
             </div>
 
@@ -45,65 +48,67 @@
 
                 <div class="campo-perfil">
                     <label>CPF</label>
-                    <p id="detalheCpf">-</p>
+                    <p th:text="${cliente.cpf}">-</p>
                 </div>
 
                 <div class="campo-perfil">
                     <label>E-mail</label>
-                    <p id="detalheEmail">-</p>
+                    <p th:text="${cliente.email}">-</p>
                 </div>
 
                 <div class="campo-perfil">
                     <label>Gênero</label>
-                    <p id="detalheGenero">-</p>
+                    <p th:text="${cliente.genero}">-</p>
                 </div>
 
                 <div class="campo-perfil">
                     <label>Data de nascimento</label>
-                    <p id="detalheNascimento">-</p>
+                    <p th:text="${cliente.dataNascimento}">-</p>
                 </div>
 
                 <div class="campo-perfil">
-                    <label>Celular</label>
-                    <p id="detalheTelefone">-</p>
+                    <label>Telefone</label>
+                    <p th:text="${cliente.telefone}">-</p>
                 </div>
             </div>
         </div>
 
-
         <div class="card">
             <h2>Endereços</h2>
-
             <div class="lista-enderecos">
-
-                <!-- Endereço de entrega -->
-                <div class="item-endereco">
+                <div class="item-endereco"
+                     th:each="endereco : ${enderecos}">
                     <div class="cabecalho-item">
                         <div>
-                            <h3>Casa</h3>
-                            <span class="status-endereco entrega">Entrega</span>
+                            <h3 th:text="${endereco.nomeIdentificacao}"></h3>
+
+                            <span class="status-endereco entrega"
+                                  th:if="${endereco.tipoEndereco.id == 2}">
+                        Entrega
+                    </span>
+
+                            <span class="status-endereco cobranca"
+                                  th:if="${endereco.tipoEndereco.id == 1}">
+                        Cobrança
+                    </span>
+
+                            <span class="status-endereco entrega"
+                                  th:if="${endereco.tipoEndereco.id == 3}">
+                        Entrega e Cobrança
+                    </span>
                         </div>
                     </div>
-                    <p>Rua João Batista, 355 - Jardim Ângela</p>
-                    <p>Acrelândia - Acre</p>
-                    <p>CEP: 08888-888, Brasil</p>
+
+                    <p th:text="${endereco.logradouro + ', ' + endereco.numero + ' - ' + endereco.bairro}"></p>
+
+                    <p th:text="${endereco.cidade + ' - ' + endereco.estado.sigla}"></p>
+
+                    <p th:text="${'CEP: ' + endereco.cep + ', ' + endereco.pais}"></p>
+
                 </div>
 
-                <!-- Endereço de cobrança -->
-                <div class="item-endereco">
-                    <div class="cabecalho-item">
-                        <div>
-                            <h3>Escritório</h3>
-                            <span class="status-endereco cobranca">Cobrança</span>
-                        </div>
-                    </div>
-
-                    <p>Avenida Paulista, 1000 - Bela Vista</p>
-                    <p>São Paulo - SP</p>
-                    <p>CEP: 01310-100, Brasil</p>
-                </div>
             </div>
-         </div>
+        </div>
 
         <!-- Transações -->
         <div class="card">
@@ -125,7 +130,7 @@
                     <td>PED-2031</td>
                     <td>12/07/2026</td>
                     <td>R$ 396,35</td>
-                    <td><span class="status status-concluido">Concluído</span></td>
+                    <td>Aprovado</td>
                     <td>
                         <i class="fa-solid fa-eye btn-ver-pedido"
                            title="Ver detalhes do pedido"
@@ -142,7 +147,7 @@
                     <td>PED-1988</td>
                     <td>02/06/2026</td>
                     <td>R$ 89,90</td>
-                    <td><span class="status status-cancelado">Cancelado</span></td>
+                    <td>Aprovado</td>
                     <td>
                         <i class="fa-solid fa-eye btn-ver-pedido"
                            title="Ver detalhes do pedido"
@@ -159,7 +164,7 @@
                     <td>PED-1750</td>
                     <td>15/03/2026</td>
                     <td>R$ 210,00</td>
-                    <td><span class="status status-concluido">Concluído</span></td>
+                    <td>Aprovado</td>
                     <td>
                         <i class="fa-solid fa-eye btn-ver-pedido"
                            title="Ver detalhes do pedido"

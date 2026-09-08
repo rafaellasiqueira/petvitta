@@ -26,7 +26,6 @@
 </head>
 
 <body>
-
 <div class="container">
 
     <!-- Cabeçalho -->
@@ -34,34 +33,44 @@
 
     <main class="conteudo">
         <div class="container-principal">
-            <h2>RANKING 200pts</h2>
+            <h2>RANKING <span th:text="${cliente.ranking}"></span>pts</h2>
 
             <!-- Dados pessoais -->
             <div class="card">
                 <h1>Dados pessoais</h1>
 
-                <form class="form-dados-pessoais" method="post">
+                <form class="form-dados-pessoais"
+                      id="formDadosPessoais"
+                      th:action="@{/cliente/alterar}"
+                      method="post">
 
                     <div class="campo-grupo">
+
                         <label for="nome">Nome</label>
+
                         <input type="text"
                                id="nome"
                                name="nome"
-                               value="Letícia Gomes de Souza"
+                               th:value="${cliente.nome}"
                                placeholder="Digite seu nome completo">
 
                         <p class="mensagem-erro" id="erroNome"></p>
                     </div>
 
+
                     <div class="campo-grupo">
                         <label for="cpf">CPF</label>
+
                         <input type="text"
                                id="cpf"
                                name="cpf"
-                               value="123.456.789-00"
-                               placeholder="000.000.000-00">
+                               th:value="${cliente.cpf}"
+                               placeholder="000.000.000-00"
+                               readonly>
+
                         <p class="mensagem-erro" id="erroCpf"></p>
                     </div>
+
 
                     <div class="linha-campos">
 
@@ -69,16 +78,18 @@
                             <label for="tipoTelefone">Tipo de telefone</label>
 
                             <select id="tipoTelefone"
-                                    name="tipoTelefone"
-                                    required>
+                                    name="tipoTelefone">
 
                                 <option value="" disabled hidden>Selecione</option>
 
-                                <option value="celular" selected>Celular</option>
-
-                                <option value="fixo">Fixo</option>
+                                <option th:each="tipo : ${tiposTelefone}"
+                                        th:value="${tipo.id}"
+                                        th:text="${tipo.descricao}"
+                                        th:selected="${cliente.tipoTelefone != null and tipo.id == cliente.tipoTelefone.id}">
+                                </option>
                             </select>
                         </div>
+
 
                         <div class="campo-grupo">
                             <label for="telefone">Telefone</label>
@@ -86,65 +97,63 @@
                             <input type="text"
                                    id="telefone"
                                    name="telefone"
-                                   placeholder="(00) 00000-0000"
-                                   value="(11) 99999-9999"
-                                   required>
+                                   th:value="${cliente.telefone}"
+                                   placeholder="(00) 00000-0000">
 
-                            <p class="mensagem-erro" id="erroTelefone"></p>
+                            <p class="mensagem-erro"id="erroTelefone"></p>
                         </div>
-
                     </div>
 
-                    <div class="linha-campos">
 
+                    <div class="linha-campos">
                         <div class="campo-grupo">
                             <label for="genero">Gênero</label>
 
-                            <select id="genero" name="genero">
-                                <option value="feminino" selected>Feminino</option>
-                                <option value="masculino">Masculino</option>
-                                <option value="outro">Outro</option>
+                            <select id="genero" name="genero" required>
+
+                                <option value=""
+                                        disabled
+                                        hidden>
+                                    Selecione
+                                </option>
+
+                                <option th:each="genero : ${generos}"
+                                        th:value="${genero.id}"
+                                        th:text="${genero.descricao}"
+                                        th:selected="${cliente.genero != null and genero.id == cliente.genero.id}">
+                                </option>
                             </select>
                         </div>
 
                         <div class="campo-grupo">
-                            <label for="dataNascimento">
-                                Data de nascimento
-                            </label>
+                            <label for="dataNascimento">Data de nascimento</label>
 
                             <input type="date"
                                    id="dataNascimento"
                                    name="dataNascimento"
-                                   value="1991-09-10">
-                            <p class="mensagem-erro" id="erroDataNascimento"></p>
+                                   th:value="${cliente.dataNascimento}"
+                                   readonly>
                         </div>
-
                     </div>
 
                     <div class="container-btn-salvar">
-                        <button type="submit" class="btn-salvar">
-                            Salvar
-                        </button>
+                        <button type="submit" class="btn-salvar">Salvar</button>
                     </div>
-
                 </form>
             </div>
 
             <!-- Alterar senha -->
             <div class="card">
-
                 <h1>Alterar senha</h1>
 
-                <form class="form-alterar-senha" method="post">
+                <form class="form-alterar-senha"
+                      th:action="@{/cliente/alterar-senha}"
+                      method="post">
 
                     <div class="campo-grupo largura-total">
-
-                        <label for="senhaAtual">
-                            Senha atual
-                        </label>
+                        <label for="senhaAtual">Senha atual</label>
 
                         <div class="campo-senha">
-
                             <input type="password"
                                    id="senhaAtual"
                                    name="senhaAtual"
@@ -155,19 +164,13 @@
                                     data-input="senhaAtual">
                                 <i class="fa-solid fa-eye"></i>
                             </button>
-
                         </div>
-
                         <p class="mensagem-erro" id="erroSenhaAtual"></p>
-
                     </div>
 
                     <div class="linha-campos">
-
                         <div class="campo-grupo">
-
                             <label for="novaSenha">Nova senha</label>
-
                             <div class="campo-senha">
 
                                 <input type="password"
@@ -180,21 +183,14 @@
                                         data-input="novaSenha">
                                     <i class="fa-solid fa-eye"></i>
                                 </button>
-
                             </div>
-
                             <p class="mensagem-erro" id="erroNovaSenha"></p>
-
                         </div>
 
                         <div class="campo-grupo">
-
-                            <label for="confirmarSenha">
-                                Confirme a nova senha
-                            </label>
+                            <label for="confirmarSenha">Confirme a nova senha</label>
 
                             <div class="campo-senha">
-
                                 <input type="password"
                                        id="confirmarSenha"
                                        name="confirmarSenha"
@@ -205,9 +201,7 @@
                                         data-input="confirmarSenha">
                                     <i class="fa-solid fa-eye"></i>
                                 </button>
-
                             </div>
-
                             <p class="mensagem-erro" id="erroConfirmarSenha"></p>
                         </div>
                     </div>
@@ -224,6 +218,7 @@
                             Salvar nova senha
                         </button>
                     </div>
+
                 </form>
             </div>
 
@@ -233,83 +228,70 @@
 
                 <div class="lista-enderecos">
 
-                    <!-- Endereço de entrega -->
-                    <div class="item-endereco">
+                    <div class="item-endereco"
+                         th:each="endereco : ${enderecos}">
+
                         <div class="cabecalho-item">
+
                             <div>
-                                <h3>Casa</h3>
-                                <span class="status-endereco entrega">Entrega</span>
+                                <h3 th:text="${endereco.nomeIdentificacao}"></h3>
+
+                                <span class="status-endereco entrega"
+                                      th:if="${endereco.tipoEndereco.id == 2}">
+                        Entrega
+                    </span>
+
+                                <span class="status-endereco cobranca"
+                                      th:if="${endereco.tipoEndereco.id == 1}">
+                        Cobrança
+                    </span>
+
+                                <span class="status-endereco entrega"
+                                      th:if="${endereco.tipoEndereco.id == 3}">
+                        Entrega e Cobrança
+                    </span>
                             </div>
 
                             <div class="acoes-item">
 
                                 <button type="button"
                                         class="btn-editar editar-endereco"
-                                        data-nome="Escritório"
-                                        data-tipo-endereco="entrega"
-                                        data-tipo-residencia="casa"
-                                        data-tipo-logradouro="rua"
-                                        data-cep="08888-888"
-                                        data-logradouro="Rua João Batista"
-                                        data-bairro="Jardim Ângela"
-                                        data-numero="355"
-                                        data-estado="AC"
-                                        data-cidade="Acrelândia"
-                                        data-pais="Brasil"
-                                        data-observacoes="">
+                                        th:data-nome="${endereco.nomeIdentificacao}"
+                                        th:data-tipo-endereco="${endereco.tipoEndereco.id}"
+                                        th:data-tipo-residencia="${endereco.tipoResidencia.id}"
+                                        th:data-tipo-logradouro="${endereco.tipoLogradouro.id}"
+                                        th:data-cep="${endereco.cep}"
+                                        th:data-logradouro="${endereco.logradouro}"
+                                        th:data-bairro="${endereco.bairro}"
+                                        th:data-numero="${endereco.numero}"
+                                        th:data-estado="${endereco.estado.id}"
+                                        th:data-cidade="${endereco.cidade}"
+                                        th:data-pais="${endereco.pais}"
+                                        th:data-observacoes="${endereco.observacoes}">
+
                                     <i class="fa-solid fa-pen"></i>
+
                                 </button>
 
                                 <button type="button"
                                         class="btn-excluir excluir-endereco"
-                                        data-nome="Escritório">
+                                        th:data-nome="${endereco.nomeIdentificacao}">
+
                                     <i class="fa-solid fa-trash"></i>
-                                </button>
-                            </div>
-                        </div>
-                        <p>Rua João Batista, 355 - Jardim Ângela</p>
-                        <p>Acrelândia - Acre</p>
-                        <p>CEP: 08888-888, Brasil</p>
-                    </div>
 
-                    <!-- Endereço de cobrança -->
-                    <div class="item-endereco">
-                        <div class="cabecalho-item">
-                            <div>
-                                <h3>Escritório</h3>
-                                <span class="status-endereco cobranca">Cobrança</span>
-                            </div>
-
-                            <div class="acoes-item">
-                                <button type="button"
-                                        class=" btn-editar editar-endereco"
-                                        data-nome="Escritório"
-                                        data-tipo-endereco="entrega"
-                                        data-tipo-residencia="casa"
-                                        data-tipo-logradouro="rua"
-                                        data-cep="08888-888"
-                                        data-logradouro="Rua João Batista"
-                                        data-bairro="Jardim Ângela"
-                                        data-numero="355"
-                                        data-estado="AC"
-                                        data-cidade="Acrelândia"
-                                        data-pais="Brasil"
-                                        data-observacoes="">
-                                    <i class="fa-solid fa-pen"></i>
                                 </button>
 
-                                <button type="button"
-                                        class="btn-excluir excluir-endereco"
-                                        data-nome="Escritório">
-                                    <i class="fa-solid fa-trash"></i>
-                                </button>
                             </div>
                         </div>
 
-                        <p>Avenida Paulista, 1000 - Bela Vista</p>
-                        <p>São Paulo - SP</p>
-                        <p>CEP: 01310-100, Brasil</p>
+                        <p th:text="${endereco.logradouro + ', ' + endereco.numero + ' - ' + endereco.bairro}"></p>
+
+                        <p th:text="${endereco.cidade + ' - ' + endereco.estado.sigla}"></p>
+
+                        <p th:text="${'CEP: ' + endereco.cep + ', ' + endereco.pais}"></p>
+
                     </div>
+
                 </div>
 
                 <div class="container-btn-salvar">
@@ -324,76 +306,47 @@
             <!-- Cartões -->
             <div class="card">
                 <h1>Cartões</h1>
+
                 <div class="lista-cartoes">
 
-                    <!-- Primeiro cartão -->
-                    <div class="item-cartao">
+                    <div class="item-cartao"
+                         th:each="cartao : ${cartoes}">
+
                         <div class="cabecalho-item">
                             <div>
-                                <h3>Visa</h3>
-                                <span class="status-cartao">Preferencial</span>
+                                <h3 th:text="${cartao.bandeira.descricao}"></h3>
+                                <span class="status-cartao"
+                                      th:if="${cartao.preferencial}">
+                        Preferencial
+                    </span>
                             </div>
-
                             <div class="acoes-item">
+
                                 <button type="button"
-                                        class="btn-editar editar-cartao"
-                                        data-numero="**** **** **** 1234"
-                                        data-nome="Letícia Souza"
-                                        data-bandeira="visa"
-                                        data-cvv="123"
-                                        data-validade="08/29">
-                                    <i class="fa-solid fa-pen"></i>
+                                        class="btn-tornar-preferencial"
+                                        th:if="${!cartao.preferencial}"
+                                        th:attr="data-id=${cartao.id}">
+                                    Tornar preferencial
                                 </button>
 
                                 <button type="button"
                                         class="btn-excluir excluir-cartao"
-                                        data-nome="Visa"
-                                        data-numero="**** **** **** 1234">
+                                        th:attr="
+                                data-nome=${cartao.bandeira.descricao},
+                                data-numero=${cartao.numero}">
                                     <i class="fa-solid fa-trash"></i>
                                 </button>
+
                             </div>
                         </div>
 
                         <div class="informacoes-cartao">
-                            <p>**** **** **** 1234</p>
-                            <p>Letícia Souza</p>
-                            <p>Vencimento: 08/2029</p>
-                        </div>
+                            <p th:text="'**** ' + '**** ' + '**** ' + ${cartao.numero.substring(cartao.numero.length() - 4)}">
+                            </p>
 
-                    </div>
+                            <p th:text="${cartao.nomeImpresso}">
+                            </p>
 
-
-                    <!-- Segundo cartão -->
-                    <div class="item-cartao">
-                        <div class="cabecalho-item">
-                            <div>
-                                <h3>Mastercard</h3>
-                            </div>
-
-                            <div class="acoes-item">
-                                <button type="button"
-                                        class="btn-editar editar-cartao"
-                                        data-numero="**** **** **** 5678"
-                                        data-nome="Letícia Souza"
-                                        data-bandeira="mastercard"
-                                        data-cvv="456"
-                                        data-validade="11/30">
-                                    <i class="fa-solid fa-pen"></i>
-                                </button>
-
-                                <button type="button"
-                                        class="btn-excluir excluir-cartao"
-                                        data-nome="Mastercard"
-                                        data-numero="**** **** **** 5678">
-                                    <i class="fa-solid fa-trash"></i>
-                                </button>
-                            </div>
-                        </div>
-
-                        <div class="informacoes-cartao">
-                            <p>**** **** **** 5678</p>
-                            <p>Letícia Souza</p>
-                            <p>Vencimento: 11/2030</p>
                         </div>
                     </div>
                 </div>
@@ -437,9 +390,19 @@
             </div>
         </div>
 
-        <div id="toast" class="toast">
-            <i class="toast-icone fa-solid fa-check"></i>
-            <p id="toastMensagem">Alterações feitas com sucesso!</p>
+        <!-- Toast de erro -->
+        <div id="toast"
+             class="toast ativo"
+             th:if="${mensagemToast}">
+
+            <i th:if="${tipoToast == 'erro'}"
+               class="fa-solid fa-circle-xmark"></i>
+
+            <i th:if="${tipoToast != 'erro'}"
+               class="fa-solid fa-check"></i>
+
+            <p th:text="${mensagemToast}"></p>
+
         </div>
 
     </main>

@@ -151,163 +151,47 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr>
-                    <td>CL-001</td>
-                    <td>Letícia Gomes de Souza</td>
-                    <td>123.456.789-00</td>
-                    <td>leticia@gmail.com</td>
-                    <td>0</td>
-                    <td class="linha-acoes">
-                        <i class="fa-solid fa-eye btn-detalhes"
-                           data-codigo="CL-001"
-                           data-nome="Letícia Gomes de Souza"
-                           data-cpf="123.456.789-00"
-                           data-email="leticia@gmail.com"
-                           data-genero="Feminino"
-                           data-ranking="0"
-                           data-nascimento="20/05/1995"
-                           data-telefone="(11) 98765-4321"
-                           data-nome-identificacao="Minha casa"
-                           data-tipo-endereco="Cobrança e entrega"
-                           data-tipo-residencia="Apartamento"
-                           data-tipo-logradouro="Avenida"
-                           data-cep="01310-100"
-                           data-logradouro="Avenida Paulista"
-                           data-bairro="Bela Vista"
-                           data-numero="1578"
-                           data-estado="São Paulo"
-                           data-cidade="São Paulo"
-                           data-pais="Brasil"
-                           data-observacoes="Entregar na portaria">
-                        </i>
 
-                        <button type="button" class="btn-inativar">Inativar</button>
+                <tr th:each="cliente : ${clientes}">
+
+                    <td th:text="${'CL-' + cliente.id}">
                     </td>
+
+                    <td th:text="${cliente.nome}">
+                    </td>
+
+                    <td th:text="${cliente.cpf}">
+                    </td>
+
+                    <td th:text="${cliente.email}">
+                    </td>
+
+                    <td th:text="${cliente.ranking}">
+                    </td>
+
+                    <td class="linha-acoes">
+
+                        <a th:href="@{/admin/detalhesCliente/{id}(id=${cliente.id})}"
+                           class="btn-detalhes">
+                            <i class="fa-solid fa-eye"></i>
+                        </a>
+
+                        <button type="button"
+                                class="btn-inativar"
+                                th:if="${cliente.ativo}">
+                            Inativar
+                        </button>
+
+                        <button type="button"
+                                class="btn-ativar"
+                                th:unless="${cliente.ativo}">
+                            Ativar
+                        </button>
+
+                    </td>
+
                 </tr>
 
-                <tr class="inativo">
-                    <td>CL-002</td>
-                    <td>Marcos Oliveira</td>
-                    <td>223.456.789-00</td>
-                    <td>marcos@gmail.com</td>
-                    <td>0</td>
-                    <td class="linha-acoes">
-                        <i class="fa-solid fa-eye btn-detalhes"
-                           data-codigo="CL-002"
-                           data-nome="Marcos Oliveira"
-                           data-cpf="223.456.789-00"
-                           data-email="marcos@gmail.com"
-                           data-genero="Masculino"
-                           data-ranking="0"
-                           data-nascimento="14/02/1990"
-                           data-telefone="(15) 99123-4567"
-                           data-logradouro="Rua das Acácias"
-                           data-numero="220"
-                           data-bairro="Centro"
-                           data-cidade="Sorocaba"
-                           data-estado="SP"
-                           data-cep="18010-000"
-                           data-pais="Brasil">
-                        </i>
-                        <button type="button" class="btn-ativar">Ativar</button>
-                    </td>
-                </tr>
-
-                <tr>
-                    <td>CL-003</td>
-                    <td>Ana Beatriz Santos</td>
-                    <td>323.456.789-00</td>
-                    <td>ana@gmail.com</td>
-                    <td>0</td>
-                    <td class="linha-acoes">
-                        <i class="fa-solid fa-eye btn-detalhes"></i>
-                        <button type="button" class="btn-inativar">Inativar</button>
-                    </td>
-                </tr>
-
-                <tr>
-                    <td>CL-004</td>
-                    <td>João Pedro Almeida</td>
-                    <td>423.456.789-00</td>
-                    <td>joao@gmail.com</td>
-                    <td>0</td>
-                    <td class="linha-acoes">
-                        <i class="fa-solid fa-eye btn-detalhes"></i>
-                        <button type="button" class="btn-inativar">Inativar</button>
-                    </td>
-                </tr>
-
-                <tr>
-                    <td>CL-005</td>
-                    <td>Camila Rodrigues Lima</td>
-                    <td>523.456.789-00</td>
-                    <td>camila@gmail.com</td>
-                    <td>0</td>
-                    <td class="linha-acoes">
-                        <i class="fa-solid fa-eye btn-detalhes"></i>
-                        <button type="button" class="btn-inativar">Inativar</button>
-                    </td>
-                </tr>
-
-                <tr>
-                    <td>CL-006</td>
-                    <td>Lucas Henrique Martins</td>
-                    <td>623.456.789-00</td>
-                    <td>lucas@gmail.com</td>
-                    <td>0</td>
-                    <td class="linha-acoes">
-                        <i class="fa-solid fa-eye btn-detalhes"></i>
-                        <button type="button" class="btn-inativar">Inativar</button>
-                    </td>
-                </tr>
-
-                <tr class="inativo">
-                    <td>CL-007</td>
-                    <td>Fernanda Cristina Alves</td>
-                    <td>723.456.789-00</td>
-                    <td>fernanda@gmail.com</td>
-                    <td>0</td>
-                    <td class="linha-acoes">
-                        <i class="fa-solid fa-eye btn-detalhes"></i>
-                        <button type="button" class="btn-ativar">Ativar</button>
-                    </td>
-                </tr>
-
-                <tr>
-                    <td>CL-008</td>
-                    <td>Rafael Augusto Costa</td>
-                    <td>823.456.789-00</td>
-                    <td>rafael@gmail.com</td>
-                    <td>0</td>
-                    <td class="linha-acoes">
-                        <i class="fa-solid fa-eye btn-detalhes"></i>
-                        <button type="button" class="btn-inativar">Inativar</button>
-                    </td>
-                </tr>
-
-                <tr>
-                    <td>CL-009</td>
-                    <td>Juliana Mendes Ferreira</td>
-                    <td>923.456.789-00</td>
-                    <td>juliana@gmail.com</td>
-                    <td>0</td>
-                    <td class="linha-acoes">
-                        <i class="fa-solid fa-eye btn-detalhes"></i>
-                        <button type="button" class="btn-inativar">Inativar</button>
-                    </td>
-                </tr>
-
-                <tr>
-                    <td>CL-10</td>
-                    <td>Juliana Mendes Ferreira</td>
-                    <td>923.456.789-00</td>
-                    <td>juliana@gmail.com</td>
-                    <td>0</td>
-                    <td class="linha-acoes">
-                        <i class="fa-solid fa-eye btn-detalhes"></i>
-                        <button type="button" class="btn-inativar">Inativar</button>
-                    </td>
-                </tr>
                 </tbody>
             </table>
         </main>

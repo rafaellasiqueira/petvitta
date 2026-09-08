@@ -212,7 +212,19 @@ ul {
     color: #EA2B41;
 }
 
-/* Cartões */
+.btn-tornar-preferencial {
+    width: auto;
+    height: 32px;
+    border: none;
+    background: #FFFFFF;
+    text-decoration: underline;
+    cursor: pointer;
+    color: #1C2423;
+    font-family: 'Nunito', sans-serif;
+    font-size: 14px;
+}
+
+    /* Cartões */
 .lista-cartoes {
     display: flex;
     flex-direction: column;
@@ -415,6 +427,11 @@ h4 {
 
 .toast.ativo {
     display: flex;
+}
+
+/* Toast de erro */
+.toast:has(.fa-circle-xmark) {
+    background-color: #EA2B41;
 }
 
 .toast-icone {

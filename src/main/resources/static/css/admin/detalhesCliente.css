@@ -24,19 +24,25 @@
 
 h2 {
      font-family: 'Fredoka', sans-serif;
-     font-size: 20px;
+     font-size: 18px;
      font-weight: 500;
      color: #1F2A29;
      text-align: center;
  }
 
-.perfil-cabecalho span
-.perfil-cabecalho h3 {
-      font-family: 'Fredoka', sans-serif;
-      font-size: 16px;
-      font-weight: 500;
-      color: #5F7370;
-      text-align: center;
+.ranking {
+    font-family: 'Fredoka', sans-serif;
+    font-size: 16px;
+    font-weight: 500;
+    color: #5F7370;
+    text-align: center;
+}
+
+.ranking span {
+    font-family: 'Fredoka', sans-serif;
+    font-size: 16px;
+    font-weight: 500;
+    color: #5F7370;
 }
 
 .container-perfil {
@@ -60,7 +66,7 @@ h2 {
 .campo-perfil p {
     margin: 0;
     font-family: 'Nunito', sans-serif;
-    font-size: 16px;
+    font-size: 14px;
     color: #1F2A29;
 }
 

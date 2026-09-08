@@ -314,7 +314,7 @@
 }
 
 /* Toast de erro */
-.toast.toast-erro {
+.toast:has(.fa-circle-xmark) {
     background-color: #EA2B41;
 }
 

@@ -591,6 +591,7 @@ document.addEventListener('DOMContentLoaded', () => {
         endereco.querySelector('.btn-remover-item').style.display = 'block';
 
         endereco.querySelectorAll('input').forEach(function (input) {
+
             input.value = '';
 
             if (input.name) {
@@ -671,7 +672,15 @@ document.addEventListener('DOMContentLoaded', () => {
     document.addEventListener('click', function (event) {
         const botao = event.target.closest('.btn-remover-item');
 
+        if (!botao) {
+            return;
+        }
+
         const item = botao.closest('.endereco-item, .cartao-item');
+
+        if (!item) {
+            return;
+        }
 
         item.remove();
     });

@@ -1,0 +1,153 @@
+package com.project.petvitta.service;
+
+import com.project.petvitta.model.Cartao;
+import com.project.petvitta.model.Cliente;
+import com.project.petvitta.model.dominio.BandeiraCartao;
+import com.project.petvitta.repository.dominio.BandeiraCartaoRepository;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+@Service
+public class CartaoService {
+
+    private final BandeiraCartaoRepository bandeiraCartaoRepository;
+
+    public CartaoService(
+            BandeiraCartaoRepository bandeiraCartaoRepository
+    ) {
+        this.bandeiraCartaoRepository =
+                bandeiraCartaoRepository;
+    }
+
+    public List<BandeiraCartao> listarBandeiras() {
+        return bandeiraCartaoRepository.findAll();
+    }
+
+    public void validarCartao(Cartao cartao) {
+
+        if (cartao == null) {
+            throw new IllegalArgumentException(
+                    "Cartão inválido."
+            );
+        }
+
+        if (cartao.getNumero() == null ||
+                cartao.getNumero().trim().isEmpty()) {
+
+            throw new IllegalArgumentException(
+                    "Preencha o número do cartão."
+            );
+        }
+
+        String numero = cartao.getNumero()
+                .replaceAll("\\D", "");
+
+        if (!numeroCartaoValido(numero)) {
+            throw new IllegalArgumentException(
+                    "Digite um número de cartão válido."
+            );
+        }
+
+        if (cartao.getNomeImpresso() == null ||
+                cartao.getNomeImpresso().trim().isEmpty()) {
+
+            throw new IllegalArgumentException(
+                    "Preencha o nome do cartão."
+            );
+        }
+
+        if (cartao.getNomeImpresso().trim().length() < 3) {
+            throw new IllegalArgumentException(
+                    "Digite um nome com pelo menos 3 caracteres."
+            );
+        }
+
+        if (!cartao.getNomeImpresso()
+                .matches("[A-Za-zÀ-ÿ\\s]+")) {
+
+            throw new IllegalArgumentException(
+                    "O nome do cartão deve conter apenas letras."
+            );
+        }
+
+        if (cartao.getBandeira() == null ||
+                cartao.getBandeira().getId() == null) {
+
+            throw new IllegalArgumentException(
+                    "Selecione a bandeira do cartão."
+            );
+        }
+
+        if (cartao.getCodigoSeguranca() == null ||
+                cartao.getCodigoSeguranca().trim().isEmpty()) {
+
+            throw new IllegalArgumentException(
+                    "Preencha o CVV."
+            );
+        }
+
+        if (!cartao.getCodigoSeguranca()
+                .matches("\\d{3,4}")) {
+
+            throw new IllegalArgumentException(
+                    "Digite um CVV válido."
+            );
+        }
+    }
+
+    private boolean numeroCartaoValido(String numero) {
+
+        if (numero == null || numero.length() != 16) {
+            return false;
+        }
+
+        int soma = 0;
+
+        for (int i = 0; i < numero.length(); i++) {
+
+            int digito =
+                    Character.getNumericValue(numero.charAt(i));
+
+            if (i % 2 == 0) {
+
+                digito *= 2;
+
+                if (digito > 9) {
+                    digito -= 9;
+                }
+            }
+
+            soma += digito;
+        }
+
+        return soma % 10 == 0;
+    }
+
+    public void adicionarAoCliente(
+            Cliente cliente,
+            List<Cartao> cartoes
+    ) {
+
+        if (cartoes == null) {
+            return;
+        }
+
+        for (Cartao cartao : cartoes) {
+
+            cartao.setCliente(cliente);
+
+            cartao.setBandeira(
+                    bandeiraCartaoRepository.findById(
+                            cartao.getBandeira().getId()
+                    ).orElseThrow(() ->
+                            new IllegalArgumentException(
+                                    "Bandeira de cartão inválida."
+                            )
+                    )
+            );
+
+            cliente.getCartoes().add(cartao);
+        }
+    }
+}

@@ -1,17 +1,100 @@
 document.addEventListener('DOMContentLoaded', function() {
 
     // Toast
-    function mostrarToast(mensagem) {
-        const toast = document.getElementById('toast');
-        const texto = document.getElementById('toastMensagem');
+    const toast = document.getElementById('toast');
 
-        texto.textContent = mensagem;
+    if (toast) {
         toast.classList.add('ativo');
 
         setTimeout(() => {
             toast.classList.remove('ativo');
-        }, 2000);
+        }, 6000);
     }
+
+    // Dados pessoais
+    const form = document.getElementById('formDadosPessoais');
+
+    // Validação nome
+    const inputNome = document.getElementById('nome');
+    const erroNome = document.getElementById('erroNome');
+
+    inputNome.addEventListener('input', function() {
+        this.value = this.value.replace(/[^A-Za-zÀ-ÿ\s]/g, '');
+
+        if (this.value.trim().length < 3) {
+            erroNome.textContent = 'Digite um nome com pelo menos de 3 caracteres.';
+        } else {
+            erroNome.textContent = '';
+        }
+    });
+
+    // Validação telefone + máscara
+    const inputTelefone = document.getElementById('telefone');
+    const erroTelefone = document.getElementById('erroTelefone');
+    const tipoTelefone = document.getElementById('tipoTelefone');
+
+    inputTelefone.addEventListener('input', function () {
+        let telefone = inputTelefone.value.replace(/\D/g, '');
+        const tipo = tipoTelefone.value;
+
+        if (tipo === '2') { // Fixo
+            telefone = telefone.slice(0, 10);
+            if (telefone.length > 2) telefone = telefone.replace(/(\d{2})(\d{4})(\d{0,4})/, '($1) $2-$3');
+        } else {
+            telefone = telefone.slice(0, 11);
+            if (telefone.length > 2) telefone = telefone.replace(/(\d{2})(\d{5})(\d{0,4})/, '($1) $2-$3');
+        }
+
+        inputTelefone.value = telefone;
+
+        if (!telefoneValido(telefone)) {
+            erroTelefone.textContent = 'Digite o telefone completo.';
+        } else {
+            erroTelefone.textContent = '';
+        }
+    });
+
+    function telefoneValido(telefone) {
+        telefone = telefone.replace(/\D/g, '');
+        if (tipoTelefone.value === '2') {
+            return telefone.length === 10;
+        } else {
+            return telefone.length === 11;
+        }
+    }
+
+    tipoTelefone.addEventListener('change', function () {
+        inputTelefone.value = '';
+        erroTelefone.textContent = '';
+        if (this.value === '2') {
+            inputTelefone.placeholder = '(00) 0000-0000';
+        } else {
+            inputTelefone.placeholder = '(00) 00000-0000';
+        }
+    });
+
+    // Impedir envio se houver erro
+    form.addEventListener('submit', function (event) {
+
+        let formularioValido = true;
+
+        // Nome
+        if (inputNome.value.trim() === '') {
+            erroNome.textContent = 'Preencha o nome.';
+            formularioValido = false;
+        }
+
+        // Telefone
+        if (inputTelefone.value.trim() === '') {
+            erroTelefone.textContent = 'Preencha o telefone.';
+            formularioValido = false;
+        }
+
+        if (!formularioValido) {
+            event.preventDefault();
+        }
+
+    });
 
     // Senha
     document.querySelectorAll('.btn-mostrar-senha').forEach(function(botao) {
@@ -29,87 +112,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 icone.classList.add("fa-eye");
             }
         });
-    });
-
-    // Dados pessoais
-    const formDados = document.querySelector('.form-dados-pessoais');
-    const cpf = document.getElementById('cpf');
-    const telefone = document.getElementById('telefone');
-    const tipoTelefone = document.getElementById('tipoTelefone');
-
-    cpf.addEventListener('input', function() {
-        let valor = this.value.replace(/\D/g, '').slice(0, 11);
-
-        if (valor.length > 9) {
-            valor = valor.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4');
-        } else if (valor.length > 6) {
-            valor = valor.replace(/(\d{3})(\d{3})(\d{1,3})/, '$1.$2.$3');
-        } else if (valor.length > 3) {
-            valor = valor.replace(/(\d{3})(\d{1,3})/, '$1.$2');
-        }
-
-        this.value = valor;
-    });
-
-    telefone.addEventListener('input', function() {
-        let valor = this.value.replace(/\D/g, '');
-
-        if (tipoTelefone.value === 'fixo') {
-            valor = valor.slice(0, 10);
-
-            if (valor.length > 2) {
-                valor = valor.replace(/(\d{2})(\d{4})(\d{0,4})/, '($1) $2-$3');
-            }
-        } else {
-            valor = valor.slice(0, 11);
-
-            if (valor.length > 2) {
-                valor = valor.replace(/(\d{2})(\d{5})(\d{0,4})/, '($1) $2-$3');
-            }
-        }
-
-        this.value = valor;
-    });
-
-    tipoTelefone.addEventListener('change', function() {
-        if (this.value === 'fixo') {
-            telefone.placeholder = '(00) 0000-0000';
-        } else {
-            telefone.placeholder = '(00) 00000-0000';
-        }
-    });
-
-    // Validar data de nascimento
-    const dataNascimento = document.getElementById('dataNascimento');
-    const erroDataNascimento = document.getElementById('erroDataNascimento');
-
-    dataNascimento.addEventListener('change', function() {
-        erroDataNascimento.textContent = '';
-
-        if (this.value === '') {
-            return;
-        }
-
-        const data = new Date(this.value + 'T00:00:00');
-        const hoje = new Date();
-
-        hoje.setHours(0, 0, 0, 0);
-
-        if (data > hoje) {
-            erroDataNascimento.textContent = 'A data de nascimento não pode ser futura.';
-        }
-    });
-
-    // Não deixar entrar números ou caracteres especiais no nome
-    document.getElementById('nome').addEventListener('input', function() {
-        this.value = this.value.replace(/[^A-Za-zÀ-ÿ\s]/g, '');
-    });
-
-    formDados.addEventListener('submit', function(e) {
-        e.preventDefault();
-
-        mostrarToast('Dados pessoais salvos com sucesso!');
-
     });
 
     // Alterar senha
@@ -165,7 +167,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Enviar formulário
     formSenha.addEventListener('submit', function(e) {
-        e.preventDefault();
 
         let valido = true;
 
@@ -177,29 +178,16 @@ document.addEventListener('DOMContentLoaded', function() {
         if (nova.value === '') {
             erroNovaSenha.textContent = 'Digite uma nova senha.';
             valido = false;
-        } else if (
-            nova.value.length < 8 ||
-            !/[A-Z]/.test(nova.value) ||
-            !/[a-z]/.test(nova.value) ||
-            !/[^A-Za-z0-9]/.test(nova.value)
-        ) {
-            valido = false;
         }
 
         if (confirmar.value === '') {
             erroConfirmarSenha.textContent = 'Confirme a nova senha.';
             valido = false;
-        } else if (nova.value !== confirmar.value) {
-            erroConfirmarSenha.textContent = 'As senhas não coincidem.';
-            valido = false;
         }
 
         if (!valido) {
-            return;
+            e.preventDefault();
         }
-
-        mostrarToast('Senha alterada com sucesso!');
-        formSenha.reset();
     });
 
     // Endereço

@@ -1,34 +1,37 @@
 package com.project.petvitta.controller;
 
 import com.project.petvitta.dto.ClienteCadastroDTO;
+import com.project.petvitta.model.Cliente;
+import com.project.petvitta.service.CartaoService;
 import com.project.petvitta.service.ClienteService;
+import com.project.petvitta.service.EnderecoService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
 @Controller
 public class ClienteController {
 
     private final ClienteService clienteService;
+    private final EnderecoService enderecoService;
+    private final CartaoService cartaoService;
 
     public ClienteController(
-            ClienteService clienteService)
-    {
+            ClienteService clienteService,
+            EnderecoService enderecoService,
+            CartaoService cartaoService
+    ) {
         this.clienteService = clienteService;
+        this.enderecoService = enderecoService;
+        this.cartaoService = cartaoService;
     }
 
-    @GetMapping("/cliente/login")
-    public String login() {
-        return "cliente/login";
-    }
-
-    @GetMapping("/cliente/cadastrar")
-    public String cadastrar(Model model) {
-
-        model.addAttribute("cliente", new ClienteCadastroDTO());
-
+    @ModelAttribute
+    public void carregarDadosCadastro(Model model) {
         model.addAttribute(
                 "tiposTelefone",
                 clienteService.listarTiposTelefone()
@@ -41,28 +44,44 @@ public class ClienteController {
 
         model.addAttribute(
                 "tiposEndereco",
-                clienteService.listarTiposEndereco()
+                enderecoService.listarTiposEndereco()
         );
 
         model.addAttribute(
                 "tiposResidencia",
-                clienteService.listarTiposResidencia()
+                enderecoService.listarTiposResidencia()
         );
 
         model.addAttribute(
                 "tiposLogradouro",
-                clienteService.listarTiposLogradouro()
+                enderecoService.listarTiposLogradouro()
         );
 
         model.addAttribute(
                 "estados",
-                clienteService.listarEstados()
+                enderecoService.listarEstados()
         );
 
         model.addAttribute(
                 "bandeiras",
-                clienteService.listarBandeiras()
+                cartaoService.listarBandeiras()
         );
+    }
+
+    @GetMapping("/cliente/login")
+    public String login() {
+        return "cliente/login";
+    }
+
+    @GetMapping("/cliente/cadastrar")
+    public String cadastrar(Model model) {
+
+        if (!model.containsAttribute("cliente")) {
+            model.addAttribute(
+                    "cliente",
+                    new ClienteCadastroDTO()
+            );
+        }
 
         return "cliente/cadastrar";
     }
@@ -70,26 +89,142 @@ public class ClienteController {
     @PostMapping("/cliente/cadastrar")
     public String cadastrar(
             @ModelAttribute("cliente") ClienteCadastroDTO dto,
-            RedirectAttributes redirectAttributes) {
+            Model model,
+            RedirectAttributes redirectAttributes
+    ) {
+        try {
+            clienteService.cadastrar(dto);
 
-        clienteService.cadastrar(dto);
+            redirectAttributes.addFlashAttribute(
+                    "tipoToast",
+                    "sucesso"
+            );
 
-        redirectAttributes.addFlashAttribute(
-                "tipoToast",
-                "sucesso"
-        );
+            redirectAttributes.addFlashAttribute(
+                    "mensagemToast",
+                    "Cadastro concluído com sucesso!"
+            );
 
-        redirectAttributes.addFlashAttribute(
-                "mensagemToast",
-                "Cadastro concluído com sucesso!"
-        );
+            return "redirect:/cliente/cadastrar";
 
-        return "redirect:/cliente/cadastrar";
+        } catch (IllegalArgumentException e) {
+            model.addAttribute(
+                    "tipoToast",
+                    "erro"
+            );
+
+            model.addAttribute(
+                    "mensagemToast",
+                    e.getMessage()
+            );
+
+            return "cliente/cadastrar";
+        }
     }
 
     @GetMapping("/cliente/produtos")
     public String produtos() {
         return "cliente/produtos";
+    }
+
+    @GetMapping("/cliente/perfil")
+    public String perfil(Model model) {
+
+        Long clienteId = 6L;
+
+        Cliente cliente = clienteService.buscarPorId(clienteId);
+
+        model.addAttribute("cliente", cliente);
+        model.addAttribute("enderecos", cliente.getEnderecos());
+        model.addAttribute("cartoes", cliente.getCartoes());
+
+        return "cliente/perfil";
+    }
+
+
+    @PostMapping("/cliente/alterar")
+    public String alterar(
+            @RequestParam String nome,
+            @RequestParam String telefone,
+            @RequestParam Long genero,
+            @RequestParam Long tipoTelefone,
+            RedirectAttributes redirectAttributes,
+            Model model
+    ) {
+        try {
+
+            clienteService.alterar(
+                    6L,
+                    nome,
+                    telefone,
+                    genero,
+                    tipoTelefone
+            );
+
+            redirectAttributes.addFlashAttribute(
+                    "tipoToast",
+                    "sucesso"
+            );
+
+            redirectAttributes.addFlashAttribute(
+                    "mensagemToast",
+                    "Dados salvos com sucesso!"
+            );
+
+            return "redirect:/cliente/perfil";
+
+        } catch (IllegalArgumentException e) {
+
+            model.addAttribute("tipoToast", "erro");
+            model.addAttribute("mensagemToast", e.getMessage());
+
+            return "cliente/perfil";
+        }
+    }
+
+    @PostMapping("/cliente/alterar-senha")
+    public String alterarSenha(
+            @RequestParam String senhaAtual,
+            @RequestParam String novaSenha,
+            @RequestParam String confirmarSenha,
+            RedirectAttributes redirectAttributes
+    ) {
+
+        try {
+
+            clienteService.alterarSenha(
+                    6L,
+                    senhaAtual,
+                    novaSenha,
+                    confirmarSenha
+            );
+
+            redirectAttributes.addFlashAttribute(
+                    "tipoToast",
+                    "sucesso"
+            );
+
+            redirectAttributes.addFlashAttribute(
+                    "mensagemToast",
+                    "Senha alterada com sucesso!"
+            );
+
+            return "redirect:/cliente/perfil";
+
+        } catch (IllegalArgumentException e) {
+
+            redirectAttributes.addFlashAttribute(
+                    "tipoToast",
+                    "erro"
+            );
+
+            redirectAttributes.addFlashAttribute(
+                    "mensagemToast",
+                    e.getMessage()
+            );
+
+            return "redirect:/cliente/perfil";
+        }
     }
 
     @GetMapping("/cliente/detalhes-produto")
@@ -110,11 +245,6 @@ public class ClienteController {
     @GetMapping("/cliente/pedido")
     public String pedido() {
         return "cliente/pedido";
-    }
-
-    @GetMapping("/cliente/perfil")
-    public String perfil() {
-        return "cliente/perfil";
     }
 
     @GetMapping("/cliente/sair")
