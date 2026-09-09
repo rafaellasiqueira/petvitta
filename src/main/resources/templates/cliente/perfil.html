@@ -256,6 +256,7 @@
 
                                 <button type="button"
                                         class="btn-editar editar-endereco"
+                                        th:data-id="${endereco.id}"
                                         th:data-nome="${endereco.nomeIdentificacao}"
                                         th:data-tipo-endereco="${endereco.tipoEndereco.id}"
                                         th:data-tipo-residencia="${endereco.tipoResidencia.id}"
@@ -268,9 +269,7 @@
                                         th:data-cidade="${endereco.cidade}"
                                         th:data-pais="${endereco.pais}"
                                         th:data-observacoes="${endereco.observacoes}">
-
                                     <i class="fa-solid fa-pen"></i>
-
                                 </button>
 
                                 <button type="button"
@@ -322,12 +321,19 @@
                             </div>
                             <div class="acoes-item">
 
-                                <button type="button"
-                                        class="btn-tornar-preferencial"
-                                        th:if="${!cartao.preferencial}"
-                                        th:attr="data-id=${cartao.id}">
-                                    Tornar preferencial
-                                </button>
+                                <form th:if="${!cartao.preferencial}"
+                                      method="post"
+                                      action="/cliente/tornar-cartao-preferencial">
+
+                                    <input type="hidden"
+                                           name="cartaoId"
+                                           th:value="${cartao.id}">
+
+                                    <button type="submit" class="status-cartao">
+                                        Tornar preferencial
+                                    </button>
+
+                                </form>
 
                                 <button type="button"
                                         class="btn-excluir excluir-cartao"

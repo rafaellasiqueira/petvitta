@@ -4,7 +4,9 @@ import com.project.petvitta.model.Cartao;
 import com.project.petvitta.model.Cliente;
 import com.project.petvitta.model.dominio.BandeiraCartao;
 import com.project.petvitta.repository.CartaoRepository;
+import com.project.petvitta.repository.ClienteRepository;
 import com.project.petvitta.repository.dominio.BandeiraCartaoRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,13 +15,16 @@ import java.util.List;
 public class CartaoService {
     private final CartaoRepository cartaoRepository;
     private final BandeiraCartaoRepository bandeiraCartaoRepository;
+    private final ClienteRepository clienteRepository;
 
     public CartaoService(
             BandeiraCartaoRepository bandeiraCartaoRepository,
-            CartaoRepository cartaoRepository
+            CartaoRepository cartaoRepository,
+            ClienteRepository clienteRepository
     ) {
         this.bandeiraCartaoRepository = bandeiraCartaoRepository;
         this.cartaoRepository = cartaoRepository;
+        this.clienteRepository = clienteRepository;
     }
 
     public List<BandeiraCartao> listarBandeiras() {
@@ -131,9 +136,11 @@ public class CartaoService {
             List<Cartao> cartoes
     ) {
 
-        if (cartoes == null) {
+        if (cartoes == null || cartoes.isEmpty()) {
             return;
         }
+
+        boolean primeiroCartao = cliente.getCartoes().isEmpty();
 
         for (Cartao cartao : cartoes) {
 
@@ -149,8 +156,86 @@ public class CartaoService {
                     )
             );
 
+            if (primeiroCartao) {
+                cartao.setPreferencial(true);
+                primeiroCartao = false;
+            } else {
+                cartao.setPreferencial(false);
+            }
+
             cliente.getCartoes().add(cartao);
         }
+    }
+
+    @Transactional
+    public void adicionar(Long clienteId, Cartao cartao, boolean preferencial) {
+
+        Cliente cliente = clienteRepository.findById(clienteId)
+                .orElseThrow(() ->
+                        new IllegalArgumentException(
+                                "Cliente não encontrado."
+                        )
+                );
+
+        validarCartao(cartao);
+
+        BandeiraCartao bandeira = bandeiraCartaoRepository
+                .findById(cartao.getBandeira().getId())
+                .orElseThrow(() ->
+                        new IllegalArgumentException(
+                                "Bandeira de cartão inválida."
+                        )
+                );
+
+        cartao.setCliente(cliente);
+        cartao.setBandeira(bandeira);
+
+        boolean primeiroCartao = cliente.getCartoes().isEmpty();
+
+        if (primeiroCartao) {
+            preferencial = true;
+        }
+
+        if (preferencial) {
+            cliente.getCartoes().forEach(c ->
+                    c.setPreferencial(false)
+            );
+        }
+
+        cartao.setPreferencial(preferencial);
+
+        cliente.getCartoes().add(cartao);
+
+        cartaoRepository.save(cartao);
+    }
+
+    @Transactional
+    public void tornarPreferencial(Long clienteId, Long cartaoId) {
+
+        Cliente cliente = clienteRepository.findById(clienteId)
+                .orElseThrow(() ->
+                        new IllegalArgumentException(
+                                "Cliente não encontrado."
+                        )
+                );
+
+        Cartao cartao = cliente.getCartoes()
+                .stream()
+                .filter(c -> c.getId().equals(cartaoId))
+                .findFirst()
+                .orElseThrow(() ->
+                        new IllegalArgumentException(
+                                "Esse cartão não pertence ao cliente."
+                        )
+                );
+
+        cliente.getCartoes().forEach(c ->
+                c.setPreferencial(false)
+        );
+
+        cartao.setPreferencial(true);
+
+        cartaoRepository.save(cartao);
     }
 
     public void excluir(Long id) {

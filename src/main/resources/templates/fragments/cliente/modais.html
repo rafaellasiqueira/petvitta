@@ -126,8 +126,8 @@
 <!-- Modal adicionar/editar endereço -->
 <div th:fragment="modal-adicionar-endereco" id="modalAdicionarEditarEndereco" class="modal">
 
-    <form id="formEndereco">
-
+    <form id="formEndereco" method="post">
+        <input type="hidden" id="enderecoId" name="enderecoId">
         <div class="modalConteudo">
 
             <!-- Cabeçalho -->
@@ -145,52 +145,59 @@
 
                     <input type="text"
                            id="nomeIdentificacao"
+                           name="nomeIdentificacao"
                            placeholder="Digite um nome de identificação do endereço"
-                           required>
+                           minlength="3"
+                           maxlength="100">
+                    <p class="mensagem-erro" id="erroNomeIdentificacao"></p>
                 </div>
 
                 <!-- Tipo de endereço -->
                 <div class="campo-formulario">
                     <label for="tipoEndereco">Tipo de endereço</label>
 
-                    <select id="tipoEndereco" required>
-                        <option value="" disabled selected hidden>
-                            Selecione o tipo de endereço
+                    <select name="tipoEndereco" id="tipoEndereco">
+                        <option value="" disabled selected hidden>Selecione</option>
+
+                        <option
+                                th:each="tipo : ${tiposEndereco}"
+                                th:value="${tipo.id}"
+                                th:text="${tipo.descricao}">
                         </option>
-                        <option value="cobranca">Cobrança</option>
-                        <option value="entrega">Entrega</option>
-                        <option value="cobranca-entrega">Cobrança e entrega</option>
                     </select>
+                    <p class="mensagem-erro" id="erroTipoEndereco"></p>
                 </div>
 
                 <!-- Tipo de residência -->
                 <div class="campo-formulario">
                     <label for="tipoResidencia">Tipo de residência</label>
 
-                    <select id="tipoResidencia" required>
+                    <select name="tipoResidencia" id="tipoResidencia">
                         <option value="" disabled selected hidden>Selecione</option>
-                        <option value="casa">Casa</option>
-                        <option value="apartamento">Apartamento</option>
-                        <option value="sobrado">Sobrado</option>
-                        <option value="outro">Outro</option>
+
+                        <option
+                                th:each="tipo : ${tiposResidencia}"
+                                th:value="${tipo.id}"
+                                th:text="${tipo.descricao}">
+                        </option>
                     </select>
+                    <p class="mensagem-erro" id="erroTipoResidencia"></p>
                 </div>
 
                 <!-- Tipo de logradouro -->
                 <div class="campo-formulario">
                     <label for="tipoLogradouro">Tipo de logradouro</label>
 
-                    <select id="tipoLogradouro" required>
+                    <select name="tipoLogradouro" id="tipoLogradouro">
                         <option value="" disabled selected hidden>Selecione</option>
-                        <option value="rua">Rua</option>
-                        <option value="avenida">Avenida</option>
-                        <option value="praca">Praça</option>
-                        <option value="alameda">Alameda</option>
-                        <option value="travessa">Travessa</option>
-                        <option value="estrada">Estrada</option>
-                        <option value="rodovia">Rodovia</option>
-                        <option value="outro">Outro</option>
+
+                        <option
+                                th:each="tipo : ${tiposLogradouro}"
+                                th:value="${tipo.id}"
+                                th:text="${tipo.descricao}">
+                        </option>
                     </select>
+                    <p class="mensagem-erro" id="erroTipoLogradouro"></p>
                 </div>
 
                 <!-- CEP -->
@@ -198,11 +205,11 @@
                     <label for="cep">CEP</label>
                     <input type="text"
                            id="cep"
+                           name="cep"
                            placeholder="00000-000"
                            maxlength="9"
-                           required>
-
-                    <p id="mensagemErroCEP" class="mensagem-erro-CEP"></p>
+                           inputmode="numeric">
+                    <p class="mensagem-erro" id="erroCep"></p>
                 </div>
 
 
@@ -211,8 +218,9 @@
                     <label for="logradouro">Logradouro</label>
                     <input type="text"
                            id="logradouro"
-                           placeholder="Digite o nome do logradouro"
-                           required>
+                           name="logradouro"
+                           placeholder="Digite o nome do logradouro">
+                    <p class="mensagem-erro" id="erroLogradouro"></p>
                 </div>
 
                 <!-- Bairro -->
@@ -220,8 +228,9 @@
                     <label for="bairro">Bairro</label>
                     <input type="text"
                            id="bairro"
-                           placeholder="Digite o bairro"
-                           required>
+                           name="bairro"
+                           placeholder="Digite o bairro">
+                    <p class="mensagem-erro" id="erroBairro"></p>
                 </div>
 
                 <!-- Número -->
@@ -229,44 +238,25 @@
                     <label for="numero">Número</label>
                     <input type="text"
                            id="numero"
+                           name="numero"
                            placeholder="Digite o número"
-                           required>
+                           inputmode="numeric">
+                    <p class="mensagem-erro" id="erroNumero"></p>
                 </div>
 
                 <!-- Estado -->
                 <div class="campo-formulario">
                     <label for="estado">Estado</label>
 
-                    <select id="estado" required>
-                        <option value="" disabled selected hidden>Selecione o estado</option>
-                        <option value="AC">Acre</option>
-                        <option value="AL">Alagoas</option>
-                        <option value="AP">Amapá</option>
-                        <option value="AM">Amazonas</option>
-                        <option value="BA">Bahia</option>
-                        <option value="CE">Ceará</option>
-                        <option value="DF">Distrito Federal</option>
-                        <option value="ES">Espírito Santo</option>
-                        <option value="GO">Goiás</option>
-                        <option value="MA">Maranhão</option>
-                        <option value="MT">Mato Grosso</option>
-                        <option value="MS">Mato Grosso do Sul</option>
-                        <option value="MG">Minas Gerais</option>
-                        <option value="PA">Pará</option>
-                        <option value="PB">Paraíba</option>
-                        <option value="PR">Paraná</option>
-                        <option value="PE">Pernambuco</option>
-                        <option value="PI">Piauí</option>
-                        <option value="RJ">Rio de Janeiro</option>
-                        <option value="RN">Rio Grande do Norte</option>
-                        <option value="RS">Rio Grande do Sul</option>
-                        <option value="RO">Rondônia</option>
-                        <option value="RR">Roraima</option>
-                        <option value="SC">Santa Catarina</option>
-                        <option value="SP">São Paulo</option>
-                        <option value="SE">Sergipe</option>
-                        <option value="TO">Tocantins</option>
+                    <select id="estado" name="estado">
+                        <option value="" disabled selected hidden>Selecione</option>
+                        <option
+                                th:each="estado : ${estados}"
+                                th:value="${estado.id}"
+                                th:text="|${estado.sigla} - ${estado.nome}|">
+                        </option>
                     </select>
+                    <p class="mensagem-erro" id="erroEstado"></p>
                 </div>
 
                 <!-- Cidade -->
@@ -275,8 +265,9 @@
 
                     <input type="text"
                            id="cidade"
-                           placeholder="Digite a cidade"
-                           required>
+                           name="cidade"
+                           placeholder="Digite a cidade">
+                    <p class="mensagem-erro" id="erroCidade"></p>
                 </div>
 
 
@@ -286,9 +277,9 @@
 
                     <input type="text"
                            id="pais"
-                           value="Brasil"
-                           placeholder="Digite o país"
-                           required>
+                           name="pais"
+                           placeholder="Digite o nome do país">
+                    <p class="mensagem-erro" id="erroPais"></p>
                 </div>
 
 
@@ -297,6 +288,7 @@
                     <label for="observacoes">Observações <span>(Opcional)</span></label>
 
                     <textarea id="observacoes"
+                              name="obersevacoes"
                               placeholder="Digite alguma observação sobre o endereço"></textarea>
                 </div>
 
@@ -385,7 +377,7 @@
 
 <!-- Modal cadastrar cartão -->
 <div th:fragment="modal-cadastrar-cartao" id="modalCadastrarCartao" class="modal">
-    <form id="formCartao">
+    <form id="formCartao" method="POST">
         <div class="modalConteudo">
 
             <!-- Cabeçalho -->
@@ -404,12 +396,12 @@
 
                 <!-- Número do cartão -->
                 <div class="campo-formulario">
-                    <label for="numeroCartao">Número do cartão</label>
+                    <label for="numero">Número do cartão</label>
                     <input type="text"
                            id="numeroCartao"
-                           placeholder="0000 0000 0000 0000"
-                           required>
-                    <p id="mensagemErroNumero" class="mensagem-erro-cartao"></p>
+                           name="numero"
+                           placeholder="0000 0000 0000 0000">
+                    <p class="mensagem-erro" id="erroNumeroCartao"></p>
                 </div>
 
                 <!-- Nome impresso no cartão -->
@@ -418,26 +410,26 @@
 
                     <input type="text"
                            id="nomeCartao"
+                           name="nomeImpresso"
                            placeholder="Digite o nome impresso no cartão"
-                           maxlength="50"
-                           required>
+                           maxlength="50">
+                    <p class="mensagem-erro" id="erroNomeCartao"></p>
                 </div>
 
                 <!-- Bandeira -->
                 <div class="campo-formulario">
                     <label for="bandeiraCartao">Bandeira</label>
 
-                    <select id="bandeiraCartao" required>
-                        <option value="" disabled selected hidden>
-                            Selecione a bandeira
-                        </option>
+                    <select id="bandeiraCartao" name="bandeira">
+                        <option value="" disabled selected hidden>Selecione</option>
 
-                        <option value="visa">Visa</option>
-                        <option value="mastercard">Mastercard</option>
-                        <option value="elo">Elo</option>
-                        <option value="american-express">American Express</option>
-                        <option value="hipercard">Hipercard</option>
+                        <option
+                                th:each="bandeira : ${bandeiras}"
+                                th:value="${bandeira.id}"
+                                th:text="${bandeira.descricao}">
+                        </option>
                     </select>
+                    <p class="mensagem-erro" id="erroBandeira"></p>
                 </div>
 
                 <!-- CVV -->
@@ -446,22 +438,11 @@
 
                     <input type="text"
                            id="cvvCartao"
+                           name="codigoSeguranca"
                            placeholder="000"
                            maxlength="4"
-                           inputmode="numeric"
-                           required>
-                </div>
-
-                <!-- Validade -->
-                <div class="campo-formulario">
-                    <label for="validadeCartao">Validade</label>
-                    <input type="text"
-                           id="validadeCartao"
-                           placeholder="MM/AA"
-                           maxlength="5"
-                           inputmode="numeric"
-                           required>
-                    <p id="mensagemErroValidade" class="mensagem-erro-cartao"></p>
+                           inputmode="numeric">
+                    <p class="mensagem-erro" id="erroCVV"></p>
                 </div>
 
                 <!-- Salvar no perfil -->
@@ -474,10 +455,9 @@
 
                 </label>
 
-                <!-- Tornar preferencial -->
                 <label class="checkbox-endereco">
 
-                    <input type="checkbox">
+                    <input type="checkbox" name="preferencial" id="cartaoPreferencial">
 
                     <p>Tornar preferencial</p>
 

@@ -55,6 +55,7 @@
 }
 
 /* Mensagem de erro */
+.mensagem-erro,
 .mensagem-erro-troca,
 .mensagem-erro-cartao {
     margin: 2px 0 0;

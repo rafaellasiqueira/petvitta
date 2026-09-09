@@ -466,7 +466,25 @@ public class ClienteService {
                         )
                 );
 
+        boolean eraPreferencial = cartao.isPreferencial();
+
+        // Remove o cartão
         cliente.getCartoes().remove(cartao);
+
+        // Se era o preferencial, escolhe outro
+        if (eraPreferencial && !cliente.getCartoes().isEmpty()) {
+
+            // Primeiro deixa todos como não preferenciais
+            cliente.getCartoes().forEach(c ->
+                    c.setPreferencial(false)
+            );
+
+            // Define o primeiro como preferencial
+            Cartao novoPreferencial =
+                    cliente.getCartoes().get(0);
+
+            novoPreferencial.setPreferencial(true);
+        }
     }
 
 

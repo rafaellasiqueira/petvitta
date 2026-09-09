@@ -12,6 +12,13 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import com.project.petvitta.model.Cartao;
+import com.project.petvitta.model.Endereco;
+import com.project.petvitta.model.dominio.BandeiraCartao;
+import com.project.petvitta.model.dominio.Estado;
+import com.project.petvitta.model.dominio.TipoEndereco;
+import com.project.petvitta.model.dominio.TipoLogradouro;
+import com.project.petvitta.model.dominio.TipoResidencia;
 
 @Controller
 public class ClienteController {
@@ -249,6 +256,259 @@ public class ClienteController {
 
             return "redirect:/cliente/perfil";
         }
+    }
+
+    @PostMapping("/cliente/adicionar-endereco")
+    public String adicionarEndereco(
+            @RequestParam String nomeIdentificacao,
+            @RequestParam Long tipoEndereco,
+            @RequestParam Long tipoResidencia,
+            @RequestParam Long tipoLogradouro,
+            @RequestParam String cep,
+            @RequestParam String logradouro,
+            @RequestParam String bairro,
+            @RequestParam String numero,
+            @RequestParam Long estado,
+            @RequestParam String cidade,
+            @RequestParam String pais,
+            @RequestParam(required = false) String observacoes,
+            RedirectAttributes redirectAttributes
+    ) {
+        try {
+            if (!verificarClienteAtivo()) {
+                return "redirect:/cliente/inativo";
+            }
+
+            Endereco endereco = new Endereco();
+
+            endereco.setNomeIdentificacao(nomeIdentificacao);
+
+            TipoEndereco tipoEnderecoObj = new TipoEndereco();
+            tipoEnderecoObj.setId(tipoEndereco);
+            endereco.setTipoEndereco(tipoEnderecoObj);
+
+            TipoResidencia tipoResidenciaObj = new TipoResidencia();
+            tipoResidenciaObj.setId(tipoResidencia);
+            endereco.setTipoResidencia(tipoResidenciaObj);
+
+            TipoLogradouro tipoLogradouroObj = new TipoLogradouro();
+            tipoLogradouroObj.setId(tipoLogradouro);
+            endereco.setTipoLogradouro(tipoLogradouroObj);
+
+            Estado estadoObj = new Estado();
+            estadoObj.setId(estado);
+            endereco.setEstado(estadoObj);
+
+            endereco.setCep(cep);
+            endereco.setLogradouro(logradouro);
+            endereco.setBairro(bairro);
+            endereco.setNumero(numero);
+            endereco.setCidade(cidade);
+            endereco.setPais(pais);
+            endereco.setObservacoes(observacoes);
+
+            enderecoService.adicionar(6L, endereco);
+
+            redirectAttributes.addFlashAttribute(
+                    "tipoToast",
+                    "sucesso"
+            );
+
+            redirectAttributes.addFlashAttribute(
+                    "mensagemToast",
+                    "Endereço adicionado com sucesso."
+            );
+
+        } catch (IllegalArgumentException e) {
+            redirectAttributes.addFlashAttribute(
+                    "tipoToast",
+                    "erro"
+            );
+
+            redirectAttributes.addFlashAttribute(
+                    "mensagemToast",
+                    e.getMessage()
+            );
+        }
+
+        return "redirect:/cliente/perfil";
+    }
+
+    @PostMapping("/cliente/editar-endereco")
+    public String editarEndereco(
+            @RequestParam Long enderecoId,
+            @RequestParam String nomeIdentificacao,
+            @RequestParam Long tipoEndereco,
+            @RequestParam Long tipoResidencia,
+            @RequestParam Long tipoLogradouro,
+            @RequestParam String cep,
+            @RequestParam String logradouro,
+            @RequestParam String bairro,
+            @RequestParam String numero,
+            @RequestParam Long estado,
+            @RequestParam String cidade,
+            @RequestParam String pais,
+            @RequestParam(required = false) String observacoes,
+            RedirectAttributes redirectAttributes
+    ) {
+        try {
+            if (!verificarClienteAtivo()) {
+                return "redirect:/cliente/inativo";
+            }
+
+            Endereco endereco = new Endereco();
+
+            endereco.setNomeIdentificacao(nomeIdentificacao);
+
+            TipoEndereco tipoEnderecoObj = new TipoEndereco();
+            tipoEnderecoObj.setId(tipoEndereco);
+            endereco.setTipoEndereco(tipoEnderecoObj);
+
+            TipoResidencia tipoResidenciaObj = new TipoResidencia();
+            tipoResidenciaObj.setId(tipoResidencia);
+            endereco.setTipoResidencia(tipoResidenciaObj);
+
+            TipoLogradouro tipoLogradouroObj = new TipoLogradouro();
+            tipoLogradouroObj.setId(tipoLogradouro);
+            endereco.setTipoLogradouro(tipoLogradouroObj);
+
+            Estado estadoObj = new Estado();
+            estadoObj.setId(estado);
+            endereco.setEstado(estadoObj);
+
+            endereco.setCep(cep);
+            endereco.setLogradouro(logradouro);
+            endereco.setBairro(bairro);
+            endereco.setNumero(numero);
+            endereco.setCidade(cidade);
+            endereco.setPais(pais);
+            endereco.setObservacoes(observacoes);
+
+            enderecoService.editar(
+                    6L,
+                    enderecoId,
+                    endereco
+            );
+
+            redirectAttributes.addFlashAttribute(
+                    "tipoToast",
+                    "sucesso"
+            );
+
+            redirectAttributes.addFlashAttribute(
+                    "mensagemToast",
+                    "Endereço alterado com sucesso."
+            );
+
+        } catch (IllegalArgumentException e) {
+            redirectAttributes.addFlashAttribute(
+                    "tipoToast",
+                    "erro"
+            );
+
+            redirectAttributes.addFlashAttribute(
+                    "mensagemToast",
+                    e.getMessage()
+            );
+        }
+
+        return "redirect:/cliente/perfil";
+    }
+
+    @PostMapping("/cliente/adicionar-cartao")
+    public String adicionarCartao(
+            @RequestParam String numero,
+            @RequestParam String nomeImpresso,
+            @RequestParam Long bandeira,
+            @RequestParam String codigoSeguranca,
+            @RequestParam(defaultValue = "false") boolean preferencial,
+            RedirectAttributes redirectAttributes
+    ) {
+        try {
+            if (!verificarClienteAtivo()) {
+                return "redirect:/cliente/inativo";
+            }
+
+            Cartao cartao = new Cartao();
+
+            cartao.setNumero(numero);
+            cartao.setNomeImpresso(nomeImpresso);
+            cartao.setCodigoSeguranca(codigoSeguranca);
+
+            BandeiraCartao bandeiraObj = new BandeiraCartao();
+            bandeiraObj.setId(bandeira);
+
+            cartao.setBandeira(bandeiraObj);
+
+            cartaoService.adicionar(
+                    6L,
+                    cartao,
+                    preferencial
+            );
+
+            redirectAttributes.addFlashAttribute(
+                    "tipoToast",
+                    "sucesso"
+            );
+
+            redirectAttributes.addFlashAttribute(
+                    "mensagemToast",
+                    "Cartão adicionado com sucesso."
+            );
+
+        } catch (IllegalArgumentException e) {
+            redirectAttributes.addFlashAttribute(
+                    "tipoToast",
+                    "erro"
+            );
+
+            redirectAttributes.addFlashAttribute(
+                    "mensagemToast",
+                    e.getMessage()
+            );
+        }
+
+        return "redirect:/cliente/perfil";
+    }
+
+    @PostMapping("/cliente/tornar-cartao-preferencial")
+    public String tornarCartaoPreferencial(
+            @RequestParam Long cartaoId,
+            RedirectAttributes redirectAttributes
+    ) {
+        try {
+            if (!verificarClienteAtivo()) {
+                return "redirect:/cliente/inativo";
+            }
+
+            cartaoService.tornarPreferencial(
+                    6L,
+                    cartaoId
+            );
+
+            redirectAttributes.addFlashAttribute(
+                    "tipoToast",
+                    "sucesso"
+            );
+
+            redirectAttributes.addFlashAttribute(
+                    "mensagemToast",
+                    "Cartão definido como preferencial."
+            );
+
+        } catch (IllegalArgumentException e) {
+            redirectAttributes.addFlashAttribute(
+                    "tipoToast",
+                    "erro"
+            );
+
+            redirectAttributes.addFlashAttribute(
+                    "mensagemToast",
+                    e.getMessage()
+            );
+        }
+
+        return "redirect:/cliente/perfil";
     }
 
     @PostMapping("/cliente/excluir-endereco")
