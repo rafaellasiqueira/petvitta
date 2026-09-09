@@ -275,7 +275,7 @@
 
                                 <button type="button"
                                         class="btn-excluir excluir-endereco"
-                                        th:data-nome="${endereco.nomeIdentificacao}">
+                                        th:attr="data-id=${endereco.id}, data-nome=${endereco.nomeIdentificacao}">
 
                                     <i class="fa-solid fa-trash"></i>
 
@@ -331,9 +331,7 @@
 
                                 <button type="button"
                                         class="btn-excluir excluir-cartao"
-                                        th:attr="
-                                data-nome=${cartao.bandeira.descricao},
-                                data-numero=${cartao.numero}">
+                                        th:attr="data-id=${cartao.id}, data-nome=${cartao.bandeira.descricao}, data-numero=${cartao.numero}">
                                     <i class="fa-solid fa-trash"></i>
                                 </button>
 

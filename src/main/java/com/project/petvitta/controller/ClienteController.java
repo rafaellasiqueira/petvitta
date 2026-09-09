@@ -124,6 +124,10 @@ public class ClienteController {
 
     @GetMapping("/cliente/produtos")
     public String produtos() {
+        if (!verificarClienteAtivo()) {
+            return "redirect:/cliente/inativo";
+        }
+
         return "cliente/produtos";
     }
 
@@ -133,6 +137,12 @@ public class ClienteController {
         Long clienteId = 6L;
 
         Cliente cliente = clienteService.buscarPorId(clienteId);
+
+        if (!cliente.isAtivo()) {
+            model.addAttribute("cliente", cliente);
+
+            return "cliente/inativo";
+        }
 
         model.addAttribute("cliente", cliente);
         model.addAttribute("enderecos", cliente.getEnderecos());
@@ -151,6 +161,10 @@ public class ClienteController {
             RedirectAttributes redirectAttributes,
             Model model
     ) {
+        if (!verificarClienteAtivo()) {
+            return "redirect:/cliente/inativo";
+        }
+
         try {
 
             clienteService.alterar(
@@ -182,6 +196,13 @@ public class ClienteController {
         }
     }
 
+    private boolean verificarClienteAtivo() {
+
+        Long clienteId = 6L;
+
+        return clienteService.clienteAtivo(clienteId);
+    }
+
     @PostMapping("/cliente/alterar-senha")
     public String alterarSenha(
             @RequestParam String senhaAtual,
@@ -189,6 +210,9 @@ public class ClienteController {
             @RequestParam String confirmarSenha,
             RedirectAttributes redirectAttributes
     ) {
+        if (!verificarClienteAtivo()) {
+            return "redirect:/cliente/inativo";
+        }
 
         try {
 
@@ -227,24 +251,135 @@ public class ClienteController {
         }
     }
 
+    @PostMapping("/cliente/excluir-endereco")
+    public String excluirEndereco(
+            @RequestParam Long enderecoId,
+            RedirectAttributes redirectAttributes
+    ) {
+
+        try {
+
+            if (!verificarClienteAtivo()) {
+                return "redirect:/cliente/inativo";
+            }
+
+            clienteService.excluirEndereco(
+                    6L,
+                    enderecoId
+            );
+
+            redirectAttributes.addFlashAttribute(
+                    "mensagemToast",
+                    "Endereço excluído com sucesso."
+            );
+
+            redirectAttributes.addFlashAttribute(
+                    "tipoToast",
+                    "sucesso"
+            );
+
+        } catch (IllegalArgumentException e) {
+
+            redirectAttributes.addFlashAttribute(
+                    "mensagemToast",
+                    e.getMessage()
+            );
+
+            redirectAttributes.addFlashAttribute(
+                    "tipoToast",
+                    "erro"
+            );
+        }
+
+        return "redirect:/cliente/perfil";
+    }
+
+    @PostMapping("/cliente/excluir-cartao")
+    public String excluirCartao(
+            @RequestParam Long cartaoId,
+            RedirectAttributes redirectAttributes
+    ) {
+
+        try {
+
+            if (!verificarClienteAtivo()) {
+                return "redirect:/cliente/inativo";
+            }
+
+            clienteService.excluirCartao(
+                    6L,
+                    cartaoId
+            );
+
+            redirectAttributes.addFlashAttribute(
+                    "mensagemToast",
+                    "Cartão excluído com sucesso."
+            );
+
+            redirectAttributes.addFlashAttribute(
+                    "tipoToast",
+                    "sucesso"
+            );
+
+        } catch (IllegalArgumentException e) {
+
+            redirectAttributes.addFlashAttribute(
+                    "mensagemToast",
+                    e.getMessage()
+            );
+
+            redirectAttributes.addFlashAttribute(
+                    "tipoToast",
+                    "erro"
+            );
+        }
+
+        return "redirect:/cliente/perfil";
+    }
+
     @GetMapping("/cliente/detalhes-produto")
     public String detalhesProduto() {
+        if (!verificarClienteAtivo()) {
+            return "redirect:/cliente/inativo";
+        }
+
         return "cliente/detalhes-produto";
     }
 
     @GetMapping("/cliente/carrinho")
     public String carrinho() {
+        if (!verificarClienteAtivo()) {
+            return "redirect:/cliente/inativo";
+        }
         return "cliente/carrinho";
     }
 
     @GetMapping("/cliente/finalizar-compra")
     public String finalizarCompra() {
+        if (!verificarClienteAtivo()) {
+            return "redirect:/cliente/inativo";
+        }
         return "cliente/finalizar-compra";
     }
 
     @GetMapping("/cliente/pedido")
     public String pedido() {
+        if (!verificarClienteAtivo()) {
+            return "redirect:/cliente/inativo";
+        }
         return "cliente/pedido";
+    }
+
+    @GetMapping("/cliente/inativo")
+    public String inativo(Model model) {
+
+        Long clienteId = 6L;
+
+        Cliente cliente = clienteService.buscarPorId(clienteId);
+
+        model.addAttribute("cliente", cliente);
+
+        return "cliente/inativo";
     }
 
     @GetMapping("/cliente/sair")

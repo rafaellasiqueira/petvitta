@@ -6,6 +6,7 @@ import com.project.petvitta.model.dominio.Estado;
 import com.project.petvitta.model.dominio.TipoEndereco;
 import com.project.petvitta.model.dominio.TipoLogradouro;
 import com.project.petvitta.model.dominio.TipoResidencia;
+import com.project.petvitta.repository.EnderecoRepository;
 import com.project.petvitta.repository.dominio.*;
 import org.springframework.stereotype.Service;
 
@@ -13,7 +14,7 @@ import java.util.List;
 
 @Service
 public class EnderecoService {
-
+    private final EnderecoRepository enderecoRepository;
     private final TipoEnderecoRepository tipoEnderecoRepository;
     private final TipoResidenciaRepository tipoResidenciaRepository;
     private final TipoLogradouroRepository tipoLogradouroRepository;
@@ -23,12 +24,14 @@ public class EnderecoService {
             TipoEnderecoRepository tipoEnderecoRepository,
             TipoResidenciaRepository tipoResidenciaRepository,
             TipoLogradouroRepository tipoLogradouroRepository,
-            EstadoRepository estadoRepository
+            EstadoRepository estadoRepository,
+            EnderecoRepository enderecoRepository
     ) {
         this.tipoEnderecoRepository = tipoEnderecoRepository;
         this.tipoResidenciaRepository = tipoResidenciaRepository;
         this.tipoLogradouroRepository = tipoLogradouroRepository;
         this.estadoRepository = estadoRepository;
+        this.enderecoRepository = enderecoRepository;
     }
 
     public List<TipoEndereco> listarTiposEndereco() {
@@ -243,5 +246,17 @@ public class EnderecoService {
 
             cliente.getEnderecos().add(endereco);
         }
+    }
+
+    public void excluir(Long id) {
+
+        Endereco endereco = enderecoRepository.findById(id)
+                .orElseThrow(() ->
+                        new IllegalArgumentException(
+                                "Endereço não encontrado."
+                        )
+                );
+
+        enderecoRepository.delete(endereco);
     }
 }

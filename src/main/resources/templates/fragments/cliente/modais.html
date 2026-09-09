@@ -739,7 +739,10 @@
 </div>
 
 <!-- Modal confirmar exclusão -->
-<div th:fragment="modal-confirmar-exclusao" id="modalConfirmarExclusao" class="modal">
+<div th:fragment="modal-confirmar-exclusao"
+     id="modalConfirmarExclusao"
+     class="modal">
+
     <div class="modalConteudo">
 
         <!-- Cabeçalho -->
@@ -759,7 +762,9 @@
 
         <!-- Corpo -->
         <div class="modal-body">
+
             <div class="mensagem-exclusao">
+
                 <p id="mensagemModalExclusao">
                     Tem certeza de que deseja excluir este item?
                 </p>
@@ -779,15 +784,27 @@
                     Cancelar
                 </button>
 
-                <button type="button"
-                        class="btn-confirmar"
-                        id="btnConfirmarExclusao">
-                    Excluir
-                </button>
+                <form id="formExcluir" method="post">
+
+                    <input type="hidden"
+                           id="idExcluir"
+                           name="id">
+
+                    <button type="submit"
+                            class="btn-confirmar"
+                            id="btnConfirmarExclusao">
+                        Excluir
+                    </button>
+
+                </form>
+
             </div>
+
         </div>
     </div>
 </div>
+
+
 
 </body>
 </html>

@@ -1,15 +1,23 @@
 package com.project.petvitta.service;
 
 import com.project.petvitta.dto.ClienteCadastroDTO;
+import com.project.petvitta.model.Cartao;
 import com.project.petvitta.model.Cliente;
+import com.project.petvitta.model.Endereco;
+import com.project.petvitta.model.dominio.AtivarMotivo;
 import com.project.petvitta.model.dominio.Genero;
+import com.project.petvitta.model.dominio.InativarMotivo;
 import com.project.petvitta.model.dominio.TipoTelefone;
 import com.project.petvitta.repository.ClienteRepository;
+import com.project.petvitta.repository.dominio.AtivarMotivoRepository;
 import com.project.petvitta.repository.dominio.GeneroRepository;
+import com.project.petvitta.repository.dominio.InativarMotivoRepository;
 import com.project.petvitta.repository.dominio.TipoTelefoneRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -24,13 +32,18 @@ public class ClienteService {
     private final EnderecoService enderecoService;
     private final CartaoService cartaoService;
 
+    private final InativarMotivoRepository inativarMotivoRepository;
+    private final AtivarMotivoRepository ativarMotivoRepository;
+
     public ClienteService(
             ClienteRepository clienteRepository,
             TipoTelefoneRepository tipoTelefoneRepository,
             GeneroRepository generoRepository,
             SenhaService senhaService,
             EnderecoService enderecoService,
-            CartaoService cartaoService
+            CartaoService cartaoService,
+            InativarMotivoRepository inativarMotivoRepository,
+            AtivarMotivoRepository ativarMotivoRepository
     ) {
         this.clienteRepository = clienteRepository;
         this.tipoTelefoneRepository = tipoTelefoneRepository;
@@ -38,6 +51,8 @@ public class ClienteService {
         this.senhaService = senhaService;
         this.enderecoService = enderecoService;
         this.cartaoService = cartaoService;
+        this.inativarMotivoRepository = inativarMotivoRepository;
+        this.ativarMotivoRepository = ativarMotivoRepository;
     }
 
     public List<TipoTelefone> listarTiposTelefone() {
@@ -182,8 +197,93 @@ public class ClienteService {
                 );
     }
 
+    public boolean clienteAtivo(Long id) {
+        Cliente cliente = buscarPorId(id);
+        return cliente.isAtivo();
+    }
+
+    public List<Cliente> buscarPorNome(String nome) {
+        if (nome == null || nome.trim().isEmpty()) {
+            return listarTodos();
+        }
+        return clienteRepository.findByNomeContainingIgnoreCase(nome.trim());
+    }
+
     public List<Cliente> listarTodos() {
         return clienteRepository.findAll();
+    }
+
+    public List<Cliente> filtrarClientes(
+            String nome,
+            String cpf,
+            String email,
+            String telefone,
+            LocalDate dataNascimento,
+            Long genero,
+            Boolean status
+    ) {
+
+        List<Cliente> todos = clienteRepository.findAll();
+        List<Cliente> resultado = new ArrayList<>();
+
+        for (Cliente cliente : todos) {
+
+            boolean encontrou = true;
+
+            if (nome != null && !nome.isEmpty()) {
+                if (!cliente.getNome().toLowerCase()
+                        .contains(nome.toLowerCase())) {
+
+                    encontrou = false;
+                }
+            }
+
+            if (cpf != null && !cpf.isEmpty()) {
+                if (!cliente.getCpf().contains(cpf)) {
+                    encontrou = false;
+                }
+            }
+
+            if (email != null && !email.isEmpty()) {
+                if (!cliente.getEmail().toLowerCase()
+                        .contains(email.toLowerCase())) {
+
+                    encontrou = false;
+                }
+            }
+
+            if (telefone != null && !telefone.isEmpty()) {
+                if (!cliente.getTelefone().contains(telefone)) {
+                    encontrou = false;
+                }
+            }
+
+            if (dataNascimento != null) {
+                if (!cliente.getDataNascimento()
+                        .equals(dataNascimento)) {
+
+                    encontrou = false;
+                }
+            }
+
+            if (genero != null) {
+                if (!cliente.getGenero().getId().equals(genero)) {
+                    encontrou = false;
+                }
+            }
+
+            if (status != null) {
+                if (cliente.isAtivo() != status) {
+                    encontrou = false;
+                }
+            }
+
+            if (encontrou) {
+                resultado.add(cliente);
+            }
+        }
+
+        return resultado;
     }
 
     public Cliente alterar(
@@ -262,23 +362,113 @@ public class ClienteService {
         clienteRepository.save(cliente);
     }
 
-    public void inativar(Long id) {
+    public List<InativarMotivo> listarMotivosInativacao() {
+        return inativarMotivoRepository.findAllByOrderByIdAsc();
+    }
+
+    public List<AtivarMotivo> listarMotivosAtivacao() {
+        return ativarMotivoRepository.findAllByOrderByIdAsc();
+    }
+
+    public void inativar(
+            Long id,
+            Long motivoId,
+            String justificativa
+    ) {
 
         Cliente cliente = buscarPorId(id);
+
+        InativarMotivo motivo = inativarMotivoRepository
+                .findById(motivoId)
+                .orElseThrow(() ->
+                        new IllegalArgumentException(
+                                "Motivo de inativação inválido."
+                        )
+                );
+
+        if (justificativa == null || justificativa.trim().isEmpty()) {
+            throw new IllegalArgumentException(
+                    "Informe uma justificativa."
+            );
+        }
 
         cliente.setAtivo(false);
+        cliente.setMotivoInativacao(motivo);
+        cliente.setJustificativaInativacao(
+                justificativa.trim()
+        );
 
         clienteRepository.save(cliente);
     }
 
-    public void ativar(Long id) {
+    public void ativar(
+            Long id,
+            Long motivoId,
+            String justificativa
+    ) {
 
         Cliente cliente = buscarPorId(id);
 
+        AtivarMotivo motivo = ativarMotivoRepository
+                .findById(motivoId)
+                .orElseThrow(() ->
+                        new IllegalArgumentException(
+                                "Motivo de ativação inválido."
+                        )
+                );
+
+        if (justificativa == null || justificativa.trim().isEmpty()) {
+            throw new IllegalArgumentException(
+                    "Informe uma justificativa."
+            );
+        }
+
         cliente.setAtivo(true);
+        cliente.setMotivoAtivacao(motivo);
+        cliente.setJustificativaAtivacao(
+                justificativa.trim()
+        );
 
         clienteRepository.save(cliente);
     }
+
+    @Transactional
+    public void excluirEndereco(Long clienteId, Long enderecoId) {
+
+        Cliente cliente = buscarPorId(clienteId);
+
+        Endereco endereco = cliente.getEnderecos()
+                .stream()
+                .filter(e -> e.getId().equals(enderecoId))
+                .findFirst()
+                .orElseThrow(() ->
+                        new IllegalArgumentException(
+                                "Esse endereço não pertence ao cliente."
+                        )
+                );
+
+        cliente.getEnderecos().remove(endereco);
+    }
+
+
+    @Transactional
+    public void excluirCartao(Long clienteId, Long cartaoId) {
+
+        Cliente cliente = buscarPorId(clienteId);
+
+        Cartao cartao = cliente.getCartoes()
+                .stream()
+                .filter(c -> c.getId().equals(cartaoId))
+                .findFirst()
+                .orElseThrow(() ->
+                        new IllegalArgumentException(
+                                "Esse cartão não pertence ao cliente."
+                        )
+                );
+
+        cliente.getCartoes().remove(cartao);
+    }
+
 
     private void validarNome(String nome) {
 

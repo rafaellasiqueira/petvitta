@@ -1,6 +1,8 @@
 package com.project.petvitta.model;
 
+import com.project.petvitta.model.dominio.AtivarMotivo;
 import com.project.petvitta.model.dominio.Genero;
+import com.project.petvitta.model.dominio.InativarMotivo;
 import com.project.petvitta.model.dominio.TipoTelefone;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
@@ -59,6 +61,12 @@ public class Cliente {
     @Column(nullable = false)
     private Integer ranking = 0;
 
+    @Column(length = 500)
+    private String justificativaInativacao;
+
+    @Column(length = 500)
+    private String justificativaAtivacao;
+
     // Um cliente pode ter vários endereços
     @OneToMany(
             mappedBy = "cliente",
@@ -82,6 +90,14 @@ public class Cliente {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "genero_id", nullable = false)
     private Genero genero;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "motivo_inativacao_id")
+    private InativarMotivo motivoInativacao;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "motivo_ativacao_id")
+    private AtivarMotivo motivoAtivacao;
 
     // Construtor vazio necessário para o hibernate
     public Cliente() {

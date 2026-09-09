@@ -462,59 +462,74 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // Modal excluir
-    const modalExcluir = document.getElementById('modalConfirmarExclusao');
-    const btnFecharExcluir = document.getElementById('btnFecharModalExclusao');
-    const btnCancelarExcluir = document.getElementById('btnCancelarExclusao');
-    const btnConfirmarExcluir = document.getElementById('btnConfirmarExclusao');
-    const mensagemModalExclusao = document.getElementById('mensagemModalExclusao');
 
-    let itemExcluir = null;
-    let tipoExcluir = '';
+        const modalExcluir = document.getElementById('modalConfirmarExclusao');
+        const btnFecharExcluir = document.getElementById('btnFecharModalExclusao');
+        const btnCancelarExcluir = document.getElementById('btnCancelarExclusao');
+        const formExcluir = document.getElementById('formExcluir');
+        const mensagemModalExclusao = document.getElementById('mensagemModalExclusao');
+        const idExcluir = document.getElementById('idExcluir');
 
-    // Excluir endereço
-    document.querySelectorAll('.excluir-endereco').forEach(function(botao) {
-        botao.addEventListener('click', function() {
-            itemExcluir = this.closest('.item-endereco');
-            tipoExcluir = 'endereço';
 
-            mensagemModalExclusao.textContent = `Tem certeza de que deseja excluir o endereço?`;
+        // =========================
+        // EXCLUIR ENDEREÇO
+        // =========================
+
+    document.querySelectorAll('.excluir-endereco').forEach(botao => {
+
+        botao.addEventListener('click', function () {
+
+            const id = this.dataset.id;
+            const nome = this.dataset.nome;
+
+            mensagemModalExclusao.textContent =
+                `Tem certeza de que deseja excluir o endereço "${nome}"?`;
+
+            formExcluir.action = '/cliente/excluir-endereco';
+
+            idExcluir.name = 'enderecoId';
+            idExcluir.value = id;
+
             modalExcluir.classList.add('active');
         });
     });
 
-    // Excluir cartão
-    document.querySelectorAll('.excluir-cartao').forEach(function(botao) {
-        botao.addEventListener('click', function() {
-            itemExcluir = this.closest('.item-cartao');
-            tipoExcluir = 'cartão';
+        // =========================
+        // EXCLUIR CARTÃO
+        // =========================
 
-            mensagemModalExclusao.textContent = `Tem certeza de que deseja excluir o cartão?`;
+    document.querySelectorAll('.excluir-cartao').forEach(botao => {
+
+        botao.addEventListener('click', function () {
+
+            const id = this.dataset.id;
+            const nome = this.dataset.nome;
+
+            mensagemModalExclusao.textContent =
+                `Tem certeza de que deseja excluir o cartão ${nome}?`;
+
+            formExcluir.action = '/cliente/excluir-cartao';
+
+            idExcluir.name = 'cartaoId';
+            idExcluir.value = id;
+
             modalExcluir.classList.add('active');
         });
     });
 
-    // Fechar
-    btnFecharExcluir.addEventListener('click', function() {
-        modalExcluir.classList.remove('active');
-    });
 
-    btnCancelarExcluir.addEventListener('click', function() {
-        modalExcluir.classList.remove('active');
-    });
+        // =========================
+        // FECHAR MODAL
+        // =========================
 
-    // Confirmar exclusão
-    btnConfirmarExcluir.addEventListener('click', function() {
-    itemExcluir.remove();
+        function fecharModalExcluir() {
+            modalExcluir.classList.remove('active');
+        }
 
-    if (tipoExcluir === 'endereço') {
-        mostrarToast('Endereço excluído com sucesso!');
-    } else {
-        mostrarToast('Cartão excluído com sucesso!');
-    }
+        btnFecharExcluir.addEventListener('click', fecharModalExcluir);
+
+        btnCancelarExcluir.addEventListener('click', fecharModalExcluir);
 
 
-        modalExcluir.classList.remove('active');
-        itemExcluir = null;
-    });
+
 });

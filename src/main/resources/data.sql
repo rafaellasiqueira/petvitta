@@ -67,3 +67,17 @@ INSERT IGNORE INTO estado (sigla, nome) VALUES
 ('SP', 'São Paulo'),
 ('SE', 'Sergipe'),
 ('TO', 'Tocantins');
+
+-- Motivos para inativação
+INSERT IGNORE INTO motivo_inativacao (descricao) VALUES
+('Suspeita de fraude'),
+('Uso indevido da plataforma'),
+('Determinação administrativa'),
+('Outro');
+
+-- Motivos para ativação
+INSERT IGNORE INTO motivo_ativacao (descricao) VALUES
+('Revisão administrativa'),
+('Suspeita de fraude descartada'),
+('Regularização cadastral'),
+('Outro');

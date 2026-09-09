@@ -8,6 +8,7 @@
     <!-- Font Awesome -->
     <link rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
     <!-- Sidebar CSS -->
     <link rel="stylesheet" th:href="@{/css/admin/sidebar.css}">
 
@@ -58,7 +59,7 @@
 
                 <div class="campo-perfil">
                     <label>Gênero</label>
-                    <p th:text="${cliente.genero}">-</p>
+                    <p th:text="${cliente.genero.descricao}">-</p>
                 </div>
 
                 <div class="campo-perfil">
@@ -67,7 +68,7 @@
                 </div>
 
                 <div class="campo-perfil">
-                    <label>Telefone</label>
+                    <label th:text="${cliente.tipoTelefone.descricao}">-</label>
                     <p th:text="${cliente.telefone}">-</p>
                 </div>
             </div>
@@ -78,8 +79,7 @@
             <div class="lista-enderecos">
                 <div class="item-endereco"
                      th:each="endereco : ${enderecos}">
-                    <div class="cabecalho-item">
-                        <div>
+                    <div class="cabecalho-item"><div>
                             <h3 th:text="${endereco.nomeIdentificacao}"></h3>
 
                             <span class="status-endereco entrega"

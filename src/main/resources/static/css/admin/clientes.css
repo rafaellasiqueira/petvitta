@@ -1,8 +1,8 @@
 /* Filtros */
 .direito {
     display: flex;
-    justify-align: flex-end;
     align-items: center;
+    justify-content: right;
     gap: 12px;
     margin-left: auto;
 }
@@ -61,6 +61,7 @@
     border: 1px solid #D9E2E0;
     border-radius: 8px;
     padding: 16px;
+    margin-top: 12px;
     margin-bottom: 20px;
 }
 
@@ -184,4 +185,8 @@
     font-size: 18px;
     color: #E1CE8A;
     margin: 0;
+}
+
+.sem-resultados {
+    text-align: center;
 }

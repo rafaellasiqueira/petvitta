@@ -3,6 +3,7 @@ package com.project.petvitta.service;
 import com.project.petvitta.model.Cartao;
 import com.project.petvitta.model.Cliente;
 import com.project.petvitta.model.dominio.BandeiraCartao;
+import com.project.petvitta.repository.CartaoRepository;
 import com.project.petvitta.repository.dominio.BandeiraCartaoRepository;
 import org.springframework.stereotype.Service;
 
@@ -10,14 +11,15 @@ import java.util.List;
 
 @Service
 public class CartaoService {
-
+    private final CartaoRepository cartaoRepository;
     private final BandeiraCartaoRepository bandeiraCartaoRepository;
 
     public CartaoService(
-            BandeiraCartaoRepository bandeiraCartaoRepository
+            BandeiraCartaoRepository bandeiraCartaoRepository,
+            CartaoRepository cartaoRepository
     ) {
-        this.bandeiraCartaoRepository =
-                bandeiraCartaoRepository;
+        this.bandeiraCartaoRepository = bandeiraCartaoRepository;
+        this.cartaoRepository = cartaoRepository;
     }
 
     public List<BandeiraCartao> listarBandeiras() {
@@ -149,5 +151,17 @@ public class CartaoService {
 
             cliente.getCartoes().add(cartao);
         }
+    }
+
+    public void excluir(Long id) {
+
+        Cartao cartao = cartaoRepository.findById(id)
+                .orElseThrow(() ->
+                        new IllegalArgumentException(
+                                "Cartão não encontrado."
+                        )
+                );
+
+        cartaoRepository.delete(cartao);
     }
 }

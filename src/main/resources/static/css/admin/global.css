@@ -49,6 +49,7 @@ h1 {
     display: flex;
     flex-direction: column;
     gap: 12px;
+    min-height: calc(100vh - 88px);
     height: auto;
 }
 
@@ -285,6 +286,8 @@ h2 {
 }
 
 .btn-adicionar,
+.btn-inativar-modal,
+.btn-ativar-modal,
 .btn-confirmar-exclusao,
 .btn-confirmar,
 .btn-salvar {
@@ -302,6 +305,8 @@ h2 {
 }
 
 .btn-adicionar:hover,
+.btn-ativar-modal:hover,
+.btn-inativar-modal:hover,
 .btn-confirmar-exclusao:hover
 .btn-confirmar:hover,
 .btn-salvar:hover {

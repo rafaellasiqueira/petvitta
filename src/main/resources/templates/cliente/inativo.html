@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Você foi inativado!</title>
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+    <!-- Cabeçalho CSS -->
+    <link rel="stylesheet" th:href="@{/css/cliente/cabecalho.css}">
+
+    <!-- Global CSS -->
+    <link rel="stylesheet" th:href="@{/css/cliente/global.css}">
+
+    <!-- Inativo CSS -->
+    <link rel="stylesheet" th:href="@{/css/cliente/inativo.css}">
+
+</head>
+<body>
+
+<div class="container">
+
+    <!-- Cabeçalho -->
+    <header class="login-cabecalho">
+        <div class="topo">
+            <div class="logo-container">
+                <img class="logo" th:src="@{/images/logo-horizontal-escura.svg}">
+            </div>
+        </div>
+    </header>
+
+    <!-- Conteúdo -->
+    <main class="conteudo">
+        <div class="card">
+            <div class="campo-titulo">
+                <h1>Conta inativada</h1>
+                <h3>Sua conta foi inativada!</h3>
+            </div>
+
+            <div class="campo-grupo">
+                <label>Motivo da inativação</label>
+                <p th:text="${cliente.motivoInativacao.descricao}">
+                    Motivo
+                </p>
+            </div>
+
+            <div class="campo-grupo">
+                <label>Justificativa</label>
+
+                <p th:text="${cliente.justificativaInativacao}">
+                    Justificativa
+                </p>
+            </div>
+
+            <a th:href="@{/cliente/login}" class="btn-login">Ir para o login</i>
+            </a>
+        </div>
+    </main>
+</div>
+
+</body>
+</html>
