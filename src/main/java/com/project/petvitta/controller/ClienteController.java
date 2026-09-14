@@ -1,24 +1,21 @@
 package com.project.petvitta.controller;
 
+import com.project.petvitta.dto.AlterarSenhaDTO;
 import com.project.petvitta.dto.ClienteCadastroDTO;
+import com.project.petvitta.dto.ClienteEdicaoDTO;
 import com.project.petvitta.model.Cliente;
 import com.project.petvitta.service.CartaoService;
 import com.project.petvitta.service.ClienteService;
 import com.project.petvitta.service.EnderecoService;
+import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import com.project.petvitta.model.Cartao;
-import com.project.petvitta.model.Endereco;
-import com.project.petvitta.model.dominio.BandeiraCartao;
-import com.project.petvitta.model.dominio.Estado;
-import com.project.petvitta.model.dominio.TipoEndereco;
-import com.project.petvitta.model.dominio.TipoLogradouro;
-import com.project.petvitta.model.dominio.TipoResidencia;
 
 @Controller
 public class ClienteController {
@@ -39,6 +36,7 @@ public class ClienteController {
 
     @ModelAttribute
     public void carregarDadosCadastro(Model model) {
+
         model.addAttribute(
                 "tiposTelefone",
                 clienteService.listarTiposTelefone()
@@ -95,11 +93,29 @@ public class ClienteController {
 
     @PostMapping("/cliente/cadastrar")
     public String cadastrar(
-            @ModelAttribute("cliente") ClienteCadastroDTO dto,
+            @Valid @ModelAttribute("cliente") ClienteCadastroDTO dto,
+            BindingResult result,
             Model model,
             RedirectAttributes redirectAttributes
     ) {
+
+        if (result.hasErrors()) {
+
+            model.addAttribute(
+                    "tipoToast",
+                    "erro"
+            );
+
+            model.addAttribute(
+                    "mensagemToast",
+                    result.getFieldError().getDefaultMessage()
+            );
+
+            return "cliente/cadastrar";
+        }
+
         try {
+
             clienteService.cadastrar(dto);
 
             redirectAttributes.addFlashAttribute(
@@ -115,6 +131,7 @@ public class ClienteController {
             return "redirect:/cliente/cadastrar";
 
         } catch (IllegalArgumentException e) {
+
             model.addAttribute(
                     "tipoToast",
                     "erro"
@@ -131,6 +148,7 @@ public class ClienteController {
 
     @GetMapping("/cliente/produtos")
     public String produtos() {
+
         if (!verificarClienteAtivo()) {
             return "redirect:/cliente/inativo";
         }
@@ -146,41 +164,65 @@ public class ClienteController {
         Cliente cliente = clienteService.buscarPorId(clienteId);
 
         if (!cliente.isAtivo()) {
-            model.addAttribute("cliente", cliente);
+
+            model.addAttribute(
+                    "cliente",
+                    cliente
+            );
 
             return "cliente/inativo";
         }
 
-        model.addAttribute("cliente", cliente);
-        model.addAttribute("enderecos", cliente.getEnderecos());
-        model.addAttribute("cartoes", cliente.getCartoes());
+        model.addAttribute(
+                "cliente",
+                cliente
+        );
+
+        model.addAttribute(
+                "enderecos",
+                cliente.getEnderecos()
+        );
+
+        model.addAttribute(
+                "cartoes",
+                cliente.getCartoes()
+        );
 
         return "cliente/perfil";
     }
 
-
     @PostMapping("/cliente/alterar")
     public String alterar(
-            @RequestParam String nome,
-            @RequestParam String telefone,
-            @RequestParam Long genero,
-            @RequestParam Long tipoTelefone,
-            RedirectAttributes redirectAttributes,
-            Model model
+            @Valid @ModelAttribute("clienteEdicao") ClienteEdicaoDTO dto,
+            BindingResult result,
+            Model model,
+            RedirectAttributes redirectAttributes
     ) {
+
         if (!verificarClienteAtivo()) {
             return "redirect:/cliente/inativo";
         }
 
+        if (result.hasErrors()) {
+
+            Cliente cliente = clienteService.buscarPorId(6L);
+
+            model.addAttribute("cliente", cliente);
+            model.addAttribute("enderecos", cliente.getEnderecos());
+            model.addAttribute("cartoes", cliente.getCartoes());
+
+            model.addAttribute("tipoToast", "erro");
+            model.addAttribute(
+                    "mensagemToast",
+                    result.getFieldError().getDefaultMessage()
+            );
+
+            return "cliente/perfil";
+        }
+
         try {
 
-            clienteService.alterar(
-                    6L,
-                    nome,
-                    telefone,
-                    genero,
-                    tipoTelefone
-            );
+            clienteService.alterar(6L, dto);
 
             redirectAttributes.addFlashAttribute(
                     "tipoToast",
@@ -196,38 +238,51 @@ public class ClienteController {
 
         } catch (IllegalArgumentException e) {
 
-            model.addAttribute("tipoToast", "erro");
-            model.addAttribute("mensagemToast", e.getMessage());
+            redirectAttributes.addFlashAttribute(
+                    "tipoToast",
+                    "erro"
+            );
 
-            return "cliente/perfil";
+            redirectAttributes.addFlashAttribute(
+                    "mensagemToast",
+                    e.getMessage()
+            );
+
+            return "redirect:/cliente/perfil";
         }
-    }
-
-    private boolean verificarClienteAtivo() {
-
-        Long clienteId = 6L;
-
-        return clienteService.clienteAtivo(clienteId);
     }
 
     @PostMapping("/cliente/alterar-senha")
     public String alterarSenha(
-            @RequestParam String senhaAtual,
-            @RequestParam String novaSenha,
-            @RequestParam String confirmarSenha,
+            @Valid @ModelAttribute("alterarSenha") AlterarSenhaDTO dto,
+            BindingResult result,
             RedirectAttributes redirectAttributes
     ) {
+
         if (!verificarClienteAtivo()) {
             return "redirect:/cliente/inativo";
+        }
+
+        if (result.hasErrors()) {
+
+            redirectAttributes.addFlashAttribute(
+                    "tipoToast",
+                    "erro"
+            );
+
+            redirectAttributes.addFlashAttribute(
+                    "mensagemToast",
+                    result.getFieldError().getDefaultMessage()
+            );
+
+            return "redirect:/cliente/perfil";
         }
 
         try {
 
             clienteService.alterarSenha(
                     6L,
-                    senhaAtual,
-                    novaSenha,
-                    confirmarSenha
+                    dto
             );
 
             redirectAttributes.addFlashAttribute(
@@ -240,86 +295,8 @@ public class ClienteController {
                     "Senha alterada com sucesso!"
             );
 
-            return "redirect:/cliente/perfil";
-
         } catch (IllegalArgumentException e) {
 
-            redirectAttributes.addFlashAttribute(
-                    "tipoToast",
-                    "erro"
-            );
-
-            redirectAttributes.addFlashAttribute(
-                    "mensagemToast",
-                    e.getMessage()
-            );
-
-            return "redirect:/cliente/perfil";
-        }
-    }
-
-    @PostMapping("/cliente/adicionar-endereco")
-    public String adicionarEndereco(
-            @RequestParam String nomeIdentificacao,
-            @RequestParam Long tipoEndereco,
-            @RequestParam Long tipoResidencia,
-            @RequestParam Long tipoLogradouro,
-            @RequestParam String cep,
-            @RequestParam String logradouro,
-            @RequestParam String bairro,
-            @RequestParam String numero,
-            @RequestParam Long estado,
-            @RequestParam String cidade,
-            @RequestParam String pais,
-            @RequestParam(required = false) String observacoes,
-            RedirectAttributes redirectAttributes
-    ) {
-        try {
-            if (!verificarClienteAtivo()) {
-                return "redirect:/cliente/inativo";
-            }
-
-            Endereco endereco = new Endereco();
-
-            endereco.setNomeIdentificacao(nomeIdentificacao);
-
-            TipoEndereco tipoEnderecoObj = new TipoEndereco();
-            tipoEnderecoObj.setId(tipoEndereco);
-            endereco.setTipoEndereco(tipoEnderecoObj);
-
-            TipoResidencia tipoResidenciaObj = new TipoResidencia();
-            tipoResidenciaObj.setId(tipoResidencia);
-            endereco.setTipoResidencia(tipoResidenciaObj);
-
-            TipoLogradouro tipoLogradouroObj = new TipoLogradouro();
-            tipoLogradouroObj.setId(tipoLogradouro);
-            endereco.setTipoLogradouro(tipoLogradouroObj);
-
-            Estado estadoObj = new Estado();
-            estadoObj.setId(estado);
-            endereco.setEstado(estadoObj);
-
-            endereco.setCep(cep);
-            endereco.setLogradouro(logradouro);
-            endereco.setBairro(bairro);
-            endereco.setNumero(numero);
-            endereco.setCidade(cidade);
-            endereco.setPais(pais);
-            endereco.setObservacoes(observacoes);
-
-            enderecoService.adicionar(6L, endereco);
-
-            redirectAttributes.addFlashAttribute(
-                    "tipoToast",
-                    "sucesso"
-            );
-
-            redirectAttributes.addFlashAttribute(
-                    "mensagemToast",
-                    "Endereço adicionado com sucesso."
-            );
-
-        } catch (IllegalArgumentException e) {
             redirectAttributes.addFlashAttribute(
                     "tipoToast",
                     "erro"
@@ -334,271 +311,16 @@ public class ClienteController {
         return "redirect:/cliente/perfil";
     }
 
-    @PostMapping("/cliente/editar-endereco")
-    public String editarEndereco(
-            @RequestParam Long enderecoId,
-            @RequestParam String nomeIdentificacao,
-            @RequestParam Long tipoEndereco,
-            @RequestParam Long tipoResidencia,
-            @RequestParam Long tipoLogradouro,
-            @RequestParam String cep,
-            @RequestParam String logradouro,
-            @RequestParam String bairro,
-            @RequestParam String numero,
-            @RequestParam Long estado,
-            @RequestParam String cidade,
-            @RequestParam String pais,
-            @RequestParam(required = false) String observacoes,
-            RedirectAttributes redirectAttributes
-    ) {
-        try {
-            if (!verificarClienteAtivo()) {
-                return "redirect:/cliente/inativo";
-            }
+    private boolean verificarClienteAtivo() {
 
-            Endereco endereco = new Endereco();
+        Long clienteId = 6L;
 
-            endereco.setNomeIdentificacao(nomeIdentificacao);
-
-            TipoEndereco tipoEnderecoObj = new TipoEndereco();
-            tipoEnderecoObj.setId(tipoEndereco);
-            endereco.setTipoEndereco(tipoEnderecoObj);
-
-            TipoResidencia tipoResidenciaObj = new TipoResidencia();
-            tipoResidenciaObj.setId(tipoResidencia);
-            endereco.setTipoResidencia(tipoResidenciaObj);
-
-            TipoLogradouro tipoLogradouroObj = new TipoLogradouro();
-            tipoLogradouroObj.setId(tipoLogradouro);
-            endereco.setTipoLogradouro(tipoLogradouroObj);
-
-            Estado estadoObj = new Estado();
-            estadoObj.setId(estado);
-            endereco.setEstado(estadoObj);
-
-            endereco.setCep(cep);
-            endereco.setLogradouro(logradouro);
-            endereco.setBairro(bairro);
-            endereco.setNumero(numero);
-            endereco.setCidade(cidade);
-            endereco.setPais(pais);
-            endereco.setObservacoes(observacoes);
-
-            enderecoService.editar(
-                    6L,
-                    enderecoId,
-                    endereco
-            );
-
-            redirectAttributes.addFlashAttribute(
-                    "tipoToast",
-                    "sucesso"
-            );
-
-            redirectAttributes.addFlashAttribute(
-                    "mensagemToast",
-                    "Endereço alterado com sucesso."
-            );
-
-        } catch (IllegalArgumentException e) {
-            redirectAttributes.addFlashAttribute(
-                    "tipoToast",
-                    "erro"
-            );
-
-            redirectAttributes.addFlashAttribute(
-                    "mensagemToast",
-                    e.getMessage()
-            );
-        }
-
-        return "redirect:/cliente/perfil";
-    }
-
-    @PostMapping("/cliente/adicionar-cartao")
-    public String adicionarCartao(
-            @RequestParam String numero,
-            @RequestParam String nomeImpresso,
-            @RequestParam Long bandeira,
-            @RequestParam String codigoSeguranca,
-            @RequestParam(defaultValue = "false") boolean preferencial,
-            RedirectAttributes redirectAttributes
-    ) {
-        try {
-            if (!verificarClienteAtivo()) {
-                return "redirect:/cliente/inativo";
-            }
-
-            Cartao cartao = new Cartao();
-
-            cartao.setNumero(numero);
-            cartao.setNomeImpresso(nomeImpresso);
-            cartao.setCodigoSeguranca(codigoSeguranca);
-
-            BandeiraCartao bandeiraObj = new BandeiraCartao();
-            bandeiraObj.setId(bandeira);
-
-            cartao.setBandeira(bandeiraObj);
-
-            cartaoService.adicionar(
-                    6L,
-                    cartao,
-                    preferencial
-            );
-
-            redirectAttributes.addFlashAttribute(
-                    "tipoToast",
-                    "sucesso"
-            );
-
-            redirectAttributes.addFlashAttribute(
-                    "mensagemToast",
-                    "Cartão adicionado com sucesso."
-            );
-
-        } catch (IllegalArgumentException e) {
-            redirectAttributes.addFlashAttribute(
-                    "tipoToast",
-                    "erro"
-            );
-
-            redirectAttributes.addFlashAttribute(
-                    "mensagemToast",
-                    e.getMessage()
-            );
-        }
-
-        return "redirect:/cliente/perfil";
-    }
-
-    @PostMapping("/cliente/tornar-cartao-preferencial")
-    public String tornarCartaoPreferencial(
-            @RequestParam Long cartaoId,
-            RedirectAttributes redirectAttributes
-    ) {
-        try {
-            if (!verificarClienteAtivo()) {
-                return "redirect:/cliente/inativo";
-            }
-
-            cartaoService.tornarPreferencial(
-                    6L,
-                    cartaoId
-            );
-
-            redirectAttributes.addFlashAttribute(
-                    "tipoToast",
-                    "sucesso"
-            );
-
-            redirectAttributes.addFlashAttribute(
-                    "mensagemToast",
-                    "Cartão definido como preferencial."
-            );
-
-        } catch (IllegalArgumentException e) {
-            redirectAttributes.addFlashAttribute(
-                    "tipoToast",
-                    "erro"
-            );
-
-            redirectAttributes.addFlashAttribute(
-                    "mensagemToast",
-                    e.getMessage()
-            );
-        }
-
-        return "redirect:/cliente/perfil";
-    }
-
-    @PostMapping("/cliente/excluir-endereco")
-    public String excluirEndereco(
-            @RequestParam Long enderecoId,
-            RedirectAttributes redirectAttributes
-    ) {
-
-        try {
-
-            if (!verificarClienteAtivo()) {
-                return "redirect:/cliente/inativo";
-            }
-
-            clienteService.excluirEndereco(
-                    6L,
-                    enderecoId
-            );
-
-            redirectAttributes.addFlashAttribute(
-                    "mensagemToast",
-                    "Endereço excluído com sucesso."
-            );
-
-            redirectAttributes.addFlashAttribute(
-                    "tipoToast",
-                    "sucesso"
-            );
-
-        } catch (IllegalArgumentException e) {
-
-            redirectAttributes.addFlashAttribute(
-                    "mensagemToast",
-                    e.getMessage()
-            );
-
-            redirectAttributes.addFlashAttribute(
-                    "tipoToast",
-                    "erro"
-            );
-        }
-
-        return "redirect:/cliente/perfil";
-    }
-
-    @PostMapping("/cliente/excluir-cartao")
-    public String excluirCartao(
-            @RequestParam Long cartaoId,
-            RedirectAttributes redirectAttributes
-    ) {
-
-        try {
-
-            if (!verificarClienteAtivo()) {
-                return "redirect:/cliente/inativo";
-            }
-
-            clienteService.excluirCartao(
-                    6L,
-                    cartaoId
-            );
-
-            redirectAttributes.addFlashAttribute(
-                    "mensagemToast",
-                    "Cartão excluído com sucesso."
-            );
-
-            redirectAttributes.addFlashAttribute(
-                    "tipoToast",
-                    "sucesso"
-            );
-
-        } catch (IllegalArgumentException e) {
-
-            redirectAttributes.addFlashAttribute(
-                    "mensagemToast",
-                    e.getMessage()
-            );
-
-            redirectAttributes.addFlashAttribute(
-                    "tipoToast",
-                    "erro"
-            );
-        }
-
-        return "redirect:/cliente/perfil";
+        return clienteService.clienteAtivo(clienteId);
     }
 
     @GetMapping("/cliente/detalhes-produto")
     public String detalhesProduto() {
+
         if (!verificarClienteAtivo()) {
             return "redirect:/cliente/inativo";
         }
@@ -608,36 +330,43 @@ public class ClienteController {
 
     @GetMapping("/cliente/carrinho")
     public String carrinho() {
+
         if (!verificarClienteAtivo()) {
             return "redirect:/cliente/inativo";
         }
+
         return "cliente/carrinho";
     }
 
     @GetMapping("/cliente/finalizar-compra")
     public String finalizarCompra() {
+
         if (!verificarClienteAtivo()) {
             return "redirect:/cliente/inativo";
         }
+
         return "cliente/finalizar-compra";
     }
 
     @GetMapping("/cliente/pedido")
     public String pedido() {
+
         if (!verificarClienteAtivo()) {
             return "redirect:/cliente/inativo";
         }
+
         return "cliente/pedido";
     }
 
     @GetMapping("/cliente/inativo")
     public String inativo(Model model) {
 
-        Long clienteId = 6L;
+        Cliente cliente = clienteService.buscarPorId(6L);
 
-        Cliente cliente = clienteService.buscarPorId(clienteId);
-
-        model.addAttribute("cliente", cliente);
+        model.addAttribute(
+                "cliente",
+                cliente
+        );
 
         return "cliente/inativo";
     }

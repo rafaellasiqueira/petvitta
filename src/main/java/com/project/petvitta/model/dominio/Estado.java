@@ -16,7 +16,7 @@ public class Estado {
     @Column(nullable = false, unique = true, length = 2)
     private String sigla;
 
-    @Column(nullable = false, unique = true, length = 50)
+    @Column(nullable = false, unique = true, length = 30)
     private String nome;
 
     public Estado() {

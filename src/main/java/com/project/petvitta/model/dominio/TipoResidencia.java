@@ -13,7 +13,7 @@ public class TipoResidencia {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, unique = true, length = 30)
+    @Column(nullable = false, unique = true, length = 15)
     private String descricao;
 
     public TipoResidencia() {

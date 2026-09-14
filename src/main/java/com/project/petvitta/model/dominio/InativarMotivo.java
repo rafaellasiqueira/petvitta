@@ -14,7 +14,7 @@ public class InativarMotivo {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false, unique = true, length = 30)
     private String descricao;
 
     public InativarMotivo() {

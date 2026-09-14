@@ -1,5 +1,6 @@
 package com.project.petvitta.service;
 
+import com.project.petvitta.dto.EnderecoDTO;
 import com.project.petvitta.model.Cliente;
 import com.project.petvitta.model.Endereco;
 import com.project.petvitta.model.dominio.Estado;
@@ -62,114 +63,9 @@ public class EnderecoService {
                     "Endereço inválido."
             );
         }
-
-        if (endereco.getNomeIdentificacao() == null ||
-                endereco.getNomeIdentificacao().trim().isEmpty()) {
-
-            throw new IllegalArgumentException(
-                    "Preencha o nome de identificação."
-            );
-        }
-
-        if (endereco.getTipoEndereco() == null ||
-                endereco.getTipoEndereco().getId() == null) {
-
-            throw new IllegalArgumentException(
-                    "Selecione o tipo de endereço."
-            );
-        }
-
-        if (endereco.getTipoResidencia() == null ||
-                endereco.getTipoResidencia().getId() == null) {
-
-            throw new IllegalArgumentException(
-                    "Selecione o tipo de residência."
-            );
-        }
-
-        if (endereco.getTipoLogradouro() == null ||
-                endereco.getTipoLogradouro().getId() == null) {
-
-            throw new IllegalArgumentException(
-                    "Selecione o tipo de logradouro."
-            );
-        }
-
-        if (endereco.getEstado() == null ||
-                endereco.getEstado().getId() == null) {
-
-            throw new IllegalArgumentException(
-                    "Selecione o estado."
-            );
-        }
-
-        if (endereco.getCep() == null ||
-                endereco.getCep().trim().isEmpty()) {
-
-            throw new IllegalArgumentException(
-                    "Preencha o CEP."
-            );
-        }
-
-        String cep = endereco.getCep()
-                .replaceAll("\\D", "");
-
-        if (cep.length() != 8) {
-            throw new IllegalArgumentException(
-                    "Digite um CEP válido."
-            );
-        }
-
-        if (endereco.getLogradouro() == null ||
-                endereco.getLogradouro().trim().isEmpty()) {
-
-            throw new IllegalArgumentException(
-                    "Preencha o logradouro."
-            );
-        }
-
-        if (endereco.getBairro() == null ||
-                endereco.getBairro().trim().isEmpty()) {
-
-            throw new IllegalArgumentException(
-                    "Preencha o nome do bairro."
-            );
-        }
-
-        if (endereco.getNumero() == null ||
-                endereco.getNumero().trim().isEmpty()) {
-
-            throw new IllegalArgumentException(
-                    "Preencha o número."
-            );
-        }
-
-        if (!endereco.getNumero().matches("\\d+")) {
-            throw new IllegalArgumentException(
-                    "O número do endereço deve conter apenas números."
-            );
-        }
-
-        if (endereco.getCidade() == null ||
-                endereco.getCidade().trim().isEmpty()) {
-
-            throw new IllegalArgumentException(
-                    "Preencha o nome da cidade."
-            );
-        }
-
-        if (endereco.getPais() == null ||
-                endereco.getPais().trim().isEmpty()) {
-
-            throw new IllegalArgumentException(
-                    "Preencha o nome do país."
-            );
-        }
     }
 
-    public void validarTiposEndereco(
-            List<Endereco> enderecos
-    ) {
+    public void validarTiposEndereco(List<EnderecoDTO> enderecos) {
 
         if (enderecos == null || enderecos.isEmpty()) {
             throw new IllegalArgumentException(
@@ -180,16 +76,13 @@ public class EnderecoService {
         boolean possuiCobranca = false;
         boolean possuiEntrega = false;
 
-        for (Endereco endereco : enderecos) {
+        for (EnderecoDTO endereco : enderecos) {
 
-            if (endereco == null ||
-                    endereco.getTipoEndereco() == null ||
-                    endereco.getTipoEndereco().getId() == null) {
+            if (endereco == null || endereco.getTipoEndereco() == null) {
                 continue;
             }
 
-            Long tipoId =
-                    endereco.getTipoEndereco().getId();
+            Long tipoId = endereco.getTipoEndereco();
 
             if (tipoId == 1L) {
                 possuiCobranca = true;
@@ -209,66 +102,169 @@ public class EnderecoService {
     }
 
     @Transactional
-    public void adicionar(Long clienteId, Endereco endereco) {
+    public void adicionar(Long clienteId, EnderecoDTO dto) {
 
         Cliente cliente = clienteRepository.findById(clienteId)
-                .orElseThrow(() ->
-                        new IllegalArgumentException(
-                                "Cliente não encontrado."
-                        )
-                );
+                .orElseThrow(() -> new IllegalArgumentException("Cliente não encontrado."));
 
-        validarEndereco(endereco);
+        Endereco endereco = new Endereco();
 
+        endereco.setNomeIdentificacao(dto.getNomeIdentificacao());
+        endereco.setCep(dto.getCep());
+        endereco.setLogradouro(dto.getLogradouro());
+        endereco.setBairro(dto.getBairro());
+        endereco.setNumero(dto.getNumero());
+        endereco.setCidade(dto.getCidade());
+        endereco.setPais(dto.getPais());
+        endereco.setObservacoes(dto.getObservacoes());
         endereco.setCliente(cliente);
 
         endereco.setTipoEndereco(
-                tipoEnderecoRepository.findById(
-                        endereco.getTipoEndereco().getId()
-                ).orElseThrow(() ->
-                        new IllegalArgumentException(
-                                "Tipo de endereço inválido."
-                        )
-                )
+                tipoEnderecoRepository.findById(dto.getTipoEndereco())
+                        .orElseThrow(() -> new IllegalArgumentException("Tipo de endereço inválido."))
         );
 
         endereco.setTipoResidencia(
-                tipoResidenciaRepository.findById(
-                        endereco.getTipoResidencia().getId()
-                ).orElseThrow(() ->
-                        new IllegalArgumentException(
-                                "Tipo de residência inválido."
-                        )
-                )
+                tipoResidenciaRepository.findById(dto.getTipoResidencia())
+                        .orElseThrow(() -> new IllegalArgumentException("Tipo de residência inválido."))
         );
 
         endereco.setTipoLogradouro(
-                tipoLogradouroRepository.findById(
-                        endereco.getTipoLogradouro().getId()
-                ).orElseThrow(() ->
-                        new IllegalArgumentException(
-                                "Tipo de logradouro inválido."
-                        )
-                )
+                tipoLogradouroRepository.findById(dto.getTipoLogradouro())
+                        .orElseThrow(() -> new IllegalArgumentException("Tipo de logradouro inválido."))
         );
 
         endereco.setEstado(
-                estadoRepository.findById(
-                        endereco.getEstado().getId()
-                ).orElseThrow(() ->
-                        new IllegalArgumentException(
-                                "Estado inválido."
-                        )
-                )
+                estadoRepository.findById(dto.getEstado())
+                        .orElseThrow(() -> new IllegalArgumentException("Estado inválido."))
         );
 
         cliente.getEnderecos().add(endereco);
-
-        enderecoRepository.save(endereco);
     }
 
     @Transactional
-    public void editar(Long clienteId, Long enderecoId, Endereco dados) {
+    public void editar(Long clienteId, Long enderecoId, EnderecoDTO dto) {
+
+        Cliente cliente = clienteRepository.findById(clienteId)
+                .orElseThrow(() -> new IllegalArgumentException("Cliente não encontrado."));
+
+        Endereco endereco = cliente.getEnderecos()
+                .stream()
+                .filter(e -> e.getId().equals(enderecoId))
+                .findFirst()
+                .orElseThrow(() ->
+                        new IllegalArgumentException(
+                                "Esse endereço não pertence ao cliente."
+                        )
+                );
+
+        endereco.setNomeIdentificacao(dto.getNomeIdentificacao());
+        endereco.setCep(dto.getCep());
+        endereco.setLogradouro(dto.getLogradouro());
+        endereco.setBairro(dto.getBairro());
+        endereco.setNumero(dto.getNumero());
+        endereco.setCidade(dto.getCidade());
+        endereco.setPais(dto.getPais());
+        endereco.setObservacoes(dto.getObservacoes());
+
+        endereco.setTipoEndereco(
+                tipoEnderecoRepository.findById(dto.getTipoEndereco())
+                        .orElseThrow(() ->
+                                new IllegalArgumentException(
+                                        "Tipo de endereço inválido."
+                                )
+                        )
+        );
+
+        endereco.setTipoResidencia(
+                tipoResidenciaRepository.findById(dto.getTipoResidencia())
+                        .orElseThrow(() ->
+                                new IllegalArgumentException(
+                                        "Tipo de residência inválido."
+                                )
+                        )
+        );
+
+        endereco.setTipoLogradouro(
+                tipoLogradouroRepository.findById(dto.getTipoLogradouro())
+                        .orElseThrow(() ->
+                                new IllegalArgumentException(
+                                        "Tipo de logradouro inválido."
+                                )
+                        )
+        );
+
+        endereco.setEstado(
+                estadoRepository.findById(dto.getEstado())
+                        .orElseThrow(() ->
+                                new IllegalArgumentException(
+                                        "Estado inválido."
+                                )
+                        )
+        );
+    }
+
+    public void adicionarAoCliente(
+            Cliente cliente,
+            List<EnderecoDTO> enderecos
+    ) {
+
+        for (EnderecoDTO dto : enderecos) {
+
+            Endereco endereco = new Endereco();
+
+            endereco.setNomeIdentificacao(dto.getNomeIdentificacao());
+            endereco.setCep(dto.getCep());
+            endereco.setLogradouro(dto.getLogradouro());
+            endereco.setBairro(dto.getBairro());
+            endereco.setNumero(dto.getNumero());
+            endereco.setCidade(dto.getCidade());
+            endereco.setPais(dto.getPais());
+            endereco.setObservacoes(dto.getObservacoes());
+            endereco.setCliente(cliente);
+
+            endereco.setTipoEndereco(
+                    tipoEnderecoRepository.findById(dto.getTipoEndereco())
+                            .orElseThrow(() ->
+                                    new IllegalArgumentException(
+                                            "Tipo de endereço inválido."
+                                    )
+                            )
+            );
+
+            endereco.setTipoResidencia(
+                    tipoResidenciaRepository.findById(dto.getTipoResidencia())
+                            .orElseThrow(() ->
+                                    new IllegalArgumentException(
+                                            "Tipo de residência inválido."
+                                    )
+                            )
+            );
+
+            endereco.setTipoLogradouro(
+                    tipoLogradouroRepository.findById(dto.getTipoLogradouro())
+                            .orElseThrow(() ->
+                                    new IllegalArgumentException(
+                                            "Tipo de logradouro inválido."
+                                    )
+                            )
+            );
+
+            endereco.setEstado(
+                    estadoRepository.findById(dto.getEstado())
+                            .orElseThrow(() ->
+                                    new IllegalArgumentException(
+                                            "Estado inválido."
+                                    )
+                            )
+            );
+
+            cliente.getEnderecos().add(endereco);
+        }
+    }
+
+    @Transactional
+    public void excluir(Long clienteId, Long enderecoId) {
 
         Cliente cliente = clienteRepository.findById(clienteId)
                 .orElseThrow(() ->
@@ -287,124 +283,6 @@ public class EnderecoService {
                         )
                 );
 
-        validarEndereco(dados);
-
-        endereco.setNomeIdentificacao(
-                dados.getNomeIdentificacao()
-        );
-
-        endereco.setTipoEndereco(
-                tipoEnderecoRepository.findById(
-                        dados.getTipoEndereco().getId()
-                ).orElseThrow(() ->
-                        new IllegalArgumentException(
-                                "Tipo de endereço inválido."
-                        )
-                )
-        );
-
-        endereco.setTipoResidencia(
-                tipoResidenciaRepository.findById(
-                        dados.getTipoResidencia().getId()
-                ).orElseThrow(() ->
-                        new IllegalArgumentException(
-                                "Tipo de residência inválido."
-                        )
-                )
-        );
-
-        endereco.setTipoLogradouro(
-                tipoLogradouroRepository.findById(
-                        dados.getTipoLogradouro().getId()
-                ).orElseThrow(() ->
-                        new IllegalArgumentException(
-                                "Tipo de logradouro inválido."
-                        )
-                )
-        );
-
-        endereco.setCep(dados.getCep());
-        endereco.setLogradouro(dados.getLogradouro());
-        endereco.setBairro(dados.getBairro());
-        endereco.setNumero(dados.getNumero());
-        endereco.setEstado(
-                estadoRepository.findById(
-                        dados.getEstado().getId()
-                ).orElseThrow(() ->
-                        new IllegalArgumentException(
-                                "Estado inválido."
-                        )
-                )
-        );
-        endereco.setCidade(dados.getCidade());
-        endereco.setPais(dados.getPais());
-        endereco.setObservacoes(dados.getObservacoes());
-
-        enderecoRepository.save(endereco);
-    }
-
-    public void adicionarAoCliente(
-            Cliente cliente,
-            List<Endereco> enderecos
-    ) {
-
-        for (Endereco endereco : enderecos) {
-
-            endereco.setCliente(cliente);
-
-            endereco.setTipoEndereco(
-                    tipoEnderecoRepository.findById(
-                            endereco.getTipoEndereco().getId()
-                    ).orElseThrow(() ->
-                            new IllegalArgumentException(
-                                    "Tipo de endereço inválido."
-                            )
-                    )
-            );
-
-            endereco.setTipoResidencia(
-                    tipoResidenciaRepository.findById(
-                            endereco.getTipoResidencia().getId()
-                    ).orElseThrow(() ->
-                            new IllegalArgumentException(
-                                    "Tipo de residência inválido."
-                            )
-                    )
-            );
-
-            endereco.setTipoLogradouro(
-                    tipoLogradouroRepository.findById(
-                            endereco.getTipoLogradouro().getId()
-                    ).orElseThrow(() ->
-                            new IllegalArgumentException(
-                                    "Tipo de logradouro inválido."
-                            )
-                    )
-            );
-
-            endereco.setEstado(
-                    estadoRepository.findById(
-                            endereco.getEstado().getId()
-                    ).orElseThrow(() ->
-                            new IllegalArgumentException(
-                                    "Estado inválido."
-                            )
-                    )
-            );
-
-            cliente.getEnderecos().add(endereco);
-        }
-    }
-
-    public void excluir(Long id) {
-
-        Endereco endereco = enderecoRepository.findById(id)
-                .orElseThrow(() ->
-                        new IllegalArgumentException(
-                                "Endereço não encontrado."
-                        )
-                );
-
-        enderecoRepository.delete(endereco);
+        cliente.getEnderecos().remove(endereco);
     }
 }

@@ -9,6 +9,7 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Past;
+import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -20,8 +21,8 @@ import java.util.List;
 @Table(name = "cliente")
 @Getter
 @Setter
-
 public class Cliente {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -30,29 +31,21 @@ public class Cliente {
     private String codigo;
 
     @Column(nullable = false, length = 150)
-    @NotBlank(message = "O nome é obrigatório.")
     private String nome;
 
     @Column(nullable = false, unique = true, length = 14)
-    @NotBlank(message = "O CPF é obrigatório")
     private String cpf;
 
     @Column(nullable = false, length = 15)
-    @NotBlank(message = "O telefone é obrigatório")
     private String telefone;
 
     @Column(nullable = false)
-    @NotNull(message = "A data de nascimento é obrigatória")
-    @Past(message = "A data de nascimento deve ser anterior à data atual.")
     private LocalDate dataNascimento;
 
-    @Column(nullable = false, unique = true)
-    @NotBlank(message = "O e-mail é obrigatório")
-    @Email(message = "Informe um e-mail válido")
+    @Column(nullable = false, unique = true, length = 254)
     private String email;
 
-    @Column(nullable = false)
-    @NotBlank(message = "A senha é obrigatório")
+    @Column(nullable = false, length = 60)
     private String senha;
 
     @Column(nullable = false)
@@ -67,7 +60,6 @@ public class Cliente {
     @Column(length = 500)
     private String justificativaAtivacao;
 
-    // Um cliente pode ter vários endereços
     @OneToMany(
             mappedBy = "cliente",
             cascade = CascadeType.ALL,
@@ -75,11 +67,10 @@ public class Cliente {
     )
     private List<Endereco> enderecos = new ArrayList<>();
 
-    // Um cliente pode ter vários cartões
     @OneToMany(
             mappedBy = "cliente",
-            cascade = CascadeType.ALL, // Operacoes feitas no cliente podem ser propagadas para os cartoes relacionados que nem salvar o cadastro
-            orphanRemoval = true // Se um cartao for removido remove no banco
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
     )
     private List<Cartao> cartoes = new ArrayList<>();
 
@@ -99,8 +90,6 @@ public class Cliente {
     @JoinColumn(name = "motivo_ativacao_id")
     private AtivarMotivo motivoAtivacao;
 
-    // Construtor vazio necessário para o hibernate
     public Cliente() {
     }
 }
-

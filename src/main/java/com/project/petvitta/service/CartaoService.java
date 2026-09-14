@@ -1,5 +1,6 @@
 package com.project.petvitta.service;
 
+import com.project.petvitta.dto.CartaoDTO;
 import com.project.petvitta.model.Cartao;
 import com.project.petvitta.model.Cliente;
 import com.project.petvitta.model.dominio.BandeiraCartao;
@@ -13,6 +14,8 @@ import java.util.List;
 
 @Service
 public class CartaoService {
+
+    // Final porque depois de receberem um objeto não poderão apontar para outro objeto
     private final CartaoRepository cartaoRepository;
     private final BandeiraCartaoRepository bandeiraCartaoRepository;
     private final ClienteRepository clienteRepository;
@@ -31,74 +34,17 @@ public class CartaoService {
         return bandeiraCartaoRepository.findAll();
     }
 
-    public void validarCartao(Cartao cartao) {
+    public void validarCartao(CartaoDTO cartao) {
 
         if (cartao == null) {
-            throw new IllegalArgumentException(
-                    "Cartão inválido."
-            );
+            throw new IllegalArgumentException("Cartão inválido.");
         }
 
-        if (cartao.getNumero() == null ||
-                cartao.getNumero().trim().isEmpty()) {
-
-            throw new IllegalArgumentException(
-                    "Preencha o número do cartão."
-            );
-        }
-
-        String numero = cartao.getNumero()
-                .replaceAll("\\D", "");
+        String numero = cartao.getNumero().replaceAll("\\D", "");
 
         if (!numeroCartaoValido(numero)) {
             throw new IllegalArgumentException(
                     "Digite um número de cartão válido."
-            );
-        }
-
-        if (cartao.getNomeImpresso() == null ||
-                cartao.getNomeImpresso().trim().isEmpty()) {
-
-            throw new IllegalArgumentException(
-                    "Preencha o nome do cartão."
-            );
-        }
-
-        if (cartao.getNomeImpresso().trim().length() < 3) {
-            throw new IllegalArgumentException(
-                    "Digite um nome com pelo menos 3 caracteres."
-            );
-        }
-
-        if (!cartao.getNomeImpresso()
-                .matches("[A-Za-zÀ-ÿ\\s]+")) {
-
-            throw new IllegalArgumentException(
-                    "O nome do cartão deve conter apenas letras."
-            );
-        }
-
-        if (cartao.getBandeira() == null ||
-                cartao.getBandeira().getId() == null) {
-
-            throw new IllegalArgumentException(
-                    "Selecione a bandeira do cartão."
-            );
-        }
-
-        if (cartao.getCodigoSeguranca() == null ||
-                cartao.getCodigoSeguranca().trim().isEmpty()) {
-
-            throw new IllegalArgumentException(
-                    "Preencha o CVV."
-            );
-        }
-
-        if (!cartao.getCodigoSeguranca()
-                .matches("\\d{3,4}")) {
-
-            throw new IllegalArgumentException(
-                    "Digite um CVV válido."
             );
         }
     }
@@ -113,11 +59,9 @@ public class CartaoService {
 
         for (int i = 0; i < numero.length(); i++) {
 
-            int digito =
-                    Character.getNumericValue(numero.charAt(i));
+            int digito = Character.getNumericValue(numero.charAt(i));
 
             if (i % 2 == 0) {
-
                 digito *= 2;
 
                 if (digito > 9) {
@@ -133,7 +77,7 @@ public class CartaoService {
 
     public void adicionarAoCliente(
             Cliente cliente,
-            List<Cartao> cartoes
+            List<CartaoDTO> cartoes
     ) {
 
         if (cartoes == null || cartoes.isEmpty()) {
@@ -142,25 +86,31 @@ public class CartaoService {
 
         boolean primeiroCartao = cliente.getCartoes().isEmpty();
 
-        for (Cartao cartao : cartoes) {
+        for (CartaoDTO dto : cartoes) {
 
+            validarCartao(dto);
+
+            Cartao cartao = new Cartao();
+
+            cartao.setNumero(dto.getNumero());
+            cartao.setNomeImpresso(dto.getNomeImpresso());
+            cartao.setCodigoSeguranca(dto.getCodigoSeguranca());
             cartao.setCliente(cliente);
 
             cartao.setBandeira(
-                    bandeiraCartaoRepository.findById(
-                            cartao.getBandeira().getId()
-                    ).orElseThrow(() ->
-                            new IllegalArgumentException(
-                                    "Bandeira de cartão inválida."
+                    bandeiraCartaoRepository.findById(dto.getBandeira())
+                            .orElseThrow(() ->
+                                    new IllegalArgumentException(
+                                            "Bandeira de cartão inválida."
+                                    )
                             )
-                    )
             );
 
             if (primeiroCartao) {
                 cartao.setPreferencial(true);
                 primeiroCartao = false;
             } else {
-                cartao.setPreferencial(false);
+                cartao.setPreferencial(dto.isPreferencial());
             }
 
             cliente.getCartoes().add(cartao);
@@ -168,7 +118,10 @@ public class CartaoService {
     }
 
     @Transactional
-    public void adicionar(Long clienteId, Cartao cartao, boolean preferencial) {
+    public void adicionar(
+            Long clienteId,
+            CartaoDTO dto
+    ) {
 
         Cliente cliente = clienteRepository.findById(clienteId)
                 .orElseThrow(() ->
@@ -177,32 +130,37 @@ public class CartaoService {
                         )
                 );
 
-        validarCartao(cartao);
+        validarCartao(dto);
 
         BandeiraCartao bandeira = bandeiraCartaoRepository
-                .findById(cartao.getBandeira().getId())
+                .findById(dto.getBandeira())
                 .orElseThrow(() ->
                         new IllegalArgumentException(
                                 "Bandeira de cartão inválida."
                         )
                 );
 
-        cartao.setCliente(cliente);
+        Cartao cartao = new Cartao();
+
+        cartao.setNumero(dto.getNumero());
+        cartao.setNomeImpresso(dto.getNomeImpresso());
+        cartao.setCodigoSeguranca(dto.getCodigoSeguranca());
         cartao.setBandeira(bandeira);
+        cartao.setCliente(cliente);
 
         boolean primeiroCartao = cliente.getCartoes().isEmpty();
 
         if (primeiroCartao) {
-            preferencial = true;
+            dto.setPreferencial(true);
         }
 
-        if (preferencial) {
+        if (dto.isPreferencial()) {
             cliente.getCartoes().forEach(c ->
                     c.setPreferencial(false)
             );
         }
 
-        cartao.setPreferencial(preferencial);
+        cartao.setPreferencial(dto.isPreferencial());
 
         cliente.getCartoes().add(cartao);
 
@@ -238,15 +196,39 @@ public class CartaoService {
         cartaoRepository.save(cartao);
     }
 
-    public void excluir(Long id) {
+    @Transactional
+    public void excluirCartao(Long clienteId, Long cartaoId) {
 
-        Cartao cartao = cartaoRepository.findById(id)
+        Cliente cliente = clienteRepository.findById(clienteId)
                 .orElseThrow(() ->
                         new IllegalArgumentException(
-                                "Cartão não encontrado."
+                                "Cliente não encontrado."
                         )
                 );
 
-        cartaoRepository.delete(cartao);
+        Cartao cartao = cliente.getCartoes()
+                .stream()
+                .filter(c -> c.getId().equals(cartaoId))
+                .findFirst()
+                .orElseThrow(() ->
+                        new IllegalArgumentException(
+                                "Esse cartão não pertence ao cliente."
+                        )
+                );
+
+        boolean eraPreferencial = cartao.isPreferencial();
+
+        cliente.getCartoes().remove(cartao);
+
+        if (eraPreferencial && !cliente.getCartoes().isEmpty()) {
+
+            cliente.getCartoes().forEach(c ->
+                    c.setPreferencial(false)
+            );
+
+            Cartao novoPreferencial = cliente.getCartoes().get(0);
+
+            novoPreferencial.setPreferencial(true);
+        }
     }
 }

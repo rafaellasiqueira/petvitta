@@ -1,9 +1,9 @@
 package com.project.petvitta.service;
 
 import com.project.petvitta.dto.ClienteCadastroDTO;
-import com.project.petvitta.model.Cartao;
+import com.project.petvitta.dto.ClienteEdicaoDTO;
+import com.project.petvitta.dto.AlterarSenhaDTO;
 import com.project.petvitta.model.Cliente;
-import com.project.petvitta.model.Endereco;
 import com.project.petvitta.model.dominio.AtivarMotivo;
 import com.project.petvitta.model.dominio.Genero;
 import com.project.petvitta.model.dominio.InativarMotivo;
@@ -14,12 +14,10 @@ import com.project.petvitta.repository.dominio.GeneroRepository;
 import com.project.petvitta.repository.dominio.InativarMotivoRepository;
 import com.project.petvitta.repository.dominio.TipoTelefoneRepository;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Pattern;
 
 @Service
 public class ClienteService {
@@ -71,47 +69,27 @@ public class ClienteService {
             );
         }
 
-        // =========================
-        // DADOS PESSOAIS
-        // =========================
-
-        validarNome(dto.getNome());
+        // CPF
         validarCpf(dto.getCpf());
-        validarTelefone(dto.getTelefone(), dto.getTipoTelefone());
-        validarDataNascimento(dto.getDataNascimento());
-        validarEmail(dto.getEmail());
 
-        if (dto.getGenero() == null) {
-            throw new IllegalArgumentException(
-                    "Selecione o tipo de gênero."
-            );
-        }
+        // Telefone
+        validarTelefone(
+                dto.getTelefone(),
+                dto.getTipoTelefone()
+        );
 
-        // =========================
-        // SENHA
-        // =========================
-
+        // Senha
         senhaService.validarSenha(
                 dto.getSenha(),
                 dto.getConfirmarSenha()
         );
 
-        // =========================
-        // ENDEREÇOS
-        // =========================
-
+        // Endereços
         enderecoService.validarTiposEndereco(
                 dto.getEnderecos()
         );
 
-        for (var endereco : dto.getEnderecos()) {
-            enderecoService.validarEndereco(endereco);
-        }
-
-        // =========================
-        // CARTÕES
-        // =========================
-
+        // Cartões
         if (dto.getCartoes() != null) {
 
             int preferenciais = 0;
@@ -132,10 +110,7 @@ public class ClienteService {
             }
         }
 
-        // =========================
-        // CPF E E-MAIL
-        // =========================
-
+        // CPF e e-mail
         if (clienteRepository.findByCpf(dto.getCpf()).isPresent()) {
             throw new IllegalArgumentException(
                     "CPF já cadastrado."
@@ -148,11 +123,7 @@ public class ClienteService {
             );
         }
 
-        // =========================
-// CRIA CLIENTE
-// =========================
-
-
+        // Busca gênero
         Genero genero = generoRepository
                 .findById(dto.getGenero())
                 .orElseThrow(() ->
@@ -161,6 +132,7 @@ public class ClienteService {
                         )
                 );
 
+        // Busca tipo de telefone
         TipoTelefone tipoTelefone = tipoTelefoneRepository
                 .findById(dto.getTipoTelefone())
                 .orElseThrow(() ->
@@ -187,18 +159,11 @@ public class ClienteService {
         cliente.setRanking(0);
         cliente.setCodigo(gerarCodigo());
 
-        // =========================
-        // SALVA ENDEREÇOS
-        // =========================
-
+        // Converte DTOs em entidades
         enderecoService.adicionarAoCliente(
                 cliente,
                 dto.getEnderecos()
         );
-
-        // =========================
-        // SALVA CARTÕES
-        // =========================
 
         cartaoService.adicionarAoCliente(
                 cliente,
@@ -224,10 +189,13 @@ public class ClienteService {
     }
 
     public List<Cliente> buscarPorNome(String nome) {
+
         if (nome == null || nome.trim().isEmpty()) {
             return listarTodos();
         }
-        return clienteRepository.findByNomeContainingIgnoreCase(nome.trim());
+
+        return clienteRepository
+                .findByNomeContainingIgnoreCase(nome.trim());
     }
 
     public List<Cliente> listarTodos() {
@@ -252,6 +220,7 @@ public class ClienteService {
             boolean encontrou = true;
 
             if (nome != null && !nome.isEmpty()) {
+
                 if (!cliente.getNome().toLowerCase()
                         .contains(nome.toLowerCase())) {
 
@@ -260,12 +229,14 @@ public class ClienteService {
             }
 
             if (cpf != null && !cpf.isEmpty()) {
+
                 if (!cliente.getCpf().contains(cpf)) {
                     encontrou = false;
                 }
             }
 
             if (email != null && !email.isEmpty()) {
+
                 if (!cliente.getEmail().toLowerCase()
                         .contains(email.toLowerCase())) {
 
@@ -274,12 +245,14 @@ public class ClienteService {
             }
 
             if (telefone != null && !telefone.isEmpty()) {
+
                 if (!cliente.getTelefone().contains(telefone)) {
                     encontrou = false;
                 }
             }
 
             if (dataNascimento != null) {
+
                 if (!cliente.getDataNascimento()
                         .equals(dataNascimento)) {
 
@@ -288,12 +261,16 @@ public class ClienteService {
             }
 
             if (genero != null) {
-                if (!cliente.getGenero().getId().equals(genero)) {
+
+                if (!cliente.getGenero().getId()
+                        .equals(genero)) {
+
                     encontrou = false;
                 }
             }
 
             if (status != null) {
+
                 if (cliente.isAtivo() != status) {
                     encontrou = false;
                 }
@@ -309,22 +286,18 @@ public class ClienteService {
 
     public Cliente alterar(
             Long id,
-            String nome,
-            String telefone,
-            Long generoId,
-            Long tipoTelefoneId
+            ClienteEdicaoDTO dto
     ) {
+
         Cliente cliente = buscarPorId(id);
 
-        validarNome(nome);
-
         validarTelefone(
-                telefone,
-                tipoTelefoneId
+                dto.getTelefone(),
+                dto.getTipoTelefone()
         );
 
         Genero genero = generoRepository
-                .findById(generoId)
+                .findById(dto.getGenero())
                 .orElseThrow(() ->
                         new IllegalArgumentException(
                                 "Gênero inválido."
@@ -332,15 +305,15 @@ public class ClienteService {
                 );
 
         TipoTelefone tipoTelefone = tipoTelefoneRepository
-                .findById(tipoTelefoneId)
+                .findById(dto.getTipoTelefone())
                 .orElseThrow(() ->
                         new IllegalArgumentException(
                                 "Tipo de telefone inválido."
                         )
                 );
 
-        cliente.setNome(nome);
-        cliente.setTelefone(telefone);
+        cliente.setNome(dto.getNome());
+        cliente.setTelefone(dto.getTelefone());
         cliente.setGenero(genero);
         cliente.setTipoTelefone(tipoTelefone);
 
@@ -349,21 +322,13 @@ public class ClienteService {
 
     public void alterarSenha(
             Long id,
-            String senhaAtual,
-            String novaSenha,
-            String confirmarSenha
+            AlterarSenhaDTO dto
     ) {
 
         Cliente cliente = buscarPorId(id);
 
-        if (senhaAtual == null || senhaAtual.isEmpty()) {
-            throw new IllegalArgumentException(
-                    "Preencha a senha atual."
-            );
-        }
-
         if (!senhaService.verificarSenha(
-                senhaAtual,
+                dto.getSenhaAtual(),
                 cliente.getSenha()
         )) {
             throw new IllegalArgumentException(
@@ -372,12 +337,14 @@ public class ClienteService {
         }
 
         senhaService.validarSenha(
-                novaSenha,
-                confirmarSenha
+                dto.getNovaSenha(),
+                dto.getConfirmarSenha()
         );
 
         cliente.setSenha(
-                senhaService.criptografar(novaSenha)
+                senhaService.criptografar(
+                        dto.getNovaSenha()
+                )
         );
 
         clienteRepository.save(cliente);
@@ -407,7 +374,9 @@ public class ClienteService {
                         )
                 );
 
-        if (justificativa == null || justificativa.trim().isEmpty()) {
+        if (justificativa == null ||
+                justificativa.trim().isEmpty()) {
+
             throw new IllegalArgumentException(
                     "Informe uma justificativa."
             );
@@ -438,7 +407,9 @@ public class ClienteService {
                         )
                 );
 
-        if (justificativa == null || justificativa.trim().isEmpty()) {
+        if (justificativa == null ||
+                justificativa.trim().isEmpty()) {
+
             throw new IllegalArgumentException(
                     "Informe uma justificativa."
             );
@@ -453,90 +424,19 @@ public class ClienteService {
         clienteRepository.save(cliente);
     }
 
-    @Transactional
-    public void excluirEndereco(Long clienteId, Long enderecoId) {
-
-        Cliente cliente = buscarPorId(clienteId);
-
-        Endereco endereco = cliente.getEnderecos()
-                .stream()
-                .filter(e -> e.getId().equals(enderecoId))
-                .findFirst()
-                .orElseThrow(() ->
-                        new IllegalArgumentException(
-                                "Esse endereço não pertence ao cliente."
-                        )
-                );
-
-        cliente.getEnderecos().remove(endereco);
-    }
-
-
-    @Transactional
-    public void excluirCartao(Long clienteId, Long cartaoId) {
-
-        Cliente cliente = buscarPorId(clienteId);
-
-        Cartao cartao = cliente.getCartoes()
-                .stream()
-                .filter(c -> c.getId().equals(cartaoId))
-                .findFirst()
-                .orElseThrow(() ->
-                        new IllegalArgumentException(
-                                "Esse cartão não pertence ao cliente."
-                        )
-                );
-
-        boolean eraPreferencial = cartao.isPreferencial();
-
-        // Remove o cartão
-        cliente.getCartoes().remove(cartao);
-
-        // Se era o preferencial, escolhe outro
-        if (eraPreferencial && !cliente.getCartoes().isEmpty()) {
-
-            // Primeiro deixa todos como não preferenciais
-            cliente.getCartoes().forEach(c ->
-                    c.setPreferencial(false)
-            );
-
-            // Define o primeiro como preferencial
-            Cartao novoPreferencial =
-                    cliente.getCartoes().get(0);
-
-            novoPreferencial.setPreferencial(true);
-        }
-    }
-
-
-    private void validarNome(String nome) {
-
-        if (nome == null || nome.trim().isEmpty()) {
-            throw new IllegalArgumentException("Preencha o nome.");
-        }
-
-        if (nome.trim().length() < 3) {
-            throw new IllegalArgumentException(
-                    "Digite um nome com pelo menos 3 caracteres."
-            );
-        }
-
-        if (!nome.matches("[A-Za-zÀ-ÿ\\s]+")) {
-            throw new IllegalArgumentException(
-                    "O nome deve conter apenas letras."
-            );
-        }
-    }
-
     private void validarCpf(String cpf) {
 
         if (cpf == null || cpf.trim().isEmpty()) {
-            throw new IllegalArgumentException("Preencha o CPF.");
+            throw new IllegalArgumentException(
+                    "Preencha o CPF."
+            );
         }
 
         cpf = cpf.replaceAll("\\D", "");
 
-        if (cpf.length() != 11 || cpf.matches("(\\d)\\1{10}")) {
+        if (cpf.length() != 11 ||
+                cpf.matches("(\\d)\\1{10}")) {
+
             throw new IllegalArgumentException(
                     "Digite um CPF válido."
             );
@@ -545,8 +445,10 @@ public class ClienteService {
         int soma = 0;
 
         for (int i = 0; i < 9; i++) {
-            soma += Character.getNumericValue(cpf.charAt(i))
-                    * (10 - i);
+
+            soma += Character.getNumericValue(
+                    cpf.charAt(i)
+            ) * (10 - i);
         }
 
         int resto = soma % 11;
@@ -556,7 +458,9 @@ public class ClienteService {
             resultado = 0;
         }
 
-        if (resultado != Character.getNumericValue(cpf.charAt(9))) {
+        if (resultado != Character.getNumericValue(
+                cpf.charAt(9)
+        )) {
             throw new IllegalArgumentException(
                     "Digite um CPF válido."
             );
@@ -565,8 +469,10 @@ public class ClienteService {
         soma = 0;
 
         for (int i = 0; i < 10; i++) {
-            soma += Character.getNumericValue(cpf.charAt(i))
-                    * (11 - i);
+
+            soma += Character.getNumericValue(
+                    cpf.charAt(i)
+            ) * (11 - i);
         }
 
         resto = soma % 11;
@@ -576,7 +482,9 @@ public class ClienteService {
             resultado = 0;
         }
 
-        if (resultado != Character.getNumericValue(cpf.charAt(10))) {
+        if (resultado != Character.getNumericValue(
+                cpf.charAt(10)
+        )) {
             throw new IllegalArgumentException(
                     "Digite um CPF válido."
             );
@@ -588,7 +496,9 @@ public class ClienteService {
             Long tipoTelefone
     ) {
 
-        if (telefone == null || telefone.trim().isEmpty()) {
+        if (telefone == null ||
+                telefone.trim().isEmpty()) {
+
             throw new IllegalArgumentException(
                     "Preencha o telefone."
             );
@@ -617,41 +527,6 @@ public class ClienteService {
                         "Digite o telefone completo."
                 );
             }
-        }
-    }
-
-    private void validarDataNascimento(
-            LocalDate dataNascimento
-    ) {
-
-        if (dataNascimento == null) {
-            throw new IllegalArgumentException(
-                    "Preencha a data de nascimento."
-            );
-        }
-
-        if (dataNascimento.isAfter(LocalDate.now())) {
-            throw new IllegalArgumentException(
-                    "A data não pode ser futura."
-            );
-        }
-    }
-
-    private void validarEmail(String email) {
-
-        if (email == null || email.trim().isEmpty()) {
-            throw new IllegalArgumentException(
-                    "Preencha o e-mail."
-            );
-        }
-
-        String regex =
-                "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$";
-
-        if (!Pattern.matches(regex, email)) {
-            throw new IllegalArgumentException(
-                    "Digite um e-mail válido."
-            );
         }
     }
 

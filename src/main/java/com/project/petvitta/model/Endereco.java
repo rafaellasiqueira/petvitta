@@ -6,6 +6,7 @@ import com.project.petvitta.model.dominio.TipoLogradouro;
 import com.project.petvitta.model.dominio.TipoResidencia;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -13,38 +14,30 @@ import lombok.Setter;
 @Table(name = "endereco")
 @Getter
 @Setter
-
 public class Endereco {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(nullable = false, length = 20)
-    @NotBlank(message = "O nome de indentificação é obrigatório.")
     private String nomeIdentificacao;
 
     @Column(nullable = false, length = 9)
-    @NotBlank(message = "O CEP é obrigatório.")
     private String cep;
 
-    @Column(nullable = false)
-    @NotBlank(message = "O logradouro é obrigatório.")
+    @Column(nullable = false, length = 150)
     private String logradouro;
 
-    @Column(nullable = false)
-    @NotBlank(message = "O bairro é obrigatório.")
+    @Column(nullable = false, length = 150)
     private String bairro;
 
-    @Column(nullable = false)
-    @NotBlank(message = "O número é obrigatório.")
+    @Column(nullable = false, length = 20)
     private String numero;
 
-    @Column(nullable = false)
-    @NotBlank(message = "A cidade é obrigatória.")
+    @Column(nullable = false, length = 150)
     private String cidade;
 
-    @Column(nullable = false)
-    @NotBlank(message = "O país é obrigatório.")
+    @Column(nullable = false, length = 50)
     private String pais;
 
     @Column(length = 500)
@@ -70,8 +63,6 @@ public class Endereco {
     @JoinColumn(name = "estado_id", nullable = false)
     private Estado estado;
 
-    // Construtor vazio necessário para o JPA
     public Endereco() {
     }
-
 }
