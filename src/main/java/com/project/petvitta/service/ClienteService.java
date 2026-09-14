@@ -81,6 +81,12 @@ public class ClienteService {
         validarDataNascimento(dto.getDataNascimento());
         validarEmail(dto.getEmail());
 
+        if (dto.getGenero() == null) {
+            throw new IllegalArgumentException(
+                    "Selecione o tipo de gênero."
+            );
+        }
+
         // =========================
         // SENHA
         // =========================
@@ -107,8 +113,22 @@ public class ClienteService {
         // =========================
 
         if (dto.getCartoes() != null) {
+
+            int preferenciais = 0;
+
             for (var cartao : dto.getCartoes()) {
+
                 cartaoService.validarCartao(cartao);
+
+                if (cartao.isPreferencial()) {
+                    preferenciais++;
+                }
+            }
+
+            if (preferenciais > 1) {
+                throw new IllegalArgumentException(
+                        "Somente um cartão pode ser preferencial."
+                );
             }
         }
 
@@ -131,6 +151,7 @@ public class ClienteService {
         // =========================
 // CRIA CLIENTE
 // =========================
+
 
         Genero genero = generoRepository
                 .findById(dto.getGenero())

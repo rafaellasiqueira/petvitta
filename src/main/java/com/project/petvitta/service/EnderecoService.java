@@ -63,6 +63,14 @@ public class EnderecoService {
             );
         }
 
+        if (endereco.getNomeIdentificacao() == null ||
+                endereco.getNomeIdentificacao().trim().isEmpty()) {
+
+            throw new IllegalArgumentException(
+                    "Preencha o nome de identificação."
+            );
+        }
+
         if (endereco.getTipoEndereco() == null ||
                 endereco.getTipoEndereco().getId() == null) {
 

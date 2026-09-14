@@ -2,6 +2,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const form = document.getElementById('formCadastroCliente');
 
+    document.querySelectorAll('select').forEach(function (select) {
+        select.selectedIndex = 0;
+    });
+
     // Toast
     const toast = document.getElementById('toast');
 
@@ -390,7 +394,23 @@ document.addEventListener('DOMContentLoaded', () => {
         configurarCartao(cartao);
     });
 
+    // Garantir que somente um cartão seja preferencial
+    document.addEventListener('change', function (event) {
+        if (event.target.type === 'radio') {
+            document.querySelectorAll('.preferencial input').forEach(radio => {
+                radio.checked = false;
+            });
+
+            event.target.checked = true;
+        }
+    });
+
     // Impedir envio se houver erro
+    const inputTipoTelefone = document.getElementById('tipoTelefone');
+    const erroTipoTelefone = document.getElementById('erroTipoTelefone');
+    const inputGenero = document.getElementById('genero');
+    const erroGenero = document.getElementById('erroGenero');
+
     form.addEventListener('submit', function (event) {
 
         let formularioValido = true;
@@ -407,9 +427,21 @@ document.addEventListener('DOMContentLoaded', () => {
             formularioValido = false;
         }
 
+        // Tipo Telefone
+        if (inputTipoTelefone.value.trim() === '') {
+            erroTipoTelefone.textContent = 'Selecione o tipo de telefone.';
+            formularioValido = false;
+        }
+
         // Telefone
         if (inputTelefone.value.trim() === '') {
             erroTelefone.textContent = 'Preencha o telefone.';
+            formularioValido = false;
+        }
+
+        // Gênero
+        if (inputGenero.value.trim() === '') {
+            erroGenero.textContent = 'Selecione o gênero.';
             formularioValido = false;
         }
 
@@ -644,10 +676,10 @@ document.addEventListener('DOMContentLoaded', () => {
         cartao.querySelector('.btn-remover-item').style.display = 'block';
 
         cartao.querySelectorAll('input').forEach(function (input) {
-            input.value = '';
-
             if (input.type === 'radio') {
                 input.checked = false;
+            } else {
+                input.value = '';
             }
         });
 
