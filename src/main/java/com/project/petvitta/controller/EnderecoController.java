@@ -57,7 +57,7 @@ public class EnderecoController {
 
             redirectAttributes.addFlashAttribute(
                     "mensagemToast",
-                    "Endereço adicionado com sucesso."
+                    "Endereço adicionado com sucesso!"
             );
 
         } catch (IllegalArgumentException e) {
@@ -114,7 +114,7 @@ public class EnderecoController {
 
             redirectAttributes.addFlashAttribute(
                     "mensagemToast",
-                    "Endereço alterado com sucesso."
+                    "Endereço alterado com sucesso!"
             );
 
         } catch (IllegalArgumentException e) {
@@ -153,7 +153,7 @@ public class EnderecoController {
 
             redirectAttributes.addFlashAttribute(
                     "mensagemToast",
-                    "Endereço excluído com sucesso."
+                    "Endereço excluído com sucesso!"
             );
 
         } catch (IllegalArgumentException e) {

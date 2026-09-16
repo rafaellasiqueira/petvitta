@@ -57,7 +57,7 @@ public class CartaoController {
 
             redirectAttributes.addFlashAttribute(
                     "mensagemToast",
-                    "Cartão adicionado com sucesso."
+                    "Cartão adicionado com sucesso!"
             );
 
         } catch (IllegalArgumentException e) {
@@ -132,7 +132,7 @@ public class CartaoController {
 
             redirectAttributes.addFlashAttribute(
                     "mensagemToast",
-                    "Cartão excluído com sucesso."
+                    "Cartão excluído com sucesso!"
             );
 
         } catch (IllegalArgumentException e) {

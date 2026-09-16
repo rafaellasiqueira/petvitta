@@ -272,6 +272,20 @@
             </div>
 
         </main>
+
+        <!-- Toast -->
+        <div id="toast"
+             class="toast ativo"
+             th:if="${mensagemToast}">
+
+            <i th:if="${tipoToast == 'erro'}"
+               class="fa-solid fa-circle-xmark"></i>
+
+            <i th:if="${tipoToast != 'erro'}"
+               class="fa-solid fa-check"></i>
+
+            <p th:text="${mensagemToast}"></p>
+        </div>
     </div>
 </div>
 
@@ -387,6 +401,9 @@
         </form>
     </div>
 </div>
+
+
+
 
 <!-- Clientes JavaScript -->
 <script th:src="@{/js/admin/clientes.js}"></script>

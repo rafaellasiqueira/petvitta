@@ -6,7 +6,7 @@
 
     <title>Perfil</title>
 
-    <!-- Font Awesome -->
+    <!-- Font Awesome (Ícones) -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 
     <!-- Cabeçalho CSS -->
@@ -27,7 +27,6 @@
 
 <body>
 <div class="container">
-
     <!-- Cabeçalho -->
     <div th:replace="~{fragments/cliente/cabecalho :: cabecalho}"></div>
 
@@ -42,24 +41,21 @@
                 <form class="form-dados-pessoais"
                       id="formDadosPessoais"
                       th:action="@{/cliente/alterar}"
-                      method="post">
+                      method="POST">
 
                     <div class="campo-grupo">
 
-                        <label for="nome">Nome</label>
-
+                        <label>Nome</label>
                         <input type="text"
                                id="nome"
                                name="nome"
                                th:value="${cliente.nome}"
                                placeholder="Digite seu nome completo">
-
                         <p class="mensagem-erro" id="erroNome"></p>
                     </div>
 
-
                     <div class="campo-grupo">
-                        <label for="cpf">CPF</label>
+                        <label>CPF</label>
 
                         <input type="text"
                                id="cpf"
@@ -67,66 +63,53 @@
                                th:value="${cliente.cpf}"
                                placeholder="000.000.000-00"
                                readonly>
-
                         <p class="mensagem-erro" id="erroCpf"></p>
                     </div>
 
-
                     <div class="linha-campos">
-
                         <div class="campo-grupo">
-                            <label for="tipoTelefone">Tipo de telefone</label>
+                            <label>Tipo de telefone</label>
 
-                            <select id="tipoTelefone"
-                                    name="tipoTelefone">
+                            <select id="tipoTelefone" name="tipoTelefone">
 
                                 <option value="" disabled hidden>Selecione</option>
-
                                 <option th:each="tipo : ${tiposTelefone}"
                                         th:value="${tipo.id}"
                                         th:text="${tipo.descricao}"
-                                        th:selected="${cliente.tipoTelefone != null and tipo.id == cliente.tipoTelefone.id}">
+                                        th:selected="${tipo.id == cliente.tipoTelefone.id}">
                                 </option>
                             </select>
                         </div>
 
-
                         <div class="campo-grupo">
-                            <label for="telefone">Telefone</label>
+                            <label>Telefone</label>
 
                             <input type="text"
                                    id="telefone"
                                    name="telefone"
                                    th:value="${cliente.telefone}"
                                    placeholder="(00) 00000-0000">
-
                             <p class="mensagem-erro"id="erroTelefone"></p>
                         </div>
                     </div>
 
-
                     <div class="linha-campos">
                         <div class="campo-grupo">
-                            <label for="genero">Gênero</label>
 
+                            <label>Gênero</label>
                             <select id="genero" name="genero" required>
-
-                                <option value=""
-                                        disabled
-                                        hidden>
-                                    Selecione
-                                </option>
+                                <option value="" disabled hidden>Selecione</option>
 
                                 <option th:each="genero : ${generos}"
                                         th:value="${genero.id}"
                                         th:text="${genero.descricao}"
-                                        th:selected="${cliente.genero != null and genero.id == cliente.genero.id}">
+                                        th:selected="${genero.id == cliente.genero.id}">
                                 </option>
                             </select>
                         </div>
 
                         <div class="campo-grupo">
-                            <label for="dataNascimento">Data de nascimento</label>
+                            <label>Data de nascimento</label>
 
                             <input type="date"
                                    id="dataNascimento"
@@ -147,63 +130,66 @@
                 <h1>Alterar senha</h1>
 
                 <form class="form-alterar-senha"
+                      id="formAlterarSenha"
                       th:action="@{/cliente/alterar-senha}"
-                      method="post">
+                      method="POST">
 
                     <div class="campo-grupo largura-total">
-                        <label for="senhaAtual">Senha atual</label>
+                        <label>Senha atual</label>
 
-                        <div class="campo-senha">
+                        <div class="senha-container">
                             <input type="password"
                                    id="senhaAtual"
                                    name="senhaAtual"
                                    placeholder="Digite sua senha">
 
                             <button type="button"
-                                    class="btn-mostrar-senha"
-                                    data-input="senhaAtual">
+                                    class="btn-mostrar-senha">
                                 <i class="fa-solid fa-eye"></i>
                             </button>
                         </div>
+
                         <p class="mensagem-erro" id="erroSenhaAtual"></p>
                     </div>
 
                     <div class="linha-campos">
-                        <div class="campo-grupo">
-                            <label for="novaSenha">Nova senha</label>
-                            <div class="campo-senha">
 
+                        <div class="campo-grupo">
+                            <label>Nova senha</label>
+
+                            <div class="senha-container">
                                 <input type="password"
                                        id="novaSenha"
                                        name="novaSenha"
                                        placeholder="Digite sua nova senha">
 
                                 <button type="button"
-                                        class="btn-mostrar-senha"
-                                        data-input="novaSenha">
+                                        class="btn-mostrar-senha">
                                     <i class="fa-solid fa-eye"></i>
                                 </button>
                             </div>
+
                             <p class="mensagem-erro" id="erroNovaSenha"></p>
                         </div>
 
                         <div class="campo-grupo">
-                            <label for="confirmarSenha">Confirme a nova senha</label>
+                            <label>Confirme a nova senha</label>
 
-                            <div class="campo-senha">
+                            <div class="senha-container">
                                 <input type="password"
                                        id="confirmarSenha"
                                        name="confirmarSenha"
                                        placeholder="Digite sua nova senha novamente">
 
                                 <button type="button"
-                                        class="btn-mostrar-senha"
-                                        data-input="confirmarSenha">
+                                        class="btn-mostrar-senha">
                                     <i class="fa-solid fa-eye"></i>
                                 </button>
                             </div>
+
                             <p class="mensagem-erro" id="erroConfirmarSenha"></p>
                         </div>
+
                     </div>
 
                     <ul class="requisitos-senha">
@@ -419,7 +405,26 @@
 
 <div th:replace="~{fragments/cliente/modais :: modal-confirmar-exclusao}"></div>
 
-<script th:src="@{/js/cliente/perfil.js}"></script>
+
+<!-- Validações -->
+<script th:src="@{/js/cliente/validacoes/endereco.js}"></script>
+<script th:src="@{/js/cliente/validacoes/cartao.js}"></script>
+<script th:src="@{/js/cliente/validacoes/geral.js}"></script>
+
+<!-- Alteração de senha -->
+<script th:src="@{/js/cliente/alterar-senha.js}"></script>
+
+<!-- Alteração de endereço -->
+<script th:src="@{/js/cliente/perfil-endereco.js}"></script>
+
+<!-- Alteração e exclusão de cartão -->
+<script th:src="@{/js/cliente/perfil-cartao.js}"></script>
+
+<!-- Toast.js -->
+<script th:src="@{/js/cliente/componentes/toast.js}"></script>
+
+<!-- Mostrar-senha.js -->
+<script th:src="@{/js/cliente/componentes/mostrar-senha.js}"></script>
 
 <!-- Chatbot -->
 <div th:replace="~{fragments/cliente/chatbot :: chatbot}"></div>

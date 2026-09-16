@@ -16,7 +16,6 @@ public class CartaoDTO {
     @Pattern(regexp = "[0-9\\s]*", message = "O número do cartão deve conter apenas números.")
     private String numero;
 
-    @NotBlank(message = "O nome impresso no cartão é obrigatório.")
     @Size(min = 3, max = 150, message = "O nome impresso no cartão deve ter entre 3 e 150 caracteres.")
     @Pattern(regexp = "[A-Za-zÀ-ÿ\\s]*", message = "O nome do cartão deve conter apenas letras.")
     private String nomeImpresso;

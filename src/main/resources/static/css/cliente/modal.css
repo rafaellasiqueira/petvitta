@@ -177,7 +177,7 @@
     color: #3A4A48;
 }
 
-.checkbox-endereco input[type="checkbox"],
+.checkbox-endereco-cartao input[type="checkbox"],
 .checkbox-cupom input[type="checkbox"],
 .checkbox-troca input[type="checkbox"] {
     width: 16px;
@@ -187,7 +187,7 @@
     vertical-align: middle;
 }
 
-.checkbox-endereco {
+.checkbox-endereco-cartao {
     width: 100%;
     display: flex;
     gap: 4px;

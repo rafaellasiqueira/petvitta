@@ -212,18 +212,6 @@ ul {
     color: #EA2B41;
 }
 
-.status-cartao {
-    width: auto;
-    height: 32px;
-    border: none;
-    background: #FFFFFF;
-    text-decoration: underline;
-    cursor: pointer;
-    color: #1C2423;
-    font-family: 'Nunito', sans-serif;
-    font-size: 14px;
-}
-
     /* Cartões */
 .lista-cartoes {
     display: flex;
@@ -254,11 +242,12 @@ ul {
 .status-cartao {
     display: inline-flex;
     padding: 4px 9px;
+    border: none;
     border-radius: 20px;
     background-color: #1C9B86;
     color: white;
     font-family: 'Nunito', sans-serif;
-    font-size: 12px;
+    font-size: 14px;
     font-weight: 500;
 }
 
@@ -357,13 +346,13 @@ h4 {
 }
 
 /* Olho */
-.campo-senha {
+.senha-container {
     position: relative;
     width: 100%;
 }
 
 /* Input da senha */
-.campo-senha input {
+.senha-container input {
     width: 100%;
     height: 40px;
 

@@ -59,16 +59,13 @@
                                required>
 
                         <button type="button"
-                                class="btn-mostrar-senha"
-                                onclick="mostrarSenha()">
+                                class="btn-mostrar-senha">
                             <i id="icone-olho" class="fa-solid fa-eye"></i>
                         </button>
                     </div>
                 </div>
 
                 <p class="mensagem-erro-dados-de-acesso" hidden id="erroDadosAcesso"></p>
-
-
                 <a th:href="@{/cliente/produtos}" class="btnEntrar" id="btnEntrar">Entrar</a>
                 <a th:href="@{/cliente/cadastrar}" class="btnCadastrar">Não possui uma conta ainda? Cadastra-se</a>
             </form>
@@ -76,8 +73,11 @@
     </main>
 </div>
 
-<!-- Login JavaScript -->
+<!-- Login.js -->
 <script th:src="@{/js/cliente/login.js}"></script>
+
+<!-- Mostrar-senha.js -->
+<script th:src="@{/js/cliente/componentes/mostrar-senha.js}"></script>
 
 </body>
 </html>

@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cadastrar cliente</title>
 
-    <!-- Font Awesome -->
+    <!-- Font Awesome (Ícones) -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 
     <!-- Cabeçalho CSS -->
@@ -34,10 +34,10 @@
     <!-- Conteúdo -->
     <main class="conteudo">
         <form class="form-cadastrar-cliente"
+              id="formCadastroCliente"
               th:action="@{/cliente/cadastrar}"
               th:object="${cliente}"
-              method="post"
-              id="formCadastroCliente">
+              method="POST">
 
         <!-- Dados pessoais -->
             <div class="card">
@@ -134,30 +134,36 @@
                 <!-- Senha -->
                 <div class="campo-grupo">
                     <label>Senha</label>
-                    <div class="campo-senha">
+
+                    <div class="senha-container">
                         <input type="password"
                                id="senha"
                                th:field="*{senha}"
                                placeholder="Digite a senha">
+
                         <button type="button" class="btn-mostrar-senha">
                             <i class="fa-solid fa-eye"></i>
                         </button>
                     </div>
+
                     <p class="mensagem-erro" id="erroSenha"></p>
                 </div>
 
                 <!-- Confirmar senha -->
                 <div class="campo-grupo">
                     <label>Confirmar senha</label>
-                    <div class="campo-senha">
+
+                    <div class="senha-container">
                         <input type="password"
                                id="confirmarSenha"
                                th:field="*{confirmarSenha}"
                                placeholder="Digite a senha novamente">
+
                         <button type="button" class="btn-mostrar-senha">
                             <i class="fa-solid fa-eye"></i>
                         </button>
                     </div>
+
                     <p class="mensagem-erro" id="erroConfirmarSenha"></p>
                 </div>
 
@@ -190,7 +196,7 @@
                         <!-- Título + remover -->
                         <div class="subtitulo-item">
                             <h2>Endereço</h2>
-                            <button type="button" class="btn-remover-item"  style="display: none;">>
+                            <button type="button" class="btn-remover-item"  style="display: none;">
                                 <i class="fa-solid fa-trash"></i>
                             </button>
                         </div>
@@ -286,8 +292,7 @@
                             <input type="text"
                                    th:field="*{enderecos[0].numero}"
                                    class="numero"
-                                   placeholder="Digite o número"
-                                   inputmode="numeric">
+                                   placeholder="Digite o número">
                             <p class="mensagem-erro erroNumero"></p>
                         </div>
 
@@ -328,10 +333,7 @@
 
                         <!-- Observações -->
                         <div class="campo-grupo">
-                            <label>
-                                Observações
-                                <span>(Opcional)</span>
-                            </label>
+                            <label>Observações<span>(Opcional)</span></label>
                             <textarea th:field="*{enderecos[0].observacoes}"
                                       placeholder="Digite alguma observação sobre o endereço"></textarea>
                         </div>
@@ -438,7 +440,7 @@
     <!-- Toast -->
     <div id="toast"
          class="toast ativo"
-         th:if="${mensagemToast}">
+         th:if="${mensagemToast}"> <!-- So vai mostrar se existir-->
 
         <i th:if="${tipoToast == 'erro'}"
            class="fa-solid fa-circle-xmark"></i>
@@ -450,8 +452,20 @@
     </div>
 </div>
 
-<!-- JavaScript -->
+<!-- Cadastro.js -->
 <script th:src="@{/js/cliente/cadastro.js}"></script>
+
+<!-- Mostrar-senha.js -->
+<script th:src="@{/js/cliente/componentes/mostrar-senha.js}"></script>
+
+<!-- Toast.js -->
+<script th:src="@{/js/cliente/componentes/toast.js}"></script>
+
+<!-- Validações -->
+<script th:src="@{/js/cliente/validacoes/endereco.js}"></script>
+<script th:src="@{/js/cliente/validacoes/cartao.js}"></script>
+<script th:src="@{/js/cliente/validacoes/cpf.js}"></script>
+<script th:src="@{/js/cliente/validacoes/geral.js}"></script>
 
 </body>
 </html>

@@ -1,5 +1,16 @@
 document.addEventListener('DOMContentLoaded', () => {
 
+    // Toast
+    const toast = document.getElementById('toast');
+
+    if (toast) {
+        toast.classList.add('ativo');
+
+        setTimeout(() => {
+            toast.classList.remove('ativo');
+        }, 6000);
+    }
+
 //Filtro
 const btnFiltro = document.getElementById('btnfiltrar');
 const painelFiltro = document.getElementById('painelFiltro');

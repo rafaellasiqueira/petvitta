@@ -126,8 +126,10 @@
 <!-- Modal adicionar/editar endereço -->
 <div th:fragment="modal-adicionar-endereco" id="modalAdicionarEditarEndereco" class="modal">
 
-    <form id="formEndereco" method="post">
+    <form id="formEndereco" method="POST">
+
         <input type="hidden" id="enderecoId" name="enderecoId">
+
         <div class="modalConteudo">
 
             <!-- Cabeçalho -->
@@ -141,38 +143,36 @@
 
                 <!-- Nome de identificação -->
                 <div class="campo-formulario">
-                    <label for="nomeIdentificacao">Nome de identificação</label>
+                    <label>Nome de identificação</label>
 
                     <input type="text"
                            id="nomeIdentificacao"
                            name="nomeIdentificacao"
-                           placeholder="Digite um nome de identificação do endereço"
-                           minlength="3"
-                           maxlength="100">
-                    <p class="mensagem-erro" id="erroNomeIdentificacao"></p>
+                           class="nome-identificacao"
+                           placeholder="Digite um nome de identificação do endereço">
+                    <p class="mensagem-erro erroNomeIdentificacao" id="erroNomeIdentificacao"></p>
                 </div>
 
                 <!-- Tipo de endereço -->
                 <div class="campo-formulario">
-                    <label for="tipoEndereco">Tipo de endereço</label>
+                    <label>Tipo de endereço</label>
 
-                    <select name="tipoEndereco" id="tipoEndereco">
+                    <select name="tipoEndereco" class="tipo-endereco" id="tipoEndereco">
                         <option value="" disabled selected hidden>Selecione</option>
-
                         <option
                                 th:each="tipo : ${tiposEndereco}"
                                 th:value="${tipo.id}"
                                 th:text="${tipo.descricao}">
                         </option>
                     </select>
-                    <p class="mensagem-erro" id="erroTipoEndereco"></p>
+                    <p class="mensagem-erro erroTipoEndereco" id="erroTipoEndereco"></p>
                 </div>
 
                 <!-- Tipo de residência -->
                 <div class="campo-formulario">
-                    <label for="tipoResidencia">Tipo de residência</label>
+                    <label>Tipo de residência</label>
 
-                    <select name="tipoResidencia" id="tipoResidencia">
+                    <select name="tipoResidencia" class="tipo-residencia" id="tipoResidencia">
                         <option value="" disabled selected hidden>Selecione</option>
 
                         <option
@@ -181,14 +181,14 @@
                                 th:text="${tipo.descricao}">
                         </option>
                     </select>
-                    <p class="mensagem-erro" id="erroTipoResidencia"></p>
+                    <p class="mensagem-erro erroTipoResidencia" id="erroTipoResidencia"></p>
                 </div>
 
                 <!-- Tipo de logradouro -->
                 <div class="campo-formulario">
-                    <label for="tipoLogradouro">Tipo de logradouro</label>
+                    <label>Tipo de logradouro</label>
 
-                    <select name="tipoLogradouro" id="tipoLogradouro">
+                    <select name="tipoLogradouro" class="tipo-logradouro" id="tipoLogradouro">
                         <option value="" disabled selected hidden>Selecione</option>
 
                         <option
@@ -197,58 +197,58 @@
                                 th:text="${tipo.descricao}">
                         </option>
                     </select>
-                    <p class="mensagem-erro" id="erroTipoLogradouro"></p>
+                    <p class="mensagem-erro erroTipoLogradouro" id="erroTipoLogradouro"></p>
                 </div>
 
                 <!-- CEP -->
                 <div class="campo-formulario">
-                    <label for="cep">CEP</label>
+                    <label>CEP</label>
                     <input type="text"
                            id="cep"
                            name="cep"
-                           placeholder="00000-000"
-                           maxlength="9"
-                           inputmode="numeric">
-                    <p class="mensagem-erro" id="erroCep"></p>
+                           class="cep"
+                           placeholder="00000-000">
+                    <p class="mensagem-erro erroCep" id="erroCep"></p>
                 </div>
-
 
                 <!-- Logradouro -->
                 <div class="campo-formulario">
-                    <label for="logradouro">Logradouro</label>
+                    <label>Logradouro</label>
                     <input type="text"
                            id="logradouro"
                            name="logradouro"
+                           class="logradouro"
                            placeholder="Digite o nome do logradouro">
-                    <p class="mensagem-erro" id="erroLogradouro"></p>
+                    <p class="mensagem-erro erroLogradouro" id="erroLogradouro"></p>
                 </div>
 
                 <!-- Bairro -->
                 <div class="campo-formulario">
-                    <label for="bairro">Bairro</label>
+                    <label>Bairro</label>
                     <input type="text"
                            id="bairro"
                            name="bairro"
+                           class="bairro"
                            placeholder="Digite o bairro">
-                    <p class="mensagem-erro" id="erroBairro"></p>
+                    <p class="mensagem-erro erroBairro" id="erroBairro"></p>
                 </div>
 
                 <!-- Número -->
                 <div class="campo-formulario">
-                    <label for="numero">Número</label>
+                    <label>Número</label>
                     <input type="text"
                            id="numero"
                            name="numero"
-                           placeholder="Digite o número"
-                           inputmode="numeric">
-                    <p class="mensagem-erro" id="erroNumero"></p>
+                           class="numero"
+                           placeholder="Digite o número">
+                    <p class="mensagem-erro erroNumero" id="erroNumero"></p>
                 </div>
 
                 <!-- Estado -->
                 <div class="campo-formulario">
-                    <label for="estado">Estado</label>
+                    <label>Estado</label>
 
-                    <select id="estado" name="estado">
+                    <select id="estado" name="estado" class="estado">
                         <option value="" disabled selected hidden>Selecione</option>
                         <option
                                 th:each="estado : ${estados}"
@@ -256,44 +256,44 @@
                                 th:text="|${estado.sigla} - ${estado.nome}|">
                         </option>
                     </select>
-                    <p class="mensagem-erro" id="erroEstado"></p>
+                    <p class="mensagem-erro erroEstado" id="erroEstado"></p>
                 </div>
 
                 <!-- Cidade -->
                 <div class="campo-formulario">
-                    <label for="cidade">Cidade</label>
+                    <label>Cidade</label>
 
                     <input type="text"
                            id="cidade"
                            name="cidade"
+                           class="cidade"
                            placeholder="Digite a cidade">
-                    <p class="mensagem-erro" id="erroCidade"></p>
+                    <p class="mensagem-erro erroCidade" id="erroCidade"></p>
                 </div>
-
 
                 <!-- País -->
                 <div class="campo-formulario">
-                    <label for="pais">País</label>
+                    <label>País</label>
 
                     <input type="text"
                            id="pais"
                            name="pais"
+                           class="pais"
                            placeholder="Digite o nome do país">
-                    <p class="mensagem-erro" id="erroPais"></p>
+                    <p class="mensagem-erro erroPais" id="erroPais"></p>
                 </div>
-
 
                 <!-- Observações -->
                 <div class="campo-formulario">
-                    <label for="observacoes">Observações <span>(Opcional)</span></label>
+                    <label>Observações <span>(Opcional)</span></label>
 
                     <textarea id="observacoes"
-                              name="obersevacoes"
+                              name="observacoes"
                               placeholder="Digite alguma observação sobre o endereço"></textarea>
                 </div>
 
                 <!-- Salvar no perfil -->
-                <label class="checkbox-endereco" id="campoSalvarPerfil">
+                <label class="checkbox-endereco-cartao" id="campoSalvarPerfil">
                     <input type="checkbox"
                            id="salvarPerfil">
 
@@ -305,7 +305,6 @@
                     <button type="button" class="btn-cancelar" id="btnCancelarEndereco">Cancelar</button>
                     <button type="submit" class="btn-adicionar" id="btnSalvarEndereco">Adicionar</button>
                 </div>
-
             </div>
         </div>
     </form>
@@ -377,18 +376,16 @@
 
 <!-- Modal cadastrar cartão -->
 <div th:fragment="modal-cadastrar-cartao" id="modalCadastrarCartao" class="modal">
+
     <form id="formCartao" method="POST">
+
         <div class="modalConteudo">
 
             <!-- Cabeçalho -->
             <div class="modalCabecalho">
                 <h2 id="tituloModalCartao">Cadastrar cartão</h2>
 
-                <button type="button"
-                        class="btn-fechar"
-                        id="btnFecharModalCartao">
-                    &times;
-                </button>
+                <button type="button" class="btn-fechar" id="btnFecharModalCartao">&times;</button>
             </div>
 
             <!-- Corpo -->
@@ -396,31 +393,34 @@
 
                 <!-- Número do cartão -->
                 <div class="campo-formulario">
-                    <label for="numero">Número do cartão</label>
+                    <label>Número do cartão</label>
                     <input type="text"
                            id="numeroCartao"
                            name="numero"
+                           class="numero-cartao"
                            placeholder="0000 0000 0000 0000">
-                    <p class="mensagem-erro" id="erroNumeroCartao"></p>
+                    <p class="mensagem-erro erroNumeroCartao" id="erroNumeroCartao"></p>
                 </div>
 
                 <!-- Nome impresso no cartão -->
                 <div class="campo-formulario">
-                    <label for="nomeCartao">Nome impresso no cartão</label>
+                    <label>Nome impresso no cartão</label>
 
                     <input type="text"
                            id="nomeCartao"
                            name="nomeImpresso"
-                           placeholder="Digite o nome impresso no cartão"
-                           maxlength="50">
-                    <p class="mensagem-erro" id="erroNomeCartao"></p>
+                           class="nome-cartao"
+                           placeholder="Digite o nome impresso no cartão">
+                    <p class="mensagem-erro erroNomeCartao" id="erroNomeCartao"></p>
                 </div>
 
                 <!-- Bandeira -->
                 <div class="campo-formulario">
-                    <label for="bandeiraCartao">Bandeira</label>
+                    <label>Bandeira</label>
 
-                    <select id="bandeiraCartao" name="bandeira">
+                    <select id="bandeiraCartao"
+                            name="bandeira"
+                            class="bandeira-cartao">
                         <option value="" disabled selected hidden>Selecione</option>
 
                         <option
@@ -429,38 +429,33 @@
                                 th:text="${bandeira.descricao}">
                         </option>
                     </select>
-                    <p class="mensagem-erro" id="erroBandeira"></p>
+                    <p class="mensagem-erro erroBandeiraCartao" id="erroBandeira"></p>
                 </div>
 
                 <!-- CVV -->
                 <div class="campo-formulario">
-                    <label for="cvvCartao">CVV</label>
+                    <label>CVV</label>
 
                     <input type="text"
                            id="cvvCartao"
                            name="codigoSeguranca"
-                           placeholder="000"
-                           maxlength="4"
-                           inputmode="numeric">
-                    <p class="mensagem-erro" id="erroCVV"></p>
+                           class="cvv-cartao"
+                           placeholder="000">
+                    <p class="mensagem-erro erroCvvCartao" id="erroCVV"></p>
                 </div>
 
                 <!-- Salvar no perfil -->
-                <label class="checkbox-endereco" id="campoSalvarCartao">
+                <label class="checkbox-endereco-cartao" id="campoSalvarCartao">
 
                     <input type="checkbox"
                            id="salvarCartao">
 
                     <p>Salvar este cartão no meu perfil</p>
-
                 </label>
 
-                <label class="checkbox-endereco">
-
+                <label class="checkbox-endereco-cartao">
                     <input type="checkbox" name="preferencial" id="cartaoPreferencial">
-
                     <p>Tornar preferencial</p>
-
                 </label>
 
                 <!-- Botões -->
@@ -477,9 +472,7 @@
                             id="btnSalvarCartao">
                         Cadastrar
                     </button>
-
                 </div>
-
             </div>
         </div>
     </form>
@@ -719,30 +712,18 @@
 </div>
 
 <!-- Modal confirmar exclusão -->
-<div th:fragment="modal-confirmar-exclusao"
-     id="modalConfirmarExclusao"
-     class="modal">
+<div th:fragment="modal-confirmar-exclusao" id="modalConfirmarExclusao" class="modal">
 
     <div class="modalConteudo">
 
         <!-- Cabeçalho -->
         <div class="modalCabecalho">
-
-            <h2 id="tituloModalExclusao">
-                Confirmar exclusão
-            </h2>
-
-            <button type="button"
-                    class="btn-fechar"
-                    id="btnFecharModalExclusao">
-                &times;
-            </button>
-
+            <h2 id="tituloModalExclusao">Confirmar exclusão</h2>
+            <button type="button" class="btn-fechar" id="btnFecharModalExclusao">&times;</button>
         </div>
 
         <!-- Corpo -->
         <div class="modal-body">
-
             <div class="mensagem-exclusao">
 
                 <p id="mensagemModalExclusao">
@@ -752,19 +733,13 @@
                 <p>
                     Essa ação não poderá ser desfeita.
                 </p>
-
             </div>
 
             <!-- Botões -->
             <div class="modalBotoes">
+                <button type="button" class="btn-cancelar" id="btnCancelarExclusao">Cancelar</button>
 
-                <button type="button"
-                        class="btn-cancelar"
-                        id="btnCancelarExclusao">
-                    Cancelar
-                </button>
-
-                <form id="formExcluir" method="post">
+                <form id="formExcluir" method="POST">
 
                     <input type="hidden"
                            id="idExcluir"
@@ -775,11 +750,8 @@
                             id="btnConfirmarExclusao">
                         Excluir
                     </button>
-
                 </form>
-
             </div>
-
         </div>
     </div>
 </div>

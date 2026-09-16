@@ -13,6 +13,7 @@ import com.project.petvitta.model.dominio.AtivarMotivo;
 import com.project.petvitta.model.dominio.InativarMotivo;
 import com.project.petvitta.repository.dominio.AtivarMotivoRepository;
 import com.project.petvitta.repository.dominio.InativarMotivoRepository;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -105,13 +106,24 @@ public class AdminController {
     public String inativar(
             @PathVariable Long id,
             @RequestParam Long motivoInativar,
-            @RequestParam String justificativaInativar
+            @RequestParam String justificativaInativar,
+            RedirectAttributes redirectAttributes
     ) {
 
         clienteService.inativar(
                 id,
                 motivoInativar,
                 justificativaInativar
+        );
+
+        redirectAttributes.addFlashAttribute(
+                "mensagemToast",
+                "Cliente inativado com sucesso!"
+        );
+
+        redirectAttributes.addFlashAttribute(
+                "tipoToast",
+                "sucesso"
         );
 
         return "redirect:/admin/clientes";
@@ -121,13 +133,24 @@ public class AdminController {
     public String ativar(
             @PathVariable Long id,
             @RequestParam Long motivoAtivar,
-            @RequestParam String justificativaAtivar
+            @RequestParam String justificativaAtivar,
+            RedirectAttributes redirectAttributes
     ) {
 
         clienteService.ativar(
                 id,
                 motivoAtivar,
                 justificativaAtivar
+        );
+
+        redirectAttributes.addFlashAttribute(
+                "mensagemToast",
+                "Cliente ativado com sucesso!"
+        );
+
+        redirectAttributes.addFlashAttribute(
+                "tipoToast",
+                "sucesso"
         );
 
         return "redirect:/admin/clientes";
