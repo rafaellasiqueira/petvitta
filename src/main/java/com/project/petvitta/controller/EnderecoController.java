@@ -23,13 +23,12 @@ public class EnderecoController {
 
     @PostMapping("/cliente/adicionar-endereco")
     public String adicionar(
-            @Valid @ModelAttribute("endereco") EnderecoDTO dto,
+            @Valid
+            EnderecoDTO dto,
             BindingResult result,
             RedirectAttributes redirectAttributes
     ) {
-
         if (result.hasErrors()) {
-
             redirectAttributes.addFlashAttribute(
                     "tipoToast",
                     "erro"
@@ -44,11 +43,7 @@ public class EnderecoController {
         }
 
         try {
-
-            enderecoService.adicionar(
-                    6L,
-                    dto
-            );
+            enderecoService.adicionar(6L, dto);
 
             redirectAttributes.addFlashAttribute(
                     "tipoToast",
@@ -61,7 +56,6 @@ public class EnderecoController {
             );
 
         } catch (IllegalArgumentException e) {
-
             redirectAttributes.addFlashAttribute(
                     "tipoToast",
                     "erro"
@@ -72,20 +66,18 @@ public class EnderecoController {
                     e.getMessage()
             );
         }
-
         return "redirect:/cliente/perfil";
     }
 
     @PostMapping("/cliente/editar-endereco")
     public String editar(
-            @Valid @ModelAttribute("endereco") EnderecoDTO dto,
+            @Valid
+            EnderecoDTO dto,
             BindingResult result,
             @RequestParam Long enderecoId,
             RedirectAttributes redirectAttributes
     ) {
-
         if (result.hasErrors()) {
-
             redirectAttributes.addFlashAttribute(
                     "tipoToast",
                     "erro"
@@ -98,15 +90,8 @@ public class EnderecoController {
 
             return "redirect:/cliente/perfil";
         }
-
         try {
-
-            enderecoService.editar(
-                    6L,
-                    enderecoId,
-                    dto
-            );
-
+            enderecoService.editar(6L, enderecoId, dto);
             redirectAttributes.addFlashAttribute(
                     "tipoToast",
                     "sucesso"
@@ -116,9 +101,7 @@ public class EnderecoController {
                     "mensagemToast",
                     "Endereço alterado com sucesso!"
             );
-
         } catch (IllegalArgumentException e) {
-
             redirectAttributes.addFlashAttribute(
                     "tipoToast",
                     "erro"
@@ -129,23 +112,15 @@ public class EnderecoController {
                     e.getMessage()
             );
         }
-
         return "redirect:/cliente/perfil";
     }
-
     @PostMapping("/cliente/excluir-endereco")
     public String excluir(
             @RequestParam Long enderecoId,
             RedirectAttributes redirectAttributes
     ) {
-
         try {
-
-            enderecoService.excluir(
-                    6L,
-                    enderecoId
-            );
-
+            enderecoService.excluir(6L, enderecoId);
             redirectAttributes.addFlashAttribute(
                     "tipoToast",
                     "sucesso"
@@ -157,7 +132,6 @@ public class EnderecoController {
             );
 
         } catch (IllegalArgumentException e) {
-
             redirectAttributes.addFlashAttribute(
                     "tipoToast",
                     "erro"
@@ -168,7 +142,6 @@ public class EnderecoController {
                     e.getMessage()
             );
         }
-
         return "redirect:/cliente/perfil";
     }
 }

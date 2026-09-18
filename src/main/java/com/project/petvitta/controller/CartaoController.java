@@ -5,7 +5,6 @@ import com.project.petvitta.service.CartaoService;
 import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -23,32 +22,27 @@ public class CartaoController {
 
     @PostMapping("/cliente/adicionar-cartao")
     public String adicionar(
-            @Valid @ModelAttribute("cartao") CartaoDTO dto,
+            @Valid
+            CartaoDTO dto,
             BindingResult result,
             RedirectAttributes redirectAttributes
     ) {
-
         if (result.hasErrors()) {
-
-            redirectAttributes.addFlashAttribute(
+            redirectAttributes.addFlashAttribute( /* Infomação temporaria */
                     "tipoToast",
                     "erro"
             );
 
             redirectAttributes.addFlashAttribute(
                     "mensagemToast",
-                    result.getFieldError().getDefaultMessage()
+                    result.getFieldError().getDefaultMessage() /* Pega o campo de erro e a mensagem */
             );
 
             return "redirect:/cliente/perfil";
         }
 
         try {
-
-            cartaoService.adicionar(
-                    6L,
-                    dto
-            );
+            cartaoService.adicionar(6L, dto);
 
             redirectAttributes.addFlashAttribute(
                     "tipoToast",
@@ -61,7 +55,6 @@ public class CartaoController {
             );
 
         } catch (IllegalArgumentException e) {
-
             redirectAttributes.addFlashAttribute(
                     "tipoToast",
                     "erro"
@@ -83,12 +76,7 @@ public class CartaoController {
     ) {
 
         try {
-
-            cartaoService.tornarPreferencial(
-                    6L,
-                    cartaoId
-            );
-
+            cartaoService.tornarPreferencial(6L, cartaoId);
             redirectAttributes.addFlashAttribute(
                     "tipoToast",
                     "sucesso"
@@ -98,9 +86,7 @@ public class CartaoController {
                     "mensagemToast",
                     "Cartão definido como preferencial."
             );
-
         } catch (IllegalArgumentException e) {
-
             redirectAttributes.addFlashAttribute(
                     "tipoToast",
                     "erro"
@@ -111,7 +97,6 @@ public class CartaoController {
                     e.getMessage()
             );
         }
-
         return "redirect:/cliente/perfil";
     }
 
@@ -120,9 +105,7 @@ public class CartaoController {
             @RequestParam Long cartaoId,
             RedirectAttributes redirectAttributes
     ) {
-
         try {
-
             cartaoService.excluirCartao(6L, cartaoId);
 
             redirectAttributes.addFlashAttribute(
@@ -136,7 +119,6 @@ public class CartaoController {
             );
 
         } catch (IllegalArgumentException e) {
-
             redirectAttributes.addFlashAttribute(
                     "tipoToast",
                     "erro"
@@ -147,7 +129,6 @@ public class CartaoController {
                     e.getMessage()
             );
         }
-
         return "redirect:/cliente/perfil";
     }
 }

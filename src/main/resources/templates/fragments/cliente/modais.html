@@ -377,7 +377,9 @@
 <!-- Modal cadastrar cartão -->
 <div th:fragment="modal-cadastrar-cartao" id="modalCadastrarCartao" class="modal">
 
-    <form id="formCartao" method="POST">
+    <form id="formCartao"
+          th:action="@{/cliente/adicionar-cartao}"
+          method="POST">
 
         <div class="modalConteudo">
 

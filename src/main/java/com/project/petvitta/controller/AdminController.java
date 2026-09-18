@@ -80,7 +80,6 @@ public class AdminController {
 
         model.addAttribute("generos", clienteService.listarGeneros());
 
-        // ADICIONE ISSO
         model.addAttribute(
                 "motivosInativacao",
                 clienteService.listarMotivosInativacao()

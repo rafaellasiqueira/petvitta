@@ -63,7 +63,7 @@ public class Cliente {
     @OneToMany(
             mappedBy = "cliente",
             cascade = CascadeType.ALL,
-            orphanRemoval = true
+            orphanRemoval = true /* Pode ser removido do banco */
     )
     private List<Endereco> enderecos = new ArrayList<>();
 

@@ -57,7 +57,6 @@ public class EnderecoService {
     }
 
     public void validarEndereco(Endereco endereco) {
-
         if (endereco == null) {
             throw new IllegalArgumentException(
                     "Endereço inválido."
@@ -66,7 +65,6 @@ public class EnderecoService {
     }
 
     public void validarTiposEndereco(List<EnderecoDTO> enderecos) {
-
         if (enderecos == null || enderecos.isEmpty()) {
             throw new IllegalArgumentException(
                     "É obrigatório cadastrar pelo menos um endereço."
@@ -77,7 +75,6 @@ public class EnderecoService {
         boolean possuiEntrega = false;
 
         for (EnderecoDTO endereco : enderecos) {
-
             if (endereco == null || endereco.getTipoEndereco() == null) {
                 continue;
             }

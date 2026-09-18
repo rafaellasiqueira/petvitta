@@ -228,7 +228,6 @@ formEndereco.addEventListener('submit', function (event) {
     }
 });
 
-
     // Fechar modal de exclusão
     btnFecharExclusao.addEventListener('click', function () {
         modalExclusao.classList.remove('active');

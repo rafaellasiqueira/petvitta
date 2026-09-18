@@ -14,7 +14,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
@@ -36,7 +35,6 @@ public class ClienteController {
 
     @ModelAttribute
     public void carregarDadosCadastro(Model model) {
-
         model.addAttribute(
                 "tiposTelefone",
                 clienteService.listarTiposTelefone()
@@ -81,26 +79,24 @@ public class ClienteController {
     @GetMapping("/cliente/cadastrar")
     public String cadastrar(Model model) {
 
-        if (!model.containsAttribute("cliente")) {
-            model.addAttribute(
-                    "cliente",
-                    new ClienteCadastroDTO()
-            );
-        }
+        model.addAttribute(
+                "cliente",
+                new ClienteCadastroDTO()
+        );
 
         return "cliente/cadastrar";
     }
 
     @PostMapping("/cliente/cadastrar")
     public String cadastrar(
-            @Valid @ModelAttribute("cliente") ClienteCadastroDTO dto,
+            @Valid
+            @ModelAttribute("cliente")
+            ClienteCadastroDTO dto,
             BindingResult result,
             Model model,
             RedirectAttributes redirectAttributes
     ) {
-
         if (result.hasErrors()) {
-
             model.addAttribute(
                     "tipoToast",
                     "erro"
@@ -113,9 +109,7 @@ public class ClienteController {
 
             return "cliente/cadastrar";
         }
-
         try {
-
             clienteService.cadastrar(dto);
 
             redirectAttributes.addFlashAttribute(
@@ -128,10 +122,9 @@ public class ClienteController {
                     "Cadastro concluído com sucesso!"
             );
 
-            return "redirect:/cliente/cadastrar";
+            return "redirect:/cliente/login";
 
         } catch (IllegalArgumentException e) {
-
             model.addAttribute(
                     "tipoToast",
                     "erro"
@@ -148,7 +141,6 @@ public class ClienteController {
 
     @GetMapping("/cliente/produtos")
     public String produtos() {
-
         if (!verificarClienteAtivo()) {
             return "redirect:/cliente/inativo";
         }
@@ -159,41 +151,24 @@ public class ClienteController {
     @GetMapping("/cliente/perfil")
     public String perfil(Model model) {
 
-        Long clienteId = 6L;
-
-        Cliente cliente = clienteService.buscarPorId(clienteId);
-
-        if (!cliente.isAtivo()) {
-
-            model.addAttribute(
-                    "cliente",
-                    cliente
-            );
-
-            return "cliente/inativo";
+        if (!verificarClienteAtivo()) {
+            return "redirect:/cliente/inativo";
         }
 
-        model.addAttribute(
-                "cliente",
-                cliente
-        );
+        Cliente cliente = clienteService.buscarPorId(6L);
 
-        model.addAttribute(
-                "enderecos",
-                cliente.getEnderecos()
-        );
-
-        model.addAttribute(
-                "cartoes",
-                cliente.getCartoes()
-        );
+        model.addAttribute("cliente", cliente);
+        model.addAttribute("enderecos", cliente.getEnderecos());
+        model.addAttribute("cartoes", cliente.getCartoes());
 
         return "cliente/perfil";
     }
 
     @PostMapping("/cliente/alterar")
     public String alterar(
-            @Valid @ModelAttribute("clienteEdicao") ClienteEdicaoDTO dto,
+            @Valid
+            @ModelAttribute("clienteEdicao")
+            ClienteEdicaoDTO dto,
             BindingResult result,
             Model model,
             RedirectAttributes redirectAttributes
@@ -204,14 +179,15 @@ public class ClienteController {
         }
 
         if (result.hasErrors()) {
-
             Cliente cliente = clienteService.buscarPorId(6L);
 
             model.addAttribute("cliente", cliente);
             model.addAttribute("enderecos", cliente.getEnderecos());
             model.addAttribute("cartoes", cliente.getCartoes());
 
-            model.addAttribute("tipoToast", "erro");
+            model.addAttribute(
+                    "tipoToast",
+                    "erro");
             model.addAttribute(
                     "mensagemToast",
                     result.getFieldError().getDefaultMessage()
@@ -219,11 +195,8 @@ public class ClienteController {
 
             return "cliente/perfil";
         }
-
         try {
-
             clienteService.alterar(6L, dto);
-
             redirectAttributes.addFlashAttribute(
                     "tipoToast",
                     "sucesso"
@@ -237,7 +210,6 @@ public class ClienteController {
             return "redirect:/cliente/perfil";
 
         } catch (IllegalArgumentException e) {
-
             redirectAttributes.addFlashAttribute(
                     "tipoToast",
                     "erro"
@@ -247,14 +219,15 @@ public class ClienteController {
                     "mensagemToast",
                     e.getMessage()
             );
-
             return "redirect:/cliente/perfil";
         }
     }
 
     @PostMapping("/cliente/alterar-senha")
     public String alterarSenha(
-            @Valid @ModelAttribute("alterarSenha") AlterarSenhaDTO dto,
+            @Valid
+            @ModelAttribute("alterarSenha")
+            AlterarSenhaDTO dto,
             BindingResult result,
             RedirectAttributes redirectAttributes
     ) {
@@ -264,7 +237,6 @@ public class ClienteController {
         }
 
         if (result.hasErrors()) {
-
             redirectAttributes.addFlashAttribute(
                     "tipoToast",
                     "erro"
@@ -277,14 +249,8 @@ public class ClienteController {
 
             return "redirect:/cliente/perfil";
         }
-
         try {
-
-            clienteService.alterarSenha(
-                    6L,
-                    dto
-            );
-
+            clienteService.alterarSenha(6L, dto);
             redirectAttributes.addFlashAttribute(
                     "tipoToast",
                     "sucesso"
@@ -296,7 +262,6 @@ public class ClienteController {
             );
 
         } catch (IllegalArgumentException e) {
-
             redirectAttributes.addFlashAttribute(
                     "tipoToast",
                     "erro"
@@ -307,15 +272,7 @@ public class ClienteController {
                     e.getMessage()
             );
         }
-
         return "redirect:/cliente/perfil";
-    }
-
-    private boolean verificarClienteAtivo() {
-
-        Long clienteId = 6L;
-
-        return clienteService.clienteAtivo(clienteId);
     }
 
     @GetMapping("/cliente/detalhes-produto")
@@ -330,7 +287,6 @@ public class ClienteController {
 
     @GetMapping("/cliente/carrinho")
     public String carrinho() {
-
         if (!verificarClienteAtivo()) {
             return "redirect:/cliente/inativo";
         }
@@ -340,7 +296,6 @@ public class ClienteController {
 
     @GetMapping("/cliente/finalizar-compra")
     public String finalizarCompra() {
-
         if (!verificarClienteAtivo()) {
             return "redirect:/cliente/inativo";
         }
@@ -350,7 +305,6 @@ public class ClienteController {
 
     @GetMapping("/cliente/pedido")
     public String pedido() {
-
         if (!verificarClienteAtivo()) {
             return "redirect:/cliente/inativo";
         }
@@ -360,19 +314,22 @@ public class ClienteController {
 
     @GetMapping("/cliente/inativo")
     public String inativo(Model model) {
-
         Cliente cliente = clienteService.buscarPorId(6L);
 
         model.addAttribute(
                 "cliente",
                 cliente
         );
-
         return "cliente/inativo";
     }
 
     @GetMapping("/cliente/sair")
     public String sair() {
         return "cliente/login";
+    }
+
+    private boolean verificarClienteAtivo() {
+        Long clienteId = 6L;
+        return clienteService.clienteAtivo(clienteId);
     }
 }

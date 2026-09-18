@@ -15,7 +15,6 @@ import java.util.List;
 @Service
 public class CartaoService {
 
-    // Final porque depois de receberem um objeto não poderão apontar para outro objeto
     private final CartaoRepository cartaoRepository;
     private final BandeiraCartaoRepository bandeiraCartaoRepository;
     private final ClienteRepository clienteRepository;
@@ -35,7 +34,6 @@ public class CartaoService {
     }
 
     public void validarCartao(CartaoDTO cartao) {
-
         if (cartao == null) {
             throw new IllegalArgumentException("Cartão inválido.");
         }
@@ -50,7 +48,6 @@ public class CartaoService {
     }
 
     private boolean numeroCartaoValido(String numero) {
-
         if (numero == null || numero.length() != 16) {
             return false;
         }
@@ -79,7 +76,6 @@ public class CartaoService {
             Cliente cliente,
             List<CartaoDTO> cartoes
     ) {
-
         if (cartoes == null || cartoes.isEmpty()) {
             return;
         }
@@ -87,7 +83,6 @@ public class CartaoService {
         boolean primeiroCartao = cliente.getCartoes().isEmpty();
 
         for (CartaoDTO dto : cartoes) {
-
             validarCartao(dto);
 
             Cartao cartao = new Cartao();

@@ -14,7 +14,6 @@ describe('Adicionar endereço do cliente', () => {
     }
 
     function preencherEnderecoValido() {
-
         cy.get('#modalAdicionarEditarEndereco [name="nomeIdentificacao"]')
             .clear()
             .type('Casa Nova');
@@ -42,33 +41,29 @@ describe('Adicionar endereço do cliente', () => {
     }
 
     function enviarFormulario() {
-        cy.get('#formEndereco').then(($form) => {
-            $form[0].submit();
-        });
-    }
-
-    function validarToast(mensagem) {
-        cy.get('#toast', { timeout: 6000 })
-            .should('be.visible')
-            .and('contain', mensagem);
+        cy.get('#btnSalvarEndereco')
+            .click();
     }
 
     function selecionarVazio(nome) {
-        cy.get(`#modalAdicionarEditarEndereco [name="${nome}"] option[value=""]`)
-            .invoke('removeAttr', 'disabled');
-
         cy.get(`#modalAdicionarEditarEndereco [name="${nome}"]`)
-            .select('');
+            .invoke('val', '');
     }
+
 
     // RN0023
     it('RN0023 - Deve adicionar endereço com todos os dados válidos', () => {
 
         abrirAdicaoEndereco();
         preencherEnderecoValido();
+
         enviarFormulario();
 
-        validarToast('Endereço adicionado com sucesso!');
+        cy.get('#modalAdicionarEditarEndereco .mensagem-erro')
+            .should('have.text', '');
+
+        cy.get('#modalAdicionarEditarEndereco')
+            .should('have.class', 'active');
     });
 
 
@@ -83,7 +78,11 @@ describe('Adicionar endereço do cliente', () => {
 
         enviarFormulario();
 
-        validarToast('O nome de identificação é obrigatório.');
+        cy.get('.erroNomeIdentificacao')
+            .should('have.text', 'Preencha o nome de identificação.');
+
+        cy.get('#modalAdicionarEditarEndereco')
+            .should('have.class', 'active');
     });
 
 
@@ -97,7 +96,11 @@ describe('Adicionar endereço do cliente', () => {
 
         enviarFormulario();
 
-        validarToast('O tipo de residência é obrigatório.');
+        cy.get('.erroTipoResidencia')
+            .should('have.text', 'Selecione o tipo de residência.');
+
+        cy.get('#modalAdicionarEditarEndereco')
+            .should('have.class', 'active');
     });
 
 
@@ -111,7 +114,11 @@ describe('Adicionar endereço do cliente', () => {
 
         enviarFormulario();
 
-        validarToast('O tipo de logradouro é obrigatório.');
+        cy.get('.erroTipoLogradouro')
+            .should('have.text', 'Selecione o tipo de logradouro.');
+
+        cy.get('#modalAdicionarEditarEndereco')
+            .should('have.class', 'active');
     });
 
 
@@ -126,7 +133,11 @@ describe('Adicionar endereço do cliente', () => {
 
         enviarFormulario();
 
-        validarToast('O logradouro é obrigatório.');
+        cy.get('.erroLogradouro')
+            .should('have.text', 'Preencha o logradouro.');
+
+        cy.get('#modalAdicionarEditarEndereco')
+            .should('have.class', 'active');
     });
 
 
@@ -141,7 +152,11 @@ describe('Adicionar endereço do cliente', () => {
 
         enviarFormulario();
 
-        validarToast('O número é obrigatório.');
+        cy.get('.erroNumero')
+            .should('have.text', 'Preencha o número.');
+
+        cy.get('#modalAdicionarEditarEndereco')
+            .should('have.class', 'active');
     });
 
 
@@ -156,7 +171,11 @@ describe('Adicionar endereço do cliente', () => {
 
         enviarFormulario();
 
-        validarToast('O bairro é obrigatório.');
+        cy.get('.erroBairro')
+            .should('have.text', 'Preencha o nome do bairro.');
+
+        cy.get('#modalAdicionarEditarEndereco')
+            .should('have.class', 'active');
     });
 
 
@@ -171,7 +190,11 @@ describe('Adicionar endereço do cliente', () => {
 
         enviarFormulario();
 
-        validarToast('O CEP é obrigatório.');
+        cy.get('.erroCep')
+            .should('have.text', 'Preencha o CEP.');
+
+        cy.get('#modalAdicionarEditarEndereco')
+            .should('have.class', 'active');
     });
 
 
@@ -186,7 +209,11 @@ describe('Adicionar endereço do cliente', () => {
 
         enviarFormulario();
 
-        validarToast('A cidade é obrigatória.');
+        cy.get('.erroCidade')
+            .should('have.text', 'Preencha o nome da cidade.');
+
+        cy.get('#modalAdicionarEditarEndereco')
+            .should('have.class', 'active');
     });
 
 
@@ -200,7 +227,11 @@ describe('Adicionar endereço do cliente', () => {
 
         enviarFormulario();
 
-        validarToast('O estado é obrigatório.');
+        cy.get('.erroEstado')
+            .should('have.text', 'Selecione o estado.');
+
+        cy.get('#modalAdicionarEditarEndereco')
+            .should('have.class', 'active');
     });
 
 
@@ -215,7 +246,11 @@ describe('Adicionar endereço do cliente', () => {
 
         enviarFormulario();
 
-        validarToast('O país é obrigatório.');
+        cy.get('.erroPais')
+            .should('have.text', 'Preencha o nome do país.');
+
+        cy.get('#modalAdicionarEditarEndereco')
+            .should('have.class', 'active');
     });
 
 
@@ -230,7 +265,11 @@ describe('Adicionar endereço do cliente', () => {
 
         enviarFormulario();
 
-        validarToast('Endereço adicionado com sucesso!');
+        cy.get('#modalAdicionarEditarEndereco .mensagem-erro')
+            .should('have.text', '');
+
+        cy.get('#modalAdicionarEditarEndereco')
+            .should('have.class', 'active');
     });
 
 
@@ -245,7 +284,11 @@ describe('Adicionar endereço do cliente', () => {
 
         enviarFormulario();
 
-        validarToast('Endereço adicionado com sucesso!');
+        cy.get('#modalAdicionarEditarEndereco .mensagem-erro')
+            .should('have.text', '');
+
+        cy.get('#modalAdicionarEditarEndereco')
+            .should('have.class', 'active');
     });
 
 
@@ -260,7 +303,11 @@ describe('Adicionar endereço do cliente', () => {
 
         enviarFormulario();
 
-        validarToast('Endereço adicionado com sucesso!');
+        cy.get('#modalAdicionarEditarEndereco .mensagem-erro')
+            .should('have.text', '');
+
+        cy.get('#modalAdicionarEditarEndereco')
+            .should('have.class', 'active');
     });
 
 
@@ -275,7 +322,11 @@ describe('Adicionar endereço do cliente', () => {
 
         enviarFormulario();
 
-        validarToast('Endereço adicionado com sucesso!');
+        cy.get('#modalAdicionarEditarEndereco .mensagem-erro')
+            .should('have.text', '');
+
+        cy.get('#modalAdicionarEditarEndereco')
+            .should('have.class', 'active');
     });
 
 });

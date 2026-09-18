@@ -35,9 +35,6 @@ document.addEventListener('DOMContentLoaded', function () {
         document.getElementById('btnSalvarCartao').textContent =
             'Cadastrar';
 
-        formCartao.action = '/cliente/adicionar-cartao';
-        formCartao.method = 'post';
-
         modalCartao.classList.add('active');
     });
 
@@ -119,8 +116,6 @@ formCartao.addEventListener('submit', function (event) {
         event.preventDefault();
     }
 });
-
-
 
     // Excluir cartão
     document.querySelectorAll('.excluir-cartao').forEach(function (botao) {

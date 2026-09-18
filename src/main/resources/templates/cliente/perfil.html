@@ -309,7 +309,7 @@
 
                                 <form th:if="${!cartao.preferencial}"
                                       method="post"
-                                      action="/cliente/tornar-cartao-preferencial">
+                                      th:action="@{/cliente/tornar-cartao-preferencial}">
 
                                     <input type="hidden"
                                            name="cartaoId"

@@ -11,14 +11,12 @@ function configurarCartao(cartao) {
 
     // Nome
     nome.addEventListener('input', function () {
-
         nome.value = nome.value.replace(/[^A-Za-zÀ-ÿ\s]/g, '');
 
         if (nome.value.trim().length > 0 &&
             nome.value.trim().length < 3) {
 
-            erroNome.textContent =
-                'O nome deve ter pelo menos 3 caracteres.';
+            erroNome.textContent = 'O nome deve ter pelo menos 3 caracteres.';
 
         } else {
             erroNome.textContent = '';
@@ -76,12 +74,12 @@ function numeroValido(numero) {
     }
 
     let soma = 0;
-    let dobro = false;
 
-    for (let i = numero.length - 1; i >= 0; i--) {
+    for (let i = 0; i < numero.length; i++) {
+
         let digito = Number(numero[i]);
 
-        if (dobro) {
+        if (i % 2 === 0) {
             digito *= 2;
 
             if (digito > 9) {
@@ -90,7 +88,6 @@ function numeroValido(numero) {
         }
 
         soma += digito;
-        dobro = !dobro;
     }
 
     return soma % 10 === 0;

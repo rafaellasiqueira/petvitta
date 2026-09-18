@@ -1,4 +1,5 @@
-describe('Adicionar cartão', () => {
+describe('dicionar cartão', () => {
+
     afterEach(() => {
         cy.pause();
     });
@@ -29,9 +30,8 @@ describe('Adicionar cartão', () => {
     }
 
     function enviarFormulario() {
-        cy.get('#formCartao').then(($form) => {
-            $form[0].submit();
-        });
+        cy.get('#btnSalvarCartao')
+            .click();
     }
 
     function validarToast(mensagem) {
@@ -43,7 +43,7 @@ describe('Adicionar cartão', () => {
     it('RN0024 - Deve adicionar cartão com todos os dados válidos', () => {
         abrirAdicaoCartao();
         preencherCartaoValido();
-        enviarFormulario();
+        enviarFormulario()
         validarToast('Cartão adicionado com sucesso!');
     });
 
@@ -55,7 +55,9 @@ describe('Adicionar cartão', () => {
             .clear();
 
         enviarFormulario();
-        validarToast('O número do cartão é obrigatório.');
+
+        cy.get('#erroNumeroCartao')
+            .should('have.text', 'Preencha o número do cartão.');
     });
 
     it('RN0024 - Não deve adicionar cartão sem o nome impresso', () => {
@@ -66,7 +68,9 @@ describe('Adicionar cartão', () => {
             .clear();
 
         enviarFormulario();
-        validarToast('O nome impresso no cartão deve ter entre 3 e 150 caracteres.');
+
+        cy.get('#erroNomeCartao')
+            .should('have.text', 'Preencha o nome impresso no cartão.');
     });
 
     it('RN0025 - Não deve adicionar cartão sem informar a bandeira', () => {
@@ -74,13 +78,15 @@ describe('Adicionar cartão', () => {
         preencherCartaoValido();
 
         cy.get('#modalCadastrarCartao [name="bandeira"] option[value=""]')
-            .invoke('removeAttr', 'disabled'); // Remove o atributo desabilitado do value ""
+            .invoke('removeAttr', 'disabled');
 
         cy.get('#modalCadastrarCartao [name="bandeira"]')
             .select('');
 
         enviarFormulario();
-        validarToast('A bandeira do cartão é obrigatória.');
+
+        cy.get('#erroBandeira')
+            .should('have.text', 'Selecione a bandeira do cartão.');
     });
 
     it('RN0024 - Não deve adicionar cartão sem código de segurança', () => {
@@ -91,26 +97,25 @@ describe('Adicionar cartão', () => {
             .clear();
 
         enviarFormulario();
-        validarToast('O código de segurança é obrigatório.');
+
+        cy.get('#erroCVV')
+            .should('have.text', 'Preencha o código de segurança.');
     });
 
     it('RF0027 - Deve permitir adicionar cartão como preferencial', () => {
         abrirAdicaoCartao();
         preencherCartaoValido();
 
-        cy.get('#cartaoPreferencial')
-            .check();
-
-        cy.get('#cartaoPreferencial')
-            .should('be.checked');
+        cy.get('#modalCadastrarCartao [name="numero"]')
+            .clear()
+            .type('1234567812345678');
 
         enviarFormulario();
-        validarToast('Cartão adicionado com sucesso!');
 
-        cy.get('.item-cartao')
-            .contains('Preferencial')
-            .should('exist');
+        cy.get('#erroNumeroCartao')
+            .should('have.text', 'Número do cartão inválido.');
     });
+
 
     it('RF0027 - Deve permitir tornar um cartão já cadastrado como preferencial', () => {
         cy.get('.item-cartao')

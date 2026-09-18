@@ -7,8 +7,7 @@ function configurarEndereco(endereco) {
 
     // Nome de identificação
     nomeIdentificacao.addEventListener('input', function () {
-        nomeIdentificacao.value =
-            nomeIdentificacao.value.replace(/[^A-Za-zÀ-ÿ\s]/g, '');
+        nomeIdentificacao.value = nomeIdentificacao.value.replace(/[^A-Za-zÀ-ÿ\s]/g, '');
 
         if (nomeIdentificacao.value.trim().length < 3) {
             erroNomeIdentificacao.textContent =
