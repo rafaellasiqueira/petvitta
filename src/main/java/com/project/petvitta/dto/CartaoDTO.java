@@ -20,7 +20,6 @@ public class CartaoDTO {
     @Pattern(regexp = "[A-Za-zÀ-ÿ\\s]*", message = "O nome do cartão deve conter apenas letras.")
     private String nomeImpresso;
 
-    @NotBlank(message = "O código de segurança é obrigatório.")
     @Size(min = 3, max = 4, message = "O código de segurança deve ter 3 ou 4 caracteres.")
     @Pattern(regexp = "\\d*", message = "O código de segurança deve conter apenas números.")
     private String codigoSeguranca;

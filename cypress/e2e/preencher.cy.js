@@ -13,11 +13,11 @@ describe('Cadastro de clientes - Popular banco', () => {
             cartao: '4000000000000002'
         },
         {
-            nome: 'Bruno Henrique Lima',
+            nome: 'Bruna Henrique Lima',
             cpf: '31204817936',
             telefone: '11977771002',
             nascimento: '1999-07-22',
-            email: 'bruno.lima02@email.com',
+            email: 'bruna.lima02@email.com',
             cep: '08720000',
             numero: '250',
             cartao: '4000000000000010'
@@ -165,20 +165,8 @@ describe('Cadastro de clientes - Popular banco', () => {
             cy.get('[name="enderecos[0].cep"]')
                 .type(cliente.cep);
 
-            cy.get('[name="enderecos[0].logradouro"]')
-                .type('Rua das Flores');
-
-            cy.get('[name="enderecos[0].bairro"]')
-                .type('Centro');
-
             cy.get('[name="enderecos[0].numero"]')
                 .type(cliente.numero);
-
-            cy.get('[name="enderecos[0].estado"]')
-                .select('1');
-
-            cy.get('[name="enderecos[0].cidade"]')
-                .type('Mogi das Cruzes');
 
             cy.get('[name="enderecos[0].pais"]')
                 .type('Brasil');

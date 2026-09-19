@@ -122,7 +122,7 @@ public class ClienteController {
                     "Cadastro concluído com sucesso!"
             );
 
-            return "redirect:/cliente/login";
+            return "redirect:/cliente/cadastrar";
 
         } catch (IllegalArgumentException e) {
             model.addAttribute(

@@ -139,6 +139,50 @@ public class EnderecoService {
         cliente.getEnderecos().add(endereco);
     }
 
+    private void validarAlteracaoTipoEndereco(
+            Cliente cliente,
+            Endereco endereco,
+            Long novoTipoId
+    ) {
+        boolean possuiCobranca = false;
+        boolean possuiEntrega = false;
+
+        for (Endereco e : cliente.getEnderecos()) {
+
+            // Ignora o endereço que está sendo alterado
+            if (e.equals(endereco)) {
+                continue;
+            }
+
+            Long tipoId = e.getTipoEndereco().getId();
+
+            if (tipoId == 1L) {
+                possuiCobranca = true;
+            } else if (tipoId == 2L) {
+                possuiEntrega = true;
+            } else if (tipoId == 3L) {
+                possuiCobranca = true;
+                possuiEntrega = true;
+            }
+        }
+
+        // Considera o novo tipo do endereço
+        if (novoTipoId == 1L) {
+            possuiCobranca = true;
+        } else if (novoTipoId == 2L) {
+            possuiEntrega = true;
+        } else if (novoTipoId == 3L) {
+            possuiCobranca = true;
+            possuiEntrega = true;
+        }
+
+        if (!possuiCobranca || !possuiEntrega) {
+            throw new IllegalArgumentException(
+                    "Não é possível alterar o tipo deste endereço, pois você deve possuir ao menos um endereço de cobrança e um de entrega."
+            );
+        }
+    }
+
     @Transactional
     public void editar(Long clienteId, Long enderecoId, EnderecoDTO dto) {
 
@@ -154,6 +198,12 @@ public class EnderecoService {
                                 "Esse endereço não pertence ao cliente."
                         )
                 );
+
+        validarAlteracaoTipoEndereco(
+                cliente,
+                endereco,
+                dto.getTipoEndereco()
+        );
 
         endereco.setNomeIdentificacao(dto.getNomeIdentificacao());
         endereco.setCep(dto.getCep());
@@ -279,6 +329,33 @@ public class EnderecoService {
                                 "Esse endereço não pertence ao cliente."
                         )
                 );
+
+        boolean possuiCobranca = false;
+        boolean possuiEntrega = false;
+
+        for (Endereco e : cliente.getEnderecos()) {
+
+            if (e.equals(endereco)) {
+                continue;
+            }
+
+            Long tipoId = e.getTipoEndereco().getId();
+
+            if (tipoId == 1L) {
+                possuiCobranca = true;
+            } else if (tipoId == 2L) {
+                possuiEntrega = true;
+            } else if (tipoId == 3L) {
+                possuiCobranca = true;
+                possuiEntrega = true;
+            }
+        }
+
+        if (!possuiCobranca || !possuiEntrega) {
+            throw new IllegalArgumentException(
+                    "Não é possível excluir este endereço, pois o você deve possuir ao menos um endereço de cobrança e um de entrega."
+            );
+        }
 
         cliente.getEnderecos().remove(endereco);
     }

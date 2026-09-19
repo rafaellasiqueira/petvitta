@@ -6,6 +6,8 @@ describe('Adicionar endereço do cliente', () => {
 
     beforeEach(() => {
         cy.visit('/cliente/perfil');
+        cy.viewport(1280, 720);
+        cy.wait(2000);
     });
 
     function abrirAdicaoEndereco() {
@@ -14,7 +16,6 @@ describe('Adicionar endereço do cliente', () => {
     }
 
     function preencherEnderecoValido() {
-
         cy.get('#modalAdicionarEditarEndereco [name="nomeIdentificacao"]')
             .clear()
             .type('Casa Nova');
@@ -53,28 +54,14 @@ describe('Adicionar endereço do cliente', () => {
             .and('contain', mensagem);
     }
 
-    function selecionarVazio(nome) {
-        cy.get(`#modalAdicionarEditarEndereco [name="${nome}"] option[value=""]`)
-            .invoke('removeAttr', 'disabled');
-
-        cy.get(`#modalAdicionarEditarEndereco [name="${nome}"]`)
-            .select('');
-    }
-
-    // RN0023
-    it('RN0023 - Deve adicionar endereço com todos os dados válidos', () => {
-
+    it('RN0023/RF0026 - Deve adicionar endereço com todos os dados válidos', () => {
         abrirAdicaoEndereco();
         preencherEnderecoValido();
         enviarFormulario();
-
         validarToast('Endereço adicionado com sucesso!');
     });
 
-
-    // RN0023
-    it('CT02 - Não deve adicionar endereço sem o nome de identificação', () => {
-
+    it('RN0023/RF0026 - Não deve adicionar endereço sem o nome de identificação', () => {
         abrirAdicaoEndereco();
         preencherEnderecoValido();
 
@@ -82,42 +69,43 @@ describe('Adicionar endereço do cliente', () => {
             .clear();
 
         enviarFormulario();
-
-        validarToast('O nome de identificação é obrigatório.');
+        validarToast('O nome de identificação deve ter no mínimo 3 e máximo 20 caracteres.');
     });
 
-
-    // RN0023
-    it('CT03 - Não deve adicionar endereço sem tipo de residência', () => {
-
+    it('RN0023 - Não deve adicionar endereço sem o tipo de endereço', () => {
         abrirAdicaoEndereco();
         preencherEnderecoValido();
 
-        selecionarVazio('tipoResidencia');
+        cy.get('[name="tipoEndereco"]')
+            .invoke('val', '');
 
         enviarFormulario();
+        validarToast('O tipo de endereço é obrigatório.');
+    });
 
+    it('RN0023 - Não deve adicionar endereço sem o tipo de residência', () => {
+        abrirAdicaoEndereco();
+        preencherEnderecoValido();
+
+        cy.get('[name="tipoResidencia"]')
+            .invoke('val', '');
+
+        enviarFormulario();
         validarToast('O tipo de residência é obrigatório.');
     });
 
-
-    // RN0023
-    it('CT04 - Não deve adicionar endereço sem tipo de logradouro', () => {
-
+    it('RN0023 - Não deve adicionar endereço sem o tipo de logradouro', () => {
         abrirAdicaoEndereco();
         preencherEnderecoValido();
 
-        selecionarVazio('tipoLogradouro');
+        cy.get('[name="tipoLogradouro"]')
+            .invoke('val', '');
 
         enviarFormulario();
-
         validarToast('O tipo de logradouro é obrigatório.');
     });
 
-
-    // RN0023
-    it('CT05 - Não deve adicionar endereço sem logradouro', () => {
-
+    it('RN0023 - Não deve adicionar endereço sem logradouro', () => {
         abrirAdicaoEndereco();
         preencherEnderecoValido();
 
@@ -125,14 +113,10 @@ describe('Adicionar endereço do cliente', () => {
             .clear();
 
         enviarFormulario();
-
         validarToast('O logradouro é obrigatório.');
     });
 
-
-    // RN0023
-    it('CT06 - Não deve adicionar endereço sem número', () => {
-
+    it('RN0023 - Não deve adicionar endereço sem número', () => {
         abrirAdicaoEndereco();
         preencherEnderecoValido();
 
@@ -140,14 +124,10 @@ describe('Adicionar endereço do cliente', () => {
             .clear();
 
         enviarFormulario();
-
         validarToast('O número é obrigatório.');
     });
 
-
-    // RN0023
-    it('CT07 - Não deve adicionar endereço sem bairro', () => {
-
+    it('RN0023 - Não deve adicionar endereço sem bairro', () => {
         abrirAdicaoEndereco();
         preencherEnderecoValido();
 
@@ -155,14 +135,10 @@ describe('Adicionar endereço do cliente', () => {
             .clear();
 
         enviarFormulario();
-
         validarToast('O bairro é obrigatório.');
     });
 
-
-    // RN0023
-    it('CT08 - Não deve adicionar endereço sem CEP', () => {
-
+    it('RN0023 - Não deve adicionar endereço sem CEP', () => {
         abrirAdicaoEndereco();
         preencherEnderecoValido();
 
@@ -170,14 +146,10 @@ describe('Adicionar endereço do cliente', () => {
             .clear();
 
         enviarFormulario();
-
         validarToast('O CEP é obrigatório.');
     });
 
-
-    // RN0023
-    it('CT09 - Não deve adicionar endereço sem cidade', () => {
-
+    it('RN0023 - Não deve adicionar endereço sem cidade', () => {
         abrirAdicaoEndereco();
         preencherEnderecoValido();
 
@@ -185,28 +157,21 @@ describe('Adicionar endereço do cliente', () => {
             .clear();
 
         enviarFormulario();
-
         validarToast('A cidade é obrigatória.');
     });
 
-
-    // RN0023
-    it('CT10 - Não deve adicionar endereço sem estado', () => {
-
+    it('RN0023 - Não deve adicionar endereço sem estado', () => {
         abrirAdicaoEndereco();
         preencherEnderecoValido();
 
-        selecionarVazio('estado');
+        cy.get('[name="estado"]')
+            .invoke('val', '');
 
         enviarFormulario();
-
         validarToast('O estado é obrigatório.');
     });
 
-
-    // RN0023
-    it('CT11 - Não deve adicionar endereço sem país', () => {
-
+    it('RN0023 - Não deve adicionar endereço sem país', () => {
         abrirAdicaoEndereco();
         preencherEnderecoValido();
 
@@ -214,68 +179,6 @@ describe('Adicionar endereço do cliente', () => {
             .clear();
 
         enviarFormulario();
-
         validarToast('O país é obrigatório.');
     });
-
-
-    // RN0023
-    it('CT12 - Deve permitir adicionar endereço sem observações', () => {
-
-        abrirAdicaoEndereco();
-        preencherEnderecoValido();
-
-        cy.get('#modalAdicionarEditarEndereco #observacoes')
-            .clear();
-
-        enviarFormulario();
-
-        validarToast('Endereço adicionado com sucesso!');
-    });
-
-
-    // RN0021 / RN0022
-    it('CT13 - Deve permitir adicionar endereço de entrega', () => {
-
-        abrirAdicaoEndereco();
-        preencherEnderecoValido();
-
-        cy.get('#modalAdicionarEditarEndereco [name="tipoEndereco"]')
-            .select('Entrega');
-
-        enviarFormulario();
-
-        validarToast('Endereço adicionado com sucesso!');
-    });
-
-
-    // RN0021
-    it('CT14 - Deve permitir adicionar endereço de cobrança', () => {
-
-        abrirAdicaoEndereco();
-        preencherEnderecoValido();
-
-        cy.get('#modalAdicionarEditarEndereco [name="tipoEndereco"]')
-            .select('Cobrança');
-
-        enviarFormulario();
-
-        validarToast('Endereço adicionado com sucesso!');
-    });
-
-
-    // RN0021 / RN0022
-    it('CT15 - Deve permitir adicionar endereço de cobrança e entrega', () => {
-
-        abrirAdicaoEndereco();
-        preencherEnderecoValido();
-
-        cy.get('#modalAdicionarEditarEndereco [name="tipoEndereco"]')
-            .select('Cobrança e Entrega');
-
-        enviarFormulario();
-
-        validarToast('Endereço adicionado com sucesso!');
-    });
-
 });

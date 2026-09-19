@@ -13,6 +13,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         if (inputNome.value.trim() === '') {
             erroNome.textContent = 'Preencha o nome.';
+            inputNome.focus();
             formularioValido = false;
         }
 
@@ -22,7 +23,28 @@ document.addEventListener('DOMContentLoaded', function() {
 
         if (inputTelefone.value.trim() === '') {
             erroTelefone.textContent = 'Preencha o telefone.';
+            inputTelefone.focus();
             formularioValido = false;
+        }
+
+        const inputDataNascimento = document.getElementById('dataNascimento');
+        const erroDataNascimento = document.getElementById('erroDataNascimento');
+
+        // Data
+        if (inputDataNascimento.value === '') {
+            erroDataNascimento.textContent = 'Preencha a data de nascimento.';
+            inputDataNascimento.focus();
+            formularioValido = false;
+
+        } else {
+            const data = new Date(inputDataNascimento.value);
+            const hoje = new Date();
+
+            if (data > hoje) {
+                erroDataNascimento.textContent = 'A data não pode ser futura.';
+                inputDataNascimento.focus();
+                formularioValido = false;
+            }
         }
 
         if (!formularioValido) {

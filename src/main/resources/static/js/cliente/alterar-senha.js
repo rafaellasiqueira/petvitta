@@ -31,19 +31,19 @@ document.addEventListener('DOMContentLoaded', function () {
     // Enviar formulário
     formSenha.addEventListener('submit', function (e) {
 
-        let valido = true;
+        let formularioValido = true;
 
 
         if (senhaAtual.value.trim() === '') {
-            erroSenhaAtual.textContent =
-                'Digite sua senha atual.';
+            erroSenhaAtual.textContent = 'Digite sua senha atual.';
+            senhaAtual.focus();
 
-            valido = false;
+            formularioValido = false;
         }
 
 
         if (!validarSenha(novaSenha, erroNovaSenha)) {
-            valido = false;
+            formularioValido = false;
         }
 
 
@@ -52,11 +52,11 @@ document.addEventListener('DOMContentLoaded', function () {
             confirmarSenha,
             erroConfirmarSenha
         )) {
-            valido = false;
+            formularioValido = false;
         }
 
 
-        if (!valido) {
+        if (!formularioValido) {
             e.preventDefault();
         }
     });

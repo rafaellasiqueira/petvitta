@@ -12,8 +12,9 @@ function configurarEndereco(endereco) {
         if (nomeIdentificacao.value.trim().length < 3) {
             erroNomeIdentificacao.textContent =
                 'Digite um nome com pelo menos 3 caracteres.';
-        } else {
-            erroNomeIdentificacao.textContent = '';
+        } else if (nomeIdentificacao.value.trim().length > 20) {
+            erroNomeIdentificacao.textContent =
+                'Digite um nome com no máximo 20 caracteres.';
         }
     });
 

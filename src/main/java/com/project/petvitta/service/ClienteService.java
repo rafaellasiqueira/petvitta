@@ -314,6 +314,7 @@ public class ClienteService {
 
         cliente.setNome(dto.getNome());
         cliente.setTelefone(dto.getTelefone());
+        cliente.setDataNascimento(dto.getDataNascimento());
         cliente.setGenero(genero);
         cliente.setTipoTelefone(tipoTelefone);
 

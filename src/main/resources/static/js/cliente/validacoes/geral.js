@@ -9,6 +9,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (inputNome.value.trim().length < 3) {
             erroNome.textContent = 'Digite um nome com pelo menos 3 caracteres.';
+            inputNome.focus();
         } else {
             erroNome.textContent = '';
         }
@@ -41,6 +42,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (telefone.replace(/\D/g, '').length < 10) {
             erroTelefone.textContent = 'Digite o telefone completo.';
+            inputTelefone.focus();
         } else {
             erroTelefone.textContent = '';
         }
@@ -57,52 +59,52 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // E-mail
-    const inputEmail = document.getElementById('email');
-    const erroEmail = document.getElementById('erroEmail');
+    // Data de nascimento
+    const inputDataNascimento = document.getElementById('dataNascimento');
+    const erroDataNascimento = document.getElementById('erroDataNascimento');
 
-    inputEmail.addEventListener('input', function () {
-        if (inputEmail.checkValidity()) {
-            erroEmail.textContent = '';
+    inputDataNascimento.addEventListener('input', function () {
+        const data = new Date(inputDataNascimento.value);
+        const hoje = new Date();
+
+        if (inputDataNascimento.value.split('-')[0].length !== 4) {
+            erroDataNascimento.textContent = 'Digite um ano com 4 dígitos.';
+            inputDataNascimento.focus();
+        } else if (data > hoje) {
+            erroDataNascimento.textContent = 'A data não pode ser futura.';
+            inputDataNascimento.focus();
         } else {
-            erroEmail.textContent = 'Digite um e-mail válido.';
+            erroDataNascimento.textContent = '';
         }
     });
-
 });
 
 function validarSenha(senha, erroSenha) {
-
     erroSenha.textContent = '';
 
     if (senha.value.length < 8) {
-        erroSenha.textContent =
-            'A senha deve ter pelo menos 8 caracteres.';
-
+        erroSenha.textContent = 'A senha deve ter pelo menos 8 caracteres.';
+        senha.focus();
         return false;
     }
 
     if (!/[A-Z]/.test(senha.value)) {
-        erroSenha.textContent =
-            'A senha deve ter pelo menos uma letra maiúscula.';
-
+        erroSenha.textContent = 'A senha deve ter pelo menos uma letra maiúscula.';
+        senha.focus();
         return false;
     }
 
     if (!/[a-z]/.test(senha.value)) {
-        erroSenha.textContent =
-            'A senha deve ter pelo menos uma letra minúscula.';
-
+        erroSenha.textContent = 'A senha deve ter pelo menos uma letra minúscula.';
+        senha.focus();
         return false;
     }
 
     if (!/[^A-Za-z0-9]/.test(senha.value)) {
-        erroSenha.textContent =
-            'A senha deve ter pelo menos um caractere especial.';
-
+        erroSenha.textContent = 'A senha deve ter pelo menos um caractere especial.';
+        senha.focus();
         return false;
     }
-
     return true;
 }
 
@@ -114,14 +116,11 @@ function validarConfirmacaoSenha(
 ) {
 
     if (confirmarSenha.value !== senha.value) {
-
-        erroConfirmarSenha.textContent =
-            'As senhas não coincidem.';
-
+        erroConfirmarSenha.textContent = 'As senhas não coincidem.';
+        confirmarSenha.focus();
         return false;
     }
 
     erroConfirmarSenha.textContent = '';
-
     return true;
 }

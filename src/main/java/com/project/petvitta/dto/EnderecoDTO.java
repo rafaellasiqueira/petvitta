@@ -11,8 +11,7 @@ import lombok.Setter;
 @Setter
 public class EnderecoDTO {
 
-    @NotBlank(message = "O nome de identificação é obrigatório.")
-    @Size(max = 20, message = "O nome de identificação deve ter no máximo 20 caracteres.")
+    @Size(min = 3, max = 20, message = "O nome de identificação deve ter no mínimo 3 e máximo 20 caracteres.")
     private String nomeIdentificacao;
 
     @NotBlank(message = "O CEP é obrigatório.")

@@ -132,19 +132,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const inputDataNascimento = document.getElementById('dataNascimento');
     const erroDataNascimento = document.getElementById('erroDataNascimento');
 
-    inputDataNascimento.addEventListener('input', function () {
-        const data = new Date(inputDataNascimento.value);
-        const hoje = new Date();
-
-        if (inputDataNascimento.value.split('-')[0].length !== 4) {
-            erroDataNascimento.textContent = 'Digite um ano com 4 dígitos.';
-        } else if (data > hoje) {
-            erroDataNascimento.textContent = 'A data não pode ser futura.';
-        } else {
-            erroDataNascimento.textContent = '';
-        }
-    });
-
     // Gênero
     const inputGenero = document.getElementById('genero');
     const erroGenero = document.getElementById('erroGenero');
@@ -183,10 +170,11 @@ form.addEventListener('submit', function (event) {
 
     if (inputNome.value.trim() === '') {
         erroNome.textContent = 'Preencha o nome.';
+        inputNome.focus();
         formularioValido = false;
     } else if (inputNome.value.trim().length < 3) {
-        erroNome.textContent =
-            'Digite um nome com pelo menos 3 caracteres.';
+        erroNome.textContent = 'Digite um nome com pelo menos 3 caracteres.';
+        inputNome.focus();
         formularioValido = false;
     }
 
@@ -196,9 +184,11 @@ form.addEventListener('submit', function (event) {
 
     if (inputCpf.value.trim() === '') {
         erroCpf.textContent = 'Preencha o CPF.';
+        inputCpf.focus();
         formularioValido = false;
     } else if (!cpfValido(inputCpf.value)) {
         erroCpf.textContent = 'Digite um CPF válido.';
+        inputCpf.focus();
         formularioValido = false;
     }
 
@@ -208,8 +198,8 @@ form.addEventListener('submit', function (event) {
         document.getElementById('erroTipoTelefone');
 
     if (inputTipoTelefone.value.trim() === '') {
-        erroTipoTelefone.textContent =
-            'Selecione o tipo de telefone.';
+        erroTipoTelefone.textContent = 'Selecione o tipo de telefone.';
+        inputTipoTelefone.focus();
         formularioValido = false;
     }
 
@@ -221,35 +211,37 @@ form.addEventListener('submit', function (event) {
 
     if (telefone === '') {
         erroTelefone.textContent = 'Preencha o telefone.';
+        inputTelefone.focus();
         formularioValido = false;
 
     } else if (
         inputTipoTelefone.value === '2' &&
         telefone.length !== 10
     ) {
-        erroTelefone.textContent =
-            'Digite o telefone completo.';
+        erroTelefone.textContent = 'Digite o telefone completo.';
+        inputTelefone.focus();
         formularioValido = false;
 
     } else if (
         inputTipoTelefone.value !== '2' &&
         telefone.length !== 11
     ) {
-        erroTelefone.textContent =
-            'Digite o telefone completo.';
+        erroTelefone.textContent = 'Digite o telefone completo.';
+        inputTelefone.focus();
         formularioValido = false;
     }
 
     // Gênero
     if (inputGenero.value.trim() === '') {
         erroGenero.textContent = 'Selecione o gênero.';
+        inputGenero.focus();
         formularioValido = false;
     }
 
     // Data
     if (inputDataNascimento.value === '') {
-        erroDataNascimento.textContent =
-            'Preencha a data de nascimento.';
+        erroDataNascimento.textContent = 'Preencha a data de nascimento.';
+        inputDataNascimento.focus();
         formularioValido = false;
 
     } else {
@@ -257,8 +249,8 @@ form.addEventListener('submit', function (event) {
         const hoje = new Date();
 
         if (data > hoje) {
-            erroDataNascimento.textContent =
-                'A data não pode ser futura.';
+            erroDataNascimento.textContent = 'A data não pode ser futura.';
+            inputDataNascimento.focus();
             formularioValido = false;
         }
     }
@@ -269,10 +261,12 @@ form.addEventListener('submit', function (event) {
 
     if (inputEmail.value.trim() === '') {
         erroEmail.textContent = 'Preencha o e-mail.';
+        inputEmail.focus();
         formularioValido = false;
 
     } else if (!inputEmail.checkValidity()) {
         erroEmail.textContent = 'Digite um e-mail válido.';
+        inputEmail.focus();
         formularioValido = false;
     }
 
@@ -285,11 +279,8 @@ form.addEventListener('submit', function (event) {
     }
 
     // Confirmar senha
-    const confirmarSenha =
-        document.getElementById('confirmarSenha');
-
-    const erroConfirmarSenha =
-        document.getElementById('erroConfirmarSenha');
+    const confirmarSenha = document.getElementById('confirmarSenha');
+    const erroConfirmarSenha = document.getElementById('erroConfirmarSenha');
 
     if (!validarConfirmacaoSenha(
         senha,
@@ -303,12 +294,9 @@ form.addEventListener('submit', function (event) {
     document.querySelectorAll('.endereco-item').forEach(function (endereco) {
 
         const nome = endereco.querySelector('.nome-identificacao');
-        const tipoEndereco =
-            endereco.querySelector('[name*=".tipoEndereco"]');
-        const tipoResidencia =
-            endereco.querySelector('[name*=".tipoResidencia"]');
-        const tipoLogradouro =
-            endereco.querySelector('[name*=".tipoLogradouro"]');
+        const tipoEndereco = endereco.querySelector('[name*=".tipoEndereco"]');
+        const tipoResidencia = endereco.querySelector('[name*=".tipoResidencia"]');
+        const tipoLogradouro = endereco.querySelector('[name*=".tipoLogradouro"]');
         const cep = endereco.querySelector('.cep');
         const logradouro = endereco.querySelector('.logradouro');
         const bairro = endereco.querySelector('.bairro');
@@ -319,163 +307,149 @@ form.addEventListener('submit', function (event) {
 
         if (nome.value.trim() === '') {
             formularioValido = false;
-            endereco.querySelector('.erroNomeIdentificacao').textContent =
-                'Preencha o nome de identificação.';
+            endereco.querySelector('.erroNomeIdentificacao').textContent = 'Preencha o nome com até 20 caracteres.';
+            nome.focus();
 
         } else if (nome.value.trim().length < 3) {
             formularioValido = false;
-            endereco.querySelector('.erroNomeIdentificacao').textContent =
-                'Digite um nome com pelo menos 3 caracteres.';
+            endereco.querySelector('.erroNomeIdentificacao').textContent = 'Digite um nome com pelo menos 3 caracteres.';
+            nome.focus();
         }
 
         if (tipoEndereco.value === '') {
             formularioValido = false;
-            endereco.querySelector('.erroTipoEndereco').textContent =
-                'Selecione o tipo de endereço.';
+            endereco.querySelector('.erroTipoEndereco').textContent = 'Selecione o tipo de endereço.';
+            tipoEndereco.focus();
         }
 
         if (tipoResidencia.value === '') {
             formularioValido = false;
-            endereco.querySelector('.erroTipoResidencia').textContent =
-                'Selecione o tipo de residência.';
+            endereco.querySelector('.erroTipoResidencia').textContent = 'Selecione o tipo de residência.';
+            tipoResidencia.focus();
         }
 
         if (tipoLogradouro.value === '') {
             formularioValido = false;
-            endereco.querySelector('.erroTipoLogradouro').textContent =
-                'Selecione o tipo de logradouro.';
+            endereco.querySelector('.erroTipoLogradouro').textContent = 'Selecione o tipo de logradouro.';
+            tipoLogradouro.focus();
         }
 
         const cepNumeros = cep.value.replace(/\D/g, '');
 
         if (cep.value.trim() === '') {
             formularioValido = false;
-            endereco.querySelector('.erroCep').textContent =
-                'Preencha o CEP.';
+            endereco.querySelector('.erroCep').textContent = 'Preencha o CEP.';
+            cep.focus();
 
         } else if (cepNumeros.length !== 8) {
             formularioValido = false;
-            endereco.querySelector('.erroCep').textContent =
-                'Digite um CEP válido.';
+            endereco.querySelector('.erroCep').textContent = 'Digite um CEP válido.';
+            cep.focus();
         }
 
         if (logradouro.value.trim() === '') {
             formularioValido = false;
-            endereco.querySelector('.erroLogradouro').textContent =
-                'Preencha o logradouro.';
+            endereco.querySelector('.erroLogradouro').textContent = 'Preencha o logradouro.';
+            logradouro.focus();
         }
 
         if (bairro.value.trim() === '') {
             formularioValido = false;
-            endereco.querySelector('.erroBairro').textContent =
-                'Preencha o nome do bairro.';
+            endereco.querySelector('.erroBairro').textContent = 'Preencha o nome do bairro.';
+            bairro.focus();
         }
 
         if (numero.value.trim() === '') {
             formularioValido = false;
-            endereco.querySelector('.erroNumero').textContent =
-                'Preencha o número.';
+            endereco.querySelector('.erroNumero').textContent = 'Preencha o número.';
+            numero.focus();
         }
 
         if (estado.value === '') {
             formularioValido = false;
-            endereco.querySelector('.erroEstado').textContent =
-                'Selecione o estado.';
+            endereco.querySelector('.erroEstado').textContent = 'Selecione o estado.';
+            estado.focus();
         }
 
         if (cidade.value.trim() === '') {
             formularioValido = false;
-            endereco.querySelector('.erroCidade').textContent =
-                'Preencha o nome da cidade.';
+            endereco.querySelector('.erroCidade').textContent = 'Preencha o nome da cidade.';
+            cidade.focus();
         }
 
         if (pais.value.trim() === '') {
             formularioValido = false;
-            endereco.querySelector('.erroPais').textContent =
-                'Preencha o nome do país.';
+            endereco.querySelector('.erroPais').textContent = 'Preencha o nome do país.';
+            pais.focus();
         }
     });
+
 
     // Validação dos cartões
     document.querySelectorAll('.cartao-item').forEach(function (cartao) {
 
         const numero = cartao.querySelector('.numero-cartao');
         const nome = cartao.querySelector('.nome-cartao');
-        const bandeira =
-            cartao.querySelector('[name*=".bandeira"]');
+        const bandeira = cartao.querySelector('[name*=".bandeira"]');
         const cvv = cartao.querySelector('.cvv-cartao');
 
-        const erroNumero =
-            cartao.querySelector('.erroNumeroCartao');
-        const erroNome =
-            cartao.querySelector('.erroNomeCartao');
-        const erroBandeira =
-            cartao.querySelector('.erroBandeiraCartao');
-        const erroCvv =
-            cartao.querySelector('.erroCvvCartao');
+        const erroNumero = cartao.querySelector('.erroNumeroCartao');
+        const erroNome = cartao.querySelector('.erroNomeCartao');
+        const erroBandeira = cartao.querySelector('.erroBandeiraCartao');
+        const erroCvv = cartao.querySelector('.erroCvvCartao');
 
         if (numero.value.trim() === '') {
             formularioValido = false;
-            erroNumero.textContent =
-                'Preencha o número do cartão.';
+            erroNumero.textContent = 'Preencha o número do cartão.';
+            numero.focus();
 
         } else if (!numeroValido(numero.value)) {
             formularioValido = false;
-            erroNumero.textContent =
-                'Número do cartão inválido.';
+            erroNumero.textContent = 'Número do cartão inválido.';
+            numero.focus();
         }
 
         if (nome.value.trim() === '') {
             formularioValido = false;
-            erroNome.textContent =
-                'Preencha o nome do cartão.';
+            erroNome.textContent = 'Preencha o nome do cartão.';
+            nome.focus();
 
         } else if (nome.value.trim().length < 3) {
             formularioValido = false;
-            erroNome.textContent =
-                'O nome deve ter pelo menos 3 caracteres.';
+            erroNome.textContent = 'O nome deve ter pelo menos 3 caracteres.';
+            nome.focus();
         }
 
         if (bandeira.value === '') {
             formularioValido = false;
-            erroBandeira.textContent =
-                'Selecione a bandeira do cartão.';
+            erroBandeira.textContent = 'Selecione a bandeira do cartão.';
+            bandeira.focus();
         }
 
         if (cvv.value.trim() === '') {
             formularioValido = false;
-            erroCvv.textContent =
-                'Preencha o CVV.';
+            erroCvv.textContent = 'Preencha o CVV.';
+            cvv.focus();
 
-        } else if (
-            cvv.value.length < 3 ||
-            cvv.value.length > 4
-        ) {
+        } else if (cvv.value.length < 3 || cvv.value.length > 4) {
             formularioValido = false;
-            erroCvv.textContent =
-                'O CVV deve ter 3 ou 4 números.';
+            erroCvv.textContent = 'O CVV deve ter 3 ou 4 números.';
+            cvv.focus();
         }
     });
 
+    // Impede o envio se houver algum erro
     if (!formularioValido) {
         event.preventDefault();
     }
 });
-
-
-
-
 });
 
 function configurarPreferencial(cartao) {
-
     const radio = cartao.querySelector('input[type="radio"]');
-
     radio.addEventListener('change', function () {
-
         document.querySelectorAll('.cartao-item input[type="radio"]')
             .forEach(function (outroRadio) {
-
                 if (outroRadio !== radio) {
                     outroRadio.checked = false;
                 }

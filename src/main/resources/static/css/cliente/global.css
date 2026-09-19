@@ -56,3 +56,12 @@ body{
     height: 24px;
     color: white;
 }
+
+/* Mensagem de erro */
+.mensagem-erro {
+    display: block;
+    color: #d93025;
+    font-family: 'Nunito', sans-serif;
+    font-size: 14px;
+    margin-top: 5px;
+}

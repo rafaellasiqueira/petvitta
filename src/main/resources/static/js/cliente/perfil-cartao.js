@@ -29,11 +29,9 @@ document.addEventListener('DOMContentLoaded', function () {
             erro.textContent = '';
         });
 
-        document.getElementById('tituloModalCartao').textContent =
-            'Cadastrar cartão';
+        document.getElementById('tituloModalCartao').textContent = 'Cadastrar cartão';
 
-        document.getElementById('btnSalvarCartao').textContent =
-            'Cadastrar';
+        document.getElementById('btnSalvarCartao').textContent = 'Cadastrar';
 
         modalCartao.classList.add('active');
     });
@@ -69,47 +67,47 @@ formCartao.addEventListener('submit', function (event) {
     // Número
     if (numero.value.trim() === '') {
         formularioValido = false;
-        erroNumero.textContent =
-            'Preencha o número do cartão.';
+        erroNumero.textContent = 'Preencha o número do cartão.';
+        numero.focus();
 
     } else if (!numeroValido(numero.value)) {
         formularioValido = false;
-        erroNumero.textContent =
-            'Número do cartão inválido.';
+        erroNumero.textContent = 'Número do cartão inválido.';
+        numero.focus();
     }
 
     // Nome
     if (nome.value.trim() === '') {
         formularioValido = false;
-        erroNome.textContent =
-            'Preencha o nome impresso no cartão.';
+        erroNome.textContent = 'Preencha o nome impresso no cartão.';
+        nome.focus();
 
     } else if (nome.value.trim().length < 3) {
         formularioValido = false;
-        erroNome.textContent =
-            'O nome deve ter pelo menos 3 caracteres.';
+        erroNome.textContent = 'O nome deve ter pelo menos 3 caracteres.';
+        nome.focus();
     }
 
     // Bandeira
     if (bandeira.value === '') {
         formularioValido = false;
-        erroBandeira.textContent =
-            'Selecione a bandeira do cartão.';
+        erroBandeira.textContent = 'Selecione a bandeira do cartão.';
+        bandeira.focus();
     }
 
     // CVV
     if (cvv.value.trim() === '') {
         formularioValido = false;
-        erroCvv.textContent =
-            'Preencha o código de segurança.';
+        erroCvv.textContent = 'Preencha o código de segurança.';
+        cvv.focus();
 
     } else if (
         cvv.value.length < 3 ||
         cvv.value.length > 4
     ) {
         formularioValido = false;
-        erroCvv.textContent =
-            'O CVV deve ter 3 ou 4 números.';
+        erroCvv.textContent = 'O CVV deve ter 3 ou 4 números.';
+        cvv.focus();
     }
 
     if (!formularioValido) {

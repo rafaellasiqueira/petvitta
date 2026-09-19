@@ -137,34 +137,34 @@ formEndereco.addEventListener('submit', function (event) {
     // Nome de identificação
     if (nome.value.trim() === '') {
         formularioValido = false;
-        erroNome.textContent =
-            'Preencha o nome de identificação.';
+        erroNome.textContent = 'Preencha o nome com até 20 caracteres.';
+        nome.focus();
 
     } else if (nome.value.trim().length < 3) {
         formularioValido = false;
-        erroNome.textContent =
-            'Digite um nome com pelo menos 3 caracteres.';
+        erroNome.textContent = 'Digite um nome com pelo menos 3 caracteres.';
+        nome.focus();
     }
 
     // Tipo de endereço
     if (tipoEndereco.value === '') {
         formularioValido = false;
-        erroTipoEndereco.textContent =
-            'Selecione o tipo de endereço.';
+        erroTipoEndereco.textContent = 'Selecione o tipo de endereço.';
+        tipoEndereco.focus();
     }
 
     // Tipo de residência
     if (tipoResidencia.value === '') {
         formularioValido = false;
-        erroTipoResidencia.textContent =
-            'Selecione o tipo de residência.';
+        erroTipoResidencia.textContent = 'Selecione o tipo de residência.';
+        tipoResidencia.focus();
     }
 
     // Tipo de logradouro
     if (tipoLogradouro.value === '') {
         formularioValido = false;
-        erroTipoLogradouro.textContent =
-            'Selecione o tipo de logradouro.';
+        erroTipoLogradouro.textContent = 'Selecione o tipo de logradouro.';
+        tipoLogradouro.focus();
     }
 
     // CEP
@@ -172,55 +172,55 @@ formEndereco.addEventListener('submit', function (event) {
 
     if (cep.value.trim() === '') {
         formularioValido = false;
-        erroCep.textContent =
-            'Preencha o CEP.';
+        erroCep.textContent = 'Preencha o CEP.';
+        cep.focus();
 
     } else if (cepNumeros.length !== 8) {
         formularioValido = false;
-        erroCep.textContent =
-            'Digite um CEP válido.';
+        erroCep.textContent = 'Digite um CEP válido.';
+        cep.focus();
     }
 
     // Logradouro
     if (logradouro.value.trim() === '') {
         formularioValido = false;
-        erroLogradouro.textContent =
-            'Preencha o logradouro.';
+        erroLogradouro.textContent = 'Preencha o logradouro.';
+        logradouro.focus();
     }
 
     // Bairro
     if (bairro.value.trim() === '') {
         formularioValido = false;
-        erroBairro.textContent =
-            'Preencha o nome do bairro.';
+        erroBairro.textContent = 'Preencha o nome do bairro.';
+        bairro.focus();
     }
 
     // Número
     if (numero.value.trim() === '') {
         formularioValido = false;
-        erroNumero.textContent =
-            'Preencha o número.';
+        erroNumero.textContent = 'Preencha o número.';
+        numero.focus();
     }
 
     // Estado
     if (estado.value === '') {
         formularioValido = false;
-        erroEstado.textContent =
-            'Selecione o estado.';
+        erroEstado.textContent = 'Selecione o estado.';
+        estado.focus();
     }
 
     // Cidade
     if (cidade.value.trim() === '') {
         formularioValido = false;
-        erroCidade.textContent =
-            'Preencha o nome da cidade.';
+        erroCidade.textContent = 'Preencha o nome da cidade.';
+        cidade.focus();
     }
 
     // País
     if (pais.value.trim() === '') {
         formularioValido = false;
-        erroPais.textContent =
-            'Preencha o nome do país.';
+        erroPais.textContent = 'Preencha o nome do país.';
+        pais.focus();
     }
 
     if (!formularioValido) {

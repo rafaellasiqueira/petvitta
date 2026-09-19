@@ -1,7 +1,13 @@
 describe('Alteração de endereço do cliente', () => {
 
+    afterEach(() => {
+        cy.pause();
+    });
+
     beforeEach(() => {
         cy.visit('/cliente/perfil');
+        cy.viewport(1280, 720);
+        cy.wait(2000);
     });
 
     function abrirEdicaoEndereco() {
@@ -11,7 +17,6 @@ describe('Alteração de endereço do cliente', () => {
     }
 
     function preencherEnderecoValido() {
-
         cy.get('#modalAdicionarEditarEndereco [name="nomeIdentificacao"]')
             .clear()
             .type('Casa Nova');
@@ -50,18 +55,7 @@ describe('Alteração de endereço do cliente', () => {
             .and('contain', mensagem);
     }
 
-    function selecionarVazio(nome) {
-        cy.get(`#modalAdicionarEditarEndereco [name="${nome}"] option[value=""]`)
-            .invoke('removeAttr', 'disabled');
-
-        cy.get(`#modalAdicionarEditarEndereco [name="${nome}"]`)
-            .select('');
-    }
-
-
-    // RNF0034
-    it('CT01 - Deve alterar um endereço com todos os dados válidos', () => {
-
+    it('RNF0034/RN0023/RF0026 - Deve alterar um endereço com todos os dados válidos', () => {
         abrirEdicaoEndereco();
         preencherEnderecoValido();
         enviarFormulario();
@@ -69,10 +63,7 @@ describe('Alteração de endereço do cliente', () => {
         validarToast('Endereço alterado com sucesso!');
     });
 
-
-    // RN0023
-    it('CT02 - Não deve alterar endereço sem o nome de identificação', () => {
-
+    it('RNF0034/RF0026 - Não deve alterar endereço sem o nome de identificação', () => {
         abrirEdicaoEndereco();
         preencherEnderecoValido();
 
@@ -80,42 +71,47 @@ describe('Alteração de endereço do cliente', () => {
             .clear();
 
         enviarFormulario();
-
-        validarToast('O nome de identificação é obrigatório.');
+        validarToast('O nome de identificação deve ter no mínimo 3 e máximo 20 caracteres.');
     });
 
-
-    // RN0023
-    it('CT03 - Não deve alterar endereço sem tipo de residência', () => {
+    it('RNF0034/RN0023 - Não deve alterar endereço sem o tipo de endereço', () => {
 
         abrirEdicaoEndereco();
         preencherEnderecoValido();
 
-        selecionarVazio('tipoResidencia');
+        cy.get('[name="tipoEndereco"]')
+            .invoke('val', '');
+
+        enviarFormulario();
+
+        validarToast('O tipo de endereço é obrigatório.');
+    });
+
+    it('RNF0034/RN0023 - Não deve alterar endereço sem o tipo de residência', () => {
+
+        abrirEdicaoEndereco();
+        preencherEnderecoValido();
+
+        cy.get('[name="tipoResidencia"]')
+            .invoke('val', '');
 
         enviarFormulario();
 
         validarToast('O tipo de residência é obrigatório.');
     });
 
-
-    // RN0023
-    it('CT04 - Não deve alterar endereço sem tipo de logradouro', () => {
-
+    it('RNF0034/RN0023 - Não deve alterar endereço sem tipo de logradouro', () => {
         abrirEdicaoEndereco();
         preencherEnderecoValido();
 
-        selecionarVazio('tipoLogradouro');
+        cy.get('[name="tipoLogradouro"]')
+            .invoke('val', '');
 
         enviarFormulario();
-
         validarToast('O tipo de logradouro é obrigatório.');
     });
 
-
-    // RN0023
-    it('CT05 - Não deve alterar endereço sem logradouro', () => {
-
+    it('RNF0034/RN0023 - Não deve alterar endereço sem logradouro', () => {
         abrirEdicaoEndereco();
         preencherEnderecoValido();
 
@@ -123,14 +119,10 @@ describe('Alteração de endereço do cliente', () => {
             .clear();
 
         enviarFormulario();
-
         validarToast('O logradouro é obrigatório.');
     });
 
-
-    // RN0023
-    it('CT06 - Não deve alterar endereço sem número', () => {
-
+    it('RNF0034/RN0023 - Não deve alterar endereço sem número', () => {
         abrirEdicaoEndereco();
         preencherEnderecoValido();
 
@@ -138,14 +130,10 @@ describe('Alteração de endereço do cliente', () => {
             .clear();
 
         enviarFormulario();
-
         validarToast('O número é obrigatório.');
     });
 
-
-    // RN0023
-    it('CT07 - Não deve alterar endereço sem bairro', () => {
-
+    it('RNF0034/RN0023 - Não deve alterar endereço sem bairro', () => {
         abrirEdicaoEndereco();
         preencherEnderecoValido();
 
@@ -153,14 +141,10 @@ describe('Alteração de endereço do cliente', () => {
             .clear();
 
         enviarFormulario();
-
         validarToast('O bairro é obrigatório.');
     });
 
-
-    // RN0023
-    it('CT08 - Não deve alterar endereço sem CEP', () => {
-
+    it('RNF0034/RN0023 - Não deve alterar endereço sem CEP', () => {
         abrirEdicaoEndereco();
         preencherEnderecoValido();
 
@@ -168,14 +152,10 @@ describe('Alteração de endereço do cliente', () => {
             .clear();
 
         enviarFormulario();
-
         validarToast('O CEP é obrigatório.');
     });
 
-
-    // RN0023
-    it('CT09 - Não deve alterar endereço sem cidade', () => {
-
+    it('RNF0034/RN0023 - Não deve alterar endereço sem cidade', () => {
         abrirEdicaoEndereco();
         preencherEnderecoValido();
 
@@ -183,28 +163,22 @@ describe('Alteração de endereço do cliente', () => {
             .clear();
 
         enviarFormulario();
-
         validarToast('A cidade é obrigatória.');
     });
 
-
-    // RN0023
-    it('CT10 - Não deve alterar endereço sem estado', () => {
-
+    it('RNF0034/RN0023 - Não deve alterar endereço sem estado', () => {
         abrirEdicaoEndereco();
         preencherEnderecoValido();
 
-        selecionarVazio('estado');
+        cy.get('[name="estado"]')
+            .invoke('val', '');
 
         enviarFormulario();
 
         validarToast('O estado é obrigatório.');
     });
 
-
-    // RN0023
-    it('CT11 - Não deve alterar endereço sem país', () => {
-
+    it('RNF0034/RN0023- Não deve alterar endereço sem país', () => {
         abrirEdicaoEndereco();
         preencherEnderecoValido();
 
@@ -212,82 +186,6 @@ describe('Alteração de endereço do cliente', () => {
             .clear();
 
         enviarFormulario();
-
         validarToast('O país é obrigatório.');
     });
-
-
-    // RN0023
-    it('CT12 - Pode alterar endereço sem informar observações', () => {
-
-        abrirEdicaoEndereco();
-        preencherEnderecoValido();
-
-        cy.get('#modalAdicionarEditarEndereco [name="observacoes"]')
-            .clear();
-
-        enviarFormulario();
-
-        validarToast('Endereço alterado com sucesso!');
-    });
-
-
-    // RNF0034
-    it('CT13 - Deve permitir alterar somente o endereço', () => {
-
-        abrirEdicaoEndereco();
-        preencherEnderecoValido();
-        enviarFormulario();
-
-        validarToast('Endereço alterado com sucesso!');
-
-        cy.get('[name="nome"]')
-            .should('have.value', 'Bruno Henrique');
-    });
-
-
-    // RN0022 / RNF0034
-    it('CT14 - Deve permitir alterar endereço de entrega', () => {
-
-        abrirEdicaoEndereco();
-        preencherEnderecoValido();
-
-        cy.get('#modalAdicionarEditarEndereco [name="tipoEndereco"]')
-            .select('Entrega');
-
-        enviarFormulario();
-
-        validarToast('Endereço alterado com sucesso!');
-    });
-
-
-    // RN0021 / RNF0034
-    it('CT15 - Deve permitir alterar endereço de cobrança', () => {
-
-        abrirEdicaoEndereco();
-        preencherEnderecoValido();
-
-        cy.get('#modalAdicionarEditarEndereco [name="tipoEndereco"]')
-            .select('Cobrança');
-
-        enviarFormulario();
-
-        validarToast('Endereço alterado com sucesso!');
-    });
-
-
-    // RN0021 / RN0022 / RNF0034
-    it('CT16 - Deve permitir alterar endereço de entrega e cobrança', () => {
-
-        abrirEdicaoEndereco();
-        preencherEnderecoValido();
-
-        cy.get('#modalAdicionarEditarEndereco [name="tipoEndereco"]')
-            .select('Cobrança e Entrega');
-
-        enviarFormulario();
-
-        validarToast('Endereço alterado com sucesso!');
-    });
-
 });

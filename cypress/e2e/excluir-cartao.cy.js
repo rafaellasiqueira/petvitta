@@ -1,7 +1,13 @@
 describe('Exclusão de cartão do cliente', () => {
 
+    afterEach(() => {
+        cy.pause();
+    });
+
     beforeEach(() => {
         cy.visit('/cliente/perfil');
+        cy.viewport(1280, 720);
+        cy.wait(4000);
     });
 
     function validarToast(mensagem) {
@@ -10,10 +16,7 @@ describe('Exclusão de cartão do cliente', () => {
             .and('contain', mensagem);
     }
 
-
-    // RF0027
     it('CT01 - Deve permitir excluir cartão não preferencial', () => {
-
         cy.get('.item-cartao')
             .find('form[action="/cliente/tornar-cartao-preferencial"]')
             .first()
@@ -21,30 +24,32 @@ describe('Exclusão de cartão do cliente', () => {
             .find('.excluir-cartao')
             .click();
 
-        cy.get('#btnConfirmarExclusao')
+        cy.wait(5000);
+
+        cy.get('#btnConfirmarExclusao') /* Modal */
             .click();
 
         validarToast('Cartão excluído com sucesso!');
     });
 
-
-    // RF0027
-    it('CT02 - Deve permitir excluir cartão preferencial', () => {
-
+    it('RF0027 - Deve permitir excluir cartão preferencial', () => {
         cy.get('.item-cartao')
             .contains('Preferencial')
             .parents('.item-cartao')
             .find('.excluir-cartao')
             .click();
 
+        cy.wait(5000);
+
         cy.get('#btnConfirmarExclusao')
             .click();
 
         validarToast('Cartão excluído com sucesso!');
 
+        cy.wait(4000);
+
         cy.get('.item-cartao')
             .contains('Preferencial')
             .should('exist');
     });
-
 });

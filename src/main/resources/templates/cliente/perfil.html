@@ -114,8 +114,8 @@
                             <input type="date"
                                    id="dataNascimento"
                                    name="dataNascimento"
-                                   th:value="${cliente.dataNascimento}"
-                                   readonly>
+                                   th:value="${cliente.dataNascimento}">
+                            <p class="mensagem-erro" id="erroDataNascimento"></p>
                         </div>
                     </div>
 
@@ -410,6 +410,9 @@
 <script th:src="@{/js/cliente/validacoes/endereco.js}"></script>
 <script th:src="@{/js/cliente/validacoes/cartao.js}"></script>
 <script th:src="@{/js/cliente/validacoes/geral.js}"></script>
+
+<!-- Alteração dados pessoais -->
+<script th:src="@{/js/cliente/alterar-dados-pessoais.js}"></script>
 
 <!-- Alteração de senha -->
 <script th:src="@{/js/cliente/alterar-senha.js}"></script>

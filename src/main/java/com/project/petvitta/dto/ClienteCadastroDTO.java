@@ -37,7 +37,6 @@ public class ClienteCadastroDTO {
     @Size(max = 254, message = "O e-mail deve ter no máximo 254 caracteres.")
     private String email;
 
-    @NotBlank(message = "A senha é obrigatória.")
     @Size(min = 8, max = 100, message = "A senha deve ter entre 8 e 100 caracteres.")
     @Pattern(regexp = "^$|.*[A-Z].*", message = "A senha deve ter pelo menos uma letra maiúscula.")
     @Pattern(regexp = "^$|.*[a-z].*", message = "A senha deve ter pelo menos uma letra minúscula.")
