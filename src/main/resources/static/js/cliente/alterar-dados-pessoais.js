@@ -1,5 +1,4 @@
 document.addEventListener('DOMContentLoaded', function() {
-
     // Dados pessoais
     const form = document.getElementById('formDadosPessoais');
 

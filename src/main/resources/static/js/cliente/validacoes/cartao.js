@@ -1,5 +1,4 @@
 function configurarCartao(cartao) {
-
     const numero = cartao.querySelector('.numero-cartao');
     const nome = cartao.querySelector('.nome-cartao');
     const bandeira = cartao.querySelector('.bandeira-cartao');
@@ -13,11 +12,8 @@ function configurarCartao(cartao) {
     nome.addEventListener('input', function () {
         nome.value = nome.value.replace(/[^A-Za-zÀ-ÿ\s]/g, '');
 
-        if (nome.value.trim().length > 0 &&
-            nome.value.trim().length < 3) {
-
+        if (nome.value.trim().length < 3) {
             erroNome.textContent = 'O nome deve ter pelo menos 3 caracteres.';
-
         } else {
             erroNome.textContent = '';
         }
@@ -25,10 +21,7 @@ function configurarCartao(cartao) {
 
     // Número
     numero.addEventListener('input', function () {
-
-        let valor = numero.value
-            .replace(/\D/g, '')
-            .slice(0, 16);
+        let valor = numero.value.replace(/\D/g, '').slice(0, 16);
 
         if (valor.length > 4) {
             valor = valor.replace(/(\d{4})(?=\d)/g, '$1 ');
@@ -36,12 +29,8 @@ function configurarCartao(cartao) {
 
         numero.value = valor;
 
-        if (valor.replace(/\D/g, '').length > 0 &&
-            !numeroValido(valor)) {
-
-            erroNumero.textContent =
-                'Número do cartão inválido.';
-
+        if (!numeroValido(valor)) {
+            erroNumero.textContent = 'Número do cartão inválido.';
         } else {
             erroNumero.textContent = '';
         }
@@ -49,21 +38,21 @@ function configurarCartao(cartao) {
 
     // CVV
     cvv.addEventListener('input', function () {
+        cvv.value = cvv.value.replace(/\D/g, '').slice(0, 4);
 
-        cvv.value = cvv.value
-            .replace(/\D/g, '')
-            .slice(0, 4);
-
-        if (cvv.value.length > 0 &&
-            cvv.value.length < 3) {
-
-            erroCvv.textContent =
-                'O CVV deve ter 3 ou 4 números.';
-
+        if (cvv.value.length < 3) {
+            erroCvv.textContent = 'O CVV deve ter 3 ou 4 números.';
         } else {
             erroCvv.textContent = '';
         }
     });
+
+    const botaoRemoverCartao = cartao.querySelector('.btn-remover-cartao');
+    if (botaoRemoverCartao) {
+        botaoRemoverCartao.addEventListener('click', function () {
+            cartao.remove();
+        });
+    }
 }
 
 function numeroValido(numero) {
@@ -76,7 +65,6 @@ function numeroValido(numero) {
     let soma = 0;
 
     for (let i = 0; i < numero.length; i++) {
-
         let digito = Number(numero[i]);
 
         if (i % 2 === 0) {

@@ -21,7 +21,7 @@ describe('Alteração de endereço do cliente', () => {
             .type('Casa Nova');
 
         cy.get('#modalAdicionarEditarEndereco [name="tipoEndereco"]')
-            .select('Entrega');
+            .select('Cobrança');
 
         cy.get('#modalAdicionarEditarEndereco [name="tipoResidencia"]')
             .select('Casa');
@@ -107,7 +107,7 @@ describe('Alteração de endereço do cliente', () => {
         
         validarErro(
             '.erroNomeIdentificacao',
-            'Preencha o nome de identificação.'
+            'Preencha o nome com até 20 caracteres.'
         );
 
         validarErro(

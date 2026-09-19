@@ -61,7 +61,6 @@ document.addEventListener('DOMContentLoaded', function () {
             modalEndereco.querySelector('#observacoes').value = this.dataset.observacoes || '';
 
             formEndereco.action = '/cliente/editar-endereco';
-
             modalEndereco.classList.add('active');
         });
     });
@@ -73,10 +72,7 @@ document.addEventListener('DOMContentLoaded', function () {
             const idExcluir = document.getElementById('idExcluir');
             const formExcluir = document.getElementById('formExcluir');
 
-            mensagem.textContent =
-                'Tem certeza que deseja excluir o endereço "' +
-                this.dataset.nome + '"?';
-
+            mensagem.textContent = 'Tem certeza que deseja excluir o endereço "' + this.dataset.nome + '"?';
             idExcluir.name = 'enderecoId';
             idExcluir.value = this.dataset.id;
             formExcluir.action = '/cliente/excluir-endereco';
@@ -94,147 +90,147 @@ document.addEventListener('DOMContentLoaded', function () {
         modalEndereco.classList.remove('active');
     });
 
-// Validação antes do envio
-formEndereco.addEventListener('submit', function (event) {
-    let formularioValido = true;
+    // Validação antes do envio
+    formEndereco.addEventListener('submit', function (event) {
+        let formularioValido = true;
 
-    const nome = modalEndereco.querySelector('.nome-identificacao');
-    const tipoEndereco = modalEndereco.querySelector('.tipo-endereco');
-    const tipoResidencia = modalEndereco.querySelector('.tipo-residencia');
-    const tipoLogradouro = modalEndereco.querySelector('.tipo-logradouro');
-    const cep = modalEndereco.querySelector('.cep');
-    const logradouro = modalEndereco.querySelector('.logradouro');
-    const bairro = modalEndereco.querySelector('.bairro');
-    const numero = modalEndereco.querySelector('.numero');
-    const estado = modalEndereco.querySelector('.estado');
-    const cidade = modalEndereco.querySelector('.cidade');
-    const pais = modalEndereco.querySelector('.pais');
+        const nome = modalEndereco.querySelector('.nome-identificacao');
+        const tipoEndereco = modalEndereco.querySelector('.tipo-endereco');
+        const tipoResidencia = modalEndereco.querySelector('.tipo-residencia');
+        const tipoLogradouro = modalEndereco.querySelector('.tipo-logradouro');
+        const cep = modalEndereco.querySelector('.cep');
+        const logradouro = modalEndereco.querySelector('.logradouro');
+        const bairro = modalEndereco.querySelector('.bairro');
+        const numero = modalEndereco.querySelector('.numero');
+        const estado = modalEndereco.querySelector('.estado');
+        const cidade = modalEndereco.querySelector('.cidade');
+        const pais = modalEndereco.querySelector('.pais');
 
-    const erroNome = modalEndereco.querySelector('.erroNomeIdentificacao');
-    const erroTipoEndereco = modalEndereco.querySelector('.erroTipoEndereco');
-    const erroTipoResidencia = modalEndereco.querySelector('.erroTipoResidencia');
-    const erroTipoLogradouro = modalEndereco.querySelector('.erroTipoLogradouro');
-    const erroCep = modalEndereco.querySelector('.erroCep');
-    const erroLogradouro = modalEndereco.querySelector('.erroLogradouro');
-    const erroBairro = modalEndereco.querySelector('.erroBairro');
-    const erroNumero = modalEndereco.querySelector('.erroNumero');
-    const erroEstado = modalEndereco.querySelector('.erroEstado');
-    const erroCidade = modalEndereco.querySelector('.erroCidade');
-    const erroPais = modalEndereco.querySelector('.erroPais');
+        const erroNome = modalEndereco.querySelector('.erroNomeIdentificacao');
+        const erroTipoEndereco = modalEndereco.querySelector('.erroTipoEndereco');
+        const erroTipoResidencia = modalEndereco.querySelector('.erroTipoResidencia');
+        const erroTipoLogradouro = modalEndereco.querySelector('.erroTipoLogradouro');
+        const erroCep = modalEndereco.querySelector('.erroCep');
+        const erroLogradouro = modalEndereco.querySelector('.erroLogradouro');
+        const erroBairro = modalEndereco.querySelector('.erroBairro');
+        const erroNumero = modalEndereco.querySelector('.erroNumero');
+        const erroEstado = modalEndereco.querySelector('.erroEstado');
+        const erroCidade = modalEndereco.querySelector('.erroCidade');
+        const erroPais = modalEndereco.querySelector('.erroPais');
 
-    erroNome.textContent = '';
-    erroTipoEndereco.textContent = '';
-    erroTipoResidencia.textContent = '';
-    erroTipoLogradouro.textContent = '';
-    erroCep.textContent = '';
-    erroLogradouro.textContent = '';
-    erroBairro.textContent = '';
-    erroNumero.textContent = '';
-    erroEstado.textContent = '';
-    erroCidade.textContent = '';
-    erroPais.textContent = '';
+        erroNome.textContent = '';
+        erroTipoEndereco.textContent = '';
+        erroTipoResidencia.textContent = '';
+        erroTipoLogradouro.textContent = '';
+        erroCep.textContent = '';
+        erroLogradouro.textContent = '';
+        erroBairro.textContent = '';
+        erroNumero.textContent = '';
+        erroEstado.textContent = '';
+        erroCidade.textContent = '';
+        erroPais.textContent = '';
 
-    // Nome de identificação
-    if (nome.value.trim() === '') {
-        formularioValido = false;
-        erroNome.textContent = 'Preencha o nome com até 20 caracteres.';
-        nome.focus();
+        // Nome de identificação
+        if (nome.value.trim() === '') {
+            formularioValido = false;
+            erroNome.textContent = 'Preencha o nome com até 20 caracteres.';
+            nome.focus();
 
-    } else if (nome.value.trim().length < 3) {
-        formularioValido = false;
-        erroNome.textContent = 'Digite um nome com pelo menos 3 caracteres.';
-        nome.focus();
-    }
+        } else if (nome.value.trim().length < 3) {
+            formularioValido = false;
+            erroNome.textContent = 'Digite um nome com pelo menos 3 caracteres.';
+            nome.focus();
+        }
 
-    // Tipo de endereço
-    if (tipoEndereco.value === '') {
-        formularioValido = false;
-        erroTipoEndereco.textContent = 'Selecione o tipo de endereço.';
-        tipoEndereco.focus();
-    }
+        // Tipo de endereço
+        if (tipoEndereco.value === '') {
+            formularioValido = false;
+            erroTipoEndereco.textContent = 'Selecione o tipo de endereço.';
+            tipoEndereco.focus();
+        }
 
-    // Tipo de residência
-    if (tipoResidencia.value === '') {
-        formularioValido = false;
-        erroTipoResidencia.textContent = 'Selecione o tipo de residência.';
-        tipoResidencia.focus();
-    }
+        // Tipo de residência
+        if (tipoResidencia.value === '') {
+            formularioValido = false;
+            erroTipoResidencia.textContent = 'Selecione o tipo de residência.';
+            tipoResidencia.focus();
+        }
 
-    // Tipo de logradouro
-    if (tipoLogradouro.value === '') {
-        formularioValido = false;
-        erroTipoLogradouro.textContent = 'Selecione o tipo de logradouro.';
-        tipoLogradouro.focus();
-    }
+        // Tipo de logradouro
+        if (tipoLogradouro.value === '') {
+            formularioValido = false;
+            erroTipoLogradouro.textContent = 'Selecione o tipo de logradouro.';
+            tipoLogradouro.focus();
+        }
 
-    // CEP
-    const cepNumeros = cep.value.replace(/\D/g, '');
+        // CEP
+        const cepNumeros = cep.value.replace(/\D/g, '');
 
-    if (cep.value.trim() === '') {
-        formularioValido = false;
-        erroCep.textContent = 'Preencha o CEP.';
-        cep.focus();
+        if (cep.value.trim() === '') {
+            formularioValido = false;
+            erroCep.textContent = 'Preencha o CEP.';
+            cep.focus();
 
-    } else if (cepNumeros.length !== 8) {
-        formularioValido = false;
-        erroCep.textContent = 'Digite um CEP válido.';
-        cep.focus();
-    }
+        } else if (cepNumeros.length !== 8) {
+            formularioValido = false;
+            erroCep.textContent = 'Digite um CEP válido.';
+            cep.focus();
+        }
 
-    // Logradouro
-    if (logradouro.value.trim() === '') {
-        formularioValido = false;
-        erroLogradouro.textContent = 'Preencha o logradouro.';
-        logradouro.focus();
-    }
+        // Logradouro
+        if (logradouro.value.trim() === '') {
+            formularioValido = false;
+            erroLogradouro.textContent = 'Preencha o logradouro.';
+            logradouro.focus();
+        }
 
-    // Bairro
-    if (bairro.value.trim() === '') {
-        formularioValido = false;
-        erroBairro.textContent = 'Preencha o nome do bairro.';
-        bairro.focus();
-    }
+        // Bairro
+        if (bairro.value.trim() === '') {
+            formularioValido = false;
+            erroBairro.textContent = 'Preencha o nome do bairro.';
+            bairro.focus();
+        }
 
-    // Número
-    if (numero.value.trim() === '') {
-        formularioValido = false;
-        erroNumero.textContent = 'Preencha o número.';
-        numero.focus();
-    }
+        // Número
+        if (numero.value.trim() === '') {
+            formularioValido = false;
+            erroNumero.textContent = 'Preencha o número.';
+            numero.focus();
+        }
 
-    // Estado
-    if (estado.value === '') {
-        formularioValido = false;
-        erroEstado.textContent = 'Selecione o estado.';
-        estado.focus();
-    }
+        // Estado
+        if (estado.value === '') {
+            formularioValido = false;
+            erroEstado.textContent = 'Selecione o estado.';
+            estado.focus();
+        }
 
-    // Cidade
-    if (cidade.value.trim() === '') {
-        formularioValido = false;
-        erroCidade.textContent = 'Preencha o nome da cidade.';
-        cidade.focus();
-    }
+        // Cidade
+        if (cidade.value.trim() === '') {
+            formularioValido = false;
+            erroCidade.textContent = 'Preencha o nome da cidade.';
+            cidade.focus();
+        }
 
-    // País
-    if (pais.value.trim() === '') {
-        formularioValido = false;
-        erroPais.textContent = 'Preencha o nome do país.';
-        pais.focus();
-    }
+        // País
+        if (pais.value.trim() === '') {
+            formularioValido = false;
+            erroPais.textContent = 'Preencha o nome do país.';
+            pais.focus();
+        }
 
-    if (!formularioValido) {
-        event.preventDefault();
-    }
-});
-
-    // Fechar modal de exclusão
-    btnFecharExclusao.addEventListener('click', function () {
-        modalExclusao.classList.remove('active');
+        if (!formularioValido) {
+            event.preventDefault();
+        }
     });
 
-    btnCancelarExclusao.addEventListener('click', function () {
-        modalExclusao.classList.remove('active');
+        // Fechar modal de exclusão
+        btnFecharExclusao.addEventListener('click', function () {
+            modalExclusao.classList.remove('active');
+        });
+
+        btnCancelarExclusao.addEventListener('click', function () {
+            modalExclusao.classList.remove('active');
+        });
     });
-});
 

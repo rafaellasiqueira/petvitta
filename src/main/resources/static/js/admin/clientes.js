@@ -42,59 +42,57 @@ document.getElementById('filtroTelefone').addEventListener('input', function () 
     this.value = valor;
 });
 
-// Modais Ativar e Inativar
-const modalInativar = document.getElementById('modalInativarCliente');
-const modalAtivar = document.getElementById('modalAtivarCliente');
-const formInativar = document.getElementById('formInativarCliente');
-const formAtivar = document.getElementById('formAtivarCliente');
-let botaoClicado;
+    // Modais Ativar e Inativar
+    const modalInativar = document.getElementById('modalInativarCliente');
+    const modalAtivar = document.getElementById('modalAtivarCliente');
+    const formInativar = document.getElementById('formInativarCliente');
+    const formAtivar = document.getElementById('formAtivarCliente');
 
-// Abrir modal
-    document.querySelectorAll('.btn-inativar, .btn-ativar').forEach(botao => {
+    // Abrir modal de inativação
+        document.querySelectorAll('.btn-inativar').forEach(function (botao) {
+            botao.addEventListener('click', function () {
 
-        botao.addEventListener('click', function () {
+                const id = this.dataset.id;
 
-            botaoClicado = this;
-
-            const id = this.dataset.id;
-
-            if (this.classList.contains('btn-inativar')) {
-
-                formInativar.action =
-                    `/admin/clientes/${id}/inativar`;
+                formInativar.action = `/admin/clientes/${id}/inativar`;
 
                 modalInativar.classList.add('active');
+            });
+        });
 
-            } else {
 
-                formAtivar.action =
-                    `/admin/clientes/${id}/ativar`;
+    // Abrir modal de ativação
+        document.querySelectorAll('.btn-ativar').forEach(function (botao) {
+            botao.addEventListener('click', function () {
+
+                const id = this.dataset.id;
+
+                formAtivar.action = `/admin/clientes/${id}/ativar`;
 
                 modalAtivar.classList.add('active');
-            }
+            });
         });
+
+    // Fechal modal inativar
+    document.getElementById('btnFecharModalInativar').addEventListener('click', () => {
+        modalInativar.classList.remove('active');
+        formInativar.reset();
     });
 
-// Fechal modal inativar
-document.getElementById('btnFecharModalInativar').addEventListener('click', () => {
-    modalInativar.classList.remove('active');
-    formInativar.reset();
-});
+    document.getElementById('btnCancelarInativar').addEventListener('click', () => {
+        modalInativar.classList.remove('active');
+        formInativar.reset();
+    });
 
-document.getElementById('btnCancelarInativar').addEventListener('click', () => {
-    modalInativar.classList.remove('active');
-    formInativar.reset();
-});
+    // Fechar modal ativar
+    document.getElementById('btnFecharModalAtivar').addEventListener('click', () => {
+        modalAtivar.classList.remove('active');
+        formAtivar.reset();
+    });
 
-// Fechar modal ativar
-document.getElementById('btnFecharModalAtivar').addEventListener('click', () => {
-    modalAtivar.classList.remove('active');
-    formAtivar.reset();
-});
-
-document.getElementById('btnCancelarAtivar').addEventListener('click', () => {
-    modalAtivar.classList.remove('active');
-    formAtivar.reset();
-});
+    document.getElementById('btnCancelarAtivar').addEventListener('click', () => {
+        modalAtivar.classList.remove('active');
+        formAtivar.reset();
+    });
 
 });

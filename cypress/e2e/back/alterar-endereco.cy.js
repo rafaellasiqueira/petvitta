@@ -63,7 +63,7 @@ describe('Alteração de endereço do cliente', () => {
         validarToast('Endereço alterado com sucesso!');
     });
 
-    it('RNF0034/RF0026 - Não deve alterar endereço sem o nome de identificação', () => {
+    it('RNF0034/RF0026/RN0023 - Não deve alterar endereço sem o nome de identificação', () => {
         abrirEdicaoEndereco();
         preencherEnderecoValido();
 

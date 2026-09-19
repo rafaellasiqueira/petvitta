@@ -10,12 +10,13 @@ function configurarEndereco(endereco) {
         nomeIdentificacao.value = nomeIdentificacao.value.replace(/[^A-Za-zÀ-ÿ\s]/g, '');
 
         if (nomeIdentificacao.value.trim().length < 3) {
-            erroNomeIdentificacao.textContent =
-                'Digite um nome com pelo menos 3 caracteres.';
+            erroNomeIdentificacao.textContent = 'Digite um nome com pelo menos 3 caracteres.';
         } else if (nomeIdentificacao.value.trim().length > 20) {
-            erroNomeIdentificacao.textContent =
-                'Digite um nome com no máximo 20 caracteres.';
+            erroNomeIdentificacao.textContent = 'Digite um nome com no máximo 20 caracteres.';
+        } else {
+            erroNomeIdentificacao.textContent = '';
         }
+
     });
 
     // CEP
@@ -40,14 +41,23 @@ function configurarEndereco(endereco) {
     numero.addEventListener('input', function () {
         numero.value = numero.value.replace(/\D/g, '');
     });
+
+    const botaoRemover = endereco.querySelector('.btn-remover-endereco');
+
+    if (botaoRemover) {
+        botaoRemover.addEventListener('click', function () {
+            endereco.remove();
+        });
+    }
 }
 
 function buscarCep(valorCep, endereco) {
     const cepNumeros = valorCep.replace(/\D/g, '');
 
+    // Requisição
     fetch(`https://viacep.com.br/ws/${cepNumeros}/json/`)
         .then(response => response.json())
-        .then(dados => {
+        .then(dados => { /* Recebe o json */
             const erroCep = endereco.querySelector('.erroCep');
 
             if (dados.erro) {
@@ -57,14 +67,9 @@ function buscarCep(valorCep, endereco) {
 
             erroCep.textContent = '';
 
-            endereco.querySelector('.logradouro').value =
-                dados.logradouro || '';
-
-            endereco.querySelector('.bairro').value =
-                dados.bairro || '';
-
-            endereco.querySelector('.cidade').value =
-                dados.localidade || '';
+            endereco.querySelector('.logradouro').value = dados.logradouro || '';
+            endereco.querySelector('.bairro').value = dados.bairro || '';
+            endereco.querySelector('.cidade').value = dados.localidade || '';
 
             const estado = endereco.querySelector('.estado');
 
@@ -76,8 +81,7 @@ function buscarCep(valorCep, endereco) {
             }
         })
         .catch(() => {
-            endereco.querySelector('.erroCep').textContent =
-                'Não foi possível consultar o CEP.';
+            endereco.querySelector('.erroCep').textContent = 'Não foi possível consultar o CEP.';
         });
 }
 

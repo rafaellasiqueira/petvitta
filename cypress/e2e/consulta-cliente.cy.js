@@ -1,8 +1,8 @@
 describe('Consulta de clientes', () => {
 
-    /*afterEach(() => {
+    afterEach(() => {
         cy.pause();
-    });*/
+    });
 
     beforeEach(() => {
         cy.visit('/admin/clientes');
@@ -145,7 +145,7 @@ describe('Consulta de clientes', () => {
             .should('contain.text', 'ana.souza03@email.com');
     });
 
-    it('RF0024 - Deve informar quando nenhum cliente for encontrado', () => {
+    it('CT01 - Deve informar quando nenhum cliente for encontrado', () => {
         cy.get('[name="nome"]')
             .type('ClienteQueNaoExiste123456{enter}');
 
@@ -156,5 +156,11 @@ describe('Consulta de clientes', () => {
             .and('contain.text', 'Nenhum cliente encontrado.');
     });
 
+
+    it('RF0025 - Consulta de transações', () => {
+        cy.visit('/admin/detalhesCliente/6');
+
+        cy.contains('h2', 'Transações').should('be.visible');
+    });
 });
 

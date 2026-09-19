@@ -30,7 +30,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Enviar formulário
     formSenha.addEventListener('submit', function (e) {
-
         let formularioValido = true;
 
 
@@ -41,11 +40,9 @@ document.addEventListener('DOMContentLoaded', function () {
             formularioValido = false;
         }
 
-
         if (!validarSenha(novaSenha, erroNovaSenha)) {
             formularioValido = false;
         }
-
 
         if (!validarConfirmacaoSenha(
             novaSenha,
@@ -54,7 +51,6 @@ document.addEventListener('DOMContentLoaded', function () {
         )) {
             formularioValido = false;
         }
-
 
         if (!formularioValido) {
             e.preventDefault();

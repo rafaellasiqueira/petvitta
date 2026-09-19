@@ -126,7 +126,8 @@
 <!-- Modal adicionar/editar endereço -->
 <div th:fragment="modal-adicionar-endereco" id="modalAdicionarEditarEndereco" class="modal">
 
-    <form id="formEndereco" method="POST">
+    <form id="formEndereco"
+          method="POST">
 
         <input type="hidden" id="enderecoId" name="enderecoId">
 
@@ -376,7 +377,6 @@
 
 <!-- Modal cadastrar cartão -->
 <div th:fragment="modal-cadastrar-cartao" id="modalCadastrarCartao" class="modal">
-
     <form id="formCartao"
           th:action="@{/cliente/adicionar-cartao}"
           method="POST">
@@ -715,7 +715,6 @@
 
 <!-- Modal confirmar exclusão -->
 <div th:fragment="modal-confirmar-exclusao" id="modalConfirmarExclusao" class="modal">
-
     <div class="modalConteudo">
 
         <!-- Cabeçalho -->
@@ -757,8 +756,6 @@
         </div>
     </div>
 </div>
-
-
 
 </body>
 </html>

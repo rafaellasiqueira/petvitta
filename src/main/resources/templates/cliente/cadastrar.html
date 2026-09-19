@@ -8,9 +8,6 @@
     <!-- Font Awesome (Ícones) -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 
-    <!-- Cabeçalho CSS -->
-    <link rel="stylesheet" th:href="@{/css/cliente/cabecalho.css}">
-
     <!-- Global CSS -->
     <link rel="stylesheet" th:href="@{/css/cliente/global.css}">
 
@@ -21,12 +18,18 @@
 <body>
 
 <div class="container">
-
     <!-- Cabeçalho -->
-    <header class="login-cabecalho">
+    <header class="cabecalho">
         <div class="topo">
+            <a th:href="@{/cliente/login}" class="btn-voltar">
+                <i class="fa-solid fa-chevron-left"></i>
+                <span>Voltar</span>
+            </a>
+
             <div class="logo-container">
-                <img class="logo" th:src="@{/images/logo-horizontal-escura.svg}">
+                <img class="logo"
+                     th:src="@{/images/logo-horizontal-escura.svg}"
+                     alt="PetVitta">
             </div>
         </div>
     </header>
@@ -196,7 +199,7 @@
                         <!-- Título + remover -->
                         <div class="subtitulo-item">
                             <h2>Endereço</h2>
-                            <button type="button" class="btn-remover-item"  style="display: none;">
+                            <button type="button" class="btn-remover-endereco"  style="display: none;">
                                 <i class="fa-solid fa-trash"></i>
                             </button>
                         </div>
@@ -361,7 +364,7 @@
                         <!-- Título + remover -->
                         <div class="subtitulo-item">
                             <h2>Cartão</h2>
-                            <button type="button" class="btn-remover-item" style="display: none;">
+                            <button type="button" class="btn-remover-cartao" style="display: none;">
                                 <i class="fa-solid fa-trash"></i>
                             </button>
                         </div>

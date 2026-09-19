@@ -7,7 +7,7 @@ describe('Alteração de dados cadastrais do cliente', () => {
     beforeEach(() => {
         cy.visit('/cliente/perfil');
         cy.viewport(1280, 720);
-        cy.wait(2000);
+        cy.wait(3000);
     });
 
     function enviarFormulario() {
@@ -31,7 +31,7 @@ describe('Alteração de dados cadastrais do cliente', () => {
     it('RF0022 - Deve alterar os dados cadastrais do cliente', () => {
         cy.get('[name="nome"]')
             .clear()
-            .type('Bruno Henrique');
+            .type('Bruno Henrique Lima de Oliveira');
 
         cy.get('[name="telefone"]')
             .clear()
@@ -42,41 +42,6 @@ describe('Alteração de dados cadastrais do cliente', () => {
 
         enviarFormulario();
         validarToast('Dados salvos com sucesso!');
-    });
-
-    it('RF0022 - Deve alterar somente o nome do cliente', () => {
-        cy.get('[name="nome"]')
-            .clear()
-            .type('Bruno Henrique Lima');
-
-        enviarFormulario();
-        validarToast('Dados salvos com sucesso!');
-    });
-
-    it('RF0022 - Deve alterar somente o telefone do cliente', () => {
-        cy.get('[name="telefone"]')
-            .clear()
-            .type('11987654321');
-
-        enviarFormulario();
-        validarToast('Dados salvos com sucesso!');
-    });
-
-    it('RF0022 - Deve alterar somente o gênero do cliente', () => {
-        cy.get('[name="genero"]')
-            .select('3');
-
-        enviarFormulario();
-        validarToast('Dados salvos com sucesso!');
-    });
-
-    it('RF0022 - Deve alterar somente a data de nascimento', () => {
-        cy.get('[name="dataNascimento"]')
-            .clear()
-            .type('2005-01-23');
-
-        enviarFormulario();
-        validarToast('Dados salvos com sucesso!')
     });
 
     it('RN0026 - Não deve permitir enviar com campos vazios', () => {

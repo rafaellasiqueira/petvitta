@@ -82,7 +82,7 @@ describe('Cadastro de cliente', () => {
             .and('contain', mensagem);
     }
 
-    it('RF0021/RN0026 - Deve cadastrar o cliente com todos os dados obrigatórios válidos', () => {
+    it('RF0021/RN0026/RF0026/RF0027/RN0023/RN0024 - Deve cadastrar o cliente com todos os dados obrigatórios válidos', () => {
         preencherDadosValidos();
         enviarFormulario();
         validarToast('Cadastro concluído com sucesso!');

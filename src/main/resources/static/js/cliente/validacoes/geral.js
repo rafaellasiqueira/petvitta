@@ -109,12 +109,7 @@ function validarSenha(senha, erroSenha) {
 }
 
 
-function validarConfirmacaoSenha(
-    senha,
-    confirmarSenha,
-    erroConfirmarSenha
-) {
-
+function validarConfirmacaoSenha(senha, confirmarSenha, erroConfirmarSenha) {
     if (confirmarSenha.value !== senha.value) {
         erroConfirmarSenha.textContent = 'As senhas não coincidem.';
         confirmarSenha.focus();

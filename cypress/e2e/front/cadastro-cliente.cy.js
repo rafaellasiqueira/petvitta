@@ -1,8 +1,8 @@
 describe('Cadastro de cliente', () => {
 
-    /*afterEach(() => {
+    afterEach(() => {
         cy.pause();
-    });*/
+    });
 
     beforeEach(() => {
         cy.visit('/cliente/cadastrar');
@@ -11,13 +11,12 @@ describe('Cadastro de cliente', () => {
 
     function preencherDadosValidos() {
         cy.get('[name="nome"]').type('Sophia da Silva');
-        cy.get('[name="cpf"]').type('17177963030');
+        cy.get('[name="cpf"]').type('33793306046');
         cy.get('[name="tipoTelefone"]').select('1');
         cy.get('[name="telefone"]').type('11954852669');
         cy.get('[name="genero"]').select('1');
         cy.get('[name="dataNascimento"]').type('2005-02-01');
-
-        cy.get('[name="email"]').type('sophia@gmail.com');
+        cy.get('[name="email"]').type('sophia123@gmail.com');
         cy.get('[name="senha"]').type('Sophia123@');
         cy.get('[name="confirmarSenha"]').type('Sophia123@');
 
@@ -95,9 +94,55 @@ describe('Cadastro de cliente', () => {
             .and('contain', mensagem);
     }
 
-    it('RF0021/RN0026 - Deve cadastrar o cliente com todos os dados obrigatórios válidos', () => {
-        preencherDadosValidos();
+    it('RF0021/RN0026/RF0026/RF0027/RN0023/RN0024 - Deve cadastrar o cliente com todos os dados obrigatórios válidos', () => {
+
+        cy.get('[name="nome"]').type('Sophia da Silva');
+        cy.wait(300);
+
+        cy.get('[name="cpf"]').type('53474733800');
+        cy.wait(300);
+
+        cy.get('[name="tipoTelefone"]').select('1');
+        cy.wait(300);
+
+        cy.get('[name="telefone"]').type('11954852669');
+        cy.wait(300);
+
+        cy.get('[name="genero"]').select('1');
+        cy.wait(300);
+
+        cy.get('[name="dataNascimento"]').type('2005-02-01');
+        cy.wait(300);
+
+        cy.get('[name="email"]').type('sophia123@gmail.com');
+        cy.wait(300);
+
+        cy.get('[name="senha"]').type('Sophia123@');
+        cy.wait(300);
+
+        cy.get('[name="confirmarSenha"]').type('Sophia123@');
+        cy.wait(300);
+
+        preencherEndereco(0, '1');
+        cy.wait(500);
+
+        cy.get('#btnAdicionarEndereco').click();
+        cy.wait(300);
+
+        preencherEndereco(1, '2');
+        cy.wait(300);
+
+        preencherCartao(0, true);
+        cy.wait(300);
+
+        cy.get('#btnAdicionarCartao').click();
+        cy.wait(300);
+
+        preencherCartao(1, false);
+        cy.wait(300);
+
         enviarFormulario();
+
         validarToast('Cadastro concluído com sucesso!');
     });
 
@@ -107,6 +152,7 @@ describe('Cadastro de cliente', () => {
         cy.get('[name="senha"]')
             .clear()
             .type('Teste@');
+        cy.wait(300);
 
         enviarFormulario();
 
@@ -122,6 +168,7 @@ describe('Cadastro de cliente', () => {
         cy.get('[name="senha"]')
             .clear()
             .type('teste123@');
+        cy.wait(300);
 
         enviarFormulario();
 
@@ -138,6 +185,7 @@ describe('Cadastro de cliente', () => {
         cy.get('[name="senha"]')
             .clear()
             .type('TESTE123@');
+        cy.wait(300);
 
         enviarFormulario();
 
@@ -153,6 +201,7 @@ describe('Cadastro de cliente', () => {
         cy.get('[name="senha"]')
             .clear()
             .type('Teste123');
+        cy.wait(300);
 
         enviarFormulario();
 
@@ -168,6 +217,7 @@ describe('Cadastro de cliente', () => {
         cy.get('[name="senha"]')
             .clear()
             .type('Teste123@');
+        cy.wait(300);
 
         cy.get('[name="confirmarSenha"]')
             .clear()
@@ -186,6 +236,7 @@ describe('Cadastro de cliente', () => {
 
         cy.get('[name="enderecos[0].tipoEndereco"]').select('2');
         cy.get('[name="enderecos[1].tipoEndereco"]').select('2');
+        cy.wait(3000);
 
         enviarFormulario();
 
@@ -199,6 +250,7 @@ describe('Cadastro de cliente', () => {
 
         cy.get('[name="enderecos[0].tipoEndereco"]').select('1');
         cy.get('[name="enderecos[1].tipoEndereco"]').select('1');
+        cy.wait(3000);
 
         enviarFormulario();
 
@@ -211,6 +263,8 @@ describe('Cadastro de cliente', () => {
         preencherDadosValidos();
 
         // Dados do cliente
+        cy.get('[name="nome"]').clear();
+        cy.get('[name="cpf"]').clear();
         cy.get('[name="tipoTelefone"]').invoke('val', '');
         cy.get('[name="telefone"]').clear();
         cy.get('[name="genero"]').invoke('val', '');
@@ -260,6 +314,14 @@ describe('Cadastro de cliente', () => {
         enviarFormulario();
 
         // Dados do cliente
+        validarErro(
+            '#erroNome',
+            'Preencha o nome.'
+        );
+        validarErro(
+            '#erroCpf',
+            'Preencha o CPF.'
+        );
         validarErro(
             '#erroTipoTelefone',
             'Selecione o tipo de telefone.'
