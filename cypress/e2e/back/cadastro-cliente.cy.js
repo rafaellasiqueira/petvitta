@@ -173,7 +173,7 @@ describe('Cadastro de cliente', () => {
         preencherDadosValidos();
         cy.get('[name="nome"]').clear();
         enviarFormulario();
-        validarToast('O nome é obrigatório.');
+        validarToast('O nome deve ter no mínimo 3 caracteres e no máximo 150 caracteres.');
     });
 
     it('RN0026 - Não deve cadastrar o cliente sem CPF', () => {

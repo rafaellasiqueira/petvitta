@@ -18,10 +18,28 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Telefone
         const inputTelefone = document.getElementById('telefone');
+        const inputTipoTelefone = document.getElementById('tipoTelefone');
         const erroTelefone = document.getElementById('erroTelefone');
+        const telefone = inputTelefone.value.replace(/\D/g, '');
 
-        if (inputTelefone.value.trim() === '') {
+        if (telefone === '') {
             erroTelefone.textContent = 'Preencha o telefone.';
+            inputTelefone.focus();
+            formularioValido = false;
+
+        } else if (
+            inputTipoTelefone.value === '2' &&
+            telefone.length < 10
+        ) {
+            erroTelefone.textContent = 'Digite o telefone completo.';
+            inputTelefone.focus();
+            formularioValido = false;
+
+        } else if (
+            inputTipoTelefone.value !== '2' &&
+            telefone.length < 11
+        ) {
+            erroTelefone.textContent = 'Digite o telefone completo.';
             inputTelefone.focus();
             formularioValido = false;
         }

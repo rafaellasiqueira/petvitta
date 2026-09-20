@@ -10,8 +10,7 @@ import java.time.LocalDate;
 @Setter
 public class ClienteEdicaoDTO {
 
-    @NotBlank(message = "O nome é obrigatório.")
-    @Size(max = 150, message = "O nome deve ter no máximo 150 caracteres.")
+    @Size(min = 3, max = 150, message = "O nome deve ter no mínimo 3 caracteres e no máximo 150 caracteres.")
     private String nome;
 
     @NotNull(message = "O tipo de telefone é obrigatório.")

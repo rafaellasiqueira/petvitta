@@ -39,7 +39,7 @@ describe('Alteração de dados cadastrais do cliente', () => {
         validarToast('Dados salvos com sucesso!');
     });
 
-    it('RF0022 - Deve alterar somente o nome do cliente', () => {
+    it('RN0026 - Deve alterar somente o nome do cliente', () => {
         cy.get('[name="nome"]')
             .clear()
             .type('Bruno Henrique Lima');
@@ -48,7 +48,7 @@ describe('Alteração de dados cadastrais do cliente', () => {
         validarToast('Dados salvos com sucesso!');
     });
 
-    it('RF0022 - Deve alterar somente o telefone do cliente', () => {
+    it('RN0026 - Deve alterar somente o telefone do cliente', () => {
         cy.get('[name="telefone"]')
             .clear()
             .type('11987654321');
@@ -57,7 +57,7 @@ describe('Alteração de dados cadastrais do cliente', () => {
         validarToast('Dados salvos com sucesso!');
     });
 
-    it('RF0022 - Deve alterar somente o gênero do cliente', () => {
+    it('RN0026 - Deve alterar somente o gênero do cliente', () => {
         cy.get('[name="genero"]')
             .select('3');
 
@@ -65,7 +65,7 @@ describe('Alteração de dados cadastrais do cliente', () => {
         validarToast('Dados salvos com sucesso!');
     });
 
-    it('RF0022 - Deve alterar somente a data de nascimento', () => {
+    it('RN0026 - Deve alterar somente a data de nascimento', () => {
         cy.get('[name="dataNascimento"]')
             .clear()
             .type('2005-01-23');
@@ -79,7 +79,7 @@ describe('Alteração de dados cadastrais do cliente', () => {
             .clear();
 
         enviarFormulario();
-        validarToast('O nome é obrigatório.');
+        validarToast('O nome deve ter no mínimo 3 caracteres e no máximo 150 caracteres.');
     });
 
     it('RN0026 - Deve validar tipo telefone obrigatório', () => {

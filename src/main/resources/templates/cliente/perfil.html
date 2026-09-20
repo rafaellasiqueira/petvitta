@@ -211,35 +211,25 @@
             <!-- Endereços -->
             <div class="card">
                 <h1>Endereços</h1>
-
                 <div class="lista-enderecos">
 
                     <div class="item-endereco"
                          th:each="endereco : ${enderecos}">
 
                         <div class="cabecalho-item">
-
                             <div>
                                 <h3 th:text="${endereco.nomeIdentificacao}"></h3>
-
                                 <span class="status-endereco entrega"
-                                      th:if="${endereco.tipoEndereco.id == 2}">
-                        Entrega
-                    </span>
+                                      th:if="${endereco.tipoEndereco.id == 2}">Entrega</span>
 
                                 <span class="status-endereco cobranca"
-                                      th:if="${endereco.tipoEndereco.id == 1}">
-                        Cobrança
-                    </span>
+                                      th:if="${endereco.tipoEndereco.id == 1}">Cobrança</span>
 
                                 <span class="status-endereco entrega"
-                                      th:if="${endereco.tipoEndereco.id == 3}">
-                        Entrega e Cobrança
-                    </span>
+                                      th:if="${endereco.tipoEndereco.id == 3}">Entrega e Cobrança</span>
                             </div>
 
                             <div class="acoes-item">
-
                                 <button type="button"
                                         class="btn-editar editar-endereco"
                                         th:data-id="${endereco.id}"
@@ -260,21 +250,16 @@
 
                                 <button type="button"
                                         class="btn-excluir excluir-endereco"
-                                        th:attr="data-id=${endereco.id}, data-nome=${endereco.nomeIdentificacao}">
-
+                                        th:data-id="${endereco.id}"
+                                        th:data-nome="${endereco.nomeIdentificacao}">
                                     <i class="fa-solid fa-trash"></i>
-
                                 </button>
-
                             </div>
                         </div>
-
                         <p th:text="${endereco.logradouro + ', ' + endereco.numero + ' - ' + endereco.bairro}"></p>
                         <p th:text="${endereco.cidade + ' - ' + endereco.estado.sigla}"></p>
                         <p th:text="${'CEP: ' + endereco.cep + ', ' + endereco.pais}"></p>
-
                     </div>
-
                 </div>
 
                 <div class="container-btn-salvar">
@@ -289,7 +274,6 @@
             <!-- Cartões -->
             <div class="card">
                 <h1>Cartões</h1>
-
                 <div class="lista-cartoes">
 
                     <div class="item-cartao"
@@ -299,43 +283,37 @@
                             <div>
                                 <h3 th:text="${cartao.bandeira.descricao}"></h3>
                                 <span class="status-cartao"
-                                      th:if="${cartao.preferencial}">
-                        Preferencial
-                    </span>
+                                      th:if="${cartao.preferencial}">Preferencial</span>
                             </div>
-                            <div class="acoes-item">
 
+                            <div class="acoes-item">
                                 <form th:if="${!cartao.preferencial}"
                                       method="post"
-                                      th:action="@{/cliente/tornar-cartao-preferencial}">
-
-                                    <input type="hidden"
-                                           name="cartaoId"
-                                           th:value="${cartao.id}">
+                                      th:action="@{/cliente/tornar-cartao-preferencial/{id}(id=${cartao.id})}">
 
                                     <button type="submit" class="status-cartao">
                                         Tornar preferencial
                                     </button>
-
                                 </form>
 
                                 <button type="button"
                                         class="btn-excluir excluir-cartao"
-                                        th:attr="data-id=${cartao.id}, data-nome=${cartao.bandeira.descricao}, data-numero=${cartao.numero}">
+                                        th:data-id="${cartao.id}"
+                                        th:data-nome="${cartao.bandeira.descricao}"
+                                        th:data-numero="${cartao.numero}">
                                     <i class="fa-solid fa-trash"></i>
                                 </button>
-
                             </div>
                         </div>
 
                         <div class="informacoes-cartao">
-                            <p th:text="'**** ' + '**** ' + '**** ' + ${cartao.numero.substring(cartao.numero.length() - 4)}">
-                            </p>
-
-                            <p th:text="${cartao.nomeImpresso}">
-                            </p>
-
+                            <p th:text="'**** ' + '**** ' + '**** ' + ${cartao.numero.substring(cartao.numero.length() - 4)}"></p>
+                            <p th:text="${cartao.nomeImpresso}"></p>
                         </div>
+                    </div>
+
+                    <div th:if="${#lists.isEmpty(cartoes)}" class="sem-resultados">
+                        <p>Nenhum cartão cadastrado.</p>
                     </div>
                 </div>
 
@@ -346,7 +324,6 @@
                         Adicionar cartão
                     </button>
                 </div>
-
             </div>
 
             <!-- Cupons -->
@@ -373,7 +350,6 @@
                         </div>
                         <div class="valor-cupom">R$ 10,00</div>
                     </div>
-
                 </div>
             </div>
         </div>
@@ -390,9 +366,7 @@
                class="fa-solid fa-check"></i>
 
             <p th:text="${mensagemToast}"></p>
-
         </div>
-
     </main>
 </div>
 
@@ -402,7 +376,6 @@
 <div th:replace="~{fragments/cliente/modais :: modal-cadastrar-cartao}"></div>
 
 <div th:replace="~{fragments/cliente/modais :: modal-confirmar-exclusao}"></div>
-
 
 <!-- Validações -->
 <script th:src="@{/js/cliente/validacoes/endereco.js}"></script>

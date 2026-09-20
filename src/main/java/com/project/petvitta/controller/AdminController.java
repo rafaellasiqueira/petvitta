@@ -2,17 +2,9 @@ package com.project.petvitta.controller;
 
 import com.project.petvitta.model.Cliente;
 import com.project.petvitta.service.ClienteService;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import com.project.petvitta.model.dominio.AtivarMotivo;
-import com.project.petvitta.model.dominio.InativarMotivo;
-import com.project.petvitta.repository.dominio.AtivarMotivoRepository;
-import com.project.petvitta.repository.dominio.InativarMotivoRepository;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalDate;
@@ -22,17 +14,35 @@ import java.util.List;
 public class AdminController {
 
     private final ClienteService clienteService;
-    private final InativarMotivoRepository inativarMotivoRepository;
-    private final AtivarMotivoRepository ativarMotivoRepository;
 
     public AdminController(
-            ClienteService clienteService,
-            InativarMotivoRepository inativarMotivoRepository,
-            AtivarMotivoRepository ativarMotivoRepository
+            ClienteService clienteService
     ) {
         this.clienteService = clienteService;
-        this.inativarMotivoRepository = inativarMotivoRepository;
-        this.ativarMotivoRepository = ativarMotivoRepository;
+    }
+
+    @ModelAttribute
+    public void carregarDadosAdmin(Model model) {
+
+        model.addAttribute(
+                "generos",
+                clienteService.listarGeneros()
+        );
+
+        model.addAttribute(
+                "motivosInativacao",
+                clienteService.listarMotivosInativacao()
+        );
+
+        model.addAttribute(
+                "motivosAtivacao",
+                clienteService.listarMotivosAtivacao()
+        );
+
+
+        model.addAttribute("generos",
+                clienteService.listarGeneros()
+        );
     }
 
     @GetMapping("/admin/login")
@@ -42,13 +52,18 @@ public class AdminController {
 
     @GetMapping("/admin/dashboard")
     public String dashboard(Model model) {
-        model.addAttribute("paginaAtual", "dashboard");
+        model.addAttribute(
+                "paginaAtual",
+                "dashboard");
+
         return "admin/dashboard";
     }
 
     @GetMapping("/admin/pedidos")
     public String pedidos(Model model) {
-        model.addAttribute("paginaAtual", "pedidos");
+        model.addAttribute(
+                "paginaAtual",
+                "pedidos");
         return "admin/pedidos";
     }
 
@@ -63,8 +78,8 @@ public class AdminController {
             @RequestParam(required = false) Boolean status,
             Model model
     ) {
-
-        model.addAttribute("paginaAtual", "clientes");
+        model.addAttribute("paginaAtual",
+                "clientes");
 
         model.addAttribute("clientes",
                 clienteService.filtrarClientes(
@@ -76,18 +91,6 @@ public class AdminController {
                         genero,
                         status
                 )
-        );
-
-        model.addAttribute("generos", clienteService.listarGeneros());
-
-        model.addAttribute(
-                "motivosInativacao",
-                clienteService.listarMotivosInativacao()
-        );
-
-        model.addAttribute(
-                "motivosAtivacao",
-                clienteService.listarMotivosAtivacao()
         );
 
         model.addAttribute("nome", nome);

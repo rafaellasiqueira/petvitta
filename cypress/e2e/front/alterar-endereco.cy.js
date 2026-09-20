@@ -3,6 +3,7 @@ describe('Alteração de endereço do cliente', () => {
     afterEach(() => {
         cy.pause();
     });
+
     beforeEach(() => {
         cy.visit('/cliente/perfil');
         cy.viewport(1280, 720);

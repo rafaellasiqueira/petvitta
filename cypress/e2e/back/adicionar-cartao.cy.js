@@ -7,7 +7,6 @@ describe('Adicionar cartão', () => {
     beforeEach(() => {
         cy.visit('/cliente/perfil');
         cy.viewport(1280, 720);
-        cy.wait(2000);
     });
 
     function preencherCartaoValido() {
@@ -69,8 +68,7 @@ describe('Adicionar cartão', () => {
     it('RF0027 - Deve permitir tornar um cartão já cadastrado como preferencial', () => {
         cy.get('.item-cartao')
             .eq(1)
-            .find('form[action="/cliente/tornar-cartao-preferencial"]')
-            .find('button')
+            .find('.status-cartao')
             .click();
 
         validarToast('Cartão definido como preferencial.');

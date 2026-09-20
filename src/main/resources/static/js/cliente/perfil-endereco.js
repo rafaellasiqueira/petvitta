@@ -7,7 +7,6 @@ document.addEventListener('DOMContentLoaded', function () {
     const btnCancelarEndereco = document.getElementById('btnCancelarEndereco');
     const btnSalvarEndereco = document.getElementById('btnSalvarEndereco');
     const campoSalvarPerfil = document.getElementById('campoSalvarPerfil');
-    const enderecoId = document.getElementById('enderecoId');
 
     const modalExclusao = document.getElementById('modalConfirmarExclusao');
     const btnFecharExclusao = document.getElementById('btnFecharModalExclusao');
@@ -22,7 +21,6 @@ document.addEventListener('DOMContentLoaded', function () {
     // Adicionar endereço
     btnAdicionarEndereco.addEventListener('click', function () {
         formEndereco.reset();
-        enderecoId.value = '';
         tituloEndereco.textContent = 'Adicionar endereço';
         btnSalvarEndereco.textContent = 'Adicionar';
         formEndereco.action = '/cliente/adicionar-endereco';
@@ -43,7 +41,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 erro.textContent = '';
             });
 
-            enderecoId.value = this.dataset.id || '';
             tituloEndereco.textContent = 'Editar endereço';
             btnSalvarEndereco.textContent = 'Salvar';
 
@@ -60,7 +57,7 @@ document.addEventListener('DOMContentLoaded', function () {
             modalEndereco.querySelector('.pais').value = this.dataset.pais || 'Brasil';
             modalEndereco.querySelector('#observacoes').value = this.dataset.observacoes || '';
 
-            formEndereco.action = '/cliente/editar-endereco';
+            formEndereco.action = '/cliente/editar-endereco/' + this.dataset.id;
             modalEndereco.classList.add('active');
         });
     });
@@ -69,14 +66,10 @@ document.addEventListener('DOMContentLoaded', function () {
     document.querySelectorAll('.excluir-endereco').forEach(function (botao) {
         botao.addEventListener('click', function () {
             const mensagem = document.getElementById('mensagemModalExclusao');
-            const idExcluir = document.getElementById('idExcluir');
             const formExcluir = document.getElementById('formExcluir');
 
             mensagem.textContent = 'Tem certeza que deseja excluir o endereço "' + this.dataset.nome + '"?';
-            idExcluir.name = 'enderecoId';
-            idExcluir.value = this.dataset.id;
-            formExcluir.action = '/cliente/excluir-endereco';
-
+            formExcluir.action = '/cliente/excluir-endereco/' + this.dataset.id;
             modalExclusao.classList.add('active');
         });
     });

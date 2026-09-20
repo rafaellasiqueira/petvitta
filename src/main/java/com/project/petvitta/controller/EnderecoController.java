@@ -5,6 +5,7 @@ import com.project.petvitta.service.EnderecoService;
 import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -69,12 +70,11 @@ public class EnderecoController {
         return "redirect:/cliente/perfil";
     }
 
-    @PostMapping("/cliente/editar-endereco")
+    @PostMapping("/cliente/editar-endereco/{id}")
     public String editar(
-            @Valid
-            EnderecoDTO dto,
+            @Valid EnderecoDTO dto,
             BindingResult result,
-            @RequestParam Long enderecoId,
+            @PathVariable Long id,
             RedirectAttributes redirectAttributes
     ) {
         if (result.hasErrors()) {
@@ -91,7 +91,7 @@ public class EnderecoController {
             return "redirect:/cliente/perfil";
         }
         try {
-            enderecoService.editar(6L, enderecoId, dto);
+            enderecoService.editar(6L, id, dto);
             redirectAttributes.addFlashAttribute(
                     "tipoToast",
                     "sucesso"
@@ -114,13 +114,13 @@ public class EnderecoController {
         }
         return "redirect:/cliente/perfil";
     }
-    @PostMapping("/cliente/excluir-endereco")
+    @PostMapping("/cliente/excluir-endereco/{id}")
     public String excluir(
-            @RequestParam Long enderecoId,
+            @PathVariable Long id,
             RedirectAttributes redirectAttributes
     ) {
         try {
-            enderecoService.excluir(6L, enderecoId);
+            enderecoService.excluir(6L, id);
             redirectAttributes.addFlashAttribute(
                     "tipoToast",
                     "sucesso"

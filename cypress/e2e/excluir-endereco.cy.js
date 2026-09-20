@@ -59,7 +59,7 @@ describe('Exclusão de endereço do cliente', () => {
             .click();
 
         validarToast(
-            'Não é possível excluir este endereço, pois o você deve possuir ao menos um endereço de cobrança e um de entrega.'
+            'Não é possível excluir este endereço, pois você deve possuir ao menos um endereço de cobrança e um de entrega.'
         );
     });
 
@@ -76,7 +76,7 @@ describe('Exclusão de endereço do cliente', () => {
             .click();
 
         validarToast(
-            'Não é possível excluir este endereço, pois o você deve possuir ao menos um endereço de cobrança e um de entrega.'
+            'Não é possível excluir este endereço, pois você deve possuir ao menos um endereço de cobrança e um de entrega.'
         );
     });
 });

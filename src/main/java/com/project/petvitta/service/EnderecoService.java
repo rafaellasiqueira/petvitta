@@ -17,7 +17,6 @@ import java.util.List;
 
 @Service
 public class EnderecoService {
-    private final EnderecoRepository enderecoRepository;
     private final TipoEnderecoRepository tipoEnderecoRepository;
     private final TipoResidenciaRepository tipoResidenciaRepository;
     private final TipoLogradouroRepository tipoLogradouroRepository;
@@ -36,32 +35,20 @@ public class EnderecoService {
         this.tipoResidenciaRepository = tipoResidenciaRepository;
         this.tipoLogradouroRepository = tipoLogradouroRepository;
         this.estadoRepository = estadoRepository;
-        this.enderecoRepository = enderecoRepository;
         this.clienteRepository = clienteRepository;
     }
 
     public List<TipoEndereco> listarTiposEndereco() {
         return tipoEnderecoRepository.findAll();
     }
-
     public List<TipoResidencia> listarTiposResidencia() {
         return tipoResidenciaRepository.findAllByOrderByIdAsc();
     }
-
     public List<TipoLogradouro> listarTiposLogradouro() {
         return tipoLogradouroRepository.findAllByOrderByIdAsc();
     }
-
     public List<Estado> listarEstados() {
         return estadoRepository.findAll();
-    }
-
-    public void validarEndereco(Endereco endereco) {
-        if (endereco == null) {
-            throw new IllegalArgumentException(
-                    "Endereço inválido."
-            );
-        }
     }
 
     public void validarTiposEndereco(List<EnderecoDTO> enderecos) {
@@ -74,20 +61,24 @@ public class EnderecoService {
         boolean possuiCobranca = false;
         boolean possuiEntrega = false;
 
-        for (EnderecoDTO endereco : enderecos) {
-            if (endereco == null || endereco.getTipoEndereco() == null) {
-                continue;
-            }
+        for (int i = 0; i < enderecos.size(); i++) {
+            EnderecoDTO endereco = enderecos.get(i);
 
-            Long tipoId = endereco.getTipoEndereco();
+            if (endereco != null && endereco.getTipoEndereco() != null) {
+                Long tipoId = endereco.getTipoEndereco();
 
-            if (tipoId == 1L) {
-                possuiCobranca = true;
-            } else if (tipoId == 2L) {
-                possuiEntrega = true;
-            } else if (tipoId == 3L) {
-                possuiCobranca = true;
-                possuiEntrega = true;
+                if (tipoId == 1L) {
+                    possuiCobranca = true;
+                }
+
+                if (tipoId == 2L) {
+                    possuiEntrega = true;
+                }
+
+                if (tipoId == 3L) {
+                    possuiCobranca = true;
+                    possuiEntrega = true;
+                }
             }
         }
 
@@ -105,7 +96,6 @@ public class EnderecoService {
                 .orElseThrow(() -> new IllegalArgumentException("Cliente não encontrado."));
 
         Endereco endereco = new Endereco();
-
         endereco.setNomeIdentificacao(dto.getNomeIdentificacao());
         endereco.setCep(dto.getCep());
         endereco.setLogradouro(dto.getLogradouro());
@@ -147,31 +137,36 @@ public class EnderecoService {
         boolean possuiCobranca = false;
         boolean possuiEntrega = false;
 
-        for (Endereco e : cliente.getEnderecos()) {
+        for (int i = 0; i < cliente.getEnderecos().size(); i++) {
+            Endereco e = cliente.getEnderecos().get(i);
 
-            // Ignora o endereço que está sendo alterado
-            if (e.equals(endereco)) {
-                continue;
-            }
+            if (!e.equals(endereco)) {
+                Long tipoId = e.getTipoEndereco().getId();
 
-            Long tipoId = e.getTipoEndereco().getId();
+                if (tipoId == 1L) {
+                    possuiCobranca = true;
+                }
 
-            if (tipoId == 1L) {
-                possuiCobranca = true;
-            } else if (tipoId == 2L) {
-                possuiEntrega = true;
-            } else if (tipoId == 3L) {
-                possuiCobranca = true;
-                possuiEntrega = true;
+                if (tipoId == 2L) {
+                    possuiEntrega = true;
+                }
+
+                if (tipoId == 3L) {
+                    possuiCobranca = true;
+                    possuiEntrega = true;
+                }
             }
         }
 
-        // Considera o novo tipo do endereço
         if (novoTipoId == 1L) {
             possuiCobranca = true;
-        } else if (novoTipoId == 2L) {
+        }
+
+        if (novoTipoId == 2L) {
             possuiEntrega = true;
-        } else if (novoTipoId == 3L) {
+        }
+
+        if (novoTipoId == 3L) {
             possuiCobranca = true;
             possuiEntrega = true;
         }
@@ -189,21 +184,24 @@ public class EnderecoService {
         Cliente cliente = clienteRepository.findById(clienteId)
                 .orElseThrow(() -> new IllegalArgumentException("Cliente não encontrado."));
 
-        Endereco endereco = cliente.getEnderecos()
-                .stream()
-                .filter(e -> e.getId().equals(enderecoId))
-                .findFirst()
-                .orElseThrow(() ->
-                        new IllegalArgumentException(
-                                "Esse endereço não pertence ao cliente."
-                        )
-                );
+        Endereco endereco = null;
 
-        validarAlteracaoTipoEndereco(
-                cliente,
-                endereco,
-                dto.getTipoEndereco()
-        );
+        for (int i = 0; i < cliente.getEnderecos().size(); i++) {
+            Endereco e = cliente.getEnderecos().get(i);
+
+            if (e.getId().equals(enderecoId)) {
+                endereco = e;
+                break;
+            }
+        }
+
+        if (endereco == null) {
+            throw new IllegalArgumentException(
+                    "Esse endereço não pertence ao cliente."
+            );
+        }
+
+        validarAlteracaoTipoEndereco(cliente, endereco, dto.getTipoEndereco());
 
         endereco.setNomeIdentificacao(dto.getNomeIdentificacao());
         endereco.setCep(dto.getCep());
@@ -214,41 +212,21 @@ public class EnderecoService {
         endereco.setPais(dto.getPais());
         endereco.setObservacoes(dto.getObservacoes());
 
-        endereco.setTipoEndereco(
-                tipoEnderecoRepository.findById(dto.getTipoEndereco())
+        endereco.setTipoEndereco(tipoEnderecoRepository.findById(dto.getTipoEndereco())
                         .orElseThrow(() ->
-                                new IllegalArgumentException(
-                                        "Tipo de endereço inválido."
-                                )
-                        )
-        );
+                                new IllegalArgumentException("Tipo de endereço inválido.")));
 
-        endereco.setTipoResidencia(
-                tipoResidenciaRepository.findById(dto.getTipoResidencia())
+        endereco.setTipoResidencia(tipoResidenciaRepository.findById(dto.getTipoResidencia())
                         .orElseThrow(() ->
-                                new IllegalArgumentException(
-                                        "Tipo de residência inválido."
-                                )
-                        )
-        );
+                                new IllegalArgumentException("Tipo de residência inválido.")));
 
-        endereco.setTipoLogradouro(
-                tipoLogradouroRepository.findById(dto.getTipoLogradouro())
+        endereco.setTipoLogradouro(tipoLogradouroRepository.findById(dto.getTipoLogradouro())
                         .orElseThrow(() ->
-                                new IllegalArgumentException(
-                                        "Tipo de logradouro inválido."
-                                )
-                        )
-        );
+                                new IllegalArgumentException("Tipo de logradouro inválido.")));
 
-        endereco.setEstado(
-                estadoRepository.findById(dto.getEstado())
+        endereco.setEstado(estadoRepository.findById(dto.getEstado())
                         .orElseThrow(() ->
-                                new IllegalArgumentException(
-                                        "Estado inválido."
-                                )
-                        )
-        );
+                                new IllegalArgumentException("Estado inválido.")));
     }
 
     public void adicionarAoCliente(
@@ -256,7 +234,8 @@ public class EnderecoService {
             List<EnderecoDTO> enderecos
     ) {
 
-        for (EnderecoDTO dto : enderecos) {
+        for (int i = 0; i < enderecos.size(); i++) {
+            EnderecoDTO dto = enderecos.get(i);
 
             Endereco endereco = new Endereco();
 
@@ -270,41 +249,21 @@ public class EnderecoService {
             endereco.setObservacoes(dto.getObservacoes());
             endereco.setCliente(cliente);
 
-            endereco.setTipoEndereco(
-                    tipoEnderecoRepository.findById(dto.getTipoEndereco())
+            endereco.setTipoEndereco(tipoEnderecoRepository.findById(dto.getTipoEndereco())
                             .orElseThrow(() ->
-                                    new IllegalArgumentException(
-                                            "Tipo de endereço inválido."
-                                    )
-                            )
-            );
+                                    new IllegalArgumentException("Tipo de endereço inválido.")));
 
-            endereco.setTipoResidencia(
-                    tipoResidenciaRepository.findById(dto.getTipoResidencia())
+            endereco.setTipoResidencia(tipoResidenciaRepository.findById(dto.getTipoResidencia())
                             .orElseThrow(() ->
-                                    new IllegalArgumentException(
-                                            "Tipo de residência inválido."
-                                    )
-                            )
-            );
+                                    new IllegalArgumentException("Tipo de residência inválido.")));
 
-            endereco.setTipoLogradouro(
-                    tipoLogradouroRepository.findById(dto.getTipoLogradouro())
+            endereco.setTipoLogradouro(tipoLogradouroRepository.findById(dto.getTipoLogradouro())
                             .orElseThrow(() ->
-                                    new IllegalArgumentException(
-                                            "Tipo de logradouro inválido."
-                                    )
-                            )
-            );
+                                    new IllegalArgumentException("Tipo de logradouro inválido.")));
 
-            endereco.setEstado(
-                    estadoRepository.findById(dto.getEstado())
+            endereco.setEstado(estadoRepository.findById(dto.getEstado())
                             .orElseThrow(() ->
-                                    new IllegalArgumentException(
-                                            "Estado inválido."
-                                    )
-                            )
-            );
+                                    new IllegalArgumentException("Estado inválido.")));
 
             cliente.getEnderecos().add(endereco);
         }
@@ -315,45 +274,54 @@ public class EnderecoService {
 
         Cliente cliente = clienteRepository.findById(clienteId)
                 .orElseThrow(() ->
-                        new IllegalArgumentException(
-                                "Cliente não encontrado."
-                        )
-                );
+                        new IllegalArgumentException("Cliente não encontrado."));
 
-        Endereco endereco = cliente.getEnderecos()
-                .stream()
-                .filter(e -> e.getId().equals(enderecoId))
-                .findFirst()
-                .orElseThrow(() ->
-                        new IllegalArgumentException(
-                                "Esse endereço não pertence ao cliente."
-                        )
-                );
+        Endereco endereco = null;
+
+        for (int i = 0; i < cliente.getEnderecos().size(); i++) {
+            Endereco e = cliente.getEnderecos().get(i);
+
+            if (e.getId().equals(enderecoId)) {
+                endereco = e;
+                break;
+            }
+        }
+
+        if (endereco == null) {
+            throw new IllegalArgumentException(
+                    "Esse endereço não pertence ao cliente."
+            );
+        }
 
         boolean possuiCobranca = false;
         boolean possuiEntrega = false;
 
-        for (Endereco e : cliente.getEnderecos()) {
+        for (int i = 0; i < cliente.getEnderecos().size(); i++) {
 
-            if (e.equals(endereco)) {
-                continue;
-            }
+            Endereco e = cliente.getEnderecos().get(i);
 
-            Long tipoId = e.getTipoEndereco().getId();
+            if (!e.equals(endereco)) {
 
-            if (tipoId == 1L) {
-                possuiCobranca = true;
-            } else if (tipoId == 2L) {
-                possuiEntrega = true;
-            } else if (tipoId == 3L) {
-                possuiCobranca = true;
-                possuiEntrega = true;
+                Long tipoId = e.getTipoEndereco().getId();
+
+                if (tipoId == 1L) {
+                    possuiCobranca = true;
+                }
+
+                if (tipoId == 2L) {
+                    possuiEntrega = true;
+                }
+
+                if (tipoId == 3L) {
+                    possuiCobranca = true;
+                    possuiEntrega = true;
+                }
             }
         }
 
         if (!possuiCobranca || !possuiEntrega) {
             throw new IllegalArgumentException(
-                    "Não é possível excluir este endereço, pois o você deve possuir ao menos um endereço de cobrança e um de entrega."
+                    "Não é possível excluir este endereço, pois você deve possuir ao menos um endereço de cobrança e um de entrega."
             );
         }
 

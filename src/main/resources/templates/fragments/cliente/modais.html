@@ -125,11 +125,8 @@
 
 <!-- Modal adicionar/editar endereço -->
 <div th:fragment="modal-adicionar-endereco" id="modalAdicionarEditarEndereco" class="modal">
-
     <form id="formEndereco"
           method="POST">
-
-        <input type="hidden" id="enderecoId" name="enderecoId">
 
         <div class="modalConteudo">
 
@@ -741,10 +738,6 @@
                 <button type="button" class="btn-cancelar" id="btnCancelarExclusao">Cancelar</button>
 
                 <form id="formExcluir" method="POST">
-
-                    <input type="hidden"
-                           id="idExcluir"
-                           name="id">
 
                     <button type="submit"
                             class="btn-confirmar"

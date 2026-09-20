@@ -18,15 +18,13 @@ describe('Exclusão de cartão do cliente', () => {
 
     it('CT01 - Deve permitir excluir cartão não preferencial', () => {
         cy.get('.item-cartao')
-            .find('form[action="/cliente/tornar-cartao-preferencial"]')
-            .first()
-            .parents('.item-cartao')
+            .eq(1)
             .find('.excluir-cartao')
             .click();
 
         cy.wait(5000);
 
-        cy.get('#btnConfirmarExclusao') /* Modal */
+        cy.get('#btnConfirmarExclusao')
             .click();
 
         validarToast('Cartão excluído com sucesso!');

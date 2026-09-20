@@ -41,9 +41,7 @@ public class CartaoService {
         String numero = cartao.getNumero().replaceAll("\\D", "");
 
         if (!numeroCartaoValido(numero)) {
-            throw new IllegalArgumentException(
-                    "Digite um número de cartão válido."
-            );
+            throw new IllegalArgumentException("Digite um número de cartão válido.");
         }
     }
 
@@ -55,7 +53,6 @@ public class CartaoService {
         int soma = 0;
 
         for (int i = 0; i < numero.length(); i++) {
-
             int digito = Character.getNumericValue(numero.charAt(i));
 
             if (i % 2 == 0) {
@@ -65,7 +62,6 @@ public class CartaoService {
                     digito -= 9;
                 }
             }
-
             soma += digito;
         }
 
@@ -80,9 +76,9 @@ public class CartaoService {
             return;
         }
 
-        boolean primeiroCartao = cliente.getCartoes().isEmpty();
+        for (int i = 0; i < cartoes.size(); i++) {
+            CartaoDTO dto = cartoes.get(i);
 
-        for (CartaoDTO dto : cartoes) {
             validarCartao(dto);
 
             Cartao cartao = new Cartao();
@@ -92,21 +88,9 @@ public class CartaoService {
             cartao.setCodigoSeguranca(dto.getCodigoSeguranca());
             cartao.setCliente(cliente);
 
-            cartao.setBandeira(
-                    bandeiraCartaoRepository.findById(dto.getBandeira())
+            cartao.setBandeira(bandeiraCartaoRepository.findById(dto.getBandeira())
                             .orElseThrow(() ->
-                                    new IllegalArgumentException(
-                                            "Bandeira de cartão inválida."
-                                    )
-                            )
-            );
-
-            if (primeiroCartao) {
-                cartao.setPreferencial(true);
-                primeiroCartao = false;
-            } else {
-                cartao.setPreferencial(dto.isPreferencial());
-            }
+                                    new IllegalArgumentException("Bandeira de cartão inválida.")));
 
             cliente.getCartoes().add(cartao);
         }
@@ -120,20 +104,13 @@ public class CartaoService {
 
         Cliente cliente = clienteRepository.findById(clienteId)
                 .orElseThrow(() ->
-                        new IllegalArgumentException(
-                                "Cliente não encontrado."
-                        )
-                );
+                        new IllegalArgumentException("Cliente não encontrado."));
 
         validarCartao(dto);
 
-        BandeiraCartao bandeira = bandeiraCartaoRepository
-                .findById(dto.getBandeira())
+        BandeiraCartao bandeira = bandeiraCartaoRepository.findById(dto.getBandeira())
                 .orElseThrow(() ->
-                        new IllegalArgumentException(
-                                "Bandeira de cartão inválida."
-                        )
-                );
+                        new IllegalArgumentException("Bandeira de cartão inválida."));
 
         Cartao cartao = new Cartao();
 
@@ -156,7 +133,6 @@ public class CartaoService {
         }
 
         cartao.setPreferencial(dto.isPreferencial());
-
         cliente.getCartoes().add(cartao);
 
         cartaoRepository.save(cartao);
@@ -167,20 +143,25 @@ public class CartaoService {
 
         Cliente cliente = clienteRepository.findById(clienteId)
                 .orElseThrow(() ->
-                        new IllegalArgumentException(
-                                "Cliente não encontrado."
-                        )
-                );
+                        new IllegalArgumentException("Cliente não encontrado."));
 
-        Cartao cartao = cliente.getCartoes()
-                .stream()
-                .filter(c -> c.getId().equals(cartaoId))
-                .findFirst()
-                .orElseThrow(() ->
-                        new IllegalArgumentException(
-                                "Esse cartão não pertence ao cliente."
-                        )
-                );
+        Cartao cartao = null;
+
+        for (int i = 0; i < cliente.getCartoes().size(); i++) {
+
+            Cartao c = cliente.getCartoes().get(i);
+
+            if (c.getId().equals(cartaoId)) {
+                cartao = c;
+                break;
+            }
+        }
+
+        if (cartao == null) {
+            throw new IllegalArgumentException(
+                    "Esse cartão não pertence ao cliente."
+            );
+        }
 
         cliente.getCartoes().forEach(c ->
                 c.setPreferencial(false)
@@ -196,20 +177,25 @@ public class CartaoService {
 
         Cliente cliente = clienteRepository.findById(clienteId)
                 .orElseThrow(() ->
-                        new IllegalArgumentException(
-                                "Cliente não encontrado."
-                        )
-                );
+                        new IllegalArgumentException("Cliente não encontrado."));
 
-        Cartao cartao = cliente.getCartoes()
-                .stream()
-                .filter(c -> c.getId().equals(cartaoId))
-                .findFirst()
-                .orElseThrow(() ->
-                        new IllegalArgumentException(
-                                "Esse cartão não pertence ao cliente."
-                        )
-                );
+        Cartao cartao = null;
+
+        for (int i = 0; i < cliente.getCartoes().size(); i++) {
+
+            Cartao c = cliente.getCartoes().get(i);
+
+            if (c.getId().equals(cartaoId)) {
+                cartao = c;
+                break;
+            }
+        }
+
+        if (cartao == null) {
+            throw new IllegalArgumentException(
+                    "Esse cartão não pertence ao cliente."
+            );
+        }
 
         boolean eraPreferencial = cartao.isPreferencial();
 

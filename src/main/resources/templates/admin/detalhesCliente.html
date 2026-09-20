@@ -38,9 +38,7 @@
             <div class="perfil-cabecalho">
                 <h2 th:text="${cliente.nome}">Nome do cliente</h2>
 
-                <h3 class="ranking">
-                    Ranking:
-                    <span th:text="${cliente.ranking + ' pts'}">0 pts</span>
+                <h3 class="ranking">Ranking:<span th:text="${cliente.ranking + ' pts'}">0 pts</span>
                 </h3>
             </div>
 
@@ -82,30 +80,20 @@
                             <h3 th:text="${endereco.nomeIdentificacao}"></h3>
 
                             <span class="status-endereco entrega"
-                                  th:if="${endereco.tipoEndereco.id == 2}">
-                        Entrega
-                    </span>
+                                  th:if="${endereco.tipoEndereco.id == 2}">Entrega</span>
 
                             <span class="status-endereco cobranca"
-                                  th:if="${endereco.tipoEndereco.id == 1}">
-                        Cobrança
-                    </span>
+                                  th:if="${endereco.tipoEndereco.id == 1}">Cobrança</span>
 
                             <span class="status-endereco entrega"
-                                  th:if="${endereco.tipoEndereco.id == 3}">
-                        Entrega e Cobrança
-                    </span>
+                                  th:if="${endereco.tipoEndereco.id == 3}">Entrega e Cobrança</span>
                         </div>
                     </div>
 
                     <p th:text="${endereco.logradouro + ', ' + endereco.numero + ' - ' + endereco.bairro}"></p>
-
                     <p th:text="${endereco.cidade + ' - ' + endereco.estado.sigla}"></p>
-
                     <p th:text="${'CEP: ' + endereco.cep + ', ' + endereco.pais}"></p>
-
                 </div>
-
             </div>
         </div>
 

@@ -40,7 +40,6 @@
 
                         <!-- Pesquisar por nome -->
                         <div class="pesquisa">
-
                             <i class="fa-solid fa-magnifying-glass"></i>
 
                             <input type="text"
@@ -48,7 +47,6 @@
                                    name="nome"
                                    th:value="${nome}"
                                    placeholder="Buscar pelo nome do cliente">
-
                         </div>
 
                         <!-- Botão filtrar -->
@@ -59,9 +57,7 @@
                             <i class="fa-solid fa-filter"></i>
                             Filtrar
                         </button>
-
                     </div>
-
 
                     <!-- Painel de filtros -->
                     <div id="painelFiltro"
@@ -73,141 +69,91 @@
                             <!-- CPF -->
                             <div class="campo-filtro">
 
-                                <label for="filtroCpf">
-                                    CPF
-                                </label>
-
+                                <label for="filtroCpf">CPF</label>
                                 <input type="text"
                                        id="filtroCpf"
                                        name="cpf"
                                        th:value="${cpf}"
                                        placeholder="000.000.000-00">
-
                             </div>
-
 
                             <!-- E-mail -->
                             <div class="campo-filtro">
 
-                                <label for="filtroEmail">
-                                    E-mail
-                                </label>
-
+                                <label for="filtroEmail">E-mail</label>
                                 <input type="email"
                                        id="filtroEmail"
                                        name="email"
                                        th:value="${email}"
                                        placeholder="cliente@email.com">
-
                             </div>
-
 
                             <!-- Telefone -->
                             <div class="campo-filtro">
 
-                                <label for="filtroTelefone">
-                                    Telefone
-                                </label>
-
+                                <label for="filtroTelefone">Telefone</label>
                                 <input type="text"
                                        id="filtroTelefone"
                                        name="telefone"
                                        th:value="${telefone}"
                                        placeholder="(00) 00000-0000">
-
                             </div>
-
 
                             <!-- Data de nascimento -->
                             <div class="campo-filtro">
 
-                                <label for="filtroDataNascimento">
-                                    Data de Nascimento
-                                </label>
-
+                                <label for="filtroDataNascimento">Data de Nascimento</label>
                                 <input type="date"
                                        id="filtroDataNascimento"
                                        name="dataNascimento"
                                        th:value="${dataNascimento}">
-
                             </div>
-
 
                             <!-- Gênero -->
                             <div class="campo-filtro">
 
-                                <label for="filtroGenero">
-                                    Gênero
-                                </label>
+                                <label for="filtroGenero">Gênero</label>
+                                <select id="filtroGenero" name="genero">
 
-                                <select id="filtroGenero"
-                                        name="genero">
-
-                                    <option value="">
-                                        Todos
-                                    </option>
-
+                                    <option value="">Todos</option>
                                     <option th:each="generoItem : ${generos}"
                                             th:value="${generoItem.id}"
                                             th:text="${generoItem.descricao}"
                                             th:selected="${generoItem.id == genero}">
                                     </option>
-
                                 </select>
 
                             </div>
-
 
                             <!-- Status -->
                             <div class="campo-filtro">
 
-                                <label for="filtroStatus">
-                                    Status
-                                </label>
+                                <label for="filtroStatus">Status</label>
 
-                                <select id="filtroStatus"
-                                        name="status">
-
-                                    <option value="">
-                                        Todos
-                                    </option>
-
-                                    <option value="true"
-                                            th:selected="${status == true}">
-                                        Ativo
-                                    </option>
-
-                                    <option value="false"
-                                            th:selected="${status == false}">
-                                        Inativo
-                                    </option>
-
+                                <select id="filtroStatus" name="status">
+                                    <option value="">Todos</option>
+                                    <option value="true" th:selected="${status == true}">Ativo</option>
+                                    <option value="false" th:selected="${status == false}">Inativo</option>
                                 </select>
-
                             </div>
-
                         </div>
-
 
                         <!-- Botões -->
                         <div class="acoes-filtro">
 
                             <button type="reset"
                                     class="btn-limpar"
-                            id="btn-limpar">
-                                Limpar Filtros
+                                    id="btn-limpar">
+                                    Limpar Filtros
                             </button>
 
                             <button type="submit"
                                     class="btn-aplicar"
-                            id="btn-aplicar">
-                                Aplicar Filtros
+                                    id="btn-aplicar">
+                                    Aplicar Filtros
                             </button>
-
                         </div>
-
                     </div>
-
                 </form>
 
             <!-- Tabela -->
@@ -225,24 +171,13 @@
                 <tbody>
 
                 <tr th:each="cliente : ${clientes}">
-
-                    <td th:text="${'CL-' + cliente.codigo}">
-                    </td>
-
-                    <td th:text="${cliente.nome}">
-                    </td>
-
-                    <td th:text="${cliente.cpf}">
-                    </td>
-
-                    <td th:text="${cliente.email}">
-                    </td>
-
-                    <td th:text="${cliente.ranking}">
-                    </td>
+                    <td th:text="${'CL-' + cliente.codigo}"></td>
+                    <td th:text="${cliente.nome}"></td>
+                    <td th:text="${cliente.cpf}"></td>
+                    <td th:text="${cliente.email}"></td>
+                    <td th:text="${cliente.ranking}"></td>
 
                     <td class="linha-acoes">
-
                         <a th:href="@{/admin/detalhesCliente/{id}(id=${cliente.id})}"
                            class="btn-detalhes">
                             <i class="fa-solid fa-eye"></i>
@@ -251,28 +186,24 @@
                         <button type="button"
                                 class="btn-inativar"
                                 th:if="${cliente.ativo}"
-                                th:attr="data-id=${cliente.id}">
-                            Inativar
+                                th:data-id="${cliente.id}">
+                                Inativar
                         </button>
 
                         <button type="button"
                                 class="btn-ativar"
-                                th:unless="${cliente.ativo}"
-                                th:attr="data-id=${cliente.id}">
-                            Ativar
+                                th:if="${!cliente.ativo}"
+                                th:data-id="${cliente.id}">
+                                Ativar
                         </button>
-
                     </td>
-
                 </tr>
-
                 </tbody>
             </table>
 
             <div th:if="${#lists.isEmpty(clientes)}" class="sem-resultados">
                 <p>Nenhum cliente encontrado.</p>
             </div>
-
         </main>
 
         <!-- Toast -->
@@ -405,9 +336,6 @@
         </form>
     </div>
 </div>
-
-
-
 
 <!-- Clientes JavaScript -->
 <script th:src="@{/js/admin/clientes.js}"></script>

@@ -33,7 +33,7 @@ public class ClienteController {
         this.cartaoService = cartaoService;
     }
 
-    @ModelAttribute
+    @ModelAttribute // Adicionar as informações antes de renderizar a página
     public void carregarDadosCadastro(Model model) {
         model.addAttribute(
                 "tiposTelefone",
@@ -78,20 +78,17 @@ public class ClienteController {
 
     @GetMapping("/cliente/cadastrar")
     public String cadastrar(Model model) {
-
         model.addAttribute(
                 "cliente",
                 new ClienteCadastroDTO()
         );
-
         return "cliente/cadastrar";
     }
 
     @PostMapping("/cliente/cadastrar")
     public String cadastrar(
             @Valid
-            @ModelAttribute("cliente")
-            ClienteCadastroDTO dto,
+            @ModelAttribute("cliente") ClienteCadastroDTO dto,
             BindingResult result,
             Model model,
             RedirectAttributes redirectAttributes
@@ -109,6 +106,7 @@ public class ClienteController {
 
             return "cliente/cadastrar";
         }
+
         try {
             clienteService.cadastrar(dto);
 
@@ -141,6 +139,7 @@ public class ClienteController {
 
     @GetMapping("/cliente/produtos")
     public String produtos() {
+
         if (!verificarClienteAtivo()) {
             return "redirect:/cliente/inativo";
         }
@@ -167,10 +166,8 @@ public class ClienteController {
     @PostMapping("/cliente/alterar")
     public String alterar(
             @Valid
-            @ModelAttribute("clienteEdicao")
             ClienteEdicaoDTO dto,
             BindingResult result,
-            Model model,
             RedirectAttributes redirectAttributes
     ) {
 
@@ -179,21 +176,17 @@ public class ClienteController {
         }
 
         if (result.hasErrors()) {
-            Cliente cliente = clienteService.buscarPorId(6L);
-
-            model.addAttribute("cliente", cliente);
-            model.addAttribute("enderecos", cliente.getEnderecos());
-            model.addAttribute("cartoes", cliente.getCartoes());
-
-            model.addAttribute(
+            redirectAttributes.addFlashAttribute(
                     "tipoToast",
-                    "erro");
-            model.addAttribute(
+                    "erro"
+            );
+
+            redirectAttributes.addFlashAttribute(
                     "mensagemToast",
                     result.getFieldError().getDefaultMessage()
             );
 
-            return "cliente/perfil";
+            return "redirect:/cliente/perfil";
         }
         try {
             clienteService.alterar(6L, dto);
@@ -226,7 +219,6 @@ public class ClienteController {
     @PostMapping("/cliente/alterar-senha")
     public String alterarSenha(
             @Valid
-            @ModelAttribute("alterarSenha")
             AlterarSenhaDTO dto,
             BindingResult result,
             RedirectAttributes redirectAttributes
@@ -277,7 +269,6 @@ public class ClienteController {
 
     @GetMapping("/cliente/detalhes-produto")
     public String detalhesProduto() {
-
         if (!verificarClienteAtivo()) {
             return "redirect:/cliente/inativo";
         }

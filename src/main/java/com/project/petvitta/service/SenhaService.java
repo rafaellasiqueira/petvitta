@@ -12,20 +12,17 @@ public class SenhaService {
             String confirmarSenha
     ) {
         if (!senha.equals(confirmarSenha)) {
-            throw new IllegalArgumentException(
-                    "As senhas não coincidem."
-            );
+            throw new IllegalArgumentException("As senhas não coincidem.");
         }
     }
 
-    public boolean verificarSenha(
+    public void verificarSenha(
             String senhaDigitada,
             String senhaCriptografada
     ) {
-        return passwordEncoder.matches(
-                senhaDigitada,
-                senhaCriptografada
-        );
+        if (!passwordEncoder.matches(senhaDigitada, senhaCriptografada)) {
+            throw new IllegalArgumentException("A senha atual está incorreta.");
+        }
     }
 
     public String criptografar(String senha) {

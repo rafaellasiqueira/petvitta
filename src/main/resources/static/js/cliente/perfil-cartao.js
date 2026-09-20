@@ -8,7 +8,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
     const modalExclusao = document.getElementById('modalConfirmarExclusao');
     const formExcluir = document.getElementById('formExcluir');
-    const idExcluir = document.getElementById('idExcluir');
     const mensagemExclusao = document.getElementById('mensagemModalExclusao');
     const btnFecharExclusao = document.getElementById('btnFecharModalExclusao');
     const btnCancelarExclusao = document.getElementById('btnCancelarExclusao');
@@ -115,9 +114,7 @@ document.addEventListener('DOMContentLoaded', function () {
             const ultimosDigitos = this.dataset.numero.slice(-4);
 
             mensagemExclusao.textContent = 'Tem certeza que deseja excluir o cartão final ' + ultimosDigitos + '?';
-            idExcluir.name = 'cartaoId';
-            idExcluir.value = this.dataset.id;
-            formExcluir.action = '/cliente/excluir-cartao';
+            formExcluir.action = '/cliente/excluir-cartao/' + this.dataset.id;
             modalExclusao.classList.add('active');
         });
     });

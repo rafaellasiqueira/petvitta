@@ -5,13 +5,13 @@ import com.project.petvitta.service.CartaoService;
 import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 public class CartaoController {
-
     private final CartaoService cartaoService;
 
     public CartaoController(
@@ -28,14 +28,14 @@ public class CartaoController {
             RedirectAttributes redirectAttributes
     ) {
         if (result.hasErrors()) {
-            redirectAttributes.addFlashAttribute( /* Infomação temporaria */
+            redirectAttributes.addFlashAttribute(
                     "tipoToast",
                     "erro"
             );
 
             redirectAttributes.addFlashAttribute(
                     "mensagemToast",
-                    result.getFieldError().getDefaultMessage() /* Pega o campo de erro e a mensagem */
+                    result.getFieldError().getDefaultMessage()
             );
 
             return "redirect:/cliente/perfil";
@@ -69,14 +69,13 @@ public class CartaoController {
         return "redirect:/cliente/perfil";
     }
 
-    @PostMapping("/cliente/tornar-cartao-preferencial")
+    @PostMapping("/cliente/tornar-cartao-preferencial/{id}")
     public String tornarPreferencial(
-            @RequestParam Long cartaoId,
+            @PathVariable Long id,
             RedirectAttributes redirectAttributes
     ) {
-
         try {
-            cartaoService.tornarPreferencial(6L, cartaoId);
+            cartaoService.tornarPreferencial(6L, id);
             redirectAttributes.addFlashAttribute(
                     "tipoToast",
                     "sucesso"
@@ -100,13 +99,13 @@ public class CartaoController {
         return "redirect:/cliente/perfil";
     }
 
-    @PostMapping("/cliente/excluir-cartao")
+    @PostMapping("/cliente/excluir-cartao/{id}")
     public String excluir(
-            @RequestParam Long cartaoId,
+            @PathVariable Long id,
             RedirectAttributes redirectAttributes
     ) {
         try {
-            cartaoService.excluirCartao(6L, cartaoId);
+            cartaoService.excluirCartao(6L, id);
 
             redirectAttributes.addFlashAttribute(
                     "tipoToast",
