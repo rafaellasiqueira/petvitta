@@ -22,7 +22,7 @@ describe('Exclusão de cartão do cliente', () => {
             .find('.excluir-cartao')
             .click();
 
-        cy.wait(5000);
+        cy.wait(4000);
 
         cy.get('#btnConfirmarExclusao')
             .click();
@@ -37,7 +37,7 @@ describe('Exclusão de cartão do cliente', () => {
             .find('.excluir-cartao')
             .click();
 
-        cy.wait(5000);
+        cy.wait(4000);
 
         cy.get('#btnConfirmarExclusao')
             .click();

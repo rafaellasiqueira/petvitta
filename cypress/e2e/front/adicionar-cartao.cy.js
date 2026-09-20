@@ -7,24 +7,27 @@ describe('Adicionar cartão', () => {
     beforeEach(() => {
         cy.visit('/cliente/perfil');
         cy.viewport(1280, 720);
-        cy.wait(2000);
     });
 
     function preencherCartaoValido() {
         cy.get('#modalCadastrarCartao [name="numero"]')
             .clear()
             .type('4111111111111111');
+        cy.wait(1000);
 
         cy.get('#modalCadastrarCartao [name="nomeImpresso"]')
             .clear()
             .type('BRUNO HENRIQUE LIMA');
+        cy.wait(1000);
 
         cy.get('#modalCadastrarCartao [name="bandeira"]')
             .select(1);
+        cy.wait(1000);
 
         cy.get('#modalCadastrarCartao [name="codigoSeguranca"]')
             .clear()
             .type('123');
+        cy.wait(1000);
     }
 
     function enviarFormulario() {
@@ -68,8 +71,7 @@ describe('Adicionar cartão', () => {
     it('RF0027 - Deve permitir tornar um cartão já cadastrado como preferencial', () => {
         cy.get('.item-cartao')
             .eq(1)
-            .find('form[action="/cliente/tornar-cartao-preferencial"]')
-            .find('button')
+            .find('.status-cartao')
             .click();
 
         validarToast('Cartão definido como preferencial.');
@@ -82,20 +84,6 @@ describe('Adicionar cartão', () => {
     it('RN0024/RN0025 - Não deve permitir adicionar com dados vazios', () => {
         cy.get('#btnAbrirCartao')
             .click();
-        preencherCartaoValido();
-
-        cy.get('#modalCadastrarCartao [name="numero"]')
-            .clear();
-
-        cy.get('#modalCadastrarCartao [name="nomeImpresso"]')
-            .clear();
-
-        cy.get('#modalCadastrarCartao [name="bandeira"]')
-            .invoke('val', '');
-
-        cy.get('#modalCadastrarCartao [name="codigoSeguranca"]')
-            .clear();
-
         enviarFormulario();
 
         cy.get('#erroNumeroCartao')

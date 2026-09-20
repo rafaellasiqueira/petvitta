@@ -7,7 +7,6 @@ describe('Alteração de dados cadastrais do cliente', () => {
     beforeEach(() => {
         cy.visit('/cliente/perfil');
         cy.viewport(1280, 720);
-        cy.wait(3000);
     });
 
     function enviarFormulario() {
@@ -32,13 +31,16 @@ describe('Alteração de dados cadastrais do cliente', () => {
         cy.get('[name="nome"]')
             .clear()
             .type('Bruno Henrique Lima de Oliveira');
+        cy.wait(1000);
 
         cy.get('[name="telefone"]')
             .clear()
             .type('11987654321');
+        cy.wait(1000);
 
         cy.get('[name="genero"]')
             .select('3');
+        cy.wait(1000);
 
         enviarFormulario();
         validarToast('Dados salvos com sucesso!');

@@ -13,17 +13,21 @@ describe('Adicionar cartão', () => {
         cy.get('#modalCadastrarCartao [name="numero"]')
             .clear()
             .type('4111111111111111');
+        cy.wait(1000);
 
         cy.get('#modalCadastrarCartao [name="nomeImpresso"]')
             .clear()
             .type('BRUNO HENRIQUE LIMA');
+        cy.wait(1000);
 
         cy.get('#modalCadastrarCartao [name="bandeira"]')
             .select(1);
+        cy.wait(1000);
 
         cy.get('#modalCadastrarCartao [name="codigoSeguranca"]')
             .clear()
             .type('123');
+        cy.wait(1000);
     }
 
     function enviarFormulario() {

@@ -236,7 +236,7 @@ describe('Cadastro de cliente', () => {
 
         cy.get('[name="enderecos[0].tipoEndereco"]').select('2');
         cy.get('[name="enderecos[1].tipoEndereco"]').select('2');
-        cy.wait(3000);
+        cy.wait(7000);
 
         enviarFormulario();
 
@@ -250,7 +250,7 @@ describe('Cadastro de cliente', () => {
 
         cy.get('[name="enderecos[0].tipoEndereco"]').select('1');
         cy.get('[name="enderecos[1].tipoEndereco"]').select('1');
-        cy.wait(3000);
+        cy.wait(7000);
 
         enviarFormulario();
 
@@ -260,57 +260,7 @@ describe('Cadastro de cliente', () => {
     });
 
     it('RN0026/RF0026/RN0023/RN0024 - Não deve cadastrar o cliente com dados obrigatórios vazios', () => {
-        preencherDadosValidos();
-
-        // Dados do cliente
-        cy.get('[name="nome"]').clear();
-        cy.get('[name="cpf"]').clear();
-        cy.get('[name="tipoTelefone"]').invoke('val', '');
-        cy.get('[name="telefone"]').clear();
-        cy.get('[name="genero"]').invoke('val', '');
-        cy.get('[name="dataNascimento"]').clear();
-        cy.get('[name="email"]').clear();
-        cy.get('[name="senha"]').clear();
-        cy.get('[name="confirmarSenha"]').clear();
-
-        // Primeiro endereço
-        cy.get('[name="enderecos[0].nomeIdentificacao"]').clear();
-        cy.get('[name="enderecos[0].tipoEndereco"]').invoke('val', '');
-        cy.get('[name="enderecos[0].tipoResidencia"]').invoke('val', '');
-        cy.get('[name="enderecos[0].tipoLogradouro"]').invoke('val', '');
-        cy.get('[name="enderecos[0].cep"]').clear();
-        cy.get('[name="enderecos[0].logradouro"]').clear();
-        cy.get('[name="enderecos[0].bairro"]').clear();
-        cy.get('[name="enderecos[0].numero"]').clear();
-        cy.get('[name="enderecos[0].estado"]').invoke('val', '');
-        cy.get('[name="enderecos[0].cidade"]').clear();
-        cy.get('[name="enderecos[0].pais"]').clear();
-
-        // Segundo endereço
-        cy.get('[name="enderecos[1].nomeIdentificacao"]').clear();
-        cy.get('[name="enderecos[1].tipoEndereco"]').invoke('val', '');
-        cy.get('[name="enderecos[1].tipoResidencia"]').invoke('val', '');
-        cy.get('[name="enderecos[1].tipoLogradouro"]').invoke('val', '');
-        cy.get('[name="enderecos[1].cep"]').clear();
-        cy.get('[name="enderecos[1].logradouro"]').clear();
-        cy.get('[name="enderecos[1].bairro"]').clear();
-        cy.get('[name="enderecos[1].numero"]').clear();
-        cy.get('[name="enderecos[1].estado"]').invoke('val', '');
-        cy.get('[name="enderecos[1].cidade"]').clear();
-        cy.get('[name="enderecos[1].pais"]').clear();
-
-        // Primeiro cartão
-        cy.get('[name="cartoes[0].numero"]').clear();
-        cy.get('[name="cartoes[0].nomeImpresso"]').clear();
-        cy.get('[name="cartoes[0].bandeira"]').invoke('val', '');
-        cy.get('[name="cartoes[0].codigoSeguranca"]').clear();
-
-        // Segundo cartão
-        cy.get('[name="cartoes[1].numero"]').clear();
-        cy.get('[name="cartoes[1].nomeImpresso"]').clear();
-        cy.get('[name="cartoes[1].bandeira"]').invoke('val', '');
-        cy.get('[name="cartoes[1].codigoSeguranca"]').clear();
-
+        cy.wait(2000);
         enviarFormulario();
 
         // Dados do cliente

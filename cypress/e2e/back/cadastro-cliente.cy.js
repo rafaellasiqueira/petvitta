@@ -92,6 +92,7 @@ describe('Cadastro de cliente', () => {
         preencherDadosValidos();
 
         cy.get('[name="senha"]').clear().type('Teste@');
+        cy.wait(300);
         cy.get('[name="confirmarSenha"]').clear().type('Teste@');
 
         enviarFormulario();
@@ -103,6 +104,7 @@ describe('Cadastro de cliente', () => {
         preencherDadosValidos();
 
         cy.get('[name="senha"]').clear().type('teste123@');
+        cy.wait(300);
         cy.get('[name="confirmarSenha"]').clear().type('teste123@');
 
         enviarFormulario();
@@ -114,6 +116,7 @@ describe('Cadastro de cliente', () => {
         preencherDadosValidos();
 
         cy.get('[name="senha"]').clear().type('TESTE123@');
+        cy.wait(300);
         cy.get('[name="confirmarSenha"]').clear().type('TESTE123@');
 
         enviarFormulario();
@@ -125,6 +128,7 @@ describe('Cadastro de cliente', () => {
         preencherDadosValidos();
 
         cy.get('[name="senha"]').clear().type('Teste123');
+        cy.wait(300);
         cy.get('[name="confirmarSenha"]').clear().type('Teste123');
 
         enviarFormulario();
@@ -136,6 +140,7 @@ describe('Cadastro de cliente', () => {
         preencherDadosValidos();
 
         cy.get('[name="senha"]').clear().type('Teste123@');
+        cy.wait(300);
         cy.get('[name="confirmarSenha"]').clear().type('TESTE');
 
         enviarFormulario();
@@ -148,6 +153,7 @@ describe('Cadastro de cliente', () => {
 
         cy.get('[name="enderecos[0].tipoEndereco"]').select('2');
         cy.get('[name="enderecos[1].tipoEndereco"]').select('2');
+        cy.wait(7000);
 
         enviarFormulario();
 
@@ -161,6 +167,7 @@ describe('Cadastro de cliente', () => {
 
         cy.get('[name="enderecos[0].tipoEndereco"]').select('1');
         cy.get('[name="enderecos[1].tipoEndereco"]').select('1');
+        cy.wait(7000);
 
         enviarFormulario();
 

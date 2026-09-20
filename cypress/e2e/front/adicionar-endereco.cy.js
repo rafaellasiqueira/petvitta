@@ -19,27 +19,34 @@ describe('Adicionar endereço do cliente', () => {
         cy.get('#modalAdicionarEditarEndereco [name="nomeIdentificacao"]')
             .clear()
             .type('Casa Nova');
+        cy.wait(500);
 
         cy.get('#modalAdicionarEditarEndereco [name="tipoEndereco"]')
             .select('Entrega');
+        cy.wait(500);
 
         cy.get('#modalAdicionarEditarEndereco [name="tipoResidencia"]')
             .select('Casa');
+        cy.wait(500);
 
         cy.get('#modalAdicionarEditarEndereco [name="tipoLogradouro"]')
             .select('Rua');
+        cy.wait(500);
 
         cy.get('#modalAdicionarEditarEndereco [name="cep"]')
             .clear()
             .type('08710-000');
+        cy.wait(500);
 
         cy.get('#modalAdicionarEditarEndereco [name="numero"]')
             .clear()
             .type('123');
+        cy.wait(500);
 
         cy.get('#modalAdicionarEditarEndereco [name="pais"]')
             .clear()
             .type('Brasil');
+        cy.wait(500);
     }
 
     function enviarFormulario() {
@@ -56,6 +63,7 @@ describe('Adicionar endereço do cliente', () => {
     it('RN0023/RF0026 - Deve adicionar endereço com todos os dados válidos', () => {
         abrirAdicaoEndereco();
         preencherEnderecoValido();
+        cy.wait(7000);
         enviarFormulario();
         validarToast('Endereço adicionado com sucesso!');
     });

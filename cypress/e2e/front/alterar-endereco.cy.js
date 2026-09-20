@@ -19,28 +19,35 @@ describe('Alteração de endereço do cliente', () => {
     function preencherEnderecoValido() {
         cy.get('#modalAdicionarEditarEndereco [name="nomeIdentificacao"]')
             .clear()
-            .type('Casa Nova');
+            .type('Casa Nova Atualizado');
+        cy.wait(1000);
 
         cy.get('#modalAdicionarEditarEndereco [name="tipoEndereco"]')
             .select('Cobrança');
+        cy.wait(1000);
 
         cy.get('#modalAdicionarEditarEndereco [name="tipoResidencia"]')
             .select('Casa');
+        cy.wait(1000);
 
         cy.get('#modalAdicionarEditarEndereco [name="tipoLogradouro"]')
             .select('Rua');
+        cy.wait(1000);
 
         cy.get('#modalAdicionarEditarEndereco [name="cep"]')
             .clear()
-            .type('08710-000');
+            .type('08775530');
+        cy.wait(1000);
 
         cy.get('#modalAdicionarEditarEndereco [name="numero"]')
             .clear()
             .type('123');
+        cy.wait(1000);
 
         cy.get('#modalAdicionarEditarEndereco [name="pais"]')
             .clear()
             .type('Brasil');
+        cy.wait(1000);
     }
 
     function enviarFormulario() {
