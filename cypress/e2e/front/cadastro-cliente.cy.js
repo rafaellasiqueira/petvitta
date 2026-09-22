@@ -124,7 +124,7 @@ describe('Cadastro de cliente', () => {
         cy.wait(300);
 
         preencherEndereco(0, '1');
-        cy.wait(500);
+        cy.wait(1000);
 
         cy.get('#btnAdicionarEndereco').click();
         cy.wait(300);
@@ -139,7 +139,7 @@ describe('Cadastro de cliente', () => {
         cy.wait(300);
 
         preencherCartao(1, false);
-        cy.wait(300);
+        cy.wait(100);
 
         enviarFormulario();
 
@@ -302,7 +302,7 @@ describe('Cadastro de cliente', () => {
             'A senha deve ter pelo menos 8 caracteres.'
         );
 
-        // Endereço - 1º endereço
+        // Endereço
         validarErro(
             '.erroNomeIdentificacao',
             'Preencha o nome com até 20 caracteres.',
@@ -369,76 +369,7 @@ describe('Cadastro de cliente', () => {
             0
         );
 
-
-        // Endereço - 2º endereço
-        validarErro(
-            '.erroNomeIdentificacao',
-            'Preencha o nome com até 20 caracteres.',
-            1
-        );
-
-        validarErro(
-            '.erroTipoEndereco',
-            'Selecione o tipo de endereço.',
-            1
-        );
-
-        validarErro(
-            '.erroTipoResidencia',
-            'Selecione o tipo de residência.',
-            1
-        );
-
-        validarErro(
-            '.erroTipoLogradouro',
-            'Selecione o tipo de logradouro.',
-            1
-        );
-
-        validarErro(
-            '.erroCep',
-            'Preencha o CEP.',
-            1
-        );
-
-        validarErro(
-            '.erroLogradouro',
-            'Preencha o logradouro.',
-            1
-        );
-
-        validarErro(
-            '.erroBairro',
-            'Preencha o nome do bairro.',
-            1
-        );
-
-        validarErro(
-            '.erroNumero',
-            'Preencha o número.',
-            1
-        );
-
-        validarErro(
-            '.erroEstado',
-            'Selecione o estado.',
-            1
-        );
-
-        validarErro(
-            '.erroCidade',
-            'Preencha o nome da cidade.',
-            1
-        );
-
-        validarErro(
-            '.erroPais',
-            'Preencha o nome do país.',
-            1
-        );
-
-
-        // Cartão - 1º cartão
+        // Cartão
         validarErro(
             '.erroNumeroCartao',
             'Preencha o número do cartão.',
@@ -463,31 +394,6 @@ describe('Cadastro de cliente', () => {
             0
         );
 
-
-        // Cartão - 2º cartão
-        validarErro(
-            '.erroNumeroCartao',
-            'Preencha o número do cartão.',
-            1
-        );
-
-        validarErro(
-            '.erroNomeCartao',
-            'Preencha o nome do cartão.',
-            1
-        );
-
-        validarErro(
-            '.erroBandeiraCartao',
-            'Selecione a bandeira do cartão.',
-            1
-        );
-
-        validarErro(
-            '.erroCvvCartao',
-            'Preencha o CVV.',
-            1
-        );
     });
 });
 

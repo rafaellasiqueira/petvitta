@@ -39,7 +39,12 @@ describe('Alteração de dados cadastrais do cliente', () => {
         cy.wait(1000);
 
         cy.get('[name="genero"]')
-            .select('3');
+            .select('2');
+        cy.wait(1000);
+
+        cy.get('[name="dataNascimento"]')
+            .clear()
+            .type('2000-12-20');
         cy.wait(1000);
 
         enviarFormulario();

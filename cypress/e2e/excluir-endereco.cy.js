@@ -23,7 +23,7 @@ describe('Exclusão de endereço do cliente', () => {
             .find('.excluir-endereco')
             .click();
 
-        cy.wait(5000);
+        cy.wait(4000);
 
         cy.get('#btnConfirmarExclusao')
             .click();
@@ -38,7 +38,7 @@ describe('Exclusão de endereço do cliente', () => {
             .find('.excluir-endereco')
             .click();
 
-        cy.wait(5000);
+        cy.wait(4000);
 
         cy.get('#btnConfirmarExclusao')
             .click();
@@ -53,7 +53,7 @@ describe('Exclusão de endereço do cliente', () => {
             .find('.excluir-endereco')
             .click();
 
-        cy.wait(5000);
+        cy.wait(4000);
 
         cy.get('#btnConfirmarExclusao')
             .click();
@@ -70,7 +70,7 @@ describe('Exclusão de endereço do cliente', () => {
             .find('.excluir-endereco')
             .click();
 
-        cy.wait(5000);
+        cy.wait(4000);
 
         cy.get('#btnConfirmarExclusao')
             .click();

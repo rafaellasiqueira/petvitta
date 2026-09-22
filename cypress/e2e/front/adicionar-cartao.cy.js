@@ -70,7 +70,7 @@ describe('Adicionar cartão', () => {
 
     it('RF0027 - Deve permitir tornar um cartão já cadastrado como preferencial', () => {
         cy.get('.item-cartao')
-            .eq(1)
+            .eq(0)
             .find('.status-cartao')
             .click();
 

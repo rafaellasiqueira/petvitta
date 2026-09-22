@@ -28,7 +28,6 @@ public class EnderecoService {
             TipoResidenciaRepository tipoResidenciaRepository,
             TipoLogradouroRepository tipoLogradouroRepository,
             EstadoRepository estadoRepository,
-            EnderecoRepository enderecoRepository,
             ClienteRepository clienteRepository
     ) {
         this.tipoEnderecoRepository = tipoEnderecoRepository;

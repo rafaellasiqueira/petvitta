@@ -61,7 +61,7 @@ public class Cliente {
     private String justificativaAtivacao;
 
     @OneToMany(
-            mappedBy = "cliente",
+            mappedBy = "cliente", /* Cliente controla */
             cascade = CascadeType.ALL,
             orphanRemoval = true /* Pode ser removido do banco */
     )

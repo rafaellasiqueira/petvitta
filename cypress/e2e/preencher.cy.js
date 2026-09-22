@@ -98,7 +98,7 @@ describe('Cadastro de clientes - Popular banco', () => {
             telefone: '11988881010',
             nascimento: '1996-10-11',
             email: 'joao.martins10@email.com',
-            cep: '08800000',
+            cep: '01001000',
             numero: '1070',
             cartao: '4000000000000093'
         }
@@ -164,6 +164,7 @@ describe('Cadastro de clientes - Popular banco', () => {
 
             cy.get('[name="enderecos[0].cep"]')
                 .type(cliente.cep);
+            cy.wait(5000);
 
             cy.get('[name="enderecos[0].numero"]')
                 .type(cliente.numero);
@@ -187,6 +188,9 @@ describe('Cadastro de clientes - Popular banco', () => {
 
             cy.get('[name="cartoes[0].codigoSeguranca"]')
                 .type('123');
+
+            cy.get('[name="cartoes[0].preferencial"][value="true"]')
+                .check();
 
 
             // =========================

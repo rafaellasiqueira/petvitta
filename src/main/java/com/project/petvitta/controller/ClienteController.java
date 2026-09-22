@@ -33,7 +33,7 @@ public class ClienteController {
         this.cartaoService = cartaoService;
     }
 
-    @ModelAttribute // Adicionar as informações antes de renderizar a página
+    @ModelAttribute
     public void carregarDadosCadastro(Model model) {
         model.addAttribute(
                 "tiposTelefone",

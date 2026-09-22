@@ -92,6 +92,7 @@ public class CartaoService {
                             .orElseThrow(() ->
                                     new IllegalArgumentException("Bandeira de cartão inválida.")));
 
+            cartao.setPreferencial(dto.isPreferencial());
             cliente.getCartoes().add(cartao);
         }
     }
@@ -134,8 +135,6 @@ public class CartaoService {
 
         cartao.setPreferencial(dto.isPreferencial());
         cliente.getCartoes().add(cartao);
-
-        cartaoRepository.save(cartao);
     }
 
     @Transactional
@@ -168,8 +167,6 @@ public class CartaoService {
         );
 
         cartao.setPreferencial(true);
-
-        cartaoRepository.save(cartao);
     }
 
     @Transactional

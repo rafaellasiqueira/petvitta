@@ -68,7 +68,6 @@ public class ClienteService {
         return ativarMotivoRepository.findAllByOrderByIdAsc();
     }
 
-    @Transactional
     public Cliente cadastrar(ClienteCadastroDTO dto) {
         if (dto == null) {
             throw new IllegalArgumentException(
