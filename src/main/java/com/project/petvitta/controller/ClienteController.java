@@ -3,7 +3,7 @@ package com.project.petvitta.controller;
 import com.project.petvitta.dto.AlterarSenhaDTO;
 import com.project.petvitta.dto.ClienteCadastroDTO;
 import com.project.petvitta.dto.ClienteEdicaoDTO;
-import com.project.petvitta.model.Cliente;
+import com.project.petvitta.model.cliente.Cliente;
 import com.project.petvitta.service.CartaoService;
 import com.project.petvitta.service.ClienteService;
 import com.project.petvitta.service.EnderecoService;

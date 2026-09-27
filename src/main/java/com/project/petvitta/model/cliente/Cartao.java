@@ -1,9 +1,7 @@
-package com.project.petvitta.model;
+package com.project.petvitta.model.cliente;
 
 import com.project.petvitta.model.dominio.BandeiraCartao;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 

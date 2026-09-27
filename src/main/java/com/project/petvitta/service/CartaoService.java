@@ -1,11 +1,11 @@
 package com.project.petvitta.service;
 
 import com.project.petvitta.dto.CartaoDTO;
-import com.project.petvitta.model.Cartao;
-import com.project.petvitta.model.Cliente;
+import com.project.petvitta.model.cliente.Cartao;
+import com.project.petvitta.model.cliente.Cliente;
 import com.project.petvitta.model.dominio.BandeiraCartao;
-import com.project.petvitta.repository.CartaoRepository;
-import com.project.petvitta.repository.ClienteRepository;
+import com.project.petvitta.repository.cliente.CartaoRepository;
+import com.project.petvitta.repository.cliente.ClienteRepository;
 import com.project.petvitta.repository.dominio.BandeiraCartaoRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;

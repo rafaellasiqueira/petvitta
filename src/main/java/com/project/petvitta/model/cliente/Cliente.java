@@ -1,15 +1,11 @@
-package com.project.petvitta.model;
+package com.project.petvitta.model.cliente;
 
+import com.project.petvitta.model.cliente.Cupom;
 import com.project.petvitta.model.dominio.AtivarMotivo;
 import com.project.petvitta.model.dominio.Genero;
 import com.project.petvitta.model.dominio.InativarMotivo;
 import com.project.petvitta.model.dominio.TipoTelefone;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Past;
-import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -89,6 +85,14 @@ public class Cliente {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "motivo_ativacao_id")
     private AtivarMotivo motivoAtivacao;
+
+    @ManyToMany
+    @JoinTable(
+            name = "cliente_cupom",
+            joinColumns = @JoinColumn(name = "cliente_id"),
+            inverseJoinColumns = @JoinColumn(name = "cupom_id")
+    )
+    private List<Cupom> cupons = new ArrayList<>();
 
     public Cliente() {
     }

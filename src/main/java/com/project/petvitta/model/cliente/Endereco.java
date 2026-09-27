@@ -1,12 +1,10 @@
-package com.project.petvitta.model;
+package com.project.petvitta.model.cliente;
 
 import com.project.petvitta.model.dominio.Estado;
 import com.project.petvitta.model.dominio.TipoEndereco;
 import com.project.petvitta.model.dominio.TipoLogradouro;
 import com.project.petvitta.model.dominio.TipoResidencia;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 

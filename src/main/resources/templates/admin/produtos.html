@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Produtos</title>
+
+    <!-- Font Awesome (Ícones) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+    <!-- Sidebar CSS -->
+    <link rel="stylesheet" th:href="@{/css/admin/sidebar.css}">
+
+    <!-- Global CSS -->
+    <link rel="stylesheet" th:href="@{/css/admin/global.css}">
+</head>
+<body>
+
+<div class="container">
+
+    <!-- sidebar -->
+    <div th:replace="~{fragments/admin/sidebar :: sidebar}"></div>
+
+    <!-- conteudo -->
+    <div class="conteudo">
+
+        <!-- cabecalho -->
+        <header class="cabecalho">
+            <h1>Produtos</h1>
+        </header>
+
+        <main class="card">
+            <!-- tabela -->
+            <table>
+                <thead>
+                <tr>
+                    <th>Código</th>
+                    <th>Nome</th>
+                    <th>Categoria</th>
+                    <th>Preço</th>
+                    <th></th>
+                </tr>
+                </thead>
+
+                <tbody>
+                <tr>
+                    <td>PEDI001</td>
+                </tr>
+                </tbody>
+            </table>
+        </main>
+    </div>
+</div>
+
+</body>
+</html>

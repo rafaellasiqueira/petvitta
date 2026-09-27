@@ -20,6 +20,8 @@ document.addEventListener('DOMContentLoaded', function () {
     const tipoResidencia = document.getElementById('tipoResidencia');
     const tipoLogradouro = document.getElementById('tipoLogradouro');
     const cep = document.getElementById('cep');
+    tipoEndereco.closest('.campo-formulario').style.display = 'none';
+
     const logradouro = document.getElementById('logradouro');
     const bairro = document.getElementById('bairro');
     const numeroEndereco = document.getElementById('numero');
@@ -217,106 +219,87 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
-    // Cartão
+// Cartão
     const modalCartao = document.getElementById('modalCadastrarCartao');
     const formCartao = document.getElementById('formCartao');
     const btnAdicionarCartao = document.getElementById('btnAbrirCartao');
     const btnFecharCartao = document.getElementById('btnFecharModalCartao');
     const btnCancelarCartao = document.getElementById('btnCancelarCartao');
+
     const numeroCartao = document.getElementById('numeroCartao');
     const cvv = document.getElementById('cvvCartao');
-    const validade = document.getElementById('validadeCartao');
-    const mensagemErroNumero = document.getElementById('mensagemErroNumero');
-    const mensagemErroValidade = document.getElementById('mensagemErroValidade');
+    const mensagemErroNumero = document.getElementById('erroNumeroCartao');
 
-    // Abrir cartão
+// Abrir cartão
     btnAdicionarCartao.addEventListener('click', function (e) {
         e.preventDefault();
+
         formCartao.reset();
 
         mensagemErroNumero.textContent = '';
-        mensagemErroValidade.textContent = '';
 
         modalCartao.classList.add('active');
     });
 
-    // Fechar cartão
+
+// Fechar cartão
     btnFecharCartao.addEventListener('click', function () {
         modalCartao.classList.remove('active');
     });
 
+
+// Cancelar cartão
     btnCancelarCartao.addEventListener('click', function () {
         modalCartao.classList.remove('active');
     });
 
+
+// Nome do cartão
     document.getElementById('nomeCartao').addEventListener('input', function() {
         this.value = this.value.replace(/[^A-Za-zÀ-ÿ\s]/g, '');
     });
 
-    // Número do cartão
+
+// Número do cartão
     numeroCartao.addEventListener('input', function () {
         let numero = this.value.replace(/\D/g, '');
+
         numero = numero.slice(0, 16);
+
         numero = numero.replace(/(\d{4})(?=\d)/g, '$1 ');
 
         this.value = numero;
     });
 
-    // CVV
+
+// CVV
     cvv.addEventListener('input', function () {
         this.value = this.value.replace(/\D/g, '').slice(0, 4);
     });
 
-    // Validade
-    validade.addEventListener('input', function () {
-        let valor = this.value.replace(/\D/g, '').slice(0, 4);
 
-        if (valor.length > 2) {
-            valor = valor.replace(/(\d{2})(\d{1,2})/, '$1/$2');
-        }
 
-        this.value = valor;
-    });
 
-    // Validar cartão
+// Validar cartão
     formCartao.addEventListener('submit', function (e) {
         e.preventDefault();
+
         mensagemErroNumero.textContent = '';
-        mensagemErroValidade.textContent = '';
+
         const numero = numeroCartao.value.replace(/\D/g, '');
-        const validade = validade.value;
 
         if (numero.length !== 16) {
-            mensagemErroNumero.textContent = 'Digite o número completo do cartão.';
-            return;
-        }
-
-        if (validade.length === 5) {
-            const partes = validade.split('/');
-            const mes = parseInt(partes[0]);
-            const ano = parseInt('20' + partes[1]);
-
-            if (mes < 1 || mes > 12) {
-                mensagemErroValidade.textContent = 'Digite uma validade válida.';
-                return;
-            }
-
-            const dataValidade = new Date(ano, mes - 1, 1);
-            const hoje = new Date();
-
-            hoje.setHours(0, 0, 0, 0);
-
-            if (dataValidade < hoje) {
-                mensagemErroValidade.textContent = 'Cartão vencido.';
-                return;
-            }
-        } else {
-            mensagemErroValidade.textContent = 'Digite uma validade válida.';
+            mensagemErroNumero.textContent =
+                'Digite o número completo do cartão.';
             return;
         }
 
         modalCartao.classList.remove('active');
-        mostrarToast('Cartão cadastrado com sucesso!', 'certo');
+
+        mostrarToast(
+            'Cartão cadastrado com sucesso!',
+            'certo'
+        );
     });
 
 

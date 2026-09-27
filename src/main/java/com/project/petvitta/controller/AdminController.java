@@ -1,6 +1,6 @@
 package com.project.petvitta.controller;
 
-import com.project.petvitta.model.Cliente;
+import com.project.petvitta.model.cliente.Cliente;
 import com.project.petvitta.service.ClienteService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalDate;
-import java.util.List;
 
 @Controller
 public class AdminController {
@@ -57,6 +56,15 @@ public class AdminController {
                 "dashboard");
 
         return "admin/dashboard";
+    }
+
+    @GetMapping("/admin/produtos")
+    public String produtos(Model model) {
+        model.addAttribute(
+                "paginaAtual",
+                "produtos");
+
+        return "admin/produtos";
     }
 
     @GetMapping("/admin/pedidos")
