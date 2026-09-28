@@ -7,6 +7,7 @@ import com.project.petvitta.model.cliente.Cliente;
 import com.project.petvitta.service.CartaoService;
 import com.project.petvitta.service.ClienteService;
 import com.project.petvitta.service.EnderecoService;
+import com.project.petvitta.service.ProdutoService;
 import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -22,15 +23,19 @@ public class ClienteController {
     private final ClienteService clienteService;
     private final EnderecoService enderecoService;
     private final CartaoService cartaoService;
+    private final ProdutoService produtoService;
 
     public ClienteController(
             ClienteService clienteService,
             EnderecoService enderecoService,
-            CartaoService cartaoService
+            CartaoService cartaoService,
+            ProdutoService produtoService
+
     ) {
         this.clienteService = clienteService;
         this.enderecoService = enderecoService;
         this.cartaoService = cartaoService;
+        this.produtoService = produtoService;;
     }
 
     @ModelAttribute
@@ -138,11 +143,16 @@ public class ClienteController {
     }
 
     @GetMapping("/cliente/produtos")
-    public String produtos() {
+    public String produtos(Model model) {
 
         if (!verificarClienteAtivo()) {
             return "redirect:/cliente/inativo";
         }
+
+        model.addAttribute(
+                "produtos",
+                produtoService.listarProdutos()
+        );
 
         return "cliente/produtos";
     }
@@ -154,7 +164,7 @@ public class ClienteController {
             return "redirect:/cliente/inativo";
         }
 
-        Cliente cliente = clienteService.buscarPorId(6L);
+        Cliente cliente = clienteService.buscarPorId(1L);
 
         model.addAttribute("cliente", cliente);
         model.addAttribute("enderecos", cliente.getEnderecos());
@@ -189,7 +199,7 @@ public class ClienteController {
             return "redirect:/cliente/perfil";
         }
         try {
-            clienteService.alterar(6L, dto);
+            clienteService.alterar(1L, dto);
             redirectAttributes.addFlashAttribute(
                     "tipoToast",
                     "sucesso"
@@ -242,7 +252,7 @@ public class ClienteController {
             return "redirect:/cliente/perfil";
         }
         try {
-            clienteService.alterarSenha(6L, dto);
+            clienteService.alterarSenha(1L, dto);
             redirectAttributes.addFlashAttribute(
                     "tipoToast",
                     "sucesso"
@@ -305,7 +315,7 @@ public class ClienteController {
 
     @GetMapping("/cliente/inativo")
     public String inativo(Model model) {
-        Cliente cliente = clienteService.buscarPorId(6L);
+        Cliente cliente = clienteService.buscarPorId(1L);
 
         model.addAttribute(
                 "cliente",
@@ -320,7 +330,7 @@ public class ClienteController {
     }
 
     private boolean verificarClienteAtivo() {
-        Long clienteId = 6L;
+        Long clienteId = 1L;
         return clienteService.clienteAtivo(clienteId);
     }
 }

@@ -15,11 +15,15 @@ import lombok.Setter;
 public class Racao extends Produto {
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "tipo_racao_id", nullable = false)
+    @JoinColumn(
+            name = "tipo_racao_id",
+            nullable = false)
     private TipoRacao tipoRacao;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "tamanho_grao_id", nullable = false)
+    @JoinColumn(
+            name = "tamanho_grao_id",
+            nullable = false)
     private TamanhoGrao tamanhoGrao;
 
     public Racao() {

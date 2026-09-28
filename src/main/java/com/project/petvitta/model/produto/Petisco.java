@@ -8,12 +8,15 @@ import lombok.Setter;
 @Entity
 @Table(name = "petisco")
 @PrimaryKeyJoinColumn(name = "produto_id")
+@DiscriminatorValue("PETISCO")
 @Getter
 @Setter
 public class Petisco extends Produto {
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "tipo_petisco_id", nullable = false)
+    @JoinColumn(
+            name = "tipo_petisco_id",
+            nullable = false)
     private TipoPetisco tipoPetisco;
 
     public Petisco() {

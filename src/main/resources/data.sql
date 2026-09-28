@@ -119,7 +119,8 @@ INSERT IGNORE INTO forma_apresentacao (nome) VALUES
 ('Comprimidos'),
 ('Tabletes Mastigáveis'),
 ('Pó'),
-('Líquido');
+('Líquido'),
+('Cápsulas');
 
 
 -- Espécie
@@ -146,12 +147,14 @@ INSERT IGNORE INTO porte (nome) VALUES
 INSERT IGNORE INTO sabor (nome) VALUES
 ('Frango'),
 ('Carne'),
-('Atum'),
+('Vegetais'),
+('Peixe'),
 ('Cordeiro'),
 ('Peru'),
 ('Bacon'),
 ('Queijo'),
 ('Mix de Carnes'),
+('Frutas'),
 ('Sem Sabor');
 
 -- Grupo de precificação

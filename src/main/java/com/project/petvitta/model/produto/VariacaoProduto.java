@@ -29,7 +29,9 @@ public class VariacaoProduto {
     private Integer estoqueAtual;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "produto_id", nullable = false)
+    @JoinColumn(
+            name = "produto_id",
+            nullable = false)
     private Produto produto;
 
     public VariacaoProduto() {

@@ -2,6 +2,7 @@ package com.project.petvitta.controller;
 
 import com.project.petvitta.model.cliente.Cliente;
 import com.project.petvitta.service.ClienteService;
+import com.project.petvitta.service.ProdutoService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -13,11 +14,14 @@ import java.time.LocalDate;
 public class AdminController {
 
     private final ClienteService clienteService;
+    private final ProdutoService produtoService;
 
     public AdminController(
-            ClienteService clienteService
+            ClienteService clienteService,
+            ProdutoService produtoService
     ) {
         this.clienteService = clienteService;
+        this.produtoService = produtoService;
     }
 
     @ModelAttribute
@@ -64,6 +68,11 @@ public class AdminController {
                 "paginaAtual",
                 "produtos");
 
+        model.addAttribute(
+                "produtos",
+                produtoService.listarProdutos()
+        );
+
         return "admin/produtos";
     }
 
@@ -72,6 +81,7 @@ public class AdminController {
         model.addAttribute(
                 "paginaAtual",
                 "pedidos");
+
         return "admin/pedidos";
     }
 

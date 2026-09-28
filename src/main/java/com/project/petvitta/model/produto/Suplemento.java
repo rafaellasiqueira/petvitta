@@ -8,12 +8,15 @@ import lombok.Setter;
 @Entity
 @Table(name = "suplemento")
 @PrimaryKeyJoinColumn(name = "produto_id")
+@DiscriminatorValue("SUPLEMENTO")
 @Getter
 @Setter
 public class Suplemento extends Produto {
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "forma_apresentacao_id", nullable = false)
+    @JoinColumn(
+            name = "forma_apresentacao_id",
+            nullable = false)
     private FormaApresentacao formaApresentacao;
 
     public Suplemento() {

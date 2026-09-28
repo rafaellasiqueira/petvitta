@@ -31,7 +31,7 @@
 
         <main class="card">
             <!-- tabela -->
-            <table>
+            <table th:if="${not #lists.isEmpty(produtos)}">
                 <thead>
                 <tr>
                     <th>Código</th>
@@ -43,11 +43,18 @@
                 </thead>
 
                 <tbody>
-                <tr>
-                    <td>PEDI001</td>
+                <tr th:each="produto : ${produtos}">
+                    <td th:text="${'PR-' + produto.codigoProduto}"></td>
+                    <td th:text="${produto.nome}"></td>
+                    <td th:text="${produto.categoria}"></td>
+                    <td th:text="${produto.valorMinimo + ' - ' + produto.valorMaximo}"></td>
                 </tr>
                 </tbody>
             </table>
+
+            <div th:if="${#lists.isEmpty(produtos)}" class="sem-resultados">
+                <p>Nenhum produto cadastrado.</p>
+            </div>
         </main>
     </div>
 </div>

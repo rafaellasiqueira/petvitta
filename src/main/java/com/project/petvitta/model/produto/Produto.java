@@ -33,13 +33,13 @@ public class Produto {
     @Column(nullable = false, length = 100)
     private String marca;
 
-    @Column(nullable = false, length = 100)
+    @Column(nullable = false, length = 2000)
     private String descricao;
 
     @Column(nullable = false, length = 2048)
     private String imagemUrl;
 
-    @Column(nullable = false, length = 1000)
+    @Column(nullable = false, length = 10000)
     private String composicaoNutricional;
 
     @Column(nullable = false)
@@ -91,13 +91,59 @@ public class Produto {
     private List<QuantidadeRecomendada> quantidadeRecomendada = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "grupo_precificacao_id", nullable = false)
+    @JoinColumn(
+            name = "grupo_precificacao_id",
+            nullable = false)
     private GrupoPrecificacao grupoPrecificacao;
 
     @OneToMany(mappedBy = "produto",
             cascade = CascadeType.ALL,
             orphanRemoval = true)
     private List<VariacaoProduto> variacoes = new ArrayList<>();
+
+    public String getCategoria() {
+        if (this instanceof Racao) {
+            return "Ração";
+        }
+
+        if (this instanceof Suplemento) {
+            return "Suplemento";
+        }
+
+        if (this instanceof Petisco) {
+            return "Petisco";
+        }
+
+        return "Outro";
+    }
+
+    public BigDecimal getValorMaximo() {
+        BigDecimal maior = null;
+
+        for (int i = 0; i < variacoes.size(); i++) {
+            BigDecimal valor = variacoes.get(i).getValorVenda();
+
+            if (valor != null && (maior == null || valor.compareTo(maior) > 0)) {
+                maior = valor;
+            }
+        }
+
+        return maior;
+    }
+
+    public BigDecimal getValorMinimo() {
+        BigDecimal menor = null;
+
+        for (int i = 0; i < variacoes.size(); i++) {
+            BigDecimal valor = variacoes.get(i).getValorVenda();
+
+            if (valor != null && (menor == null || valor.compareTo(menor) < 0)) {
+                menor = valor;
+            }
+        }
+
+        return menor;
+    }
 
     public Produto() {
     }
