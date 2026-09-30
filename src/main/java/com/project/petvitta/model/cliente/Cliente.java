@@ -1,5 +1,6 @@
 package com.project.petvitta.model.cliente;
 
+import com.project.petvitta.model.carrinho.Carrinho;
 import com.project.petvitta.model.cliente.Cupom;
 import com.project.petvitta.model.dominio.AtivarMotivo;
 import com.project.petvitta.model.dominio.Genero;
@@ -85,6 +86,9 @@ public class Cliente {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "motivo_ativacao_id")
     private AtivarMotivo motivoAtivacao;
+
+    @OneToOne(mappedBy = "cliente")
+    private Carrinho carrinho;
 
     @ManyToMany
     @JoinTable(

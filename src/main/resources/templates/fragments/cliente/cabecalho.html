@@ -14,10 +14,13 @@
             <img class="logo" th:src="@{/images/logo-horizontal-escura.svg}">
         </div>
 
-        <div class="barra-de-pesquisa">
-            <input type="text" placeholder="Pesquisar na PetVitta Club">
-            <i class="fa-solid fa-magnifying-glass"></i>
-        </div>
+        <form th:action="@{/cliente/produtos}" method="GET" class="barra-de-pesquisa">
+            <input type="text"
+                   name="nome"
+                   placeholder="Pesquisar na PetVitta Club">
+
+                <i class="fa-solid fa-magnifying-glass"></i>
+        </form>
 
         <!-- Menu -->
         <div class="menu">
@@ -35,8 +38,22 @@
             </a>
 
             <!-- Notificacao -->
-            <a href="#" class="menu-container">
-                <i class="fa-solid fa-bell"></i>
+            <!-- Notificação -->
+            <a th:href="@{/cliente/notificacao}"
+               class="menu-container"
+               onclick="marcarNotificacaoVista()">
+
+                <div class="icone-notificacao">
+
+                    <i class="fa-solid fa-bell"></i>
+
+                    <span id="bolinha-notificacao"
+                          class="bolinha-notificacao"
+                          th:if="${avisoExpiracao}">
+                    </span>
+
+                </div>
+
             </a>
 
             <!-- Perfil -->
@@ -55,13 +72,22 @@
     <nav class="categorias">
         <a th:href="@{/cliente/produtos}" class="categorias-container">Todos</a>
         <span class="divisor">|</span>
-        <a href="#" class="categorias-container">Cachorros</a>
-        <a href="#" class="categorias-container">Gatos</a>
-        <a href="#" class="categorias-container">Petiscos</a>
-        <a href="#" class="categorias-container">Rações</a>
-        <a href="#" class="categorias-container">Suplementos</a>
+        <a th:href="@{/cliente/produtos(categoria='Petisco')}"
+           class="categorias-container">
+            Petiscos
+        </a>
+        <a th:href="@{/cliente/produtos(categoria='Ração')}"
+           class="categorias-container">
+            Ração
+        </a>
+        <a th:href="@{/cliente/produtos(categoria='Suplementos')}"
+           class="categorias-container">
+            Suplementos
+        </a>
     </nav>
 </header>
-
+<script th:src="@{/js/cliente/notificacao.js}"></script>
 </body>
+
+
 </html>

@@ -44,7 +44,7 @@ public class EnderecoController {
         }
 
         try {
-            enderecoService.adicionar(6L, dto);
+            enderecoService.adicionar(1L, dto);
 
             redirectAttributes.addFlashAttribute(
                     "tipoToast",
@@ -91,7 +91,7 @@ public class EnderecoController {
             return "redirect:/cliente/perfil";
         }
         try {
-            enderecoService.editar(6L, id, dto);
+            enderecoService.editar(1L, id, dto);
             redirectAttributes.addFlashAttribute(
                     "tipoToast",
                     "sucesso"
@@ -120,7 +120,7 @@ public class EnderecoController {
             RedirectAttributes redirectAttributes
     ) {
         try {
-            enderecoService.excluir(6L, id);
+            enderecoService.excluir(1L, id);
             redirectAttributes.addFlashAttribute(
                     "tipoToast",
                     "sucesso"

@@ -41,25 +41,28 @@
             <!-- Informação do produto -->
             <div class="produto-info">
                 <div class="imagem-container">
-                    <img th:src="@{/images/produtos/racao-1.png}">
+                    <img th:src="${produto.imagemUrl}">
                 </div>
 
                 <div class="info-principal">
-                        <h1>Ração Cães Adultos Frango e Carne Choice</h1>
+                        <h1 th:text="${produto.nome}"></h1>
 
                     <div class="secao-descricao">
                         <h2>Descrição</h2>
-                        <p>
-                            A ração GranPlus Choice Cães Adultos Frango e Carne é um alimento seco desenvolvido para cães adultos de todos os portes. Ela possui uma fórmula equilibrada, com proteínas de frango e carne que ajudam na manutenção da massa muscular e fornecem energia para o dia a dia. Além disso, contém vitaminas e minerais importantes para a saúde dos ossos, dentes e sistema imunológico, contribuindo também para uma boa digestão e fezes mais firmes. É uma opção considerada premium, sem corantes artificiais, indicada para garantir uma alimentação completa e nutritiva para o pet.
-                        </p>
+                        <p th:text="${produto.descricao}"></p>
                     </div>
 
                     <div class="secao-tamanhos">
                         <h2>Tamanhos</h2>
                         <div class="opcoes-tamanho">
-                            <button type="button" class="tamanho-opcao active" data-preco="156.75">10.1 KG</button>
-                            <button type="button" class="tamanho-opcao" data-preco="199.90">15 KG</button>
-                            <button type="button" class="tamanho-opcao" data-preco="249.90">20 KG</button>
+                            <button type="button"
+                                    class="tamanho-opcao"
+                                    th:each="variacao : ${produto.variacoes}"
+                                    th:data-id="${variacao.id}"
+                                    th:data-valor="${variacao.valorVenda}"
+                                    th:data-estoque="${variacao.estoqueAtual}"
+                                    th:text="${variacao.tamanho}">
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -75,43 +78,85 @@
                     <tbody>
                     <tr>
                         <th>Marca</th>
-                        <td>GranPlus</td>
+                        <td th:text="${produto.marca}"></td>
                     </tr>
-                    <tr>
                         <th>Espécie</th>
-                        <td>Cachorro</td>
+                        <td>
+                            <span th:each="especie : ${produto.especies}"
+                                  th:text="${especie.nome + ' '}">
+                            </span>
+                        </td>
                     </tr>
+
                     <tr>
                         <th>Idade</th>
-                        <td>Adulto</td>
+                        <td>
+                            <span th:each="faixa : ${produto.faixasEtarias}"
+                                  th:text="${faixa.nome + ' '}">
+                            </span>
+                        </td>
                     </tr>
+
                     <tr>
                         <th>Porte indicado</th>
-                        <td>Médio, Grande</td>
+                        <td>
+                            <span th:each="porte : ${produto.portes}"
+                                  th:text="${porte.nome + ' '}">
+                            </span>
+                        </td>
                     </tr>
+
                     <tr>
                         <th>Categoria</th>
-                        <td>Ração seca</td>
+                        <td th:text="${produto.categoria}"></td>
                     </tr>
+
+                    <tr th:if="${produto.categoria == 'Ração'}">
+                        <th>Tipo de ração</th>
+                        <td th:text="${produto.tipoRacao.nome}"></td>
+                    </tr>
+
+                    <tr th:if="${produto.categoria == 'Ração'}">
+                        <th>Tamanho do grão</th>
+                        <td th:text="${produto.tamanhoGrao.nome}"></td>
+                    </tr>
+
+                    <tr th:if="${produto.categoria == 'Petisco'}">
+                        <th>Tipo de petisco</th>
+                        <td th:text="${produto.tipoPetisco.nome}"></td>
+                    </tr>
+
+                    <tr th:if="${produto.categoria == 'Suplemento'}">
+                        <th>Forma de apresentação</th>
+                        <td th:text="${produto.formaApresentacao.nome}"></td>
+                    </tr>
+
                     <tr>
                         <th>Sabor</th>
-                        <td>Frango, Carne</td>
+                        <td th:each="sabor : ${produto.sabores}"
+                            th:text="${sabor.nome}">
+                        </td>
                     </tr>
-                    <tr>
-                        <th>Tamanho do grão</th>
-                        <td>Pequeno</td>
-                    </tr>
+
                     <tr>
                         <th>Composição nutricional</th>
-                        <td>Farinha de Vísceras de Aves, Farinha de Carne e Ossos, Quirera de Arroz, Grão de Milho¹, Farelo de Glúten de Milho-60¹, Grão de Sorgo, Óleo de Vísceras de Aves, Farelo de Trigo, Cloreto de Sódio (Sal Comum), Cloreto de Potássio, Hidrolisado de Fígado Ave e Suíno, Antioxidantes (BHA, BHT), Propionato de Cálcio, Sorbato de Potássio, Aditivo Adsorvente (Parede Celular de Levedura – Glucomananos), Vitaminas (A, D3, E, K3, C, B1, B2, B6, B12, Pantotenato de Cálcio, Ácido Fólico, Ácido Nicotínico, Biotina, Cloreto de Colina), Minerais (Sulfato de Zinco, Sulfato de Ferro, Sulfato de Manganês, Iodato de Cálcio, Selenito de Sódio, Proteinato de Cobre).</td>
+                        <td th:text="${produto.composicaoNutricional}"></td>
                     </tr>
+
                     <tr>
                         <th>Transgênico</th>
-                        <td>Não</td>
+                        <td>
+                            <span th:if="${produto.contemTransgenico}">Sim</span>
+                            <span th:if="${!produto.contemTransgenico}">Não</span>
+                        </td>
                     </tr>
+
                     <tr>
                         <th>Glúten</th>
-                        <td>Não</td>
+                        <td>
+                            <span th:if="${produto.contemGluten}">Sim</span>
+                            <span th:if="${!produto.contemGluten}">Não</span>
+                        </td>
                     </tr>
                     </tbody>
                 </table>
@@ -120,18 +165,15 @@
                 <table class="tabela-dosagem">
                     <thead>
                     <tr>
-                        <th>Peso do animal (kg)</th>
-                        <th>Quantidade recomendada (g)</th>
+                        <th>Peso do animal</th>
+                        <th>Quantidade recomendada</th>
                     </tr>
                     </thead>
+
                     <tbody>
-                    <tr>
-                        <td>1 a 5</td>
-                        <td>30 a 100</td>
-                    </tr>
-                    <tr>
-                        <td>6 a 10</td>
-                        <td>101 a 200</td>
+                    <tr th:each="recomendacao : ${produto.quantidadeRecomendada}">
+                        <td th:text="${recomendacao.pesoAnimal}"></td>
+                        <td th:text="${recomendacao.quantidadeRecomendada}"></td>
                     </tr>
                     </tbody>
                 </table>
@@ -141,7 +183,7 @@
         <!-- Card Direita -->
         <div class="direito">
             <div class="preco-container">
-                <span class="preco">R$ 156,75</span>
+                <span class="preco" id="precoProduto"></span>
             </div>
 
             <div class="quantidade-container">
@@ -153,18 +195,42 @@
                 </div>
             </div>
 
-            <button type="button" class="btn-adicionar-carrinho" onclick="adicionarCarrinho()">Adicionar ao carrinho</button>
+            <span id="mensagemEstoque" class="mensagem-erro"></span>
 
-            <div id="toast" class="toast">
-                <i class="toast-icone fa-solid fa-check"></i>
-                <span>Produto adicionado ao carrinho com sucesso!</span>
-            </div>
+            <form id="formAdicionar" method="post">
+
+                <input type="hidden" name="variacaoId">
+
+                <input type="hidden" name="quantidade">
+
+                <button type="button" class="btn-adicionar-carrinho">
+                    Adicionar ao carrinho
+                </button>
+
+            </form>
+        </div>
+
+        <!-- Toast -->
+        <div id="toast"
+             class="toast ativo"
+             th:if="${mensagemToast}">
+
+            <i th:if="${tipoToast == 'erro'}"
+               class="fa-solid fa-circle-xmark"></i>
+
+            <i th:if="${tipoToast != 'erro'}"
+               class="fa-solid fa-check"></i>
+
+            <p th:text="${mensagemToast}"></p>
         </div>
     </main>
 </div>
 
 <!-- Detalhes do produto JavaScript -->
 <script th:src="@{/js/cliente/detalhes-produto.js}"></script>
+
+<!-- Toast JavaScript -->
+<script th:src="@{/js/cliente/componentes/toast.js}"></script>
 
 <!-- ChatBot -->
 <div th:replace="~{fragments/cliente/chatbot :: chatbot}"></div>

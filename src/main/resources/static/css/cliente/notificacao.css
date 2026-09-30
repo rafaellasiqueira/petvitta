@@ -1,0 +1,46 @@
+.container-principal {
+    display: flex;
+    flex-direction: column;
+    background: #FFFFFF;
+    border-radius: 8px;
+    padding: 16px 20px;
+    width: 600px;
+    height: auto;
+    min-height: 500px;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+h1 {
+    font-family: 'Fredoka', sans-serif;
+    font-size: 16px;
+    font-weight: 500;
+    color: #1F2A29;
+    margin: 0;
+}
+
+.card {
+    background: #FFFFFF;
+    border-radius: 8px;
+    border: 1px solid #B8C7C3;
+    padding: 12px 12px;
+    width: auto;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    color: #0E1413;
+}
+
+.card h2 {
+    font-size: 16px;
+    font-family: 'Fredoka', sans-serif;
+    font-weight: 500;
+}
+
+.card p {
+    font-size: 14px;
+    font-family: 'Nunito', sans-serif;
+    font-weight: 500;
+}

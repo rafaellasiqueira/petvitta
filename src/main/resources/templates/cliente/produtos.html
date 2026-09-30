@@ -28,200 +28,202 @@
 
     <main class="conteudo">
         <!-- Filtro -->
-        <div class="filtro">
-            <div class="filtro-cabecalho">
-                <h1>Filtro</h1>
-                <button type="button" class="btn-limpar">Limpar</button>
-            </div>
+        <form id="formFiltro" th:action="@{/cliente/produtos}" method="GET">
+            <div class="filtro">
 
-            <span class="linha"></span>
+                <div class="filtro-cabecalho">
+                    <h1>Filtro</h1>
 
-            <!-- Categoria -->
-            <div class="filtro-categoria">
-                <h3>Categoria</h3>
+                    <a th:href="@{/cliente/produtos}" class="btn-limpar">
+                        Limpar
+                    </a>
+                </div>
 
-                <!-- Ração -->
-                <details>
-                    <summary>Ração</summary>
-                    <a href="#" class="ver-todos">Ver todas as rações</a>
+                <span class="linha"></span>
 
-                    <label>
-                        <input type="checkbox" name="tipoRacao" value="seca">
-                        <span>Seca</span>
-                    </label>
+                <!-- Categoria -->
+                <div class="filtro-categoria">
 
-                    <label>
-                        <input type="checkbox" name="tipoRacao" value="natural">
-                        <span>Natural</span>
-                    </label>
+                    <h3>Categoria</h3>
 
-                    <label>
-                        <input type="checkbox" name="tipoRacao" value="umida">
-                        <span>Úmida</span>
-                    </label>
+                    <!-- Ração -->
+                    <details open>
+                        <summary>Ração</summary>
 
-                    <label>
-                        <input type="checkbox" name="tipoRacao" value="medicamentosa">
-                        <span>Medicamentosa</span>
-                    </label>
-                </details>
+                        <button type="submit"
+                                name="verTodos"
+                                value="racao"
+                                class="ver-todos">
+                            Ver todas as rações
+                        </button>
 
-                <!-- Petisco -->
-                <details>
-                    <summary>Petisco</summary>
-                    <a href="#" class="ver-todos">Ver todos os petiscos</a>
+                        <label th:each="tipo : ${tiposRacao}">
+                            <input type="checkbox"
+                                   name="tipoRacao"
+                                   th:value="${tipo.nome}"
+                                   th:checked="${tipoRacaoSelecionados != null and tipoRacaoSelecionados.contains(tipo.nome)}">
 
-                    <label>
-                        <input type="checkbox" name="tipoPetisco" value="bifinhos">
-                        <span>Bifinhos</span>
-                    </label>
+                            <span th:text="${tipo.nome}"></span>
+                        </label>
+                    </details>
 
-                    <label>
-                        <input type="checkbox" name="tipoPetisco" value="biscoitos">
-                        <span>Biscoitos e snacks</span>
-                    </label>
+                    <!-- Petisco -->
+                    <details open>
+                        <summary>Petisco</summary>
 
-                    <label>
-                        <input type="checkbox" name="tipoPetisco" value="molho">
-                        <span>Molho</span>
-                    </label>
+                        <button type="submit"
+                                name="verTodos"
+                                value="petisco"
+                                class="ver-todos">
+                            Ver todos os petiscos
+                        </button>
 
-                    <label>
-                        <input type="checkbox" name="tipoPetisco" value="cremoso">
-                        <span>Petisco cremoso</span>
-                    </label>
+                        <label th:each="tipo : ${tiposPetisco}">
+                            <input type="checkbox"
+                                   name="tipoPetisco"
+                                   th:value="${tipo.nome}"
+                                   th:checked="${tipoPetiscoSelecionados != null and tipoPetiscoSelecionados.contains(tipo.nome)}">
 
-                    <label>
-                        <input type="checkbox" name="tipoPetisco" value="natural">
-                        <span>Petisco natural</span>
-                    </label>
+                            <span th:text="${tipo.nome}"></span>
+                        </label>
+                    </details>
 
-                    <label>
-                        <input type="checkbox" name="tipoPetisco" value="osso">
-                        <span>Osso</span>
-                    </label>
-                </details>
+                    <!-- Suplemento -->
+                    <details open>
+                        <summary>Suplemento</summary>
 
-                <!-- Suplemento -->
-                <details>
-                    <summary>Suplemento</summary>
-                    <a href="#" class="ver-todos">Ver todos os suplementos</a>
+                        <button type="submit"
+                                name="verTodos"
+                                value="suplemento"
+                                class="ver-todos">
+                            Ver todos os suplementos
+                        </button>
 
-                    <label>
-                        <input type="checkbox" name="tipoSuplemento" value="comprimidos">
-                        <span>Comprimidos e cápsulas</span>
-                    </label>
+                        <label th:each="forma : ${formasApresentacao}">
+                            <input type="checkbox"
+                                   name="formaApresentacao"
+                                   th:value="${forma.nome}"
+                                   th:checked="${formasApresentacaoSelecionadas != null and formasApresentacaoSelecionadas.contains(forma.nome)}">
 
-                    <label>
-                        <input type="checkbox" name="tipoSuplemento" value="mastigaveis">
-                        <span>Tabletes mastigáveis</span>
-                    </label>
+                            <span th:text="${forma.nome}"></span>
+                        </label>
+                    </details>
 
-                    <label>
-                        <input type="checkbox" name="tipoSuplemento" value="po">
-                        <span>Pó e líquidos</span>
-                    </label>
-                </details>
-            </div>
+                    <!-- Espécie -->
+                    <div class="filtro-grupo">
+                        <h3>Espécie</h3>
 
-            <!-- Espécie -->
-            <div class="filtro-grupo">
-                <h3>Espécie</h3>
+                        <label th:each="especie : ${especies}">
+                            <input type="checkbox"
+                                   name="especie"
+                                   th:value="${especie.nome}"
+                                   th:checked="${especiesSelecionadas != null and especiesSelecionadas.contains(especie.nome)}">
 
-                <label>
-                    <input type="checkbox" name="especie" value="cachorro">
-                    <span>Cachorro</span>
-                </label>
-
-                <label>
-                    <input type="checkbox" name="especie" value="gato">
-                    <span>Gato</span>
-                </label>
-
-            </div>
-
-            <!-- Idade -->
-            <div class="filtro-grupo">
-                <h3>Idade</h3>
-
-                <label>
-                    <input type="checkbox" name="idade" value="adulto">
-                    <span>Adulto</span>
-                </label>
-
-                <label>
-                    <input type="checkbox" name="idade" value="filhote">
-                    <span>Filhote</span>
-                </label>
-
-                <label>
-                    <input type="checkbox" name="idade" value="idoso">
-                    <span>Idoso</span>
-                </label>
-
-            </div>
-
-            <!-- Porte -->
-            <div class="filtro-grupo">
-                <h3>Porte indicado</h3>
-
-                <label>
-                    <input type="checkbox" name="porte" value="pequeno">
-                    <span>Pequeno</span>
-                </label>
-
-                <label>
-                    <input type="checkbox" name="porte" value="medio">
-                    <span>Médio</span>
-                </label>
-
-                <label>
-                    <input type="checkbox" name="porte" value="grande">
-                    <span>Grande</span>
-                </label>
-            </div>
-
-
-            <!-- Características -->
-            <div class="filtro-grupo">
-                <h3>Característica do produto</h3>
-
-                <label>
-                    <input type="checkbox" name="caracteristica" value="transgenico">
-                    <span>Livre de transgênico</span>
-                </label>
-
-                <label>
-                    <input type="checkbox" name="caracteristica" value="gluten">
-                    <span>Não contém glúten</span>
-                </label>
-            </div>
-
-            <!-- Preço -->
-            <div class="filtro-preco">
-                <h3>Preço</h3>
-
-                <div class="precos">
-                    <div>
-                        <label for="precoMinimo">Mínimo</label>
-                        <input type="number"
-                                id="precoMinimo"
-                                name="precoMinimo"
-                                min="0.01"
-                                placeholder="R$ 0,00">
+                            <span th:text="${especie.nome}"></span>
+                        </label>
                     </div>
 
-                    <div>
-                        <label for="precoMaximo">Máximo</label>
-                        <input type="number"
-                                id="precoMaximo"
-                                name="precoMaximo"
-                                min="0.01"
-                                placeholder="R$ 0,00">
+                    <!-- Idade -->
+                    <div class="filtro-grupo">
+                        <h3>Idade</h3>
+                        <label th:each="idade : ${faixasEtarias}">
+                            <input type="checkbox"
+                                   name="idade"
+                                   th:value="${idade.nome}"
+                                   th:checked="${idadesSelecionadas != null and idadesSelecionadas.contains(idade.nome)}">
+
+                            <span th:text="${idade.nome}"></span>
+                        </label>
+
+                    </div>
+
+                    <!-- Porte -->
+                    <div class="filtro-grupo">
+                        <h3>Porte indicado</h3>
+                        <label th:each="porte : ${portes}">
+                            <input type="checkbox"
+                                   name="porte"
+                                   th:value="${porte.nome}"
+                                   th:checked="${portesSelecionados != null and portesSelecionados.contains(porte.nome)}">
+
+                            <span th:text="${porte.nome}"></span>
+                        </label>
+                    </div>
+
+                    <!-- Características -->
+                    <div class="filtro-grupo">
+
+                        <span>Livre de transgênico</span>
+
+                        <label>
+                            <input type="radio"
+                                   name="transgenico"
+                                   value="true"
+                                   th:checked="${transgenicoSelecionado == true}">
+                            Sim
+                        </label>
+
+                        <label>
+                            <input type="radio"
+                                   name="transgenico"
+                                   value="false"
+                                   th:checked="${transgenicoSelecionado == false}">
+                            Não
+                        </label>
+
+                        <span>Contém glúten</span>
+
+                        <label>
+                            <input type="radio"
+                                   name="gluten"
+                                   value="true"
+                                   th:checked="${glutenSelecionado == true}">
+                            Sim
+                        </label>
+
+                        <label>
+                            <input type="radio"
+                                   name="gluten"
+                                   value="false"
+                                   th:checked="${glutenSelecionado == false}">
+                            Não
+                        </label>
+                    </div>
+
+                    <!-- Preço -->
+                    <div class="filtro-preco">
+                        <h3>Preço</h3>
+
+                        <div class="precos">
+
+                            <div>
+                                <label for="precoMinimo">Mínimo</label>
+
+                                <input type="number"
+                                       id="precoMinimo"
+                                       name="precoMinimo"
+                                       min="0.01"
+                                       step="0.01"
+                                       th:value="${precoMinimo}"
+                                       placeholder="R$ 0,00">
+                            </div>
+
+                            <div>
+                                <label for="precoMaximo">Máximo</label>
+
+                                <input type="number"
+                                       id="precoMaximo"
+                                       name="precoMaximo"
+                                       min="0.01"
+                                       step="0.01"
+                                       th:value="${precoMaximo}"
+                                       placeholder="R$ 0,00">
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
+        </form>
 
         <div class="produtos-container">
             <h1>Produtos</h1>
@@ -239,12 +241,47 @@
                         </div>
                     </a>
 
-                    <button type="button" class="btn-adicionar">Adicionar</button>
+                    <form th:action="@{/cliente/carrinho/adicionar}" method="post">
+                        <input type="hidden"
+                               name="variacaoId"
+                               th:value="${produto.variacoes[0].id}">
+
+                        <input type="hidden"
+                               name="quantidade"
+                               value="1">
+
+                        <button type="submit" class="btn-adicionar">
+                            Adicionar
+                        </button>
+                    </form>
                 </div>
             </div>
+            <div class="sem-resultados" th:if="${produtos.isEmpty()}">
+                <p>Sem resultados.</p>
+            </div>
+        </div>
+
+        <!-- Toast -->
+        <div id="toast"
+             class="toast ativo"
+             th:if="${mensagemToast}">
+
+            <i th:if="${tipoToast == 'erro'}"
+               class="fa-solid fa-circle-xmark"></i>
+
+            <i th:if="${tipoToast != 'erro'}"
+               class="fa-solid fa-check"></i>
+
+            <p th:text="${mensagemToast}"></p>
         </div>
     </main>
 </div>
+
+<!-- Produto -->
+<script th:src="@{/js/cliente/produtos.js}"></script>
+
+<!-- Toast JavaScript -->
+<script th:src="@{/js/cliente/componentes/toast.js}"></script>
 
 <!-- ChatBot -->
 <div th:replace="~{fragments/cliente/chatbot :: chatbot}"></div>

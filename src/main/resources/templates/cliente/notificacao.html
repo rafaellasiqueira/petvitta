@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Notificação</title>
+
+    <!-- Font Awesome (Ícones) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+    <!-- Cabeçalho CSS -->
+    <link rel="stylesheet" th:href="@{/css/cliente/cabecalho.css}">
+
+    <!-- Global CSS -->
+    <link rel="stylesheet" th:href="@{/css/cliente/global.css}">
+
+    <!-- Notificação CSS -->
+    <link rel="stylesheet" th:href="@{/css/cliente/notificacao.css}">
+
+    <!-- Chatbot CSS -->
+    <link rel="stylesheet" th:href="@{/css/cliente/chatbot.css}">
+</head>
+
+<body>
+<div class="container">
+    <!-- Cabeçalho -->
+    <div th:replace="~{fragments/cliente/cabecalho :: cabecalho}"></div>
+
+    <main class="conteudo">
+        <div class="container-principal">
+            <div class="notificacao-cabecalho">
+                <h1>Notificação</h1>
+            </div>
+
+            <div class="card"
+                 th:if="${avisoExpiracao}">
+                <h2>Atenção!</h2>
+
+                <p>Seu carrinho irá expirar em 5 minutos.</p>
+
+            </div>
+
+            <div class="sem-resultados"
+                 th:if="${!avisoExpiracao}">
+
+                <h2>Nenhuma notificação</h2>
+
+                <p>Você não possui nenhuma notificação no momento.</p>
+
+            </div>
+        </div>
+
+    </main>
+</div>
+
+<!-- Chatbot -->
+<div th:replace="~{fragments/cliente/chatbot :: chatbot}"></div>
+<script th:src="@{/js/cliente/chatbot.js}"></script>
+
+</body>
+</html>

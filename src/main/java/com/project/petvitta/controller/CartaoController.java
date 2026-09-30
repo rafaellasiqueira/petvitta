@@ -42,7 +42,7 @@ public class CartaoController {
         }
 
         try {
-            cartaoService.adicionar(6L, dto);
+            cartaoService.adicionar(1L, dto);
 
             redirectAttributes.addFlashAttribute(
                     "tipoToast",
@@ -75,7 +75,7 @@ public class CartaoController {
             RedirectAttributes redirectAttributes
     ) {
         try {
-            cartaoService.tornarPreferencial(6L, id);
+            cartaoService.tornarPreferencial(1L, id);
             redirectAttributes.addFlashAttribute(
                     "tipoToast",
                     "sucesso"
@@ -105,7 +105,7 @@ public class CartaoController {
             RedirectAttributes redirectAttributes
     ) {
         try {
-            cartaoService.excluirCartao(6L, id);
+            cartaoService.excluirCartao(1L, id);
 
             redirectAttributes.addFlashAttribute(
                     "tipoToast",

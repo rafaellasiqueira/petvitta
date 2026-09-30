@@ -39,7 +39,7 @@ public class Produto {
     @Column(nullable = false, length = 2048)
     private String imagemUrl;
 
-    @Column(nullable = false, length = 10000)
+    @Column(nullable = false, length = 3000)
     private String composicaoNutricional;
 
     @Column(nullable = false)
@@ -102,7 +102,7 @@ public class Produto {
     private List<VariacaoProduto> variacoes = new ArrayList<>();
 
     public String getCategoria() {
-        if (this instanceof Racao) {
+        if (this instanceof Racao) { /* Verifica se o objeto pertence a tal classe */
             return "Ração";
         }
 

@@ -157,6 +157,11 @@ INSERT IGNORE INTO sabor (nome) VALUES
 ('Frutas'),
 ('Sem Sabor');
 
+-- Tipo de cupom
+INSERT IGNORE INTO tipo_cupom (nome) VALUES
+('Promocional'),
+('Troca');
+
 -- Grupo de precificação
 INSERT IGNORE INTO grupo_precificacao (nome, percentual) VALUES
 ('Básico', 20.00),

@@ -32,22 +32,82 @@
         <div class="container-esquerdo">
                 <div class="carrinho-cabecalho">
                     <h1>Carrinho</h1>
-                    <button type="button" id="btn-limpar" class="btn-limpar">Limpar carrinho</button>
+                    <form th:action="@{/cliente/carrinho/limpar-carrinho}" method="post">
+                        <input type="hidden" name="carrinhoId" th:value="${carrinho.id}">
+                        <button class="btn-limpar" type="submit">
+                            Limpar carrinho
+                        </button>
+                    </form>
                 </div>
 
-                <div class="produtos-expirados">
-                        <h1>O tempo para finalizar sua compra expirou</h1>
-                        <p>
-                            Alguns produtos foram removidos do seu carrinho porque o prazo de reserva de 20 minutos expirou. Para garantir a disponibilidade dos itens, adicione-os novamente ao carrinho antes de finalizar a compra.
-                        </p>
+            <div class="produtos-expirados"
+                 th:if="${itensExpirados != null and !itensExpirados.isEmpty()}"
+                 id="produtos-expirados">
 
-                    <span class="linha"></span>
+                <h1>O tempo para finalizar sua compra expirou</h1>
 
-                    <div class="container-produtos-expirados">
-                        <p>Pedigree Ração Cães Carne Adulto</p>
-                        <button type="button" class="btn-adicionar-novamente">Adicionar novamente</button>
+                <p>
+                    Alguns produtos foram removidos do seu carrinho porque o prazo
+                    de bloqueio de 20 minutos expirou. Os itens foram desbloqueados
+                    e estão disponíveis novamente para compra.
+                </p>
+
+                <span class="linha"></span>
+
+                <!-- Cada produto expirado -->
+                <div th:each="item : ${itensExpirados}"
+                     class="container-produtos-expirados">
+
+                    <p th:text="${item.variacao.produto.nome}">
+                        Nome do produto
+                    </p>
+
+                    <form th:action="@{/cliente/carrinho/adicionar}" method="post">
+
+                        <input type="hidden"
+                               name="variacaoId"
+                               th:value="${item.variacao.id}">
+
+                        <input type="hidden"
+                               name="quantidade"
+                               th:value="${item.quantidade}">
+
+                        <button type="submit"
+                                class="btn-adicionar-novamente">
+                            Adicionar novamente
+                        </button>
+
+                    </form>
+
+                </div>
+
+                <span class="linha"></span>
+
+                <!-- Adicionar todos -->
+                <form th:action="@{/cliente/carrinho/adicionar}"
+                      method="post"
+                      class="form-adicionar-todos">
+
+                    <div th:each="item : ${itensExpirados}">
+
+                        <input type="hidden"
+                               name="variacaoId"
+                               th:value="${item.variacao.id}">
+
+                        <input type="hidden"
+                               name="quantidade"
+                               th:value="${item.quantidade}">
+
                     </div>
-               </div>
+
+                    <button type="submit"
+                            class="btn-adicionar-novamente">
+                        Adicionar todos novamente
+                    </button>
+
+                </form>
+
+            </div>
 
                 <!-- Selecionar todos -->
                 <div class="selecionar-todos">
@@ -59,75 +119,79 @@
             <span class="linha-cinza"></span>
 
             <!-- Produto 1 -->
-            <div class="produto">
-                <div class="imagem-e-dados">
-                    <input type="checkbox" class="checkbox-produto">
+            <div th:if="${carrinho != null and !carrinho.itens.isEmpty()}">
+                <div th:each="item : ${carrinho.itens}" class="produto">
+                    <div class="imagem-e-dados">
+                        <input type="checkbox" class="checkbox-produto">
 
-                    <div class="imagem-container">
-                        <a th:href="@{/cliente/detalhes-produto}" class="produto-link">
-                            <img th:src="@{/images/produtos/racao-1.png}">
-                        </a>
-                    </div>
+                        <div class="imagem-container">
+                            <a th:href="@{/cliente/detalhes-produto/{id}(id=${item.variacao.produto.id})}"
+                               class="produto-link">
 
-                    <div class="informacoes-produto">
-                        <h3>Ração Cães Adultos Frango e Carne Choice</h3>
-                        <p class="preco-produto">R$ 156,75</p>
+                                <img class="produto-imagem"
+                                     th:src="${item.variacao.produto.imagemUrl}">
+                            </a>
+                        </div>
 
-                        <div class="quantidade-container">
-                            <div class="seletor-quantidade">
-                                <button type="button" class="btn-qtd menos">-</button>
-                                <input type="number" value="1" min="1">
-                                <button type="button" class="btn-qtd mais">+</button>
+                        <div class="informacoes-produto">
+                            <h3 th:text="${item.variacao.produto.nome}">
+                            </h3>
+
+                            <p class="preco-produto"
+                               th:text="${#numbers.formatDecimal(item.variacao.valorVenda, 2, 2)}"
+                               th:data-preco="${item.variacao.valorVenda}">
+                            </p>
+
+                            <div class="quantidade-container">
+                                <div class="seletor-quantidade">
+                                    <button type="button" class="btn-qtd menos">-</button>
+                                    <input type="number"
+                                           th:value="${item.quantidade}"
+                                           min="1">
+                                    <button type="button" class="btn-qtd mais">+</button>
+                                </div>
+                            </div>
+
+                            <div class="secao-tamanhos">
+                                <div class="opcoes-tamanho">
+
+                                    <button th:each="variacao : ${item.variacao.produto.variacoes}"
+                                            th:if="${variacao.id == item.variacao.id}"
+                                            type="button"
+                                            class="tamanho-opcao active"
+                                            th:text="${variacao.tamanho}"
+                                            th:data-valor="${variacao.valorVenda}">
+                                    </button>
+
+                                    <button th:each="variacao : ${item.variacao.produto.variacoes}"
+                                            th:if="${variacao.id != item.variacao.id}"
+                                            type="button"
+                                            class="tamanho-opcao"
+                                            th:text="${variacao.tamanho}"
+                                            th:data-valor="${variacao.valorVenda}">
+                                    </button>
+
+                                </div>
                             </div>
                         </div>
 
-                        <div class="secao-tamanhos">
-                            <div class="opcoes-tamanho">
-                                <button type="button" class="tamanho-opcao active" data-preco="156.75">10.1 KG</button>
-                                <button type="button" class="tamanho-opcao" data-preco="199.90">15 KG</button>
-                                <button type="button" class="tamanho-opcao" data-preco="249.90">20 KG</button>
-                            </div>
-                        </div>
+                        <form th:action="@{/cliente/carrinho/excluir/{id}(id=${item.id})}" method="post">
+                            <button class="btn-excluir" type="submit">
+                                <i class="fa-solid fa-trash"></i>
+                            </button>
+                        </form>
                     </div>
+                    <span class="linha-cinza"></span>
                 </div>
-                <button class="btn-excluir" type="button"><i class="fa-solid fa-trash"></i></button>
             </div>
 
-            <span class="linha-cinza"></span>
+            <div th:if="${carrinho == null or carrinho.itens.isEmpty()}"
+                 class="carrinho-vazio">
 
-            <!-- Produto 2 -->
-            <div class="produto">
-                <div class="imagem-e-dados">
-                    <input type="checkbox" class="checkbox-produto">
+                <h2>Seu carrinho está vazio</h2>
 
-                    <div class="imagem-container">
-                        <a th:href="@{/cliente/detalhes-produto}">
-                            <img th:src="@{/images/produtos/racao-3.png}">
-                        </a>
-                    </div>
+                <p>Adicione produtos para continuar sua compra.</p>
 
-                    <div class="informacoes-produto">
-                        <h3>Ração GoldeN Special Gatos Adultos Sabor Frango e Carne</h3>
-                        <p class="preco-produto">R$ 59,90</p>
-
-                        <div class="quantidade-container">
-                            <div class="seletor-quantidade">
-                                <button type="button" class="btn-qtd menos">-</button>
-                                <input type="number" value="1" min="1">
-                                <button type="button" class="btn-qtd mais">+</button>
-                            </div>
-                        </div>
-
-                        <div class="secao-tamanhos">
-                            <div class="opcoes-tamanho">
-                                <button type="button" class="tamanho-opcao active" data-preco="59.90">10.1 KG</button>
-                                <button type="button" class="tamanho-opcao" data-preco="79.90">15 KG</button>
-                                <button type="button" class="tamanho-opcao" data-preco="99.90">20 KG</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <button class="btn-excluir" type="button"><i class="fa-solid fa-trash"></i></button>
             </div>
         </div>
 
@@ -141,17 +205,30 @@
             <a th:href="@{/cliente/finalizar-compra}" class="btn-finalizar-a-compra">
                 Realizar a compra
             </a>
+        </div>
 
-            <div id="toast" class="toast">
-                <span class="toast-icone"><i class="fa-solid fa-triangle-exclamation"></i></span>
-                <span>Selecione um produto</span>
-            </div>
+
+        <!-- Toast -->
+        <div id="toast"
+             class="toast ativo"
+             th:if="${mensagemToast}">
+
+            <i th:if="${tipoToast == 'erro'}"
+               class="fa-solid fa-circle-xmark"></i>
+
+            <i th:if="${tipoToast != 'erro'}"
+               class="fa-solid fa-check"></i>
+
+            <p th:text="${mensagemToast}"></p>
         </div>
     </main>
 </div>
 
 <!-- Carrinho -->
 <script th:src="@{/js/cliente/carrinho.js}"></script>
+
+<!-- Toast JavaScript -->
+<script th:src="@{/js/cliente/componentes/toast.js}"></script>
 
 <!-- ChatBot -->
 <div th:replace="~{fragments/cliente/chatbot :: chatbot}"></div>

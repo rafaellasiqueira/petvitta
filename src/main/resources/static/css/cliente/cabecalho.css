@@ -109,3 +109,22 @@
     height: 20px;
     color: white;
 }
+
+.icone-notificacao {
+    position: relative;
+    display: inline-block;
+}
+
+.bolinha-notificacao {
+    position: absolute;
+    top: -2px;
+    right: -3px;
+    width: 8px;
+    height: 8px;
+    background-color: red;
+    border-radius: 50%;
+}
+
+.bolinha-notificacao.oculto {
+    display: none;
+}

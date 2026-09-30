@@ -4,6 +4,17 @@
     background: #FFFFFF;
     border-radius: 8px;
     padding: 16px 20px;
+    width: 716px;
+    height: 755px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.filtro {
+    background: #FFFFFF;
+    border-radius: 8px;
+    padding: 16px 20px;
     width: auto;
     height: auto;
     display: flex;
@@ -30,7 +41,7 @@
 .filtro-categoria, .filtro-grupo, .filtro-preco {
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 12px;
 }
 
 .filtro-categoria details {
@@ -52,12 +63,17 @@
     cursor: pointer;
 }
 
+details[open] .ver-todos {
+    margin-top: 8px;
+    display: block;
+}
+
 .filtro label {
     display: flex;
     align-items: center;
     gap: 8px;
     font-family: 'Nunito', sans-serif;
-    font-size: 16px;
+    font-size: 14px;
     font-weight: 500;
     color: #3A4A48;
     cursor: pointer;
@@ -75,10 +91,12 @@
 
 .ver-todos {
     font-family: 'Nunito', sans-serif;
-    font-size: 16px;
+    font-size: 14px;
     font-weight: 500;
     color: #1C9B86;
     text-decoration: none;
+    border: none;
+    background-color: transparent;
 }
 
 .ver-todos:hover {
@@ -87,6 +105,22 @@
 
 .filtro-preco {
     gap: 8px;
+}
+
+/* Características */
+.filtro-grupo span {
+    font-family: 'Nunito', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    color: #3A4A48;
+}
+
+.filtro input[type="radio"] {
+    width: 18px;
+    height: 18px;
+    margin: 0;
+    accent-color: #1C9B86;
+    cursor: pointer;
 }
 
 .precos {

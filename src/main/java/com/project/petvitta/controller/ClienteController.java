@@ -3,11 +3,10 @@ package com.project.petvitta.controller;
 import com.project.petvitta.dto.AlterarSenhaDTO;
 import com.project.petvitta.dto.ClienteCadastroDTO;
 import com.project.petvitta.dto.ClienteEdicaoDTO;
+import com.project.petvitta.model.carrinho.Carrinho;
 import com.project.petvitta.model.cliente.Cliente;
-import com.project.petvitta.service.CartaoService;
-import com.project.petvitta.service.ClienteService;
-import com.project.petvitta.service.EnderecoService;
-import com.project.petvitta.service.ProdutoService;
+import com.project.petvitta.model.cliente.Notificacao;
+import com.project.petvitta.service.*;
 import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,7 +14,12 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.List;
 
 @Controller
 public class ClienteController {
@@ -24,18 +28,26 @@ public class ClienteController {
     private final EnderecoService enderecoService;
     private final CartaoService cartaoService;
     private final ProdutoService produtoService;
+    private final CupomService cupomService;
+    private final NotificacaoService notificacaoService;
+    private final CarrinhoService carrinhoService;
 
     public ClienteController(
             ClienteService clienteService,
             EnderecoService enderecoService,
             CartaoService cartaoService,
-            ProdutoService produtoService
+            ProdutoService produtoService,
+            CupomService cupomService, NotificacaoService notificacaoService, CarrinhoService carrinhoService
 
     ) {
         this.clienteService = clienteService;
         this.enderecoService = enderecoService;
         this.cartaoService = cartaoService;
-        this.produtoService = produtoService;;
+        this.produtoService = produtoService;
+        this.cupomService = cupomService;
+        this.notificacaoService = notificacaoService;
+        this.carrinhoService = carrinhoService;
+        ;
     }
 
     @ModelAttribute
@@ -142,21 +154,6 @@ public class ClienteController {
         }
     }
 
-    @GetMapping("/cliente/produtos")
-    public String produtos(Model model) {
-
-        if (!verificarClienteAtivo()) {
-            return "redirect:/cliente/inativo";
-        }
-
-        model.addAttribute(
-                "produtos",
-                produtoService.listarProdutos()
-        );
-
-        return "cliente/produtos";
-    }
-
     @GetMapping("/cliente/perfil")
     public String perfil(Model model) {
 
@@ -169,6 +166,11 @@ public class ClienteController {
         model.addAttribute("cliente", cliente);
         model.addAttribute("enderecos", cliente.getEnderecos());
         model.addAttribute("cartoes", cliente.getCartoes());
+        model.addAttribute("cupons", cupomService.listarCupoms());
+        model.addAttribute(
+                "avisoExpiracao",
+                verificarAvisoExpiracao()
+        );
 
         return "cliente/perfil";
     }
@@ -277,40 +279,45 @@ public class ClienteController {
         return "redirect:/cliente/perfil";
     }
 
-    @GetMapping("/cliente/detalhes-produto")
-    public String detalhesProduto() {
-        if (!verificarClienteAtivo()) {
-            return "redirect:/cliente/inativo";
-        }
-
-        return "cliente/detalhes-produto";
-    }
-
-    @GetMapping("/cliente/carrinho")
-    public String carrinho() {
-        if (!verificarClienteAtivo()) {
-            return "redirect:/cliente/inativo";
-        }
-
-        return "cliente/carrinho";
-    }
-
     @GetMapping("/cliente/finalizar-compra")
-    public String finalizarCompra() {
+    public String finalizarCompra(Model model) {
         if (!verificarClienteAtivo()) {
             return "redirect:/cliente/inativo";
         }
 
+        model.addAttribute(
+                "avisoExpiracao",
+                verificarAvisoExpiracao()
+        );
         return "cliente/finalizar-compra";
     }
 
     @GetMapping("/cliente/pedido")
-    public String pedido() {
+    public String pedido(Model model) {
         if (!verificarClienteAtivo()) {
             return "redirect:/cliente/inativo";
         }
 
+        model.addAttribute(
+                "avisoExpiracao",
+                verificarAvisoExpiracao()
+        );
         return "cliente/pedido";
+    }
+
+    @GetMapping("/cliente/notificacao")
+    public String notificacao(Model model) {
+
+        if (!verificarClienteAtivo()) {
+            return "redirect:/cliente/inativo";
+        }
+
+        model.addAttribute(
+                "avisoExpiracao",
+                verificarAvisoExpiracao()
+        );
+
+        return "cliente/notificacao";
     }
 
     @GetMapping("/cliente/inativo")
@@ -332,5 +339,17 @@ public class ClienteController {
     private boolean verificarClienteAtivo() {
         Long clienteId = 1L;
         return clienteService.clienteAtivo(clienteId);
+    }
+
+    private boolean verificarAvisoExpiracao() {
+        Cliente cliente = clienteService.buscarPorId(1L);
+
+        Carrinho carrinho = carrinhoService.buscarPorCliente(cliente.getId());
+
+        if (carrinho == null || carrinho.getItens().isEmpty()) {
+            return false;
+        }
+
+        return carrinhoService.verificarAvisoExpiracao(carrinho);
     }
 }

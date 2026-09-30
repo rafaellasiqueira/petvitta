@@ -7,16 +7,18 @@ function atualizarSubtotal() {
         let checkbox = produto.querySelector('.checkbox-produto');
 
         if (checkbox.checked) {
-            let input = produto.querySelector('input[type="number"]');
-            let quantidade = parseInt(input.value);
+            let quantidade = produto.querySelector('.seletor-quantidade input');
             let tamanho = produto.querySelector('.tamanho-opcao.active');
 
-            let preco = parseFloat(tamanho.dataset.preco);
-            total = total + (preco * quantidade);
+            let valor = parseFloat(tamanho.dataset.valor);
+            let qtd = parseInt(quantidade.value);
+
+            total = total + (valor * qtd);
         }
     });
 
     let subtotal = document.getElementById('subtotal');
+
     subtotal.innerText = total.toLocaleString('pt-BR', {
         style: 'currency',
         currency: 'BRL'
@@ -62,6 +64,11 @@ document.querySelectorAll('.produto').forEach(produto => {
             botoesTamanho.forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
             atualizarSubtotal();
+
+            let tamanho = produto.querySelector('.tamanho-opcao.active');
+            let valorAtualizado = produto.querySelector('.preco-produto');
+
+            valorAtualizado.innerText = tamanho.dataset.valor;
         };
     });
 });
@@ -89,26 +96,6 @@ checkboxTodos.onclick = function() {
     atualizarSubtotal();
 };
 
-
-// Excluir produto
-const botoesExcluir = document.querySelectorAll(".btn-excluir");
-botoesExcluir.forEach(btn => {
-    btn.onclick = function() {
-        const produto = btn.closest(".produto");
-        produto.remove();
-        atualizarSubtotal();
-    };
-});
-
-// Limpar carrinho
-const btnLimpar = document.getElementById("btn-limpar");
-    btnLimpar.onclick = function() {
-    const produtos = document.querySelectorAll(".produto");
-    produtos.forEach(produto => produto.remove());
-    atualizarSubtotal();
-}
-
-
 // Finalizar a compra
 const btnFinalizarCompra = document.querySelector('.btn-finalizar-a-compra');
 
@@ -122,15 +109,6 @@ btnFinalizarCompra.addEventListener('click', function(event) {
     }
 });
 
-// Toast
-function mostrarToast() {
-    const toast = document.getElementById("toast");
-    toast.classList.add("ativo");
-
-    setTimeout(function() {
-        toast.classList.remove("ativo");
-    }, 3000);
-}
 
 
 

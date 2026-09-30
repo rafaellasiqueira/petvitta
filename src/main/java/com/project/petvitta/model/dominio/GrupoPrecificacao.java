@@ -20,7 +20,7 @@ public class GrupoPrecificacao {
     @Column(nullable = false, unique = true, length = 50)
     private String nome;
 
-    @Column(nullable = false, precision = 5, scale = 2)
+    @Column(nullable = false)
     private BigDecimal percentual;
 
     public GrupoPrecificacao() {

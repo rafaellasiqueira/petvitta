@@ -16,8 +16,8 @@ public class VariacaoProduto {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
-    private BigDecimal peso;
+    @Column(nullable = false, length = 20)
+    private String tamanho;
 
     @Column(nullable = false)
     private BigDecimal valorCusto;

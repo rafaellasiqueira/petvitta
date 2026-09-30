@@ -65,3 +65,11 @@ body{
     font-size: 14px;
     margin-top: 5px;
 }
+
+.sem-resultados,
+.carrinho-vazio {
+    text-align: center;
+    font-family: 'Nunito', sans-serif;
+    font-size: 14px;
+    color:#5F7370;
+}
