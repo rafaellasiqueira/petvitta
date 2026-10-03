@@ -1,12 +1,13 @@
 package com.project.petvitta.controller;
 
-import com.project.petvitta.dto.AlterarSenhaDTO;
-import com.project.petvitta.dto.ClienteCadastroDTO;
-import com.project.petvitta.dto.ClienteEdicaoDTO;
+import com.project.petvitta.dto.*;
 import com.project.petvitta.model.carrinho.Carrinho;
 import com.project.petvitta.model.cliente.Cliente;
-import com.project.petvitta.model.cliente.Notificacao;
+import com.project.petvitta.model.cliente.Cupom;
+import com.project.petvitta.model.cliente.Endereco;
+import com.project.petvitta.model.pedido.Pedido;
 import com.project.petvitta.service.*;
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -17,9 +18,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.math.BigDecimal;
-import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 public class ClienteController {
@@ -29,29 +30,30 @@ public class ClienteController {
     private final CartaoService cartaoService;
     private final ProdutoService produtoService;
     private final CupomService cupomService;
-    private final NotificacaoService notificacaoService;
     private final CarrinhoService carrinhoService;
+    private final PedidoService pedidoService;
 
     public ClienteController(
             ClienteService clienteService,
             EnderecoService enderecoService,
             CartaoService cartaoService,
             ProdutoService produtoService,
-            CupomService cupomService, NotificacaoService notificacaoService, CarrinhoService carrinhoService
-
+            CupomService cupomService,
+            CarrinhoService carrinhoService,
+            PedidoService pedidoService
     ) {
         this.clienteService = clienteService;
         this.enderecoService = enderecoService;
         this.cartaoService = cartaoService;
         this.produtoService = produtoService;
         this.cupomService = cupomService;
-        this.notificacaoService = notificacaoService;
         this.carrinhoService = carrinhoService;
-        ;
+        this.pedidoService = pedidoService;
     }
 
     @ModelAttribute
     public void carregarDadosCadastro(Model model) {
+
         model.addAttribute(
                 "tiposTelefone",
                 clienteService.listarTiposTelefone()
@@ -95,10 +97,12 @@ public class ClienteController {
 
     @GetMapping("/cliente/cadastrar")
     public String cadastrar(Model model) {
+
         model.addAttribute(
                 "cliente",
                 new ClienteCadastroDTO()
         );
+
         return "cliente/cadastrar";
     }
 
@@ -110,7 +114,9 @@ public class ClienteController {
             Model model,
             RedirectAttributes redirectAttributes
     ) {
+
         if (result.hasErrors()) {
+
             model.addAttribute(
                     "tipoToast",
                     "erro"
@@ -125,6 +131,7 @@ public class ClienteController {
         }
 
         try {
+
             clienteService.cadastrar(dto);
 
             redirectAttributes.addFlashAttribute(
@@ -140,6 +147,7 @@ public class ClienteController {
             return "redirect:/cliente/cadastrar";
 
         } catch (IllegalArgumentException e) {
+
             model.addAttribute(
                     "tipoToast",
                     "erro"
@@ -163,13 +171,24 @@ public class ClienteController {
 
         Cliente cliente = clienteService.buscarPorId(1L);
 
-        model.addAttribute("cliente", cliente);
-        model.addAttribute("enderecos", cliente.getEnderecos());
-        model.addAttribute("cartoes", cliente.getCartoes());
-        model.addAttribute("cupons", cupomService.listarCupoms());
         model.addAttribute(
-                "avisoExpiracao",
-                verificarAvisoExpiracao()
+                "cliente",
+                cliente
+        );
+
+        model.addAttribute(
+                "enderecos",
+                cliente.getEnderecos()
+        );
+
+        model.addAttribute(
+                "cartoes",
+                cliente.getCartoes()
+        );
+
+        model.addAttribute(
+                "cupons",
+                cupomService.listarCupoms()
         );
 
         return "cliente/perfil";
@@ -177,8 +196,7 @@ public class ClienteController {
 
     @PostMapping("/cliente/alterar")
     public String alterar(
-            @Valid
-            ClienteEdicaoDTO dto,
+            @Valid ClienteEdicaoDTO dto,
             BindingResult result,
             RedirectAttributes redirectAttributes
     ) {
@@ -188,6 +206,7 @@ public class ClienteController {
         }
 
         if (result.hasErrors()) {
+
             redirectAttributes.addFlashAttribute(
                     "tipoToast",
                     "erro"
@@ -200,8 +219,11 @@ public class ClienteController {
 
             return "redirect:/cliente/perfil";
         }
+
         try {
+
             clienteService.alterar(1L, dto);
+
             redirectAttributes.addFlashAttribute(
                     "tipoToast",
                     "sucesso"
@@ -215,6 +237,7 @@ public class ClienteController {
             return "redirect:/cliente/perfil";
 
         } catch (IllegalArgumentException e) {
+
             redirectAttributes.addFlashAttribute(
                     "tipoToast",
                     "erro"
@@ -224,14 +247,14 @@ public class ClienteController {
                     "mensagemToast",
                     e.getMessage()
             );
+
             return "redirect:/cliente/perfil";
         }
     }
 
     @PostMapping("/cliente/alterar-senha")
     public String alterarSenha(
-            @Valid
-            AlterarSenhaDTO dto,
+            @Valid AlterarSenhaDTO dto,
             BindingResult result,
             RedirectAttributes redirectAttributes
     ) {
@@ -241,6 +264,7 @@ public class ClienteController {
         }
 
         if (result.hasErrors()) {
+
             redirectAttributes.addFlashAttribute(
                     "tipoToast",
                     "erro"
@@ -253,8 +277,11 @@ public class ClienteController {
 
             return "redirect:/cliente/perfil";
         }
+
         try {
+
             clienteService.alterarSenha(1L, dto);
+
             redirectAttributes.addFlashAttribute(
                     "tipoToast",
                     "sucesso"
@@ -266,6 +293,7 @@ public class ClienteController {
             );
 
         } catch (IllegalArgumentException e) {
+
             redirectAttributes.addFlashAttribute(
                     "tipoToast",
                     "erro"
@@ -276,32 +304,231 @@ public class ClienteController {
                     e.getMessage()
             );
         }
+
         return "redirect:/cliente/perfil";
     }
 
     @GetMapping("/cliente/finalizar-compra")
-    public String finalizarCompra(Model model) {
+    public String finalizarCompra(
+            @RequestParam(required = false) List<Long> itensSelecionados,
+            Model model,
+            HttpSession session,
+            RedirectAttributes redirectAttributes
+    ) {
+
         if (!verificarClienteAtivo()) {
             return "redirect:/cliente/inativo";
         }
 
+        if (itensSelecionados == null || itensSelecionados.isEmpty()) {
+            redirectAttributes.addFlashAttribute(
+                    "tipoToast",
+                    "erro"
+            );
+
+            redirectAttributes.addFlashAttribute(
+                    "mensagemToast",
+                    "Selecione pelo menos um produto."
+            );
+
+            return "redirect:/cliente/carrinho";
+        }
+
+        Cliente cliente = clienteService.buscarPorId(1L);
+
+        Carrinho carrinho =
+                carrinhoService.buscarPorCliente(cliente.getId());
+
+        if (carrinho == null ||
+                carrinho.getItens() == null ||
+                carrinho.getItens().isEmpty()) {
+
+            redirectAttributes.addFlashAttribute(
+                    "tipoToast",
+                    "erro"
+            );
+
+            redirectAttributes.addFlashAttribute(
+                    "mensagemToast",
+                    "Seu carrinho está vazio."
+            );
+
+            return "redirect:/cliente/carrinho";
+        }
+
+        carrinhoService.verificarExpiracao(carrinho);
+
+        Endereco endereco = null;
+
+        Long enderecoSelecionadoId =
+                (Long) session.getAttribute("enderecoSelecionadoId");
+
+        if (enderecoSelecionadoId != null &&
+                cliente.getEnderecos() != null) {
+
+            for (Endereco enderecoAtual : cliente.getEnderecos()) {
+
+                if (enderecoAtual.getId().equals(enderecoSelecionadoId) &&
+                        "Entrega".equalsIgnoreCase(
+                                enderecoAtual.getTipoEndereco().getDescricao())) {
+
+                    endereco = enderecoAtual;
+                    break;
+                }
+            }
+        }
+
+        if (endereco == null &&
+                cliente.getEnderecos() != null &&
+                !cliente.getEnderecos().isEmpty()) {
+
+            for (Endereco enderecoAtual : cliente.getEnderecos()) {
+
+                if ("Entrega".equalsIgnoreCase(enderecoAtual.getTipoEndereco().getDescricao()) ||
+                        "Cobrança e Entrega".equalsIgnoreCase(enderecoAtual.getTipoEndereco().getDescricao())) {
+
+                    endereco = enderecoAtual;
+                    break;
+                }
+            }
+        }
+
+        List<Cupom> cupons =
+                cupomService.listarCupoms();
+
         model.addAttribute(
-                "avisoExpiracao",
-                verificarAvisoExpiracao()
+                "itensSelecionados",
+                itensSelecionados
         );
+
+        model.addAttribute(
+                "cliente",
+                cliente
+        );
+
+        model.addAttribute(
+                "carrinho",
+                carrinho
+        );
+
+        model.addAttribute("endereco", endereco);
+
+        if (endereco != null) {
+            model.addAttribute("enderecoSelecionadoId", endereco.getId());
+        }
+
+        model.addAttribute("cupons", cupons);
+
+
         return "cliente/finalizar-compra";
     }
 
-    @GetMapping("/cliente/pedido")
-    public String pedido(Model model) {
+    @PostMapping("/cliente/finalizar-compra")
+    public String finalizarCompra(
+            @Valid FinalizarCompraDTO dto,
+            BindingResult result,
+            HttpSession session,
+            RedirectAttributes redirectAttributes
+    ) {
+
         if (!verificarClienteAtivo()) {
             return "redirect:/cliente/inativo";
         }
 
-        model.addAttribute(
-                "avisoExpiracao",
-                verificarAvisoExpiracao()
-        );
+        if (result.hasErrors()) {
+
+            redirectAttributes.addFlashAttribute(
+                    "tipoToast",
+                    "erro"
+            );
+
+            redirectAttributes.addFlashAttribute(
+                    "mensagemToast",
+                    result.getFieldError()
+                            .getDefaultMessage()
+            );
+
+            return "redirect:/cliente/finalizar-compra";
+        }
+
+        try {
+
+            Long clienteId = 1L;
+
+            /*
+             * O DTO já deve possuir:
+             *
+             * enderecoId
+             * valoresCartoes
+             * itensSelecionados
+             * cuponsIds
+             *
+             * Não existe mais nenhum temporário.
+             */
+            pedidoService.finalizarCompra(
+                    clienteId,
+                    dto
+            );
+
+            /*
+             * Remove somente a seleção do endereço
+             * depois que o pedido foi criado.
+             */
+            session.removeAttribute(
+                    "enderecoSelecionadoId"
+            );
+
+            redirectAttributes.addFlashAttribute(
+                    "tipoToast",
+                    "sucesso"
+            );
+
+            redirectAttributes.addFlashAttribute(
+                    "mensagemToast",
+                    "Compra realizada com sucesso!"
+            );
+
+            return "redirect:/cliente/pedido";
+
+        } catch (IllegalArgumentException e) {
+
+            redirectAttributes.addFlashAttribute(
+                    "tipoToast",
+                    "erro"
+            );
+
+            redirectAttributes.addFlashAttribute(
+                    "mensagemToast",
+                    e.getMessage()
+            );
+
+            redirectAttributes.addAttribute(
+                    "itensSelecionados",
+                    dto.getItensSelecionados()
+            );
+
+            return "redirect:/cliente/finalizar-compra";
+        }
+    }
+
+    @GetMapping("/cliente/pedido")
+    public String pedidos(
+            @RequestParam(required = false) String codigo,
+            Model model) {
+
+        Cliente cliente = clienteService.buscarPorId(1L);
+
+        List<Pedido> pedidos;
+
+        if (codigo != null && !codigo.isBlank()) {
+            pedidos = pedidoService.buscarPorCodigo(codigo, cliente.getId());
+        } else {
+            pedidos = pedidoService.listarPorCliente(cliente.getId());
+        }
+
+        model.addAttribute("pedidos", pedidos);
+        model.addAttribute("codigoPesquisa", codigo);
+
         return "cliente/pedido";
     }
 
@@ -312,22 +539,20 @@ public class ClienteController {
             return "redirect:/cliente/inativo";
         }
 
-        model.addAttribute(
-                "avisoExpiracao",
-                verificarAvisoExpiracao()
-        );
-
         return "cliente/notificacao";
     }
 
     @GetMapping("/cliente/inativo")
     public String inativo(Model model) {
-        Cliente cliente = clienteService.buscarPorId(1L);
+
+        Cliente cliente =
+                clienteService.buscarPorId(1L);
 
         model.addAttribute(
                 "cliente",
                 cliente
         );
+
         return "cliente/inativo";
     }
 
@@ -337,19 +562,11 @@ public class ClienteController {
     }
 
     private boolean verificarClienteAtivo() {
+
         Long clienteId = 1L;
-        return clienteService.clienteAtivo(clienteId);
-    }
 
-    private boolean verificarAvisoExpiracao() {
-        Cliente cliente = clienteService.buscarPorId(1L);
-
-        Carrinho carrinho = carrinhoService.buscarPorCliente(cliente.getId());
-
-        if (carrinho == null || carrinho.getItens().isEmpty()) {
-            return false;
-        }
-
-        return carrinhoService.verificarAvisoExpiracao(carrinho);
+        return clienteService.clienteAtivo(
+                clienteId
+        );
     }
 }

@@ -32,6 +32,9 @@ public class Carrinho {
     @Column(nullable = false)
     private Boolean notificacaoExpiracaoEnviada = false;
 
+    @Column
+    private LocalDateTime dataCongelamento;
+
     @OneToMany(
             mappedBy = "carrinho",
             cascade = CascadeType.ALL,

@@ -1,22 +1,17 @@
 document.addEventListener('DOMContentLoaded', function () {
+
     const modalCartao = document.getElementById('modalCadastrarCartao');
     const formCartao = document.getElementById('formCartao');
-    const btnAdicionarCartao = document.getElementById('btnAbrirCartao');
+    const btnAdicionarCartao = document.getElementById('btnCadastrarCartao');
     const btnFecharCartao = document.getElementById('btnFecharModalCartao');
     const btnCancelarCartao = document.getElementById('btnCancelarCartao');
-
-    const modalExclusao = document.getElementById('modalConfirmarExclusao');
-    const formExcluir = document.getElementById('formExcluir');
-    const mensagemExclusao = document.getElementById('mensagemModalExclusao');
-    const btnFecharExclusao = document.getElementById('btnFecharModalExclusao');
-    const btnCancelarExclusao = document.getElementById('btnCancelarExclusao');
+    const campoSalvarPerfil = document.getElementById('campoSalvarCartao');
 
     configurarCartao(modalCartao);
 
     // Adicionar cartão
     btnAdicionarCartao.addEventListener('click', function () {
         formCartao.reset();
-        formCartao.action = '/cliente/adicionar-cartao';
 
         modalCartao.querySelectorAll('.mensagem-erro').forEach(function (erro) {
             erro.textContent = '';
@@ -24,6 +19,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         modalCartao.classList.add('active');
     });
+
 
     // Fechar modal do cartão
     btnFecharCartao.addEventListener('click', function () {
@@ -102,25 +98,5 @@ document.addEventListener('DOMContentLoaded', function () {
         if (!formularioValido) {
             event.preventDefault();
         }
-    });
-
-    // Excluir cartão
-    document.querySelectorAll('.excluir-cartao').forEach(function (botao) {
-        botao.addEventListener('click', function () {
-            const ultimosDigitos = this.dataset.numero.slice(-4);
-
-            mensagemExclusao.textContent = 'Tem certeza que deseja excluir o cartão final ' + ultimosDigitos + '?';
-            formExcluir.action = '/cliente/excluir-cartao/' + this.dataset.id;
-            modalExclusao.classList.add('active');
-        });
-    });
-
-    // Fechar modal de exclusão
-    btnFecharExclusao.addEventListener('click', function () {
-        modalExclusao.classList.remove('active');
-    });
-
-    btnCancelarExclusao.addEventListener('click', function () {
-        modalExclusao.classList.remove('active');
     });
 });

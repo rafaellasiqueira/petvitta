@@ -40,6 +40,12 @@
                     </form>
                 </div>
 
+            <!-- Carrinho vai expirar -->
+            <div class="mensagem-erro"
+                 th:if="${avisoExpiracao}">
+                <span>Atenção! Seu carrinho irá expirar em 5 minutos.</span>
+            </div>
+
             <div class="produtos-expirados"
                  th:if="${itensExpirados != null and !itensExpirados.isEmpty()}"
                  id="produtos-expirados">
@@ -118,9 +124,9 @@
 
             <span class="linha-cinza"></span>
 
-            <!-- Produto 1 -->
+            <!-- Produto -->
             <div th:if="${carrinho != null and !carrinho.itens.isEmpty()}">
-                <div th:each="item : ${carrinho.itens}" class="produto">
+                <div th:each="item : ${carrinho.itens}" class="produto" th:data-item-id="${item.id}">
                     <div class="imagem-e-dados">
                         <input type="checkbox" class="checkbox-produto">
 
@@ -152,6 +158,8 @@
                                 </div>
                             </div>
 
+                            <span class="mensagem-estoque mensagem-erro"></span>
+
                             <div class="secao-tamanhos">
                                 <div class="opcoes-tamanho">
 
@@ -160,7 +168,9 @@
                                             type="button"
                                             class="tamanho-opcao active"
                                             th:text="${variacao.tamanho}"
-                                            th:data-valor="${variacao.valorVenda}">
+                                            th:data-variacao-id="${variacao.id}"
+                                            th:data-valor="${variacao.valorVenda}"
+                                            th:data-estoque="${variacao.estoqueAtual}">
                                     </button>
 
                                     <button th:each="variacao : ${item.variacao.produto.variacoes}"
@@ -168,7 +178,9 @@
                                             type="button"
                                             class="tamanho-opcao"
                                             th:text="${variacao.tamanho}"
-                                            th:data-valor="${variacao.valorVenda}">
+                                            th:data-valor="${variacao.valorVenda}"
+                                            th:data-estoque="${variacao.estoqueAtual}"
+                                            th:data-variacao-id="${variacao.id}">
                                     </button>
 
                                 </div>
@@ -202,11 +214,22 @@
                 <span id="subtotal">R$ 0,00</span>
             </div>
 
-            <a th:href="@{/cliente/finalizar-compra}" class="btn-finalizar-a-compra">
-                Realizar a compra
-            </a>
+            <form th:action="@{/cliente/finalizar-compra}" method="get" id="formFinalizarCompra">
+
+                <div id="itensSelecionados"></div>
+
+                <button type="submit" class="btn-finalizar-a-compra">
+                    Realizar a compra
+                </button>
+
+            </form>
         </div>
 
+        <!-- Toast de atenção -->
+        <div id="toastAtencao" class="toast">
+            <i class="fa-solid fa-triangle-exclamation"></i>
+            <p>Selecione pelo menos um produto.</p>
+        </div>
 
         <!-- Toast -->
         <div id="toast"

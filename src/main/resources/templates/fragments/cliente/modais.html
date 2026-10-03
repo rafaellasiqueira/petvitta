@@ -8,116 +8,127 @@
 
 <body>
 
-<!-- Modal alterar endereço-->
-<div th:fragment="modal-alterar-endereco" id="modalAlterarEndereco" class="modal">
+<!-- Modal alterar endereço -->
+<div th:fragment="modal-alterar-endereco"
+     id="modalAlterarEndereco"
+     class="modal">
 
     <div class="modalConteudo">
 
         <!-- Cabeçalho -->
         <div class="modalCabecalho">
             <h2>Endereços</h2>
-            <button type="button" class="btn-fechar" id="btnFecharModalAlterarEndereco">&times;</button>
+
+            <button type="button"
+                    class="btn-fechar"
+                    id="btnFecharModalAlterarEndereco">
+                &times;
+            </button>
         </div>
 
         <!-- Corpo -->
         <div class="modal-body">
 
-            <!-- Endereço 1 -->
-            <label class="modalEndereco">
+            <form id="formSelecionarEndereco"
+                  th:action="@{/cliente/finalizar-compra/endereco}"
+                  method="post">
 
-                <input type="radio"
-                       name="endereco"
-                       value="escritorio">
+                <input th:each="itemId : ${itensSelecionados}"
+                       type="hidden"
+                       name="itensSelecionados"
+                       th:value="${itemId}">
 
-                <div class="radio-custom"></div>
+            </form>
 
-                <div class="dados-endereco">
+            <!-- Endereços do cliente -->
+            <div th:each="endereco, posicao : ${cliente.enderecos}"
+                 th:if="${endereco.tipoEndereco.descricao == 'Entrega' or endereco.tipoEndereco.descricao == 'Cobrança e Entrega'}">
 
-                    <h3>Escritório</h3>
+                <label class="modalEndereco">
 
-                    <span class="tipo-residencia">Casa</span>
+                    <input type="radio"
+                           name="enderecoId"
+                           th:value="${endereco.id}"
+                           form="formSelecionarEndereco">
 
-                    <div class="linha-endereco">
-                        <span class="logradouro">Rua João Batista</span>
-                        <span>,</span>
-                        <span class="numero">355</span>
-                        <span>-</span>
-                        <span class="bairro">Jardim Ângela</span>
-                        <span>,</span>
-                        <span class="cidade">Acrelândia</span>
-                        <span>-</span>
-                        <span class="estado">Acre</span>
+                    <div class="radio-custom"></div>
+                    <div class="dados-endereco">
+
+                        <h3 th:text="${endereco.nomeIdentificacao}"></h3>
+                        <span class="tipo-residencia" th:text="${endereco.tipoResidencia.descricao}"></span>
+
+                        <div class="linha-endereco">
+
+                            <span class="logradouro"
+                                  th:text="${endereco.logradouro}">
+                            </span>
+                            <span>,</span>
+
+                            <span class="numero"
+                                  th:text="${endereco.numero}">
+                            </span>
+
+                            <span>-</span>
+
+                            <span class="bairro"
+                                  th:text="${endereco.bairro}">
+                            </span>
+
+                            <span>,</span>
+
+                            <span class="cidade"
+                                  th:text="${endereco.cidade}">
+                            </span>
+
+                            <span>-</span>
+
+                            <span class="estado"
+                                  th:text="${endereco.estado.nome}">
+                            </span>
+
+                        </div>
+
+                        <span class="cep"
+                              th:text="${endereco.cep}">
+                        </span>
                     </div>
-                    <span class="cep">08888-888</span>
-                </div>
 
-                <button type="button"
-                        class="editar-endereco"
-                        data-nome="Escritório"
-                        data-tipo-endereco="entrega"
-                        data-tipo-residencia="casa"
-                        data-tipo-logradouro="rua"
-                        data-cep="08888-888"
-                        data-logradouro="Rua João Batista"
-                        data-bairro="Jardim Ângela"
-                        data-numero="355"
-                        data-estado="AC"
-                        data-cidade="Acrelândia"
-                        data-pais="Brasil"
-                        data-observacoes="">
-                    <i class="fa-solid fa-pen"></i>
-                </button>
-            </label>
+                    <button type="button"
+                            class="editar-endereco"
+                            th:data-id="${endereco.id}"
+                            th:data-nome="${endereco.nomeIdentificacao}"
+                            th:data-tipo-endereco="${endereco.tipoEndereco.id}"
+                            th:data-tipo-residencia="${endereco.tipoResidencia.id}"
+                            th:data-tipo-logradouro="${endereco.tipoLogradouro.id}"
+                            th:data-cep="${endereco.cep}"
+                            th:data-logradouro="${endereco.logradouro}"
+                            th:data-bairro="${endereco.bairro}"
+                            th:data-numero="${endereco.numero}"
+                            th:data-estado="${endereco.estado.id}"
+                            th:data-cidade="${endereco.cidade}"
+                            th:data-pais="${endereco.pais}"
+                            th:data-observacoes="${endereco.observacoes}">
 
-            <!-- Endereço 2 -->
-            <label class="modalEndereco">
-
-                <input type="radio"
-                       name="endereco"
-                       value="escritorio">
-
-                <div class="radio-custom"></div>
-
-                <div class="dados-endereco">
-
-                    <h3>Minha casa</h3>
-                    <span class="tipo-residencia">Casa</span>
-                    <div class="linha-endereco">
-                        <span class="logradouro">Avenida dos Ipês</span>
-                        <span>,</span>
-                        <span class="numero">128</span>
-                        <span>-</span>
-                        <span class="bairro">Jardim Primavera</span>
-                        <span>,</span>
-                        <span class="cidade">Sorocaba</span>
-                        <span>-</span>
-                        <span class="estado">São Paulo</span>
-                    </div>
-                </div>
-
-                <button type="button"
-                        class="editar-endereco"
-                        data-nome="Minha casa"
-                        data-tipo-endereco="entrega"
-                        data-tipo-residencia="casa"
-                        data-tipo-logradouro="avenida"
-                        data-cep="18046-310"
-                        data-logradouro="Avenida dos Ipês"
-                        data-bairro="Jardim Primavera"
-                        data-numero="128"
-                        data-estado="SP"
-                        data-cidade="Sorocaba"
-                        data-pais="Brasil"
-                        data-observacoes="">
-                    <i class="fa-solid fa-pen"></i>
-                </button>
-
-            </label>
+                        <i class="fa-solid fa-pen"></i>
+                    </button>
+                </label>
+            </div>
 
             <!-- Botões -->
             <div class="modalBotoes">
-                <button type="button" class="btn-adicionar-endereco" id="btnAdicionarEndereco">Adicionar endereço</button>
-                <button type="button" class="btn-confirmar" id="btnConfirmarEndereco">Confirmar</button>
+
+                <button type="button"
+                        class="btn-adicionar-endereco"
+                        id="btnAdicionarEndereco">
+                    Adicionar endereço
+                </button>
+
+                <button type="submit"
+                        class="btn-confirmar"
+                        id="btnConfirmarEndereco"
+                        form="formSelecionarEndereco">
+                    Confirmar
+                </button>
             </div>
         </div>
     </div>
@@ -290,13 +301,11 @@
                               placeholder="Digite alguma observação sobre o endereço"></textarea>
                 </div>
 
-                <!-- Salvar no perfil -->
-                <label class="checkbox-endereco-cartao" id="campoSalvarPerfil">
-                    <input type="checkbox"
-                           id="salvarPerfil">
+                <input th:each="itemId : ${itensSelecionados}"
+                       type="hidden"
+                       name="itensSelecionados"
+                       th:value="${itemId}">
 
-                    <p>Salvar este endereço no meu perfil</p>
-                </label>
 
                 <!-- Botões -->
                 <div class="modalBotoes">
@@ -312,7 +321,6 @@
 <div th:fragment="modal-cupons" id="modalCupons" class="modal">
 
     <div class="modalConteudo">
-
         <!-- Cabeçalho -->
         <div class="modalCabecalho">
             <h2>Cupons</h2>
@@ -321,52 +329,26 @@
 
         <!-- Corpo -->
         <div class="modal-body">
-            <!-- Cupom 1 -->
-            <label class="modalCupom">
+
+            <!-- Cupons  -->
+            <label th:each="cupom : ${cupons}"
+                   class="modalCupom"
+                   th:data-codigo="${cupom.codigo}"
+                   th:data-valor="${cupom.valor}"
+                   th:data-tipo="${cupom.tipoCupom.nome}">
 
                 <input type="checkbox"
+                       name="cuponsIds"
+                       th:value="${cupom.id}"
                        class="checkbox-cupom"
-                       data-tipo="promocional"
-                       data-codigo="PROMO80"
-                       data-valor="80.00">
+                       form="formFinalizarCompra">
 
                 <div class="dados-cupom">
-                    <h3>PROMO80</h3>
-                    <span>Promocional</span>
-                    <span>R$ 80,00</span>
+                    <h3 th:text="${cupom.codigo}"></h3>
+                    <span th:text="${cupom.tipoCupom.nome}"></span>
+                    <span th:text="'R$ ' + ${#numbers.formatDecimal(cupom.valor, 2, 2)}"></span>
                 </div>
-            </label>
 
-            <!-- Cupom 2 -->
-            <label class="modalCupom">
-
-                <input type="checkbox"
-                       class="checkbox-cupom"
-                       data-tipo="troca"
-                       data-codigo="TROCA50"
-                       data-valor="50.00">
-
-                <div class="dados-cupom">
-                    <h3>TROCA50</h3>
-                    <span>Troca</span>
-                    <span>R$ 50,00</span>
-                </div>
-            </label>
-
-            <!-- Cupom 3 -->
-            <label class="modalCupom">
-
-                <input type="checkbox"
-                       class="checkbox-cupom"
-                       data-tipo="promocional"
-                       data-codigo="PROMO10"
-                       data-valor="10.00">
-
-                <div class="dados-cupom">
-                    <h3>PROMO10</h3>
-                    <span>Promocional</span>
-                    <span>R$ 10,00</span>
-                </div>
             </label>
         </div>
     </div>
@@ -375,8 +357,12 @@
 <!-- Modal cadastrar cartão -->
 <div th:fragment="modal-cadastrar-cartao" id="modalCadastrarCartao" class="modal">
     <form id="formCartao"
-          th:action="@{/cliente/adicionar-cartao}"
-          method="POST">
+          method="POST"
+          th:action="@{/cliente/adicionar-cartao}">
+
+        <input type="hidden"
+               name="voltarPara"
+               value="finalizar-compra">
 
         <div class="modalConteudo">
 
@@ -443,19 +429,15 @@
                     <p class="mensagem-erro erroCvvCartao" id="erroCVV"></p>
                 </div>
 
-                <!-- Salvar no perfil -->
-                <label class="checkbox-endereco-cartao" id="campoSalvarCartao">
-
-                    <input type="checkbox"
-                           id="salvarCartao">
-
-                    <p>Salvar este cartão no meu perfil</p>
-                </label>
-
                 <label class="checkbox-endereco-cartao">
                     <input type="checkbox" name="preferencial" id="cartaoPreferencial">
                     <p>Tornar preferencial</p>
                 </label>
+
+                <input th:each="itemId : ${itensSelecionados}"
+                       type="hidden"
+                       name="itensSelecionados"
+                       th:value="${itemId}">
 
                 <!-- Botões -->
                 <div class="modalBotoes">

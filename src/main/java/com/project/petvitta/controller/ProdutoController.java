@@ -115,11 +115,6 @@ public class ProdutoController {
                 )
         );
 
-        model.addAttribute(
-                "avisoExpiracao",
-                verificarAvisoExpiracao()
-        );
-
         return "cliente/produtos";
     }
 
@@ -136,25 +131,6 @@ public class ProdutoController {
                 produto
         );
 
-        model.addAttribute(
-                "avisoExpiracao",
-                verificarAvisoExpiracao()
-        );
-
         return "cliente/detalhes-produto";
-    }
-
-    private boolean verificarAvisoExpiracao() {
-
-        Cliente cliente = clienteService.buscarPorId(1L);
-
-        Carrinho carrinho =
-                carrinhoService.buscarPorCliente(cliente.getId());
-
-        if (carrinho == null || carrinho.getItens().isEmpty()) {
-            return false;
-        }
-
-        return carrinhoService.verificarAvisoExpiracao(carrinho);
     }
 }

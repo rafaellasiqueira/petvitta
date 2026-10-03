@@ -340,6 +340,11 @@ h2 {
     background-color: #EA2B41;
 }
 
+/* Toast de atenção */
+.toast:has(.fa-triangle-exclamation) {
+    background-color: #F4AC2D;
+}
+
 .toast-icone {
     display: flex;
     align-items: center;
@@ -347,8 +352,4 @@ h2 {
     width: 24px;
     height: 24px;
     color: white;
-}
-
-.sem-resultados {
-    text-align: center;
 }

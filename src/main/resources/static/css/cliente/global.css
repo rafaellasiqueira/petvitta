@@ -48,6 +48,11 @@ body{
     background-color: #EA2B41;
 }
 
+/* Toast de atenção */
+.toast:has(.fa-triangle-exclamation) {
+    background-color: #F4AC2D;
+}
+
 .toast-icone {
     display: flex;
     align-items: center;
@@ -67,7 +72,8 @@ body{
 }
 
 .sem-resultados,
-.carrinho-vazio {
+.carrinho-vazio,
+.mensagem-pedidos {
     text-align: center;
     font-family: 'Nunito', sans-serif;
     font-size: 14px;

@@ -38,388 +38,168 @@
             <!-- Cabecalho -->
             <div class="cabecalho-container">
                 <h1>Meus pedidos</h1>
-
-                <div class="pesquisa">
+                <form th:action="@{/cliente/pedido}" method="get" class="pesquisa">
                     <i class="fa-solid fa-magnifying-glass"></i>
-
                     <input type="text"
                            id="inputPesquisa"
+                           name="codigo"
+                           th:value="${codigoPesquisa}"
                            placeholder="Buscar pelo código do pedido..">
-                </div>
+                </form>
             </div>
 
-            <!-- Pagamento recusado  -->
-            <div class="card-pedido">
+            <!-- Pedidos  -->
+            <div th:if="${pedidos.isEmpty() and (codigoPesquisa == null or codigoPesquisa.isBlank())}" class="mensagem-pedidos">
+                <h2>Nenhum pedido realizado ainda</h2>
+                <p>Faça seu primeiro pedido e acompanhe todos os detalhes por aqui.</p>
+            </div>
+
+            <div th:if="${pedidos.isEmpty() and codigoPesquisa != null and !codigoPesquisa.isBlank()}" class="mensagem-pedidos">
+                <h2>Pedido não encontrado</h2>
+                <p>Não encontramos nenhum pedido com o código informado.</p>
+            </div>
+
+            <div th:each="pedido : ${pedidos}" class="card-pedido">
 
                 <!-- Cabeçalho -->
                 <div class="cabecalho-pedido">
                     <div class="informacoes-pedido">
-                        <h2>PEDIDO01</h2>
-                        <p>Pedido feito em 08/08/2026</p>
-                        <p>Reprovado em 08/08/2026</p>
-                    </div>
-                    <span class="status-pedido pagamento-recusado">Reprovado</span>
-                </div>
+                        <h2 th:text="${'PED-' + pedido.codigo}"></h2>
 
-                <div class="linha-pedido"></div>
+                        <p th:text="${'Pedido feito em: ' + #temporals.format(pedido.data, 'dd/MM/yyyy')}"></p>
 
-                <!-- Produtos -->
-                <div class="produtos-pedido">
+                        <p th:if="${pedido.statusPedido.descricao == 'Aprovada'}"
+                           th:text="${'Pagamento aprovado em: ' + #temporals.format(pedido.dataAprovacao, 'dd/MM/yyyy')}"></p>
 
-                    <!-- Produto 1 -->
-                    <div class="produto-pedido">
-                        <div class="imagem-produto-pedido">
-                            <img th:src="@{/images/produtos/racao-1.png}">
-                        </div>
+                        <p th:if="${pedido.statusPedido.descricao == 'Reprovada'}"
+                           th:text="${'Pagamento reprovado em: ' + #temporals.format(pedido.dataReprovacaoPagamento, 'dd/MM/yyyy')}"></p>
 
-                        <div class="dados-produto-pedido">
-                            <h3>Ração Cães Adultos Frango e Carne Choice</h3>
-                            <p>Tamanho: 10.1 KG</p>
-                            <p>Quantidade: 1</p>
-                            <p>R$ 156,75</p>
-                        </div>
+                        <p th:if="${pedido.statusPedido.descricao == 'Em transporte'}"
+                           th:text="${'Previsão de entrega: ' + #temporals.format(pedido.dataPrevisaoEntrega, 'dd/MM/yyyy')}"></p>
+
+                        <p th:if="${pedido.statusPedido.descricao == 'Entregue'}"
+                           th:text="${'Entregue em: ' + #temporals.format(pedido.dataEntrega, 'dd/MM/yyyy')}"></p>
                     </div>
 
-                    <!-- Produto 2 -->
-                    <div class="produto-pedido">
-                        <div class="imagem-produto-pedido">
-                            <img th:src="@{/images/produtos/racao-3.png}"
-                                 alt="Ração GoldeN Special Gatos Adultos Sabor Frango e Carne">
-                        </div>
+                    <!-- Pagamento recusado -->
+                    <span th:if="${pedido.statusPedido.descricao == 'Reprovada'}"
+                          class="status-pedido pagamento-recusado">Reprovado</span>
 
-                        <div class="dados-produto-pedido">
-                            <h3>Ração GoldeN Special Gatos Adultos Sabor Frango e Carne</h3>
-                            <p>Tamanho: 10.1 KG</p>
-                            <p>Quantidade: 1</p>
-                            <p>R$ 59,90</p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Resumo -->
-                <div class="resumo-pedido">
-                    <div class="linha-resumo-pedido">
-                        <p>Subtotal</p>
-                        <p>R$ 216,65</p>
-                    </div>
-
-                    <div class="linha-resumo-pedido desconto">
-                        <p>Descontos</p>
-                        <p>-R$ 10,00</p>
-                    </div>
-
-                    <div class="linha-resumo-pedido frete">
-                        <p>Frete</p>
-                        <p>R$ 10,00</p>
-                    </div>
-
-                    <div class="linha-resumo-pedido total">
-                        <p>Total</p>
-                        <p>R$ 216,00</p>
-                    </div>
-
-                </div>
-            </div>
-
-            <!-- Entregue -->
-            <div class="card-pedido" id="cardTrocarPedido">
-
-                <div class="cabecalho-pedido">
-                    <div class="informacoes-pedido">
-                        <h2>PEDIDO02</h2>
-                        <p>Pedido feito em 08/08/2026</p>
-                        <p>Entregue em 20/08/2026</p>
-                    </div>
-
-                    <div class="container-status-troca">
+                    <!-- Entregue -->
+                    <div th:if="${pedido.statusPedido.descricao == 'Entregue'}"
+                         class="container-status-troca">
                         <span class="status-pedido entregue">Entregue</span>
-                        <button type="button" class="btn-branco btn-solicitar-troca" hidden id="btnAbrirModalTroca">Solicitar troca</button>
-                        <button type="button" class="btn-branco btn-itens-recebidos">Itens recebidos</button>
-                    </div>
-                </div>
 
-                <div class="linha-pedido"></div>
-
-                <!-- Produtos -->
-                <div class="produtos-pedido">
-
-                    <!-- Produto 1 -->
-                    <div class="produto-pedido">
-                        <div class="imagem-produto-pedido">
-                            <img th:src="@{/images/produtos/racao-1.png}">
-                        </div>
-
-                        <div class="dados-produto-pedido">
-                            <h3>Ração Cães Adultos Frango e Carne Choice</h3>
-                            <p>Tamanho: 10.1 KG</p>
-                            <p>Quantidade: 1</p>
-                            <p>R$ 156,75</p>
-                        </div>
+                        <button type="button"
+                                class="btn-branco btn-solicitar-troca"
+                                id="btnAbrirModalTroca">
+                            Solicitar troca
+                        </button>
                     </div>
 
-                    <!-- Produto 2 -->
-                    <div class="produto-pedido">
-                        <div class="imagem-produto-pedido">
-                            <img th:src="@{/images/produtos/racao-3.png}"
-                                 alt="Ração GoldeN Special Gatos Adultos Sabor Frango e Carne">
-                        </div>
+                    <!-- Em trânsito -->
+                    <span th:if="${pedido.statusPedido.descricao == 'Em transporte'}"
+                          class="status-pedido em-transito">Em transporte</span>
 
-                        <div class="dados-produto-pedido">
-                            <h3>Ração GoldeN Special Gatos Adultos Sabor Frango e Carne</h3>
-                            <p>Tamanho: 10.1 KG</p>
-                            <p>Quantidade: 1</p>
-                            <p>R$ 59,90</p>
-                        </div>
-                    </div>
-                </div>
+                    <!-- Aprovado -->
+                    <span th:if="${pedido.statusPedido.descricao == 'Aprovada'}"
+                          class="status-pedido aprovado">Aprovada</span>
 
-                <div class="resumo-pedido">
-                    <div class="linha-resumo-pedido">
-                        <p>Subtotal</p>
-                        <p>R$ 216,65</p>
-                    </div>
-
-                    <div class="linha-resumo-pedido desconto">
-                        <p>Descontos</p>
-                        <p>-R$ 10,00</p>
-                    </div>
-
-                    <div class="linha-resumo-pedido frete">
-                        <p>Frete</p>
-                        <p>R$ 10,00</p>
-                    </div>
-
-                    <div class="linha-resumo-pedido total">
-                        <p>Total</p>
-                        <p>R$ 216,00</p>
-                    </div>
-
-                </div>
-            </div>
-
-            <!-- Em trânsito  -->
-            <div class="card-pedido">
-
-                <!-- Cabeçalho -->
-                <div class="cabecalho-pedido">
-                    <div class="informacoes-pedido">
-                        <h2>PEDIDO04</h2>
-                        <p>Pedido feito em 08/08/2026</p>
-                        <p>Entrega prevista para dia 20/08/2026</p>
-                    </div>
-                    <div class="container-status-troca">
-                        <span class="status-pedido em-transito">Em trânsito</span>
-                    </div>
-                </div>
-
-                <div class="linha-pedido"></div>
-
-                <!-- Produtos -->
-                <div class="produtos-pedido">
-
-                    <!-- Produto 1 -->
-                    <div class="produto-pedido">
-                        <div class="imagem-produto-pedido">
-                            <img th:src="@{/images/produtos/racao-1.png}">
-                        </div>
-
-                        <div class="dados-produto-pedido">
-                            <h3>Ração Cães Adultos Frango e Carne Choice</h3>
-                            <p>Tamanho: 10.1 KG</p>
-                            <p>Quantidade: 1</p>
-                            <p>R$ 156,75</p>
-                        </div>
-                    </div>
-
-                    <!-- Produto 2 -->
-                    <div class="produto-pedido">
-                        <div class="imagem-produto-pedido">
-                            <img th:src="@{/images/produtos/racao-3.png}">
-                        </div>
-
-                        <div class="dados-produto-pedido">
-                            <h3>Ração GoldeN Special Gatos Adultos Sabor Frango e Carne</h3>
-                            <p>Tamanho: 10.1 KG</p>
-                            <p>Quantidade: 1</p>
-                            <p>R$ 59,90</p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Resumo -->
-                <div class="resumo-pedido">
-                    <div class="linha-resumo-pedido">
-                        <p>Subtotal</p>
-                        <p>R$ 216,65</p>
-                    </div>
-
-                    <div class="linha-resumo-pedido desconto">
-                        <p>Descontos</p>
-                        <p>-R$ 10,00</p>
-                    </div>
-
-                    <div class="linha-resumo-pedido frete">
-                        <p>Frete</p>
-                        <p>R$ 10,00</p>
-                    </div>
-
-                    <div class="linha-resumo-pedido total">
-                        <p>Total</p>
-                        <p>R$ 216,00</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Aprovado  -->
-            <div class="card-pedido">
-
-                <!-- Cabeçalho -->
-                <div class="cabecalho-pedido">
-                    <div class="informacoes-pedido">
-                        <h2>PEDIDO06</h2>
-                        <p>Pedido feito em 08/08/2026</p>
-                        <p>Aprovado em 20/08/2026</p>
-                    </div>
-
-                    <div class="container-status-troca">
-                        <span class="status-pedido aprovado">Aprovado</span>
-                    </div>
-                </div>
-
-                <div class="linha-pedido"></div>
-
-                <!-- Produtos -->
-                <div class="produtos-pedido">
-
-                    <!-- Produto 1 -->
-                    <div class="produto-pedido">
-
-                        <div class="imagem-produto-pedido">
-                            <img th:src="@{/images/produtos/racao-1.png}">
-                        </div>
-
-                        <div class="dados-produto-pedido">
-                            <h3>Ração Cães Adultos Frango e Carne Choice</h3>
-                            <p>Tamanho: 10.1 KG</p>
-                            <p>Quantidade: 1</p>
-                            <p>R$ 156,75</p>
-                        </div>
-                    </div>
-
-                    <!-- Produto 2 -->
-                    <div class="produto-pedido">
-                        <div class="imagem-produto-pedido">
-                            <img th:src="@{/images/produtos/racao-3.png}">
-                        </div>
-
-                        <div class="dados-produto-pedido">
-                            <h3>Ração GoldeN Special Gatos Adultos Sabor Frango e Carne</h3>
-                            <p>Tamanho: 10.1 KG</p>
-                            <p>Quantidade: 1</p>
-                            <p>R$ 59,90</p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Resumo -->
-                <div class="resumo-pedido">
-                    <div class="linha-resumo-pedido">
-                        <p>Subtotal</p>
-                        <p>R$ 216,65</p>
-                    </div>
-
-                    <div class="linha-resumo-pedido desconto">
-                        <p>Descontos</p>
-                        <p>-R$ 10,00</p>
-                    </div>
-
-                    <div class="linha-resumo-pedido frete">
-                        <p>Frete</p>
-                        <p>R$ 10,00</p>
-                    </div>
-
-                    <div class="linha-resumo-pedido total">
-                        <p>Total</p>
-                        <p>R$ 216,00</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Em processamento  -->
-            <div class="card-pedido">
-
-                <!-- Cabeçalho -->
-                <div class="cabecalho-pedido">
-                    <div class="informacoes-pedido">
-                        <h2>PEDIDO05</h2>
-                        <p>Pedido feito em 08/08/2026</p>
-                    </div>
-
-                    <div class="container-status-troca">
+                    <!-- Em processamento -->
+                    <div th:if="${pedido.statusPedido.descricao == 'Em processamento'}"
+                         class="container-status-troca">
                         <span class="status-pedido em-processamento">Em processamento</span>
-                        <button type="button" class="btn-cancelar-pedido">Cancelar pedido</button>
                     </div>
-
                 </div>
+
 
                 <div class="linha-pedido"></div>
 
                 <!-- Produtos -->
                 <div class="produtos-pedido">
 
-                    <!-- Produto 1 -->
-                    <div class="produto-pedido">
+                    <div th:each="item, iteracao : ${pedido.itens}"
+                         class="produto-pedido"
+                         th:classappend="${iteracao.index >= 3 ? ' produto-escondido' : ''}">
+
                         <div class="imagem-produto-pedido">
-                            <img th:src="@{/images/produtos/racao-1.png}">
+                            <img th:src="${item.variacaoProduto.produto.imagemUrl}"
+                                 th:alt="${item.variacaoProduto.produto.nome}">
                         </div>
 
                         <div class="dados-produto-pedido">
-                            <h3>Ração Cães Adultos Frango e Carne Choice</h3>
-                            <p>Tamanho: 10.1 KG</p>
-                            <p>Quantidade: 1</p>
-                            <p>R$ 156,75</p>
+
+                            <h3 th:text="${item.variacaoProduto.produto.nome}">
+                            </h3>
+
+                            <p th:text="${'Tamanho: ' + item.variacaoProduto.tamanho}">
+                            </p>
+
+                            <p th:text="${'Quantidade: ' + item.quantidade}">
+                            </p>
+
+                            <p th:text="${'R$ ' + #numbers.formatDecimal(item.variacaoProduto.valorVenda * item.quantidade, 2, 2)}">
+                            </p>
+
                         </div>
                     </div>
 
-                    <!-- Produto 2 -->
-                    <div class="produto-pedido">
-                        <div class="imagem-produto-pedido">
-                            <img th:src="@{/images/produtos/racao-3.png}">
-                        </div>
+                    <!-- Ver mais -->
+                    <button type="button"
+                            class="btn-ver-mais-produtos"
+                            th:if="${pedido.itens.size() > 3}">
+                        Ver mais
+                    </button>
 
-                        <div class="dados-produto-pedido">
-                            <h3>Ração GoldeN Special Gatos Adultos Sabor Frango e Carne</h3>
-                            <p>Tamanho: 10.1 KG</p>
-                            <p>Quantidade: 2</p>
-                            <p>R$ 119,80</p>
-                        </div>
-                    </div>
                 </div>
 
                 <!-- Resumo -->
                 <div class="resumo-pedido">
+
                     <div class="linha-resumo-pedido">
                         <p>Subtotal</p>
-                        <p>R$ 276,55</p>
+                        <p th:text="${'R$ ' + #numbers.formatDecimal(pedido.subtotal, 2, 2)}">
+                            R$ 216,65
+                        </p>
                     </div>
 
                     <div class="linha-resumo-pedido desconto">
                         <p>Descontos</p>
-                        <p>-R$ 10,00</p>
+                        <p th:text="${'-R$ ' + #numbers.formatDecimal(pedido.desconto, 2, 2)}">
+                            -R$ 10,00
+                        </p>
                     </div>
 
                     <div class="linha-resumo-pedido frete">
                         <p>Frete</p>
-                        <p>R$ 10,00</p>
+                        <p th:text="${'R$ ' + #numbers.formatDecimal(pedido.frete, 2, 2)}">
+                            R$ 10,00
+                        </p>
                     </div>
 
                     <div class="linha-resumo-pedido total">
                         <p>Total</p>
-                        <p>R$ 216,00</p>
+                        <p th:text="${'R$ ' + #numbers.formatDecimal(pedido.total, 2, 2)}">
+                            R$ 216,00
+                        </p>
                     </div>
+
                 </div>
             </div>
 
+            <!-- Toast de erro -->
+            <div id="toast"
+                 class="toast ativo"
+                 th:if="${mensagemToast}">
+
+                <i th:if="${tipoToast == 'erro'}"
+                   class="fa-solid fa-circle-xmark"></i>
+
+                <i th:if="${tipoToast != 'erro'}"
+                   class="fa-solid fa-check"></i>
+
+                <p th:text="${mensagemToast}"></p>
+            </div>
         </div>
 
         <!-- Modais -->
@@ -428,6 +208,10 @@
         <div th:replace="~{fragments/cliente/modais :: modal-cancelar-pedido}"></div>
     </main>
 </div>
+
+
+<!-- Mostrar Toast -->
+<script th:src="@{/js/cliente/componentes.toast.js}"></script>
 
 <!-- Pedido JavaScript -->
 <script th:src="@{/js/cliente/pedido.js}"></script>

@@ -209,4 +209,9 @@ public class CartaoService {
             novoPreferencial.setPreferencial(true);
         }
     }
+
+    public BandeiraCartao buscarBandeira(Long id) {
+        return bandeiraCartaoRepository.findById(id)
+                .orElse(null);
+    }
 }

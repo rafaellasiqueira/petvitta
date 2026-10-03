@@ -1,500 +1,224 @@
+// Funções de cálculo
+function pegarValor(texto) {
+    return parseFloat(texto.replace('R$', '').replace(/\./g, '').replace(',', '.').trim()) || 0;
+}
 
-document.addEventListener('DOMContentLoaded', function () {
-    // Endereço
-    const modalAlterarEndereco = document.getElementById('modalAlterarEndereco');
-    const btnAlterarEndereco = document.getElementById('btnAlterarEndereco');
-    const btnFecharModalAlterarEndereco = document.getElementById('btnFecharModalAlterarEndereco');
-    const btnAdicionarEndereco = document.getElementById('btnAdicionarEndereco');
-    const btnConfirmarEndereco = document.getElementById('btnConfirmarEndereco');
-
-    const modalEndereco = document.getElementById('modalAdicionarEditarEndereco');
-    const formEndereco = document.getElementById('formEndereco');
-    const tituloEndereco = document.getElementById('tituloModalEndereco');
-    const btnFecharEndereco = document.getElementById('btnFecharModalEndereco');
-    const btnCancelarEndereco = document.getElementById('btnCancelarEndereco');
-    const campoSalvarPerfil = document.getElementById('campoSalvarPerfil');
-    const btnSalvarEndereco = document.getElementById('btnSalvarEndereco');
-
-    const nomeIdentificacao = document.getElementById('nomeIdentificacao');
-    const tipoEndereco = document.getElementById('tipoEndereco');
-    const tipoResidencia = document.getElementById('tipoResidencia');
-    const tipoLogradouro = document.getElementById('tipoLogradouro');
-    const cep = document.getElementById('cep');
-    tipoEndereco.closest('.campo-formulario').style.display = 'none';
-
-    const logradouro = document.getElementById('logradouro');
-    const bairro = document.getElementById('bairro');
-    const numeroEndereco = document.getElementById('numero');
-    const estado = document.getElementById('estado');
-    const cidade = document.getElementById('cidade');
-    const pais = document.getElementById('pais');
-    const observacoes = document.getElementById('observacoes');
-
-    // Toast
-    function mostrarToast(mensagem, tipo) {
-        const toast = document.getElementById('toast');
-        const icone = toast.querySelector('.toast-icone');
-        const texto = document.getElementById('toastMensagem');
-
-        texto.textContent = mensagem;
-
-        toast.classList.remove('atencao', 'certo', 'ativo');
-        toast.classList.add(tipo);
-
-        if (tipo === 'atencao') {
-            icone.className = 'toast-icone fa-solid fa-triangle-exclamation';
-        } else {
-            icone.className = 'toast-icone fa-solid fa-check';
-        }
-
-        toast.classList.add('ativo');
-
-        setTimeout(function () {
-            toast.classList.remove('ativo');
-        }, 2500);
+function calcularFrete(subtotal) {
+    if (subtotal < 100) {
+        return 20;
     }
 
-    // Abrir modal de endereços
-    btnAlterarEndereco.addEventListener('click', function (e) {
-        modalAlterarEndereco.classList.add('active');
-    });
+    if (subtotal < 200) {
+        return 15;
+    }
 
-    // Fechar modal de endereços
-    btnFecharModalAlterarEndereco.addEventListener('click', function () {
-        modalAlterarEndereco.classList.remove('active');
-    });
+    return 10;
+}
 
-    // Adicionar endereço
-    btnAdicionarEndereco.addEventListener('click', function () {
-        formEndereco.reset();
+function mostrarToast(mensagem) {
+    const toast = document.getElementById('toastAtencao');
 
-        tituloEndereco.textContent = 'Adicionar endereço';
-        btnSalvarEndereco.textContent = 'Adicionar';
+    toast.querySelector('p').textContent = mensagem;
+    toast.classList.add('ativo');
 
-        pais.value = 'Brasil';
-        campoSalvarPerfil.style.display = '';
+    setTimeout(function () {
+        toast.classList.remove('ativo');
+    }, 5000);
+}
 
-        modalAlterarEndereco.classList.remove('active');
-        modalEndereco.classList.add('active');
-    });
-
-    // Editar endereço
-    document.querySelectorAll('.editar-endereco').forEach(function (botao) {
-        botao.addEventListener('click', function (e) {
-            e.preventDefault();
-
-            tituloEndereco.textContent = 'Editar endereço';
-            btnSalvarEndereco.textContent = 'Salvar';
-
-            nomeIdentificacao.value = this.dataset.nome;
-            tipoEndereco.value = this.dataset.tipoEndereco;
-            tipoResidencia.value = this.dataset.tipoResidencia;
-            tipoLogradouro.value = this.dataset.tipoLogradouro;
-            cep.value = this.dataset.cep;
-            logradouro.value = this.dataset.logradouro;
-            bairro.value = this.dataset.bairro;
-            numeroEndereco.value = this.dataset.numero;
-            estado.value = this.dataset.estado;
-            cidade.value = this.dataset.cidade;
-            pais.value = this.dataset.pais;
-            observacoes.value = this.dataset.observacoes;
-
-            campoSalvarPerfil.style.display = 'none';
-
-            modalAlterarEndereco.classList.remove('active');
-            modalEndereco.classList.add('active');
-        });
-    });
-
-    // Fechar modal de endereço
-    btnFecharEndereco.addEventListener('click', function () {
-        modalEndereco.classList.remove('active');
-        modalAlterarEndereco.classList.add('active');
-    });
-
-    // Cancelar endereço
-    btnCancelarEndereco.addEventListener('click', function () {
-        modalEndereco.classList.remove('active');
-        modalAlterarEndereco.classList.add('active');
-    });
-
-    // Salvar endereço
-    formEndereco.addEventListener('submit', function (e) {
-        e.preventDefault();
-
-        mostrarToast('Endereço salvo com sucesso!', 'certo');
-
-        modalEndereco.classList.remove('active');
-        modalAlterarEndereco.classList.add('active');
-    });
-
-
-    // Confirmar endereço
-    btnConfirmarEndereco.addEventListener('click', function () {
-        const enderecoSelecionado = document.querySelector('input[name="endereco"]:checked');
-
-        if (!enderecoSelecionado) {
-            mostrarToast('Selecione um endereço.', 'atencao');
-            return;
-        }
-        modalAlterarEndereco.classList.remove('active');
-
-        mostrarToast('Endereço selecionado com sucesso!', 'certo');
-    });
-
-    // CEP
-    cep.addEventListener('input', function () {
-        let valor = this.value.replace(/\D/g, '').slice(0, 8);
-
-        if (valor.length > 5) {
-            valor = valor.replace(/(\d{5})(\d)/, '$1-$2');
-        }
-
-        this.value = valor;
-    });
-
-    // Número
-    numeroEndereco.addEventListener('input', function () {
-        this.value = this.value.replace(/\D/g, '');
-    });
-
-
-    // Cupons
-    const modalCupons = document.getElementById('modalCupons');
-    const btnAbrirModalCupom = document.getElementById('btnMeusCupons');
-    const btnFecharModalCupom = document.getElementById('btnFecharModalCupom');
-    const checkboxesCupom = document.querySelectorAll('.checkbox-cupom');
-    const cuponsSelecionados = document.getElementById('cuponsSelecionados');
-
-    btnAbrirModalCupom.addEventListener('click', function (e) {
-        e.preventDefault();
-        modalCupons.classList.add('active');
-    });
-
-    btnFecharModalCupom.addEventListener('click', function () {
-        modalCupons.classList.remove('active');
-    });
-
-    checkboxesCupom.forEach(function (checkbox) {
-        checkbox.addEventListener('change', function () {
-            const codigo = this.dataset.codigo;
-
-            if (!this.checked) {
-                const cupom = cuponsSelecionados.querySelector('[data-codigo="' + codigo + '"]');
-                cupom.remove();
-
-                atualizarResumoPagamento();
-                return;
-            }
-
-            if (this.dataset.tipo === 'promocional') {
-                const promocionaisSelecionados = document.querySelectorAll(
-                    '.checkbox-cupom[data-tipo="promocional"]:checked'
-                );
-
-                if (promocionaisSelecionados.length > 1) {
-                    this.checked = false;
-                    mostrarToast('Apenas um cupom promocional pode ser utilizado por compra.', 'atencao');
-                    return;
-                }
-            }
-
-            const cupom = document.createElement('div');
-            cupom.classList.add('cupom-selecionado');
-            cupom.dataset.codigo = codigo;
-
-            cupom.innerHTML =
-                '<span>' + codigo + '</span>' +
-                '<button type="button" class="remover-cupom">×</button>';
-
-            cuponsSelecionados.appendChild(cupom);
-
-            cupom.querySelector('.remover-cupom').addEventListener('click', function () {
-                checkbox.checked = false;
-                cupom.remove();
-                atualizarResumoPagamento();
-            });
-
-            atualizarResumoPagamento();
-        });
-    });
-
-// Cartão
-    const modalCartao = document.getElementById('modalCadastrarCartao');
-    const formCartao = document.getElementById('formCartao');
-    const btnAdicionarCartao = document.getElementById('btnAbrirCartao');
-    const btnFecharCartao = document.getElementById('btnFecharModalCartao');
-    const btnCancelarCartao = document.getElementById('btnCancelarCartao');
-
-    const numeroCartao = document.getElementById('numeroCartao');
-    const cvv = document.getElementById('cvvCartao');
-    const mensagemErroNumero = document.getElementById('erroNumeroCartao');
-
-// Abrir cartão
-    btnAdicionarCartao.addEventListener('click', function (e) {
-        e.preventDefault();
-
-        formCartao.reset();
-
-        mensagemErroNumero.textContent = '';
-
-        modalCartao.classList.add('active');
-    });
-
-
-// Fechar cartão
-    btnFecharCartao.addEventListener('click', function () {
-        modalCartao.classList.remove('active');
-    });
-
-
-// Cancelar cartão
-    btnCancelarCartao.addEventListener('click', function () {
-        modalCartao.classList.remove('active');
-    });
-
-
-// Nome do cartão
-    document.getElementById('nomeCartao').addEventListener('input', function() {
-        this.value = this.value.replace(/[^A-Za-zÀ-ÿ\s]/g, '');
-    });
-
-
-// Número do cartão
-    numeroCartao.addEventListener('input', function () {
-        let numero = this.value.replace(/\D/g, '');
-
-        numero = numero.slice(0, 16);
-
-        numero = numero.replace(/(\d{4})(?=\d)/g, '$1 ');
-
-        this.value = numero;
-    });
-
-
-// CVV
-    cvv.addEventListener('input', function () {
-        this.value = this.value.replace(/\D/g, '').slice(0, 4);
-    });
-
-
-
-
-// Validar cartão
-    formCartao.addEventListener('submit', function (e) {
-        e.preventDefault();
-
-        mensagemErroNumero.textContent = '';
-
-        const numero = numeroCartao.value.replace(/\D/g, '');
-
-        if (numero.length !== 16) {
-            mensagemErroNumero.textContent =
-                'Digite o número completo do cartão.';
-            return;
-        }
-
-        modalCartao.classList.remove('active');
-
-        mostrarToast(
-            'Cartão cadastrado com sucesso!',
-            'certo'
-        );
-    });
-
-
-    // Pagamento
-    const cartoes = document.querySelectorAll('.cartao-container');
-    const btnFinalizarCompra = document.getElementById('btnFinalizarCompra');
-
+function atualizarTotal() {
     const subtotalElemento = document.getElementById('subtotal');
     const freteElemento = document.getElementById('frete');
     const descontoElemento = document.getElementById('desconto');
     const totalElemento = document.getElementById('total');
+    const produtosPrecos = document.querySelectorAll('.preco');
+    const aviso = document.getElementById('avisoMinimoCartao');
 
-    function converterMoeda(valor) {
-        return valor.toLocaleString('pt-BR', {
-            style: 'currency',
-            currency: 'BRL'
+    let subtotal = 0;
+
+    produtosPrecos.forEach(function (produto) {
+        subtotal += pegarValor(produto.textContent);
+    });
+
+    const frete = calcularFrete(subtotal);
+    let desconto = 0;
+
+    document.querySelectorAll('.checkbox-cupom:checked').forEach(function (checkbox) {
+        const cupom = checkbox.closest('.modalCupom');
+        desconto += parseFloat(cupom.dataset.valor) || 0;
+    });
+
+    const valorCompra = subtotal + frete;
+
+    if (desconto > valorCompra) {
+        desconto = valorCompra;
+    }
+
+    const total = valorCompra - desconto;
+
+    if (total < 10 && desconto > 0) {
+        aviso.textContent = 'O valor mínimo por cartão é de R$ 01,00.';
+    }
+
+    subtotalElemento.textContent = 'R$ ' + subtotal.toFixed(2).replace('.', ',');
+    freteElemento.textContent = 'R$ ' + frete.toFixed(2).replace('.', ',');
+    descontoElemento.textContent = '-R$ ' + desconto.toFixed(2).replace('.', ',');
+    totalElemento.textContent = 'R$ ' + total.toFixed(2).replace('.', ',');
+}
+
+document.addEventListener('DOMContentLoaded', function () {
+    const checkbox = document.getElementById('mostrarOutrosCartoes');
+    const outrosCartoes = document.getElementById('outrosCartoes');
+
+    if (checkbox && outrosCartoes) {
+        checkbox.addEventListener('change', function () {
+            outrosCartoes.hidden = !this.checked;
         });
     }
 
-    function pegarValor(texto) {
-        return parseFloat(
-            texto
-                .replace('R$', '')
-                .replace(/\./g, '')
-                .replace(',', '.')
-                .trim()
-        ) || 0;
+    const btnAlterarEndereco = document.getElementById('btnAlterarEndereco');
+    const modalAlterarEndereco = document.getElementById('modalAlterarEndereco');
+    const btnFecharModalAlterarEndereco = document.getElementById('btnFecharModalAlterarEndereco');
+
+    if (btnAlterarEndereco && modalAlterarEndereco) {
+        btnAlterarEndereco.addEventListener('click', function () {
+            modalAlterarEndereco.classList.add('active');
+        });
     }
 
-    const subtotal = pegarValor(subtotalElemento.textContent);
-    const frete = pegarValor(freteElemento.textContent);
-    const totalCompra = subtotal + frete;
+    if (btnFecharModalAlterarEndereco && modalAlterarEndereco) {
+        btnFecharModalAlterarEndereco.addEventListener('click', function () {
+            modalAlterarEndereco.classList.remove('active');
+        });
+    }
 
-    totalElemento.textContent = 'R$ ' + converterMoeda(totalCompra);
+    const modalCupom = document.getElementById('modalCupons');
+    const btnAbrirModalCupom = document.getElementById('btnVerCupons');
+    const btnFecharModalCupom = document.getElementById('btnFecharModalCupom');
 
-    // Mostrar/ocultar valor do cartão
-    cartoes.forEach(function (cartao) {
-        const checkbox = cartao.querySelector('.checkbox-cartao');
-        const campo = cartao.querySelector('.campo-valor-cartao');
-        const input = campo.querySelector('input');
+    if (btnAbrirModalCupom && modalCupom) {
+        btnAbrirModalCupom.addEventListener('click', function () {
+            modalCupom.classList.add('active');
+        });
+    }
 
-        campo.style.display = 'none';
+    if (btnFecharModalCupom && modalCupom) {
+        btnFecharModalCupom.addEventListener('click', function () {
+            modalCupom.classList.remove('active');
+        });
+    }
+
+    atualizarTotal();
+
+    const toastAtencao = document.getElementById('toastAtencao');
+
+    document.querySelectorAll('.cartao-item').forEach(function (item) {
+        const checkbox = item.querySelector('.checkbox-cartao');
+        const campo = item.querySelector('.input-valor input');
+
 
         checkbox.addEventListener('change', function () {
+            const total = pegarValor(document.getElementById('total').textContent);
+            const desconto = pegarValor(document.getElementById('desconto').textContent.replace('-', ''));
+
+            if (total === 0 && desconto > 0) {
+                this.checked = false;
+                campo.disabled = true;
+                campo.value = '0';
+
+                mostrarToast('A compra já foi paga com o(s) cupom(ns) selecionado(s).');
+                return;
+            }
+
             if (this.checked) {
-                campo.style.display = 'block';
+                campo.disabled = false;
+
+                if (total < 10 && desconto > 0) {
+                    campo.value = '0.01';
+                } else {
+                    campo.value = '10.00';
+                }
             } else {
-                campo.style.display = 'none';
-                input.value = '';
+                campo.disabled = true;
+                campo.value = '0';
+            }
+        });
+
+        campo.disabled = true;
+        campo.value = '0';
+
+        campo.addEventListener('blur', function () {
+            const valor = parseFloat(this.value) || 0;
+            const total = pegarValor(document.getElementById('total').textContent);
+            const desconto = pegarValor(document.getElementById('desconto').textContent.replace('-', ''));
+            let minimo = 10;
+
+            if (total < 10 && desconto > 0) {
+                minimo = 0.01;
+            }
+
+            if (valor > 0 && valor < minimo) {
+                mostrarToast(
+                    'O valor mínimo por cartão é de R$ ' +
+                    minimo.toFixed(2).replace('.', ',') +
+                    '.'
+                );
             }
         });
     });
 
-    // Atualizar resumo
-    function atualizarResumoPagamento() {
-        let totalCupons = 0;
+    const formFinalizarCompra = document.getElementById('formFinalizarCompra');
 
-        document.querySelectorAll('.checkbox-cupom:checked').forEach(function (cupom) {
-            const valor = parseFloat(cupom.dataset.valor) || 0;
-            totalCupons += valor;
-        });
+    formFinalizarCompra.addEventListener('submit', function (event) {
+        const total = pegarValor(document.getElementById('total').textContent);
+        let valorCartoes = 0;
+        let cartoesSelecionados = 0;
 
-        let desconto = totalCupons;
+        document.querySelectorAll('.cartao-item').forEach(function (item) {
+            const checkbox = item.querySelector('.checkbox-cartao');
+            const campo = item.querySelector('.input-valor input');
 
-        if (desconto > totalCompra) {
-            desconto = totalCompra;
-        }
+            if (checkbox && checkbox.checked && campo) {
+                valorCartoes += parseFloat(campo.value) || 0;
+                cartoesSelecionados++;
 
-        const totalFinal = totalCompra - desconto;
+                const indice = cartoesSelecionados - 1;
 
-        descontoElemento.textContent = '-R$ ' + converterMoeda(desconto);
+                const inputId = document.createElement('input');
+                inputId.type = 'hidden';
+                inputId.name = 'cartoes[' + indice + '].cartaoId';
+                inputId.value = checkbox.value;
 
-        totalElemento.textContent = 'R$ ' + converterMoeda(totalFinal);
+                const inputValor = document.createElement('input');
+                inputValor.type = 'hidden';
+                inputValor.name = 'cartoes[' + indice + '].valor';
+                inputValor.value = campo.value;
 
-        return {
-            totalCupons: totalCupons,
-            desconto: desconto,
-            totalFinal: totalFinal
-        };
-    }
-
-    atualizarResumoPagamento();
-
-    // Finalizar compra
-    btnFinalizarCompra.addEventListener('click', function () {
-        const pagamento = atualizarResumoPagamento();
-
-        const totalCupons = pagamento.totalCupons;
-        const valorRestante = pagamento.totalFinal;
-
-        let quantidadeCartoes = 0;
-        let totalCartoes = 0;
-        let valorCartaoInvalido = false;
-        let cartaoMenorQue10 = false;
-
-        // Verificar cartões
-        cartoes.forEach(function (cartao) {
-            const checkbox = cartao.querySelector('.checkbox-cartao');
-
-            if (!checkbox.checked) {
-                return;
-            }
-
-            quantidadeCartoes++;
-
-            const input = cartao.querySelector('input[type="number"]');
-            const valor = parseFloat(input.value);
-
-            if (isNaN(valor) || valor <= 0) {
-                valorCartaoInvalido = true;
-                return;
-            }
-
-            totalCartoes += valor;
-
-            if (valorRestante >= 10 && valor < 10) {
-                cartaoMenorQue10 = true;
+                formFinalizarCompra.appendChild(inputId);
+                formFinalizarCompra.appendChild(inputValor);
             }
         });
 
-        // Compra já paga pelos cupons
-        if (valorRestante <= 0) {
-            if (quantidadeCartoes > 0) {
-                mostrarToast('Remova os cartões, pois os cupons já cobrem o valor da compra.', 'atencao');
-                return;
-            }
-
-            let mensagem = 'Compra realizada com sucesso!';
-
-            if (totalCupons > totalCompra) {
-                const valorTroca = totalCupons - totalCompra;
-
-                mensagem +=
-                    ' Foi gerado um cupom de troca de R$ ' +
-                    converterMoeda(valorTroca) +
-                    '.';
-            }
-
-            mostrarToast(mensagem, 'certo');
-
-            setTimeout(function () {
-                window.location.href = '/cliente/pedidos';
-            }, 2500);
-
+        if (total > 0 && cartoesSelecionados === 0) {
+            event.preventDefault();
+            mostrarToast('Selecione pelo menos um cartão para finalizar a compra.');
             return;
         }
 
-        // Precisa de cartão
-        if (quantidadeCartoes === 0) {
-            mostrarToast('Selecione um cartão para completar o pagamento.', 'atencao');
+        if (valorCartoes < total) {
+            event.preventDefault();
+            mostrarToast(
+                'Ainda falta informar R$ ' +
+                (total - valorCartoes).toFixed(2).replace('.', ',') +
+                ' para finalizar a compra.'
+            );
             return;
         }
 
-        // Todos os cartões precisam ter valor
-        if (valorCartaoInvalido) {
-            mostrarToast('Digite o valor de todos os cartões selecionados.', 'atencao');
-            return;
+        if (valorCartoes > total) {
+            event.preventDefault();
+            mostrarToast('O valor informado nos cartões é maior que o total da compra.');
         }
-
-        // Cartões não podem ultrapassar o restante
-        if (totalCartoes > valorRestante) {
-            mostrarToast('O valor dos cartões é maior que o valor restante.', 'atencao');
-            return;
-        }
-
-        // Cartões precisam completar o pagamento
-        if (totalCartoes < valorRestante) {
-            mostrarToast('O valor dos cartões não completa o pagamento.', 'atencao');
-            return;
-        }
-
-        // Mínimo de R$ 10 por cartão
-        if (cartaoMenorQue10) {
-            mostrarToast('Cada cartão deve ter no mínimo R$ 10,00.', 'atencao');
-            return;
-        }
-
-        // Compra paga
-        let mensagem = 'Compra realizada com sucesso!';
-
-        if (totalCupons > totalCompra) {
-            const valorTroca = totalCupons - totalCompra;
-
-            mensagem +=
-                ' Foi gerado um cupom de troca de R$ ' +
-                converterMoeda(valorTroca) +
-                '.';
-        }
-
-        mostrarToast(mensagem, 'certo');
-
-        setTimeout(function () {
-            window.location.href = '/cliente/pedido';
-        }, 2500);
     });
-
 });
 

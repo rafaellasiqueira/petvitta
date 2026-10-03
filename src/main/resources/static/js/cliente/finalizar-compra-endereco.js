@@ -1,4 +1,5 @@
 document.addEventListener('DOMContentLoaded', function () {
+
     const modalEndereco = document.getElementById('modalAdicionarEditarEndereco');
     const formEndereco = document.getElementById('formEndereco');
     const tituloEndereco = document.getElementById('tituloModalEndereco');
@@ -6,10 +7,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const btnFecharEndereco = document.getElementById('btnFecharModalEndereco');
     const btnCancelarEndereco = document.getElementById('btnCancelarEndereco');
     const btnSalvarEndereco = document.getElementById('btnSalvarEndereco');
-
-    const modalExclusao = document.getElementById('modalConfirmarExclusao');
-    const btnFecharExclusao = document.getElementById('btnFecharModalExclusao');
-    const btnCancelarExclusao = document.getElementById('btnCancelarExclusao');
+    const campoSalvarPerfil = document.getElementById('campoSalvarPerfil');
 
     configurarEndereco(modalEndereco);
 
@@ -18,7 +16,7 @@ document.addEventListener('DOMContentLoaded', function () {
         formEndereco.reset();
         tituloEndereco.textContent = 'Adicionar endereço';
         btnSalvarEndereco.textContent = 'Adicionar';
-        formEndereco.action = '/cliente/adicionar-endereco';
+        formEndereco.action = '/cliente/adicionar-endereco?voltarPara=finalizar-compra';
 
         modalEndereco.querySelectorAll('.mensagem-erro').forEach(function (erro) {
             erro.textContent = '';
@@ -26,6 +24,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         modalEndereco.classList.add('active');
     });
+
 
     // Editar endereço
     document.querySelectorAll('.editar-endereco').forEach(function (botao) {
@@ -38,6 +37,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
             tituloEndereco.textContent = 'Editar endereço';
             btnSalvarEndereco.textContent = 'Salvar';
+
+            if (campoSalvarPerfil) {
+                campoSalvarPerfil.style.display = 'none';
+            }
 
             modalEndereco.querySelector('.nome-identificacao').value = this.dataset.nome || '';
             modalEndereco.querySelector('.tipo-endereco').value = this.dataset.tipoEndereco || '';
@@ -52,24 +55,13 @@ document.addEventListener('DOMContentLoaded', function () {
             modalEndereco.querySelector('.pais').value = this.dataset.pais || 'Brasil';
             modalEndereco.querySelector('#observacoes').value = this.dataset.observacoes || '';
 
-            formEndereco.action = '/cliente/editar-endereco/' + this.dataset.id;
+            formEndereco.action = '/cliente/editar-endereco/' + this.dataset.id + '?voltarPara=finalizar-compra';
+
             modalEndereco.classList.add('active');
         });
     });
 
-    // Excluir endereço
-    document.querySelectorAll('.excluir-endereco').forEach(function (botao) {
-        botao.addEventListener('click', function () {
-            const mensagem = document.getElementById('mensagemModalExclusao');
-            const formExcluir = document.getElementById('formExcluir');
-
-            mensagem.textContent = 'Tem certeza que deseja excluir o endereço "' + this.dataset.nome + '"?';
-            formExcluir.action = '/cliente/excluir-endereco/' + this.dataset.id;
-            modalExclusao.classList.add('active');
-        });
-    });
-
-    // Fechar modal de endereço
+    // Fechar modais
     btnFecharEndereco.addEventListener('click', function () {
         modalEndereco.classList.remove('active');
     });
@@ -78,7 +70,7 @@ document.addEventListener('DOMContentLoaded', function () {
         modalEndereco.classList.remove('active');
     });
 
-    // Validação antes do envio
+    // Validação
     formEndereco.addEventListener('submit', function (event) {
         let formularioValido = true;
 
@@ -118,7 +110,6 @@ document.addEventListener('DOMContentLoaded', function () {
         erroCidade.textContent = '';
         erroPais.textContent = '';
 
-        // Nome de identificação
         if (nome.value.trim() === '') {
             formularioValido = false;
             erroNome.textContent = 'Preencha o nome com até 20 caracteres.';
@@ -130,28 +121,24 @@ document.addEventListener('DOMContentLoaded', function () {
             nome.focus();
         }
 
-        // Tipo de endereço
         if (tipoEndereco.value === '') {
             formularioValido = false;
             erroTipoEndereco.textContent = 'Selecione o tipo de endereço.';
             tipoEndereco.focus();
         }
 
-        // Tipo de residência
         if (tipoResidencia.value === '') {
             formularioValido = false;
             erroTipoResidencia.textContent = 'Selecione o tipo de residência.';
             tipoResidencia.focus();
         }
 
-        // Tipo de logradouro
         if (tipoLogradouro.value === '') {
             formularioValido = false;
             erroTipoLogradouro.textContent = 'Selecione o tipo de logradouro.';
             tipoLogradouro.focus();
         }
 
-        // CEP
         const cepNumeros = cep.value.replace(/\D/g, '');
 
         if (cep.value.trim() === '') {
@@ -165,42 +152,41 @@ document.addEventListener('DOMContentLoaded', function () {
             cep.focus();
         }
 
-        // Logradouro
         if (logradouro.value.trim() === '') {
             formularioValido = false;
             erroLogradouro.textContent = 'Preencha o logradouro.';
             logradouro.focus();
         }
 
-        // Bairro
+
         if (bairro.value.trim() === '') {
             formularioValido = false;
             erroBairro.textContent = 'Preencha o nome do bairro.';
             bairro.focus();
         }
 
-        // Número
+
         if (numero.value.trim() === '') {
             formularioValido = false;
             erroNumero.textContent = 'Preencha o número.';
             numero.focus();
         }
 
-        // Estado
+
         if (estado.value === '') {
             formularioValido = false;
             erroEstado.textContent = 'Selecione o estado.';
             estado.focus();
         }
 
-        // Cidade
+
         if (cidade.value.trim() === '') {
             formularioValido = false;
             erroCidade.textContent = 'Preencha o nome da cidade.';
             cidade.focus();
         }
 
-        // País
+
         if (pais.value.trim() === '') {
             formularioValido = false;
             erroPais.textContent = 'Preencha o nome do país.';
@@ -210,14 +196,5 @@ document.addEventListener('DOMContentLoaded', function () {
         if (!formularioValido) {
             event.preventDefault();
         }
-    });
-
-    // Fechar modal de exclusão
-    btnFecharExclusao.addEventListener('click', function () {
-        modalExclusao.classList.remove('active');
-    });
-
-    btnCancelarExclusao.addEventListener('click', function () {
-        modalExclusao.classList.remove('active');
     });
 });

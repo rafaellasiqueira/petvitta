@@ -1,114 +1,231 @@
-// Atualizar subtotal
 function atualizarSubtotal() {
     let total = 0;
-    let produtos = document.querySelectorAll('.produto');
 
-    produtos.forEach(produto => {
-        let checkbox = produto.querySelector('.checkbox-produto');
+    const produtosSelecionados = document.querySelectorAll(
+        '.produto:has(.checkbox-produto:checked)'
+    );
 
-        if (checkbox.checked) {
-            let quantidade = produto.querySelector('.seletor-quantidade input');
-            let tamanho = produto.querySelector('.tamanho-opcao.active');
+    produtosSelecionados.forEach(produto => {
+        const tamanho = produto.querySelector('.tamanho-opcao.active');
+        const quantidade = produto.querySelector('.seletor-quantidade input');
 
-            let valor = parseFloat(tamanho.dataset.valor);
-            let qtd = parseInt(quantidade.value);
+        const valor = parseFloat(tamanho.dataset.valor);
+        const qtd = parseInt(quantidade.value);
 
-            total = total + (valor * qtd);
-        }
+        total += valor * qtd;
     });
 
-    let subtotal = document.getElementById('subtotal');
+    document.getElementById('subtotal').innerText =
+        total.toLocaleString('pt-BR', {
+            style: 'currency',
+            currency: 'BRL'
+        });
+}
 
-    subtotal.innerText = total.toLocaleString('pt-BR', {
-        style: 'currency',
-        currency: 'BRL'
+function alterarQuantidade(itemId, quantidade) {
+    fetch(`/cliente/carrinho/quantidade?itemId=${itemId}&quantidade=${quantidade}`, {
+        method: 'POST'
     });
 }
 
-// Quantidade
-document.querySelectorAll('.seletor-quantidade').forEach(seletor => {
+function alterarTamanho(itemId, variacaoId) {
+    fetch(`/cliente/carrinho/tamanho?itemId=${itemId}&variacaoId=${variacaoId}`, {
+        method: 'POST'
+    });
+}
 
+function verificarEstoque(produto) {
+    const tamanho = produto.querySelector('.tamanho-opcao.active');
+    const quantidadeInput = produto.querySelector('.seletor-quantidade input');
+    const mensagemEstoque = produto.querySelector('.mensagem-estoque');
+
+    const quantidade = parseInt(quantidadeInput.value);
+    const estoque = parseInt(tamanho.dataset.estoque);
+
+    if (quantidade > estoque) {
+        mensagemEstoque.textContent =
+            'Quantidade maior que o estoque disponível.';
+
+        return false;
+    }
+
+    mensagemEstoque.textContent = '';
+    return true;
+}
+
+document.querySelectorAll('.seletor-quantidade').forEach(seletor => {
     const inputQtd = seletor.querySelector('input');
     const btnMenos = seletor.querySelector('.btn-qtd.menos');
     const btnMais = seletor.querySelector('.btn-qtd.mais');
+    const produto = seletor.closest('.produto');
+    const itemId = produto.dataset.itemId;
 
     btnMais.onclick = () => {
-        inputQtd.value++;
+
+        inputQtd.value = parseInt(inputQtd.value) + 1;
+
+        alterarQuantidade(
+            itemId,
+            inputQtd.value
+        );
+
+        verificarEstoque(produto);
         atualizarSubtotal();
     };
 
     btnMenos.onclick = () => {
-        if (inputQtd.value > 1) {
-            inputQtd.value--;
-            atualizarSubtotal();
+
+        if (parseInt(inputQtd.value) <= 1) {
+            return;
         }
+
+        inputQtd.value = parseInt(inputQtd.value) - 1;
+
+        alterarQuantidade(
+            itemId,
+            inputQtd.value
+        );
+
+        verificarEstoque(produto);
+        atualizarSubtotal();
     };
 
-    inputQtd.addEventListener('input', function() {
-        if (this.value < 1) {
+    inputQtd.addEventListener('input', function () {
+        let quantidade = parseInt(this.value);
+
+        if (quantidade < 1) {
+            quantidade = 1;
             this.value = 1;
         }
 
+        alterarQuantidade(
+            itemId,
+            quantidade
+        );
+
+        verificarEstoque(produto);
         atualizarSubtotal();
     });
 
 });
 
-// Mudar o tamanho
+// Tamanho
 document.querySelectorAll('.produto').forEach(produto => {
 
     const botoesTamanho = produto.querySelectorAll('.tamanho-opcao');
 
     botoesTamanho.forEach(btn => {
+
         btn.onclick = () => {
-            botoesTamanho.forEach(b => b.classList.remove('active'));
+
+            botoesTamanho.forEach(botao => {
+                botao.classList.remove('active');
+            });
+
             btn.classList.add('active');
+
+            const itemId = produto.dataset.itemId;
+            const variacaoId = btn.dataset.variacaoId;
+
+            alterarTamanho(
+                itemId,
+                variacaoId
+            );
+
+            const valorAtualizado =
+                produto.querySelector('.preco-produto');
+
+            if (valorAtualizado) {
+                valorAtualizado.innerText =
+                    btn.dataset.valor;
+            }
+
+            verificarEstoque(produto);
             atualizarSubtotal();
-
-            let tamanho = produto.querySelector('.tamanho-opcao.active');
-            let valorAtualizado = produto.querySelector('.preco-produto');
-
-            valorAtualizado.innerText = tamanho.dataset.valor;
         };
+
     });
+
 });
 
-// Checkbox
-const checkboxTodos = document.getElementById("todos");
-const checkboxesProdutos = document.querySelectorAll(".checkbox-produto");
+// Selecionar todos
 
-// Checkbox de produto
+const checkboxTodos = document.getElementById('todos');
+
+const checkboxesProdutos = document.querySelectorAll('.checkbox-produto');
+
 checkboxesProdutos.forEach(checkbox => {
-    checkbox.onclick = function() {
-        atualizarSubtotal();
+    checkbox.addEventListener('change', function () {
 
-        if (!this.checked) {
+        if (!this.checked && checkboxTodos) {
             checkboxTodos.checked = false;
         }
-    };
+        atualizarSubtotal();
+    });
+
 });
 
-// Checkbox todos
-checkboxTodos.onclick = function() {
-    checkboxesProdutos.forEach(checkbox => {
-        checkbox.checked = checkboxTodos.checked;
+if (checkboxTodos) {
+    checkboxTodos.addEventListener('change', function () {
+        checkboxesProdutos.forEach(checkbox => {
+            checkbox.checked = this.checked;
+        });
+        atualizarSubtotal();
     });
-    atualizarSubtotal();
-};
+}
 
-// Finalizar a compra
-const btnFinalizarCompra = document.querySelector('.btn-finalizar-a-compra');
 
-btnFinalizarCompra.addEventListener('click', function(event) {
-    const produtosSelecionados = document.querySelectorAll('.checkbox-produto:checked');
+// Toast
+function mostrarToast() {
 
-    // Se nenhum produto estiver selecionado, impede o redirecionamento e exibe o toast
+    const toast =
+        document.getElementById('toastAtencao');
+
+    toast.classList.add('ativo');
+
+    setTimeout(() => {
+        toast.classList.remove('ativo');
+    }, 6000);
+}
+
+// Finalizar botão
+const formFinalizarCompra = document.getElementById('formFinalizarCompra');
+
+formFinalizarCompra.addEventListener('submit', function (event) {
+
+    const produtosSelecionados = document.querySelectorAll(
+        '.checkbox-produto:checked'
+    );
+
     if (produtosSelecionados.length === 0) {
         event.preventDefault();
         mostrarToast();
+        return;
     }
+
+    const divItens = document.getElementById('itensSelecionados');
+
+    divItens.innerHTML = '';
+
+    produtosSelecionados.forEach(checkbox => {
+        const produto = checkbox.closest('.produto');
+
+        const itemId = produto.dataset.itemId;
+
+        const input = document.createElement('input');
+
+        input.type = 'hidden';
+        input.name = 'itensSelecionados';
+        input.value = itemId;
+
+        divItens.appendChild(input);
+    });
+
 });
 
 
+atualizarSubtotal();
 
-
+document.querySelectorAll('.produto').forEach(produto => {
+    verificarEstoque(produto);
+});

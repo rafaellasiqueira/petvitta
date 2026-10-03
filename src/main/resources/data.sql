@@ -167,3 +167,11 @@ INSERT IGNORE INTO grupo_precificacao (nome, percentual) VALUES
 ('Básico', 20.00),
 ('Premium', 35.00),
 ('Super Premium', 50.00);
+
+-- Status do pedido
+INSERT IGNORE INTO status_pedido (descricao) VALUES
+('Em processamento'),
+('Aprovada'),
+('Reprovada'),
+('Em transporte'),
+('Entregue');

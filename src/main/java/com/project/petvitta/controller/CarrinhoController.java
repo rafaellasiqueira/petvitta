@@ -129,10 +129,37 @@ public class CarrinhoController {
 
         List<ItemCarrinho> itensExpirados = carrinhoService.verificarExpiracao(carrinho);
 
+        boolean avisoExpiracao = false;
+
+        if (carrinho != null && carrinho.getDataExpiracao() != null) {
+            avisoExpiracao = carrinhoService.verificarAvisoExpiracao(carrinho);
+        }
+
         model.addAttribute("carrinho", carrinho);
         model.addAttribute("itensExpirados", itensExpirados);
+        model.addAttribute("avisoExpiracao", avisoExpiracao);
 
         return "cliente/carrinho";
+    }
+
+    @PostMapping("/cliente/carrinho/quantidade")
+    public String alterarQuantidade(
+            @RequestParam Long itemId,
+            @RequestParam Integer quantidade
+    ) {
+        carrinhoService.alterarQuantidade(itemId, quantidade);
+
+        return "redirect:/cliente/carrinho";
+    }
+
+    @PostMapping("/cliente/carrinho/tamanho")
+    public String alterarTamanho(
+            @RequestParam Long itemId,
+            @RequestParam Long variacaoId
+    ) {
+        carrinhoService.alterarTamanho(itemId, variacaoId);
+
+        return "redirect:/cliente/carrinho";
     }
 
 }

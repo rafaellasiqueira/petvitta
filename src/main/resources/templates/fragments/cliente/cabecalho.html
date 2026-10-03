@@ -38,22 +38,11 @@
             </a>
 
             <!-- Notificacao -->
-            <!-- Notificação -->
             <a th:href="@{/cliente/notificacao}"
-               class="menu-container"
-               onclick="marcarNotificacaoVista()">
-
+               class="menu-container">
                 <div class="icone-notificacao">
-
                     <i class="fa-solid fa-bell"></i>
-
-                    <span id="bolinha-notificacao"
-                          class="bolinha-notificacao"
-                          th:if="${avisoExpiracao}">
-                    </span>
-
                 </div>
-
             </a>
 
             <!-- Perfil -->
@@ -86,7 +75,6 @@
         </a>
     </nav>
 </header>
-<script th:src="@{/js/cliente/notificacao.js}"></script>
 </body>
 
 

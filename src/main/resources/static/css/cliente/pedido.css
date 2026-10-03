@@ -4,6 +4,7 @@
     padding: 16px 20px;
     width: 1000px;
     height: auto;
+    min-height: 500px;
     display: flex;
     flex-direction: column;
     gap: 18px;
@@ -287,3 +288,31 @@ h1 {
     color: #B8C7C3;
 }
 
+.produto-escondido {
+    display: none;
+}
+
+.btn-ver-mais-produtos {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    margin-top: 15px;
+    padding: 10px;
+    border: none;
+    background: transparent;
+    color: #1C9B86;
+    font-family: 'Nunito', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.btn-ver-mais-produtos i {
+    transition: transform 0.2s ease;
+}
+
+.btn-ver-mais-produtos.aberto i {
+    transform: rotate(180deg);
+}

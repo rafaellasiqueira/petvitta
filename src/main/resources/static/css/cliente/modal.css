@@ -177,8 +177,14 @@
     color: #3A4A48;
 }
 
+.checkbox-cupom {
+    width: 16px;
+    height: 16px;
+    accent-color: #1C9B86;
+    cursor: pointer;
+}
+
 .checkbox-endereco-cartao input[type="checkbox"],
-.checkbox-cupom input[type="checkbox"],
 .checkbox-troca input[type="checkbox"] {
     width: 16px;
     height: 16px;
@@ -202,8 +208,7 @@
 }
 
 /* Radio  + card */
-.modalEndereco input[type="radio"],
-.modalCupom input[type="radio"] {
+.modalEndereco input[type="radio"] {
     display: none;
 }
 
@@ -236,13 +241,11 @@
     transition: all 0.2s ease;
 }
 
-.modalEndereco input[type="radio"]:checked + .radio-custom,
-.modalCupom input[type="radio"]:checked + .radio-custom {
+.modalEndereco input[type="radio"]:checked + .radio-custom {
     border-color: #4FD1B5;
 }
 
-.modalEndereco input[type="radio"]:checked + .radio-custom::after,
-.modalCupom input[type="radio"]:checked + .radio-custom::after {
+.modalEndereco input[type="radio"]:checked + .radio-custom::after {
     content: "";
     width: 10px;
     height: 10px;
@@ -446,4 +449,16 @@ input[type="checkbox"].checkbox-troca {
     min-width: 20px;
     min-height: 20px;
     accent-color: #1C9B86;
+}
+
+.excluir {
+    background: none;
+    border: none;
+    padding: 8px;
+    cursor: pointer;
+    font-size: 18px;
+    color: #D9534F;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }

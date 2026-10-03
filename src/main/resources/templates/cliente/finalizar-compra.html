@@ -41,15 +41,21 @@
                     <h2>Endereço de entrega</h2>
                 </div>
 
-                <div class="endereco">
-                    <h3 id="enderecoNome">Escritório</h3>
-                    <span id="enderecoTipo">Casa</span>
-                    <p id="enderecoLogradouro">
-                        Rua João Batista, 355 - Jardim Ângela,
-                        Acrelândia - Acre
+                <div class="endereco" th:if="${endereco != null}">
+                    <h3 id="enderecoNome" th:text="${endereco.nomeIdentificacao}"></h3>
+
+                    <p id="enderecoLogradouro"
+                       th:text="${endereco.logradouro + ', ' + endereco.numero + ' - ' + endereco.bairro + ', ' + endereco.cidade + ' - ' + endereco.estado.nome}">
                     </p>
-                    <span id="enderecoCep">CEP: 08888-888, Brasil.</span>
-                    <a href="#" id="btnAlterarEndereco">Alterar endereço</a>
+
+                    <span id="enderecoCep" th:text="${'CEP: ' + endereco.cep + ', Brasil.'}"></span>
+
+                    <input type="hidden"
+                           name="enderecoId"
+                           th:value="${endereco.id}"
+                           form="formFinalizarCompra">
+
+                    <button type="button" id="btnAlterarEndereco">Alterar endereço</button>
                 </div>
             </div>
 
@@ -57,148 +63,167 @@
             <div class="card">
                 <h2>Produtos</h2>
 
-                <div class="produto">
-                    <div class="imagem-produto">
-                        <img th:src="@{/images/produtos/racao-1.png}"
-                             alt="Ração Cães Adultos">
-                    </div>
+                <div th:each="item : ${carrinho.itens}"
+                     th:if="${itensSelecionados.contains(item.id)}"
+                     class="produto">
+                    <div class="container-produto">
+                        <div class="imagem-produto">
+                            <img class="produto-imagem"
+                                 th:src="${item.variacao.produto.imagemUrl}">
+                        </div>
 
-                    <div class="informacoes-produto">
-                        <h3>Ração Cães Adultos Frango e Carne Choice</h3>
-                        <span>Tamanho: 10.1 KG</span>
-                        <span>Quantidade: 1</span>
-                        <span class="preco">R$ 156,75</span>
-                    </div>
-
-                </div>
-
-
-                <div class="linha-produto"></div>
-
-
-                <div class="produto">
-                    <div class="imagem-produto">
-                        <img th:src="@{/images/produtos/racao-3.png}"
-                             alt="Ração GoldeN Special Gatos Adultos Sabor Frango e Carne">
-                    </div>
-
-                    <div class="informacoes-produto">
-                        <h3>Ração GoldeN Special Gatos Adultos Sabor Frango e Carne</h3>
-                        <span>Tamanho: 10.1 KG</span>
-                        <span>Quantidade: 2</span>
-                        <span class="preco">R$ 119,80</span>
+                        <div class="informacoes-produto">
+                            <h3 th:text="${item.variacao.produto.nome}"></h3>
+                            <span th:text="${'Tamanho: ' + item.variacao.tamanho}"></span>
+                            <span th:text="${'Quantidade: ' + item.quantidade}"></span>
+                            <span class="preco"
+                                  th:text="${'R$ ' + #numbers.formatDecimal(item.variacao.valorVenda * item.quantidade, 2, 2)}"></span>
+                        </div>
                     </div>
                 </div>
             </div>
-
 
             <!-- Cupons -->
             <div class="card">
                 <div class="titulo-com-link">
                     <h2>Cupons</h2>
-                    <a href="#" id="btnMeusCupons">Meus cupons</a>
+                    <button type="button" id="btnVerCupons">Meus cupons</button>
                 </div>
 
-                <input type="text" class="campo-cupom" placeholder="Digite o código do cupom">
-
                 <!-- Cupons selecionados -->
-                <div id="cuponsSelecionados" class="cupons-selecionados"></div>
+                <input type="text"
+                       class="campo-cupom"
+                       id="campoCupom"
+                       placeholder="Digite o código do cupom">
+
+                <div id="cuponsSelecionados" class="cupons-selecionados" hidden></div>
 
                 <div class="aviso">
                     <span>Apenas um cupom promocional pode ser utilizado por compra.</span>
                 </div>
             </div>
 
-
             <!-- Pagamento -->
             <div class="card">
                 <div class="titulo-com-link">
                     <h2>Pagamento</h2>
-                    <a href="#" id="btnAbrirCartao">Adicionar cartão</a>
+                    <button type="button" id="btnCadastrarCartao">Adicionar Cartão</button>
                 </div>
 
                 <div class="aviso">
-                    <span>O valor mínimo por cartão é de R$ 10,00</span>
+                    <span id="avisoMinimoCartao">O valor mínimo por cartão é de R$ 10,00</span>
                 </div>
 
-                <!-- Cartão 1 -->
+                <!-- Cartões -->
                 <div class="cartao-container">
-                    <label class="cartao">
 
+                    <!-- Mostrar outros cartões -->
+                    <label class="adicionar-outro-cartao">
                         <input type="checkbox"
-                               name="cartao"
-                               value="visa"
-                               class="checkbox-cartao">
+                               id="mostrarOutrosCartoes"
+                               class="checkbox-cartoes">
 
-                        <div class="dados-cartao">
-                            <h3>Visa</h3>
-                            <span>**** **** **** 1234</span>
-                            <span>Letícia Souza</span>
-                        </div>
+                        <h4>Adicionar mais um cartão</h4>
                     </label>
 
-                    <!-- Valor do cartão -->
-                    <div class="campo-valor-cartao">
-                        <label for="valorVisa">Valor a pagar com este cartão</label>
+                    <!-- Cartão preferencial -->
+                    <div th:each="cartao : ${cliente.cartoes}"
+                         th:if="${cartao.preferencial}"
+                         class="cartao-item">
 
-                        <div class="input-valor">
-                            <span>R$</span>
-                            <input type="number"
-                                   id="valorVisa"
-                                   name="valorVisa"
-                                   min="0"
-                                   step="0.1"
-                                   placeholder="Digite o valor">
+                        <label class="cartao">
+                            <input type="checkbox"
+                                   name="cartao"
+                                   th:value="${cartao.id}"
+                                   class="checkbox-cartao">
+
+                            <div class="dados-cartao">
+                                <h3 th:text="${cartao.bandeira.descricao}"></h3>
+
+                                <span th:text="${'**** **** **** ' + cartao.numero.substring(cartao.numero.length() - 4)}"></span>
+                                <span th:text="${cartao.nomeImpresso}"></span>
+                            </div>
+                        </label>
+
+                        <!-- Valor do cartão -->
+                        <div class="campo-valor-cartao">
+                            <label th:for="'valorCartao' + ${cartao.id}">
+                                Valor a pagar com este cartão
+                            </label>
+
+                            <div class="input-valor">
+                                <span>R$</span>
+
+                                <input inputmode="decimal"
+                                       th:id="'valorCartao' + ${cartao.id}"
+                                       th:name="'valoresCartoes[' + ${cartao.id} + ']'"
+                                       form="formFinalizarCompra"
+                                       min="0.01"
+                                       step="0.01"
+                                       value="10.00"
+                                       placeholder="Digite o valor">
+                            </div>
                         </div>
                     </div>
-                </div>
 
+                    <!-- Outros cartões -->
+                    <div id="outrosCartoes" hidden>
+                        <div th:each="cartao : ${cliente.cartoes}"
+                             th:if="${!cartao.preferencial}"
+                             class="cartao-item">
 
-                <!-- Cartão 2 -->
-                <div class="cartao-container">
-                    <label class="cartao">
+                            <label class="cartao">
+                                <input type="checkbox"
+                                       name="cartao"
+                                       th:value="${cartao.id}"
+                                       class="checkbox-cartao">
 
-                        <input type="checkbox"
-                               name="cartao"
-                               value="mastercard"
-                               class="checkbox-cartao">
+                                <div class="dados-cartao">
+                                    <h3 th:text="${cartao.bandeira.descricao}"></h3>
 
-                        <div class="dados-cartao">
-                            <h3>Mastercard</h3>
-                            <span>**** **** **** 1234</span>
-                            <span>Letícia Souza</span>
-                        </div>
-                    </label>
+                                    <span th:text="'**** **** **** ' + ${cartao.numero.substring(cartao.numero.length() - 4)}"></span>
+                                    <span th:text="${cartao.nomeImpresso}"></span>
+                                </div>
+                            </label>
 
-                    <!-- Valor do cartão -->
-                    <div class="campo-valor-cartao">
-                        <label for="valorMastercard">Valor a pagar com este cartão</label>
+                            <div class="campo-valor-cartao">
+                                <label th:for="'valorCartao' + ${cartao.id}">
+                                    Valor a pagar com este cartão
+                                </label>
 
-                        <div class="input-valor">
-                            <span>R$</span>
-                            <input type="number"
-                                   id="valorMastercard"
-                                   name="valorMastercard"
-                                   min="0"
-                                   step="0.1"
-                                   placeholder="Digite o valor">
+                                <div class="input-valor">
+                                    <span>R$</span>
+
+                                    <input inputmode="decimal"
+                                           th:id="'valorCartao' + ${cartao.id}"
+                                           th:name="'valoresCartoes[' + ${cartao.id} + ']'"
+                                           form="formFinalizarCompra"
+                                           min="10.00"
+                                           step="0.01"
+                                           value="10.00"
+                                           placeholder="Digite o valor">
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-
         </div>
 
         <!-- Coluna direita -->
-        <div class="direito">
+        <form th:action="@{/cliente/finalizar-compra}"
+              method="post"
+              id="formFinalizarCompra"
+              class="direito">
+
             <div class="linha-resumo">
                 <h3>Subtotal</h3>
-                <h3 id="subtotal">R$ 276,55</h3>
+                <h3 id="subtotal">R$ 0,00</h3>
             </div>
 
             <div class="linha-resumo">
                 <h3>Frete</h3>
-                <h3 id="frete">R$ 20,00</h3>
+                <h3 id="frete">R$ 0,00</h3>
             </div>
 
             <div class="linha-resumo cupom-resumo">
@@ -213,14 +238,35 @@
                 <h3 id="total">R$ 0,00</h3>
             </div>
 
-            <button type="button" id="btnFinalizarCompra" class="btn-finalizar-a-compra">Finalizar a compra</button>
-        </div>
-    </main>
+            <div th:each="itemId : ${itensSelecionados}">
+                <input type="hidden" name="itensSelecionados" th:value="${itemId}">
+            </div>
 
-    <div id="toast" class="toast">
-        <i class="toast-icone fa-solid fa-check"></i>
-        <p id="toastMensagem"></p>
-    </div>
+            <button type="submit" id="btnFinalizarCompra" class="btn-finalizar-a-compra">Finalizar a compra</button>
+
+        </form>
+
+        <!-- Toast de atenção -->
+        <div id="toastAtencao" class="toast">
+            <i class="fa-solid fa-triangle-exclamation"></i>
+            <p></p>
+        </div>
+
+        <!-- Toast de erro -->
+        <div id="toast"
+             class="toast ativo"
+             th:if="${mensagemToast}">
+
+            <i th:if="${tipoToast == 'erro'}"
+               class="fa-solid fa-circle-xmark"></i>
+
+            <i th:if="${tipoToast != 'erro'}"
+               class="fa-solid fa-check"></i>
+
+            <p th:text="${mensagemToast}"></p>
+        </div>
+
+    </main>
 
     <!-- Modal de alterar endereço -->
     <div th:replace="~{fragments/cliente/modais :: modal-alterar-endereco}"></div>
@@ -235,8 +281,24 @@
     <div th:replace="~{fragments/cliente/modais :: modal-cadastrar-cartao}"></div>
 </div>
 
+<!-- Validações -->
+<script th:src="@{/js/cliente/validacoes/endereco.js}"></script>
+<script th:src="@{/js/cliente/validacoes/cartao.js}"></script>
+<script th:src="@{/js/cliente/validacoes/geral.js}"></script>
+<script th:src="@{/js/cliente/validacoes/cupom.js}"></script>
+
+<!-- Toast.js -->
+<script th:src="@{/js/cliente/componentes/toast.js}"></script>
+
 <!-- Finalizar compra JavaScript -->
 <script th:src="@{/js/cliente/finalizar-compra.js}"></script>
+
+<!-- Finalizar compra endereço JavaScript -->
+<script th:src="@{/js/cliente/finalizar-compra-endereco.js}"></script>
+
+<!-- Finalizar compra cartão JavaScript -->
+<script th:src="@{/js/cliente/finalizar-compra-cartao.js}"></script>
+
 
 </body>
 </html>
