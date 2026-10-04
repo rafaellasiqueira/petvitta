@@ -34,6 +34,18 @@ public class VariacaoProduto {
             nullable = false)
     private Produto produto;
 
+    public String getStatusEstoque() {
+        if (estoqueAtual == 0) {
+            return "Esgotado";
+        }
+
+        if (estoqueAtual <= 10) {
+            return "Baixo";
+        }
+
+        return "Normal";
+    }
+
     public VariacaoProduto() {
     }
 }

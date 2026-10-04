@@ -1,13 +1,10 @@
 package com.project.petvitta.service;
 
-import com.project.petvitta.model.cliente.Cliente;
 import com.project.petvitta.model.dominio.*;
-import com.project.petvitta.model.produto.Petisco;
-import com.project.petvitta.model.produto.Produto;
-import com.project.petvitta.model.produto.Racao;
-import com.project.petvitta.model.produto.Suplemento;
+import com.project.petvitta.model.produto.*;
 import com.project.petvitta.repository.dominio.*;
 import com.project.petvitta.repository.produto.ProdutoRepository;
+import com.project.petvitta.repository.produto.VariacaoProdutoRepository;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -24,6 +21,7 @@ public class ProdutoService {
     private final EspecieRepository especieRepository;
     private final FaixaEtariaRepository faixaEtariaRepository;
     private final PorteRepository porteRepository;
+    private final VariacaoProdutoRepository variacaoProdutoRepository;
 
     public ProdutoService(
             ProdutoRepository produtoRepository,
@@ -32,7 +30,7 @@ public class ProdutoService {
             FormaApresentacaoRepository formaApresentacaoRepository,
             EspecieRepository especieRepository,
             FaixaEtariaRepository faixaEtariaRepository,
-            PorteRepository porteRepository) {
+            PorteRepository porteRepository, VariacaoProdutoRepository variacaoProdutoRepository) {
 
         this.produtoRepository = produtoRepository;
         this.tipoRacaoRepository = tipoRacaoRepository;
@@ -41,11 +39,17 @@ public class ProdutoService {
         this.especieRepository = especieRepository;
         this.faixaEtariaRepository = faixaEtariaRepository;
         this.porteRepository = porteRepository;
+        this.variacaoProdutoRepository = variacaoProdutoRepository;
+    }
+
+    public List<VariacaoProduto> listarVariacoes() {
+        return variacaoProdutoRepository.findAll();
     }
 
     public List<Produto> listarProdutos() {
         return produtoRepository.findAll();
     }
+
     public List<TipoRacao> listarTiposRacao() {
         return tipoRacaoRepository.findAll();
     }
@@ -148,7 +152,6 @@ public class ProdutoService {
 
             // Espécie
             if (especie != null && !especie.isEmpty()) {
-
                 boolean encontrouEspecie = false;
 
                 for (int j = 0; j < produto.getEspecies().size(); j++) {
@@ -168,7 +171,6 @@ public class ProdutoService {
 
             // Idade
             if (idade != null && !idade.isEmpty()) {
-
                 boolean encontrouIdade = false;
 
                 for (int j = 0; j < produto.getFaixasEtarias().size(); j++) {
@@ -189,7 +191,6 @@ public class ProdutoService {
 
             // Porte
             if (porte != null && !porte.isEmpty()) {
-
                 boolean encontrouPorte = false;
 
                 for (int j = 0; j < produto.getPortes().size(); j++) {
@@ -260,11 +261,7 @@ public class ProdutoService {
 
             // Filtro por nome
             if (nome != null && !nome.isBlank()) {
-
-                if (!produto.getNome()
-                        .toLowerCase()
-                        .contains(nome.toLowerCase())) {
-
+                if (!produto.getNome().toLowerCase().contains(nome.toLowerCase())) {
                     encontrou = false;
                 }
             }
@@ -280,6 +277,47 @@ public class ProdutoService {
         return produtoRepository.findById(id)
                 .orElseThrow(() ->
                         new IllegalArgumentException("Produto não encontrado."));
+    }
+
+    public List<VariacaoProduto> filtrarEstoque(String status, String pesquisa) {
+
+        List<VariacaoProduto> variacoes = variacaoProdutoRepository.findAll();
+        List<VariacaoProduto> resultado = new ArrayList<>();
+
+        System.out.println("PESQUISA NO SERVICE: " + pesquisa);
+
+        for (int i = 0; i < variacoes.size(); i++) {
+            VariacaoProduto variacao = variacoes.get(i);
+
+            boolean encontrou = true;
+
+            // Filtro por status
+            if (status != null && !status.isBlank() && !status.equals("Todos")) {
+                if (!variacao.getStatusEstoque().equalsIgnoreCase(status)) {
+                    encontrou = false;
+                }
+            }
+
+            // Filtro por nome
+            if (pesquisa != null && !pesquisa.isBlank()) {
+
+                String nomeProduto = variacao.getProduto().getNome().toLowerCase();
+                String nomePesquisa = pesquisa.trim().toLowerCase();
+
+                if (!nomeProduto.contains(nomePesquisa)) {
+                    encontrou = false;
+                }
+            }
+
+            if (encontrou) {
+                resultado.add(variacao);
+                System.out.println("ADICIONADO: " + variacao.getProduto().getNome());
+            }
+        }
+
+        System.out.println("TOTAL RESULTADO: " + resultado.size());
+
+        return resultado;
     }
 
 

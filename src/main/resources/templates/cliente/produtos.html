@@ -29,14 +29,13 @@
     <main class="conteudo">
         <!-- Filtro -->
         <form id="formFiltro" th:action="@{/cliente/produtos}" method="GET">
+
             <div class="filtro">
 
                 <div class="filtro-cabecalho">
                     <h1>Filtro</h1>
 
-                    <a th:href="@{/cliente/produtos}" class="btn-limpar">
-                        Limpar
-                    </a>
+                    <a th:href="@{/cliente/produtos}" class="btn-limpar">Limpar</a>
                 </div>
 
                 <span class="linha"></span>
@@ -52,7 +51,7 @@
 
                         <button type="submit"
                                 name="verTodos"
-                                value="racao"
+                                value="Ração"
                                 class="ver-todos">
                             Ver todas as rações
                         </button>
@@ -62,7 +61,6 @@
                                    name="tipoRacao"
                                    th:value="${tipo.nome}"
                                    th:checked="${tipoRacaoSelecionados != null and tipoRacaoSelecionados.contains(tipo.nome)}">
-
                             <span th:text="${tipo.nome}"></span>
                         </label>
                     </details>
@@ -70,10 +68,9 @@
                     <!-- Petisco -->
                     <details open>
                         <summary>Petisco</summary>
-
                         <button type="submit"
                                 name="verTodos"
-                                value="petisco"
+                                value="Petisco"
                                 class="ver-todos">
                             Ver todos os petiscos
                         </button>
@@ -83,7 +80,6 @@
                                    name="tipoPetisco"
                                    th:value="${tipo.nome}"
                                    th:checked="${tipoPetiscoSelecionados != null and tipoPetiscoSelecionados.contains(tipo.nome)}">
-
                             <span th:text="${tipo.nome}"></span>
                         </label>
                     </details>
@@ -94,7 +90,7 @@
 
                         <button type="submit"
                                 name="verTodos"
-                                value="suplemento"
+                                value="Suplemento"
                                 class="ver-todos">
                             Ver todos os suplementos
                         </button>
@@ -103,8 +99,7 @@
                             <input type="checkbox"
                                    name="formaApresentacao"
                                    th:value="${forma.nome}"
-                                   th:checked="${formasApresentacaoSelecionadas != null and formasApresentacaoSelecionadas.contains(forma.nome)}">
-
+                                   th:checked="${formaApresentacaoSelecionadas != null and formaApresentacaoSelecionadas.contains(forma.nome)}">
                             <span th:text="${forma.nome}"></span>
                         </label>
                     </details>
@@ -112,13 +107,11 @@
                     <!-- Espécie -->
                     <div class="filtro-grupo">
                         <h3>Espécie</h3>
-
                         <label th:each="especie : ${especies}">
                             <input type="checkbox"
                                    name="especie"
                                    th:value="${especie.nome}"
                                    th:checked="${especiesSelecionadas != null and especiesSelecionadas.contains(especie.nome)}">
-
                             <span th:text="${especie.nome}"></span>
                         </label>
                     </div>
@@ -131,10 +124,8 @@
                                    name="idade"
                                    th:value="${idade.nome}"
                                    th:checked="${idadesSelecionadas != null and idadesSelecionadas.contains(idade.nome)}">
-
                             <span th:text="${idade.nome}"></span>
                         </label>
-
                     </div>
 
                     <!-- Porte -->
@@ -145,7 +136,6 @@
                                    name="porte"
                                    th:value="${porte.nome}"
                                    th:checked="${portesSelecionados != null and portesSelecionados.contains(porte.nome)}">
-
                             <span th:text="${porte.nome}"></span>
                         </label>
                     </div>
@@ -159,16 +149,14 @@
                             <input type="radio"
                                    name="transgenico"
                                    value="true"
-                                   th:checked="${transgenicoSelecionado == true}">
-                            Sim
+                                   th:checked="${transgenicoSelecionado == true}">Sim
                         </label>
 
                         <label>
                             <input type="radio"
                                    name="transgenico"
                                    value="false"
-                                   th:checked="${transgenicoSelecionado == false}">
-                            Não
+                                   th:checked="${transgenicoSelecionado == false}">Não
                         </label>
 
                         <span>Contém glúten</span>
@@ -177,16 +165,14 @@
                             <input type="radio"
                                    name="gluten"
                                    value="true"
-                                   th:checked="${glutenSelecionado == true}">
-                            Sim
+                                   th:checked="${glutenSelecionado == true}">Sim
                         </label>
 
                         <label>
                             <input type="radio"
                                    name="gluten"
                                    value="false"
-                                   th:checked="${glutenSelecionado == false}">
-                            Não
+                                   th:checked="${glutenSelecionado == false}">Não
                         </label>
                     </div>
 

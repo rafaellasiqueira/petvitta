@@ -175,3 +175,11 @@ INSERT IGNORE INTO status_pedido (descricao) VALUES
 ('Reprovada'),
 ('Em transporte'),
 ('Entregue');
+
+-- Fornecedores
+INSERT IGNORE INTO fornecedor (nome_fantasia) VALUES
+('Nutri Pet'),
+('Vida Animal'),
+('PetMais Distribuidora'),
+('Cão & Gato Nutrição'),
+('PetSupply');

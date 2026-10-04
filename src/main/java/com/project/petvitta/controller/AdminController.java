@@ -3,6 +3,8 @@ package com.project.petvitta.controller;
 import com.project.petvitta.model.cliente.Cliente;
 import com.project.petvitta.model.dominio.StatusPedido;
 import com.project.petvitta.model.pedido.Pedido;
+import com.project.petvitta.model.produto.Produto;
+import com.project.petvitta.model.produto.VariacaoProduto;
 import com.project.petvitta.service.ClienteService;
 import com.project.petvitta.service.PedidoService;
 import com.project.petvitta.service.ProdutoService;
@@ -11,6 +13,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -67,20 +70,6 @@ public class AdminController {
                 "dashboard");
 
         return "admin/dashboard";
-    }
-
-    @GetMapping("/admin/produtos")
-    public String produtos(Model model) {
-        model.addAttribute(
-                "paginaAtual",
-                "produtos");
-
-        model.addAttribute(
-                "produtos",
-                produtoService.listarProdutos()
-        );
-
-        return "admin/produtos";
     }
 
     @GetMapping("/admin/pedidos")
@@ -227,8 +216,24 @@ public class AdminController {
     }
 
     @GetMapping("/admin/estoque")
-    public String estoque(Model model) {
+    public String estoque(
+            @RequestParam(required = false) String status,
+            @RequestParam(required = false) String pesquisa,
+            Model model) {
+
+        System.out.println("STATUS: " + status);
+        System.out.println("PESQUISA: " + pesquisa);
+
         model.addAttribute("paginaAtual", "estoque");
+
+        model.addAttribute(
+                "variacoes",
+                produtoService.filtrarEstoque(status, pesquisa)
+        );
+
+        model.addAttribute("statusSelecionado", status);
+        model.addAttribute("pesquisa", pesquisa);
+
         return "admin/estoque";
     }
 

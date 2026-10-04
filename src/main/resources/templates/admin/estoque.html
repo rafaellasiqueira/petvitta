@@ -6,7 +6,7 @@
 
     <title>Estoque</title>
 
-    <!-- font awesome -->
+    <!-- Font awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 
     <!-- sidebar css -->
@@ -35,13 +35,18 @@
 
         <main class="card">
             <!-- filtros -->
-            <div class="filtros">
+            <form th:action="@{/admin/estoque}" method="get" id="formFiltro" class="filtros">
+                <input type="hidden"
+                       name="status"
+                       id="statusSelecionado"
+                       th:value="${statusSelecionado}">
+
                 <!-- lado esquerdo -->
                 <div class="botoes">
-                    <button class="btn-filtro active">Todos</button>
-                    <button class="btn-filtro">Normal</button>
-                    <button class="btn-filtro">Baixo</button>
-                    <button class="btn-filtro">Esgotado</button>
+                    <button type="button" class="btn-filtro" data-status="Todos">Todos</button>
+                    <button type="button" class="btn-filtro" data-status="Normal">Normal</button>
+                    <button type="button" class="btn-filtro" data-status="Baixo">Baixo</button>
+                    <button type="button" class="btn-filtro" data-status="Esgotado">Esgotado</button>
                 </div>
 
                 <!-- lado direito -->
@@ -49,18 +54,21 @@
                     <div class="pesquisa"><i class="fa-solid fa-magnifying-glass"></i>
                         <input type="text"
                                id="inputPesquisa"
-                               placeholder="Buscar pelo nome do produto"></div>
+                               name="pesquisa"
+                               placeholder="Buscar pelo nome do produto"
+                               th:value="${pesquisa}"></div>
                     <button type="button" class="btn-cadastrar" id="btnCadastrar">Registrar entrada</button>
                 </div>
-            </div>
+        </form>
 
             <!-- tabela -->
-            <table>
+            <table th:if="${not #lists.isEmpty(variacoes)}">
                 <thead>
                 <tr>
+                    <th>Código</th>
                     <th>Produto</th>
                     <th>Fornecedor</th>
-                    <th>Quantidade</th>
+                    <th>Estoque</th>
                     <th>Valor custo</th>
                     <th>Valor venda</th>
                     <th>Data de entrada</th>
@@ -68,98 +76,24 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr>
-                    <td>Ração Golden Cães Adultos Frango 10kg</td>
-                    <td>PetMais Distribuidora Ltda</td>
-                    <td>120</td>
-                    <td>R$ 85,00</td>
-                    <td>R$ 139,90</td>
-                    <td>16/08/2026</td>
-                    <td>Normal</td>
-                </tr>
-                <tr>
-                    <td>Petisco Bifinho Doguitos Carne 65g</td>
-                    <td>NutriPet Alimentos S.A.</td>
-                    <td>4</td>
-                    <td>R$ 3,50</td>
-                    <td>R$ 7,90</td>
-                    <td>20/09/2026</td>
-                    <td class="estoque-baixo">Baixo</td>
-                </tr>
-                <tr>
-                    <td>Suplemento Omega 3 Vetnil 30 Cápsulas</td>
-                    <td>VetSaúde Distribuidora</td>
-                    <td>0</td>
-                    <td>R$ 42,00</td>
-                    <td>R$ 78,50</td>
-                    <td>10/05/2026</td>
-                    <td class="estoque-esgotado">Esgotado</td>
-                </tr>
-                <tr>
-                    <td>Ração Royal Canin Gatos Castrados 1kg</td>
-                    <td>PetMais Distribuidora Ltda</td>
-                    <td>45</td>
-                    <td>R$ 38,00</td>
-                    <td>R$ 64,90</td>
-                    <td>12/11/2026</td>
-                    <td>Normal</td>
-                </tr>
-                <tr>
-                    <td>Petisco Sachê Whiskas Carne ao Molho 85g</td>
-                    <td>NutriPet Alimentos S.A.</td>
-                    <td>2</td>
-                    <td>R$ 1,80</td>
-                    <td>R$ 3,50</td>
-                    <td>05/10/2026</td>
-                    <td class="estoque-baixo">Baixo</td>
-                </tr>
-                <tr>
-                    <td>Suplemento Glicopan Pet Xarope 125ml</td>
-                    <td>VetSaúde Distribuidora</td>
-                    <td>18</td>
-                    <td>R$ 28,00</td>
-                    <td>R$ 49,90</td>
-                    <td>18/07/2026</td>
-                    <td>Normal</td>
-                </tr>
-                <tr>
-                    <td>Ração Premier Filhotes Porte Médio 15kg</td>
-                    <td>PetMais Distribuidora Ltda</td>
-                    <td>0</td>
-                    <td>R$ 145,00</td>
-                    <td>R$ 229,00</td>
-                    <td>30/08/2026</td>
-                    <td class="estoque-esgotado">Esgotado</td>
-                </tr>
-                <tr>
-                    <td>Petisco Osso Mastigável SnackBar 100g</td>
-                    <td>NutriPet Alimentos S.A.</td>
-                    <td>80</td>
-                    <td>R$ 6,00</td>
-                    <td>R$ 12,90</td>
-                    <td>14/12/2026</td>
-                    <td>Normal</td>
-                </tr>
-                <tr>
-                    <td>Suplemento Organew DenerPills 100g</td>
-                    <td>VetSaúde Distribuidora</td>
-                    <td>3</td>
-                    <td>R$ 31,00</td>
-                    <td>R$ 55,00</td>
-                    <td>02/09/2026</td>
-                    <td class="estoque-baixo">Baixo</td>
-                </tr>
-                <tr>
-                    <td>Ração Special Cat Prime Gatos 10kg</td>
-                    <td>PetMais Distribuidora Ltda</td>
-                    <td>32</td>
-                    <td>R$ 72,00</td>
-                    <td>R$ 119,90</td>
-                    <td>25/10/2026</td>
-                    <td>Normal</td>
-                </tr>
+                    <tr th:each="variacao : ${variacoes}">
+                        <td th:text="${'PR-' + variacao.produto.codigoProduto}"></td>
+                        <td class="nome-produto" th:text="${variacao.produto.nome + ' - ' + variacao.tamanho}"
+                            th:title="${variacao.produto.nome + ' - ' + variacao.tamanho}">
+                        </td>
+                        <td th:text="${variacao.produto.fornecedor.nomeFantasia}"></td>
+                        <td th:text="${variacao.estoqueAtual}"></td>
+                        <td th:text="${'R$ ' + variacao.valorCusto}"></td>
+                        <td th:text="${'R$ ' + variacao.valorVenda}"></td>
+                        <td>--</td>
+                        <td th:text="${variacao.statusEstoque}"></td>
+                    </tr>
                 </tbody>
             </table>
+
+            <div th:if="${#lists.isEmpty(variacoes)}" class="sem-resultados">
+                <p>Nenhum produto encontrado.</p>
+            </div>
 
             <!-- modal cadastro -->
             <div id="modalEstoque" class="modal">

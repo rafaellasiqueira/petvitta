@@ -16,11 +16,9 @@ const camposPreco = formFiltro.querySelectorAll(
 
 camposPreco.forEach(function (campo) {
     campo.addEventListener("keydown", function (event) {
-
         if (event.key === "Enter") {
             event.preventDefault();
             formFiltro.submit();
         }
-
     });
 });

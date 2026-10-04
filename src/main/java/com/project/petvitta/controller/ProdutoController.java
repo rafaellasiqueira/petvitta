@@ -54,35 +54,12 @@ public class ProdutoController {
             return "redirect:/cliente/inativo";
         }
 
-        model.addAttribute(
-                "tiposRacao",
-                produtoService.listarTiposRacao()
-        );
-
-        model.addAttribute(
-                "tiposPetisco",
-                produtoService.listarTiposPetisco()
-        );
-
-        model.addAttribute(
-                "formasApresentacao",
-                produtoService.listarFormasApresentacao()
-        );
-
-        model.addAttribute(
-                "especies",
-                produtoService.listarEspecies()
-        );
-
-        model.addAttribute(
-                "faixasEtarias",
-                produtoService.listarFaixasEtarias()
-        );
-
-        model.addAttribute(
-                "portes",
-                produtoService.listarPortes()
-        );
+        model.addAttribute("tiposRacao", produtoService.listarTiposRacao());
+        model.addAttribute("tiposPetisco", produtoService.listarTiposPetisco());
+        model.addAttribute("formasApresentacao", produtoService.listarFormasApresentacao());
+        model.addAttribute("especies", produtoService.listarEspecies());
+        model.addAttribute("faixasEtarias", produtoService.listarFaixasEtarias());
+        model.addAttribute("portes", produtoService.listarPortes());
 
         model.addAttribute("tipoRacaoSelecionados", tipoRacao);
         model.addAttribute("tipoPetiscoSelecionados", tipoPetisco);

@@ -97,3 +97,9 @@
     width: 50%;
 }
 
+.nome-produto {
+    max-width: 300px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}

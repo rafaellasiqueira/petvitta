@@ -101,6 +101,10 @@ public class Produto {
             orphanRemoval = true)
     private List<VariacaoProduto> variacoes = new ArrayList<>();
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "fornecedor_id", nullable = false)
+    private Fornecedor fornecedor;
+
     public String getCategoria() {
         if (this instanceof Racao) { /* Verifica se o objeto pertence a tal classe */
             return "Ração";

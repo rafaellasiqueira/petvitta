@@ -31,23 +31,6 @@
             <span>Dashboard</span>
         </a>
 
-
-        <!-- Produtos -->
-        <a th:if="${paginaAtual == 'produtos'}"
-           th:href="@{/admin/produtos}"
-           class="menu-item ativo">
-            <i class="fa-solid fa-bone"></i>
-            <span>Produtos</span>
-        </a>
-
-        <a th:unless="${paginaAtual == 'produtos'}"
-           th:href="@{/admin/produtos}"
-           class="menu-item">
-            <i class="fa-solid fa-bone"></i>
-            <span>Produtos</span>
-        </a>
-
-
         <!-- Pedidos -->
         <a th:if="${paginaAtual == 'pedidos'}"
            th:href="@{/admin/pedidos}"
