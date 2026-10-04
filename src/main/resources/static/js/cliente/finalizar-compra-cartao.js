@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const btnAdicionarCartao = document.getElementById('btnCadastrarCartao');
     const btnFecharCartao = document.getElementById('btnFecharModalCartao');
     const btnCancelarCartao = document.getElementById('btnCancelarCartao');
-    const campoSalvarPerfil = document.getElementById('campoSalvarCartao');
+    const salvarCartaoPerfil = document.getElementById('salvarCartaoPerfil');
 
     configurarCartao(modalCartao);
 
@@ -93,6 +93,14 @@ document.addEventListener('DOMContentLoaded', function () {
             formularioValido = false;
             erroCvv.textContent = 'O CVV deve ter 3 ou 4 números.';
             cvv.focus();
+        }
+
+        if (formularioValido) {
+            if (salvarCartaoPerfil.checked) {
+                formCartao.action = '/cliente/adicionar-cartao?voltarPara=finalizar-compra';
+            } else {
+                formCartao.action = '/cliente/adicionar-cartao-temporario';
+            }
         }
 
         if (!formularioValido) {

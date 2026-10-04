@@ -3,16 +3,64 @@ function pegarValor(texto) {
     return parseFloat(texto.replace('R$', '').replace(/\./g, '').replace(',', '.').trim()) || 0;
 }
 
-function calcularFrete(subtotal) {
-    if (subtotal < 100) {
-        return 20;
+function calcularFrete(quantidadeItens, siglaEstado) {
+
+    let frete = 0;
+
+    if (quantidadeItens >= 3) {
+        frete += 4;
     }
 
-    if (subtotal < 200) {
-        return 15;
+    if (quantidadeItens >= 6) {
+        frete += 8;
     }
 
-    return 10;
+    // Sudeste
+    if (siglaEstado === 'SP' ||
+        siglaEstado === 'RJ' ||
+        siglaEstado === 'MG' ||
+        siglaEstado === 'ES') {
+
+        frete += 5;
+    }
+
+    // Sul
+    else if (siglaEstado === 'PR' ||
+        siglaEstado === 'SC' ||
+        siglaEstado === 'RS') {
+
+        frete += 10;
+    }
+
+    // Centro-Oeste
+    else if (siglaEstado === 'GO' ||
+        siglaEstado === 'MT' ||
+        siglaEstado === 'MS' ||
+        siglaEstado === 'DF') {
+
+        frete += 15;
+    }
+
+    // Nordeste
+    else if (siglaEstado === 'BA' ||
+        siglaEstado === 'SE' ||
+        siglaEstado === 'AL' ||
+        siglaEstado === 'PE' ||
+        siglaEstado === 'PB' ||
+        siglaEstado === 'RN' ||
+        siglaEstado === 'CE' ||
+        siglaEstado === 'PI' ||
+        siglaEstado === 'MA') {
+
+        frete += 20;
+    }
+
+    // Norte
+    else {
+        frete += 25;
+    }
+
+    return frete;
 }
 
 function mostrarToast(mensagem) {
@@ -40,7 +88,22 @@ function atualizarTotal() {
         subtotal += pegarValor(produto.textContent);
     });
 
-    const frete = calcularFrete(subtotal);
+    let quantidadeItens = 0;
+
+    document.querySelectorAll('.quantidade-produto').forEach(function (elemento) {
+        quantidadeItens += parseInt(
+            elemento.textContent.replace('Quantidade: ', '')
+        );
+    });
+
+    const endereco = document.querySelector('.endereco');
+    const siglaEstado = endereco.dataset.estado;
+
+    const frete = calcularFrete(
+        quantidadeItens,
+        siglaEstado
+    );
+
     let desconto = 0;
 
     document.querySelectorAll('.checkbox-cupom:checked').forEach(function (checkbox) {
@@ -76,7 +139,7 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    const btnAlterarEndereco = document.getElementById('btnAlterarEndereco');
+    const btnAlterarEndereco = document.querySelector('.btnAlterarEndereco')
     const modalAlterarEndereco = document.getElementById('modalAlterarEndereco');
     const btnFecharModalAlterarEndereco = document.getElementById('btnFecharModalAlterarEndereco');
 
@@ -167,13 +230,82 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
+    const cartaoTemporario = document.querySelector('.cartao-temporario');
+
+    if (cartaoTemporario) {
+
+        const checkboxTemporario = cartaoTemporario.querySelector('.checkbox-cartao-temporario');
+        const campoTemporario = cartaoTemporario.querySelector('.input-valor input');
+
+        checkboxTemporario.addEventListener('change', function () {
+            const total = pegarValor(document.getElementById('total').textContent);
+            const desconto = pegarValor(document.getElementById('desconto').textContent.replace('-', ''));
+
+            if (total === 0 && desconto > 0) {
+                this.checked = false;
+                campoTemporario.disabled = true;
+                campoTemporario.value = '0';
+
+                mostrarToast('A compra já foi paga com o(s) cupom(ns) selecionado(s).');
+                return;
+            }
+
+            if (this.checked) {
+                campoTemporario.disabled = false;
+
+                if (total < 10 && desconto > 0) {
+                    campoTemporario.value = '0.01';
+                } else {
+                    campoTemporario.value = '10.00';
+                }
+
+            } else {
+                campoTemporario.disabled = true;
+                campoTemporario.value = '0';
+            }
+        });
+
+        campoTemporario.disabled = true;
+        campoTemporario.value = '0';
+
+        campoTemporario.addEventListener('blur', function () {
+
+            const valor = parseFloat(this.value) || 0;
+            const total = pegarValor(document.getElementById('total').textContent);
+            const desconto = pegarValor(document.getElementById('desconto').textContent.replace('-', ''));
+
+            let minimo = 10;
+
+            if (total < 10 && desconto > 0) {
+                minimo = 0.01;
+            }
+
+            if (valor > 0 && valor < minimo) {
+                mostrarToast(
+                    'O valor mínimo por cartão é de R$ ' +
+                    minimo.toFixed(2).replace('.', ',') +
+                    '.'
+                );
+            }
+        });
+    }
+
     const formFinalizarCompra = document.getElementById('formFinalizarCompra');
 
     formFinalizarCompra.addEventListener('submit', function (event) {
-        const total = pegarValor(document.getElementById('total').textContent);
+        const total = pegarValor(
+            document.getElementById('total').textContent
+        );
+
         let valorCartoes = 0;
         let cartoesSelecionados = 0;
 
+        // Remove inputs criados anteriormente
+        formFinalizarCompra.querySelectorAll('.input-cartao-dinamico').forEach(function (input) {
+            input.remove();
+        });
+
+        // Cartões salvos
         document.querySelectorAll('.cartao-item').forEach(function (item) {
             const checkbox = item.querySelector('.checkbox-cartao');
             const campo = item.querySelector('.input-valor input');
@@ -188,36 +320,99 @@ document.addEventListener('DOMContentLoaded', function () {
                 inputId.type = 'hidden';
                 inputId.name = 'cartoes[' + indice + '].cartaoId';
                 inputId.value = checkbox.value;
+                inputId.classList.add('input-cartao-dinamico');
 
                 const inputValor = document.createElement('input');
                 inputValor.type = 'hidden';
                 inputValor.name = 'cartoes[' + indice + '].valor';
                 inputValor.value = campo.value;
+                inputValor.classList.add('input-cartao-dinamico');
 
                 formFinalizarCompra.appendChild(inputId);
                 formFinalizarCompra.appendChild(inputValor);
             }
         });
 
+        // Cartão temporário
+        const cartaoTemporario =
+            document.querySelector('.cartao-temporario');
+
+        if (cartaoTemporario) {
+
+            const checkboxTemporario =
+                cartaoTemporario.querySelector(
+                    '.checkbox-cartao-temporario'
+                );
+
+            const campoTemporario =
+                cartaoTemporario.querySelector(
+                    '.input-valor input'
+                );
+
+            const idTemporario =
+                document.querySelector(
+                    '[name="cartaoTemporarioId"]'
+                );
+
+            if (checkboxTemporario.checked) {
+
+                valorCartoes +=
+                    parseFloat(campoTemporario.value) || 0;
+
+                cartoesSelecionados++;
+
+                campoTemporario.disabled = false;
+
+                if (idTemporario) {
+                    idTemporario.disabled = false;
+                }
+
+            } else {
+
+                campoTemporario.disabled = true;
+                campoTemporario.value = '0';
+
+                if (idTemporario) {
+                    idTemporario.disabled = true;
+                }
+            }
+        }
+
+        // Verifica se selecionou algum cartão
         if (total > 0 && cartoesSelecionados === 0) {
             event.preventDefault();
-            mostrarToast('Selecione pelo menos um cartão para finalizar a compra.');
+
+            mostrarToast(
+                'Selecione pelo menos um cartão para finalizar a compra.'
+            );
+
             return;
         }
 
+        // Verifica se o valor dos cartões é menor que o total
         if (valorCartoes < total) {
             event.preventDefault();
+
             mostrarToast(
                 'Ainda falta informar R$ ' +
-                (total - valorCartoes).toFixed(2).replace('.', ',') +
+                (total - valorCartoes)
+                    .toFixed(2)
+                    .replace('.', ',') +
                 ' para finalizar a compra.'
             );
+
             return;
         }
 
+        // Verifica se o valor dos cartões é maior que o total
         if (valorCartoes > total) {
             event.preventDefault();
-            mostrarToast('O valor informado nos cartões é maior que o total da compra.');
+
+            mostrarToast(
+                'O valor informado nos cartões é maior que o total da compra.'
+            );
+
+            return;
         }
     });
 });

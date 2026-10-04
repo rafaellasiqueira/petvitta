@@ -8,15 +8,28 @@ document.addEventListener('DOMContentLoaded', function () {
     const btnCancelarEndereco = document.getElementById('btnCancelarEndereco');
     const btnSalvarEndereco = document.getElementById('btnSalvarEndereco');
     const campoSalvarPerfil = document.getElementById('campoSalvarPerfil');
+    const salvarEnderecoPerfil = document.getElementById('salvarEnderecoPerfil');
+    let editandoEndereco = false;
 
     configurarEndereco(modalEndereco);
 
     // Adicionar endereço
     btnAdicionarEndereco.addEventListener('click', function () {
+        editandoEndereco = false;
+
         formEndereco.reset();
+
         tituloEndereco.textContent = 'Adicionar endereço';
         btnSalvarEndereco.textContent = 'Adicionar';
-        formEndereco.action = '/cliente/adicionar-endereco?voltarPara=finalizar-compra';
+
+        formEndereco.action =
+            '/cliente/adicionar-endereco?voltarPara=finalizar-compra';
+
+        if (campoSalvarPerfil) {
+            campoSalvarPerfil.style.display = '';
+        }
+
+        salvarEnderecoPerfil.checked = true;
 
         modalEndereco.querySelectorAll('.mensagem-erro').forEach(function (erro) {
             erro.textContent = '';
@@ -30,6 +43,8 @@ document.addEventListener('DOMContentLoaded', function () {
     document.querySelectorAll('.editar-endereco').forEach(function (botao) {
         botao.addEventListener('click', function (event) {
             event.preventDefault();
+            salvarEnderecoPerfil.closest('.checkbox-endereco-cartao').style.display = 'none';
+            editandoEndereco = true;
 
             modalEndereco.querySelectorAll('.mensagem-erro').forEach(function (erro) {
                 erro.textContent = '';
@@ -191,6 +206,14 @@ document.addEventListener('DOMContentLoaded', function () {
             formularioValido = false;
             erroPais.textContent = 'Preencha o nome do país.';
             pais.focus();
+        }
+
+        if (formularioValido && !editandoEndereco) {
+            if (salvarEnderecoPerfil.checked) {
+                formEndereco.action = '/cliente/adicionar-endereco?voltarPara=finalizar-compra';
+            } else {
+                formEndereco.action = '/cliente/adicionar-endereco-temporario';
+            }
         }
 
         if (!formularioValido) {

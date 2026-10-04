@@ -63,12 +63,9 @@
                 <div th:each="item : ${itensExpirados}"
                      class="container-produtos-expirados">
 
-                    <p th:text="${item.variacao.produto.nome}">
-                        Nome do produto
-                    </p>
+                    <p th:text="${item.variacao.produto.nome}"></p>
 
                     <form th:action="@{/cliente/carrinho/adicionar}" method="post">
-
                         <input type="hidden"
                                name="variacaoId"
                                th:value="${item.variacao.id}">
@@ -81,9 +78,7 @@
                                 class="btn-adicionar-novamente">
                             Adicionar novamente
                         </button>
-
                     </form>
-
                 </div>
 
                 <span class="linha"></span>
@@ -94,7 +89,6 @@
                       class="form-adicionar-todos">
 
                     <div th:each="item : ${itensExpirados}">
-
                         <input type="hidden"
                                name="variacaoId"
                                th:value="${item.variacao.id}">
@@ -102,22 +96,18 @@
                         <input type="hidden"
                                name="quantidade"
                                th:value="${item.quantidade}">
-
                     </div>
 
                     <button type="submit"
                             class="btn-adicionar-novamente">
                         Adicionar todos novamente
                     </button>
-
                 </form>
-
             </div>
 
                 <!-- Selecionar todos -->
                 <div class="selecionar-todos">
                     <input type="checkbox" id="todos">
-
                     <label for="todos">Selecionar todos os itens</label>
                 </div>
 
@@ -198,11 +188,8 @@
 
             <div th:if="${carrinho == null or carrinho.itens.isEmpty()}"
                  class="carrinho-vazio">
-
                 <h2>Seu carrinho está vazio</h2>
-
                 <p>Adicione produtos para continuar sua compra.</p>
-
             </div>
         </div>
 
@@ -214,13 +201,9 @@
             </div>
 
             <form th:action="@{/cliente/finalizar-compra}" method="get" id="formFinalizarCompra">
-
                 <div id="itensSelecionados"></div>
 
-                <button type="submit" class="btn-finalizar-a-compra">
-                    Realizar a compra
-                </button>
-
+                <button type="submit" class="btn-finalizar-a-compra">Realizar a compra</button>
             </form>
         </div>
 

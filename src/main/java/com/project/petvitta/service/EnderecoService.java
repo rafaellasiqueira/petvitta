@@ -7,8 +7,11 @@ import com.project.petvitta.model.dominio.Estado;
 import com.project.petvitta.model.dominio.TipoEndereco;
 import com.project.petvitta.model.dominio.TipoLogradouro;
 import com.project.petvitta.model.dominio.TipoResidencia;
+import com.project.petvitta.model.pedido.CartaoTemporario;
+import com.project.petvitta.model.pedido.EnderecoTemporario;
 import com.project.petvitta.repository.cliente.ClienteRepository;
 import com.project.petvitta.repository.dominio.*;
+import com.project.petvitta.repository.pedido.EnderecoTemporarioRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
@@ -21,19 +24,21 @@ public class EnderecoService {
     private final TipoLogradouroRepository tipoLogradouroRepository;
     private final EstadoRepository estadoRepository;
     private final ClienteRepository clienteRepository;
+    private final EnderecoTemporarioRepository enderecoTemporarioRepository;
 
     public EnderecoService(
             TipoEnderecoRepository tipoEnderecoRepository,
             TipoResidenciaRepository tipoResidenciaRepository,
             TipoLogradouroRepository tipoLogradouroRepository,
             EstadoRepository estadoRepository,
-            ClienteRepository clienteRepository
+            ClienteRepository clienteRepository, EnderecoTemporarioRepository enderecoTemporarioRepository
     ) {
         this.tipoEnderecoRepository = tipoEnderecoRepository;
         this.tipoResidenciaRepository = tipoResidenciaRepository;
         this.tipoLogradouroRepository = tipoLogradouroRepository;
         this.estadoRepository = estadoRepository;
         this.clienteRepository = clienteRepository;
+        this.enderecoTemporarioRepository = enderecoTemporarioRepository;
     }
 
     public List<TipoEndereco> listarTiposEndereco() {
@@ -125,6 +130,73 @@ public class EnderecoService {
         );
 
         cliente.getEnderecos().add(endereco);
+    }
+
+    @Transactional
+    public EnderecoTemporario adicionarTemporario(
+            Long clienteId,
+            EnderecoDTO dto
+    ) {
+
+        Cliente cliente = clienteRepository.findById(clienteId)
+                .orElseThrow(() ->
+                        new IllegalArgumentException(
+                                "Cliente não encontrado."
+                        )
+                );
+
+        EnderecoTemporario endereco = new EnderecoTemporario();
+
+        endereco.setNomeIdentificacao(dto.getNomeIdentificacao());
+        endereco.setCep(dto.getCep());
+        endereco.setLogradouro(dto.getLogradouro());
+        endereco.setBairro(dto.getBairro());
+        endereco.setNumero(dto.getNumero());
+        endereco.setCidade(dto.getCidade());
+        endereco.setPais(dto.getPais());
+        endereco.setObservacoes(dto.getObservacoes());
+        endereco.setUtilizado(false);
+        endereco.setCliente(cliente);
+
+
+
+        endereco.setTipoEndereco(
+                tipoEnderecoRepository.findById(dto.getTipoEndereco())
+                        .orElseThrow(() ->
+                                new IllegalArgumentException(
+                                        "Tipo de endereço inválido."
+                                )
+                        )
+        );
+
+        endereco.setTipoResidencia(
+                tipoResidenciaRepository.findById(dto.getTipoResidencia())
+                        .orElseThrow(() ->
+                                new IllegalArgumentException(
+                                        "Tipo de residência inválido."
+                                )
+                        )
+        );
+
+        endereco.setTipoLogradouro(
+                tipoLogradouroRepository.findById(dto.getTipoLogradouro())
+                        .orElseThrow(() ->
+                                new IllegalArgumentException(
+                                        "Tipo de logradouro inválido."
+                                )
+                        )
+        );
+
+        endereco.setEstado(
+                estadoRepository.findById(dto.getEstado())
+                        .orElseThrow(() ->
+                                new IllegalArgumentException(
+                                        "Estado inválido."
+                                )
+                        )
+        );
+
+        return enderecoTemporarioRepository.save(endereco);
     }
 
     private void validarAlteracaoTipoEndereco(
@@ -324,5 +396,17 @@ public class EnderecoService {
         }
 
         cliente.getEnderecos().remove(endereco);
+    }
+
+    public EnderecoTemporario buscarTemporarioPorId(Long id) {
+
+        EnderecoTemporario endereco =
+                enderecoTemporarioRepository.findById(id).orElse(null);
+
+        if (endereco != null && endereco.isUtilizado()) {
+            return null;
+        }
+
+        return endereco;
     }
 }

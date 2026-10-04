@@ -198,22 +198,18 @@
             <span id="mensagemEstoque" class="mensagem-erro"></span>
 
             <form id="formAdicionar" method="post">
+                <input type="hidden" name="origem" value="detalhes">
 
                 <input type="hidden" name="variacaoId">
 
                 <input type="hidden" name="quantidade">
 
+                <input type="hidden" name="produtoId" th:value="${produto.id}">
+
                 <button type="button" class="btn-adicionar-carrinho">
                     Adicionar ao carrinho
                 </button>
-
             </form>
-        </div>
-
-        <!-- Toast -->
-        <div id="toastAtencao" class="toast">
-            <i class="fa-solid fa-circle-xmark"></i>
-            <p>Selecione pelo menos um produto.</p>
         </div>
 
         <!-- Toast -->

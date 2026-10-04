@@ -11,9 +11,7 @@ import com.project.petvitta.model.cliente.Endereco;
 import com.project.petvitta.model.dominio.StatusPedido;
 import com.project.petvitta.model.dominio.TipoCupom;
 import com.project.petvitta.model.dominio.TipoTelefone;
-import com.project.petvitta.model.pedido.ItemPedido;
-import com.project.petvitta.model.pedido.Pagamento;
-import com.project.petvitta.model.pedido.Pedido;
+import com.project.petvitta.model.pedido.*;
 import com.project.petvitta.repository.carrinho.CarrinhoRepository;
 import com.project.petvitta.repository.cliente.CartaoRepository;
 import com.project.petvitta.repository.cliente.ClienteRepository;
@@ -21,9 +19,7 @@ import com.project.petvitta.repository.cliente.CupomRepository;
 import com.project.petvitta.repository.cliente.EnderecoRepository;
 import com.project.petvitta.repository.dominio.StatusPedidoRepository;
 import com.project.petvitta.repository.dominio.TipoCupomRepository;
-import com.project.petvitta.repository.pedido.ItemPedidoRepository;
-import com.project.petvitta.repository.pedido.PagamentoRepository;
-import com.project.petvitta.repository.pedido.PedidoRepository;
+import com.project.petvitta.repository.pedido.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -47,6 +43,8 @@ public class PedidoService {
     private final CartaoRepository cartaoRepository;
     private final StatusPedidoRepository statusPedidoRepository;
     private final TipoCupomRepository tipoCupomRepository;
+    private final CartaoTemporarioRepository cartaoTemporarioRepository;
+    private final EnderecoTemporarioRepository enderecoTemporarioRepository;
 
     public PedidoService(
             PedidoRepository pedidoRepository,
@@ -58,7 +56,7 @@ public class PedidoService {
             CupomRepository cupomRepository,
             CartaoRepository cartaoRepository,
             StatusPedidoRepository statusPedidoRepository,
-            TipoCupomRepository tipoCupomRepository
+            TipoCupomRepository tipoCupomRepository, CartaoTemporarioRepository cartaoTemporarioRepository, EnderecoTemporarioRepository enderecoTemporarioRepository
     ) {
         this.pedidoRepository = pedidoRepository;
         this.itemPedidoRepository = itemPedidoRepository;
@@ -70,6 +68,8 @@ public class PedidoService {
         this.cartaoRepository = cartaoRepository;
         this.statusPedidoRepository = statusPedidoRepository;
         this.tipoCupomRepository = tipoCupomRepository;
+        this.cartaoTemporarioRepository = cartaoTemporarioRepository;
+        this.enderecoTemporarioRepository = enderecoTemporarioRepository;
     }
 
     public List<Pedido> listarPorCliente(Long clienteId) {
@@ -120,7 +120,22 @@ public class PedidoService {
         validarCarrinho(carrinho);
 
         // Obter o endereço
-        Endereco endereco = obterEndereco(cliente, dto);
+        Endereco endereco = null;
+        EnderecoTemporario enderecoTemporario = null;
+
+        if (dto.getEnderecoId() != null) {
+            endereco = obterEndereco(cliente, dto);
+        }
+
+        if (dto.getEnderecoTemporarioId() != null) {
+            enderecoTemporario = obterEnderecoTemporario(cliente, dto);
+        }
+
+        if (endereco == null && enderecoTemporario == null) {
+            throw new IllegalArgumentException(
+                    "Selecione um endereço de entrega."
+            );
+        }
 
         // Validar se está vazio
         validarItensSelecionados(dto.getItensSelecionados());
@@ -128,8 +143,33 @@ public class PedidoService {
         // Calcular subtotal
         BigDecimal subtotal = calcularSubtotal(carrinho, dto.getItensSelecionados());
 
+        // Quantidade de itens selecionados
+        int quantidadeItens = 0;
+
+        for (int i = 0; i < carrinho.getItens().size(); i++) {
+            ItemCarrinho item = carrinho.getItens().get(i);
+
+            if (dto.getItensSelecionados().contains(item.getId())) {
+                quantidadeItens += item.getQuantidade();
+            }
+        }
+
+        // Estado do endereço
+        String siglaEstado = "";
+
+        if (endereco != null) {
+            siglaEstado = endereco.getEstado().getSigla();
+        }
+
+        if (enderecoTemporario != null) {
+            siglaEstado = enderecoTemporario.getEstado().getSigla();
+        }
+
         // Frete
-        BigDecimal frete = calcularFrete(subtotal);
+        BigDecimal frete = calcularFrete(
+                quantidadeItens,
+                siglaEstado
+        );
 
         // Buscar cupons
         List<Cupom> cupons = buscarCupons(dto.getCuponsIds());
@@ -162,6 +202,7 @@ public class PedidoService {
         pedido.setTotal(total);
         pedido.setCliente(cliente);
         pedido.setEndereco(endereco);
+        pedido.setEnderecoCompra(enderecoTemporario);
         pedido.setCupons(cupons);
         pedido.setCodigo(gerarCodigo());
 
@@ -179,6 +220,10 @@ public class PedidoService {
         salvarItensPedido(pedidoSalvo, carrinho, dto.getItensSelecionados());
 
         salvarPagamentos(pedidoSalvo, cliente, dto);
+
+        if (enderecoTemporario != null) {
+            enderecoTemporario.setUtilizado(true);
+        }
 
         carrinho.getItens().removeIf(item -> dto.getItensSelecionados().contains(item.getId()));
 
@@ -226,6 +271,32 @@ public class PedidoService {
         return endereco;
     }
 
+    private EnderecoTemporario obterEnderecoTemporario(
+            Cliente cliente,
+            FinalizarCompraDTO dto
+    ) {
+        if (dto.getEnderecoTemporarioId() == null) {
+            return null;
+        }
+
+        EnderecoTemporario endereco =
+                enderecoTemporarioRepository.findById(
+                        dto.getEnderecoTemporarioId()
+                ).orElseThrow(() ->
+                        new IllegalArgumentException(
+                                "Endereço temporário não encontrado."
+                        )
+                );
+
+        if (!endereco.getCliente().getId().equals(cliente.getId())) {
+            throw new IllegalArgumentException(
+                    "O endereço não pertence ao cliente."
+            );
+        }
+
+        return endereco;
+    }
+
     private void validarItensSelecionados(List<Long> itensSelecionados) {
         if (itensSelecionados == null || itensSelecionados.isEmpty()) {
             throw new IllegalArgumentException(
@@ -254,16 +325,66 @@ public class PedidoService {
         return subtotal;
     }
 
-    private BigDecimal calcularFrete(BigDecimal subtotal) {
-        if (subtotal.compareTo(new BigDecimal("100.00")) < 0) {
-            return new BigDecimal("20.00");
+    private BigDecimal calcularFrete(
+            int quantidadeItens,
+            String siglaEstado) {
+
+        BigDecimal frete = BigDecimal.ZERO;
+
+        if (quantidadeItens >= 3) {
+            frete = frete.add(new BigDecimal("4.00"));
         }
 
-        if (subtotal.compareTo(new BigDecimal("200.00")) < 0) {
-            return new BigDecimal("15.00");
+        if (quantidadeItens >= 6) {
+            frete = frete.add(new BigDecimal("8.00"));
         }
 
-        return new BigDecimal("10.00");
+        // Sudeste
+        if ("SP".equalsIgnoreCase(siglaEstado) ||
+                "RJ".equalsIgnoreCase(siglaEstado) ||
+                "MG".equalsIgnoreCase(siglaEstado) ||
+                "ES".equalsIgnoreCase(siglaEstado)) {
+
+            frete = frete.add(new BigDecimal("5.00"));
+        }
+
+        // Sul
+        else if ("PR".equalsIgnoreCase(siglaEstado) ||
+                "SC".equalsIgnoreCase(siglaEstado) ||
+                "RS".equalsIgnoreCase(siglaEstado)) {
+
+            frete = frete.add(new BigDecimal("10.00"));
+        }
+
+        // Centro-Oeste
+        else if ("GO".equalsIgnoreCase(siglaEstado) ||
+                "MT".equalsIgnoreCase(siglaEstado) ||
+                "MS".equalsIgnoreCase(siglaEstado) ||
+                "DF".equalsIgnoreCase(siglaEstado)) {
+
+            frete = frete.add(new BigDecimal("15.00"));
+        }
+
+        // Nordeste
+        else if ("BA".equalsIgnoreCase(siglaEstado) ||
+                "SE".equalsIgnoreCase(siglaEstado) ||
+                "AL".equalsIgnoreCase(siglaEstado) ||
+                "PE".equalsIgnoreCase(siglaEstado) ||
+                "PB".equalsIgnoreCase(siglaEstado) ||
+                "RN".equalsIgnoreCase(siglaEstado) ||
+                "CE".equalsIgnoreCase(siglaEstado) ||
+                "PI".equalsIgnoreCase(siglaEstado) ||
+                "MA".equalsIgnoreCase(siglaEstado)) {
+
+            frete = frete.add(new BigDecimal("20.00"));
+        }
+
+        // Norte
+        else {
+            frete = frete.add(new BigDecimal("25.00"));
+        }
+
+        return frete;
     }
 
     private List<Cupom> buscarCupons(List<Long> cuponsIds) {
@@ -323,20 +444,25 @@ public class PedidoService {
         BigDecimal valorPago = BigDecimal.ZERO;
         int quantidadeCartoes = 0;
 
-        boolean possuiCupom = dto.getCuponsIds() != null && !dto.getCuponsIds().isEmpty();
+        boolean possuiCupom =
+                dto.getCuponsIds() != null &&
+                        !dto.getCuponsIds().isEmpty();
 
         if (dto.getCartoes() != null) {
             for (int i = 0; i < dto.getCartoes().size(); i++) {
+
                 Long cartaoId = dto.getCartoes().get(i).getCartaoId();
                 BigDecimal valor = dto.getCartoes().get(i).getValor();
 
                 if (valor == null || valor.compareTo(BigDecimal.ZERO) <= 0) {
-                    continue; // Se for zero ele pula
+                    continue;
                 }
 
                 Cartao cartao = cartaoRepository.findById(cartaoId)
                         .orElseThrow(() ->
-                                new IllegalArgumentException("Cartão não encontrado."));
+                                new IllegalArgumentException(
+                                        "Cartão não encontrado."
+                                ));
 
                 if (!cartao.getCliente().getId().equals(cliente.getId())) {
                     throw new IllegalArgumentException(
@@ -345,6 +471,37 @@ public class PedidoService {
                 }
 
                 validarValorCartaoCupom(valor, total, possuiCupom);
+
+                valorPago = valorPago.add(valor);
+                quantidadeCartoes++;
+            }
+        }
+
+        if (dto.getCartaoTemporarioId() != null) {
+
+            CartaoTemporario cartaoTemporario =
+                    cartaoTemporarioRepository
+                            .findById(dto.getCartaoTemporarioId())
+                            .orElseThrow(() ->
+                                    new IllegalArgumentException(
+                                            "Cartão temporário não encontrado."
+                                    ));
+
+            if (!cartaoTemporario.getCliente().getId().equals(cliente.getId())) {
+                throw new IllegalArgumentException(
+                        "O cartão não pertence ao cliente."
+                );
+            }
+
+            BigDecimal valor = dto.getValorCartaoTemporario();
+
+            if (valor != null && valor.compareTo(BigDecimal.ZERO) > 0) {
+
+                validarValorCartaoCupom(
+                        valor,
+                        total,
+                        possuiCupom
+                );
 
                 valorPago = valorPago.add(valor);
                 quantidadeCartoes++;
@@ -406,31 +563,72 @@ public class PedidoService {
             Cliente cliente,
             FinalizarCompraDTO dto
     ) {
-        if (dto.getCartoes() == null) {
-            return;
+        if (dto.getCartoes() != null) {
+
+            for (int i = 0; i < dto.getCartoes().size(); i++) {
+
+                CartaoPagamentoDTO cartaoDTO = dto.getCartoes().get(i);
+
+                BigDecimal valor = cartaoDTO.getValor();
+
+                if (valor != null && valor.compareTo(BigDecimal.ZERO) > 0) {
+
+                    Cartao cartao = cartaoRepository
+                            .findById(cartaoDTO.getCartaoId())
+                            .orElseThrow(() ->
+                                    new IllegalArgumentException(
+                                            "Cartão não encontrado."
+                                    ));
+
+                    if (!cartao.getCliente().getId().equals(cliente.getId())) {
+                        throw new IllegalArgumentException(
+                                "O cartão não pertence ao cliente."
+                        );
+                    }
+
+                    Pagamento pagamento = new Pagamento();
+
+                    pagamento.setPedido(pedido);
+                    pagamento.setCartao(cartao);
+                    pagamento.setCartaoCompra(null);
+                    pagamento.setValor(valor);
+
+                    pagamentoRepository.save(pagamento);
+                }
+            }
         }
 
-        for (int i = 0; i < dto.getCartoes().size(); i++) {
-            CartaoPagamentoDTO cartaoDTO = dto.getCartoes().get(i);
-            BigDecimal valor = cartaoDTO.getValor();
+        if (dto.getCartaoTemporarioId() != null) {
+
+            CartaoTemporario cartaoTemporario =
+                    cartaoTemporarioRepository
+                            .findById(dto.getCartaoTemporarioId())
+                            .orElseThrow(() ->
+                                    new IllegalArgumentException(
+                                            "Cartão temporário não encontrado."
+                                    ));
+
+            if (!cartaoTemporario.getCliente().getId().equals(cliente.getId())) {
+                throw new IllegalArgumentException(
+                        "O cartão não pertence ao cliente."
+                );
+            }
+
+            BigDecimal valor = dto.getValorCartaoTemporario();
 
             if (valor != null && valor.compareTo(BigDecimal.ZERO) > 0) {
-                Cartao cartao = cartaoRepository.findById(cartaoDTO.getCartaoId())
-                        .orElseThrow(() ->
-                                new IllegalArgumentException("Cartão não encontrado."));
-
-                if (!cartao.getCliente().getId().equals(cliente.getId())) {
-                    throw new IllegalArgumentException(
-                            "O cartão não pertence ao cliente."
-                    );
-                }
 
                 Pagamento pagamento = new Pagamento();
+
                 pagamento.setPedido(pedido);
-                pagamento.setCartao(cartao);
+                pagamento.setCartao(null);
+                pagamento.setCartaoCompra(cartaoTemporario);
                 pagamento.setValor(valor);
 
                 pagamentoRepository.save(pagamento);
+
+                cartaoTemporario.setUtilizado(true);
+                cartaoTemporarioRepository.save(cartaoTemporario);
             }
         }
     }

@@ -183,3 +183,6 @@ INSERT IGNORE INTO fornecedor (nome_fantasia) VALUES
 ('PetMais Distribuidora'),
 ('Cão & Gato Nutrição'),
 ('PetSupply');
+
+
+

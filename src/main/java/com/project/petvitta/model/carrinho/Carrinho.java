@@ -25,15 +25,12 @@ public class Carrinho {
     @Column(nullable = false)
     private LocalDateTime dataExpiracao;
 
+    @Column
+    private LocalDateTime dataCongelamento;
+
     @OneToOne
     @JoinColumn(name = "cliente_id", nullable = false)
     private Cliente cliente;
-
-    @Column(nullable = false)
-    private Boolean notificacaoExpiracaoEnviada = false;
-
-    @Column
-    private LocalDateTime dataCongelamento;
 
     @OneToMany(
             mappedBy = "carrinho",

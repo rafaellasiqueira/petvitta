@@ -10,6 +10,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const modalExclusao = document.getElementById('modalConfirmarExclusao');
     const btnFecharExclusao = document.getElementById('btnFecharModalExclusao');
     const btnCancelarExclusao = document.getElementById('btnCancelarExclusao');
+    const salvarEnderecoPerfil = document.getElementById('salvarEnderecoPerfil');
 
     configurarEndereco(modalEndereco);
 
@@ -19,6 +20,7 @@ document.addEventListener('DOMContentLoaded', function () {
         tituloEndereco.textContent = 'Adicionar endereço';
         btnSalvarEndereco.textContent = 'Adicionar';
         formEndereco.action = '/cliente/adicionar-endereco';
+        salvarEnderecoPerfil.closest('.checkbox-endereco-cartao').style.display = 'none';
 
         modalEndereco.querySelectorAll('.mensagem-erro').forEach(function (erro) {
             erro.textContent = '';
@@ -31,6 +33,8 @@ document.addEventListener('DOMContentLoaded', function () {
     document.querySelectorAll('.editar-endereco').forEach(function (botao) {
         botao.addEventListener('click', function (event) {
             event.preventDefault();
+
+            salvarEnderecoPerfil.closest('.checkbox-endereco-cartao').style.display = 'none';
 
             modalEndereco.querySelectorAll('.mensagem-erro').forEach(function (erro) {
                 erro.textContent = '';

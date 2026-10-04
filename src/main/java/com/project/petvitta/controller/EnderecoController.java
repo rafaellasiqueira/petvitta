@@ -1,6 +1,7 @@
 package com.project.petvitta.controller;
 
 import com.project.petvitta.dto.EnderecoDTO;
+import com.project.petvitta.model.pedido.EnderecoTemporario;
 import com.project.petvitta.service.EnderecoService;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
@@ -91,6 +92,78 @@ public class EnderecoController {
         }
 
         return "redirect:/cliente/perfil";
+    }
+
+    @PostMapping("/cliente/adicionar-endereco-temporario")
+    public String adicionarTemporario(
+            @Valid EnderecoDTO dto,
+            BindingResult result,
+            @RequestParam(required = false) List<Long> itensSelecionados,
+            HttpSession session,
+            RedirectAttributes redirectAttributes
+    ) {
+        if (result.hasErrors()) {
+
+            redirectAttributes.addFlashAttribute(
+                    "tipoToast",
+                    "erro"
+            );
+
+            redirectAttributes.addFlashAttribute(
+                    "mensagemToast",
+                    result.getFieldError().getDefaultMessage()
+            );
+
+            redirectAttributes.addAttribute(
+                    "itensSelecionados",
+                    itensSelecionados
+            );
+
+            return "redirect:/cliente/finalizar-compra";
+        }
+
+        try {
+
+            EnderecoTemporario endereco =
+                    enderecoService.adicionarTemporario(
+                            1L,
+                            dto
+                    );
+
+            session.setAttribute(
+                    "enderecoTemporarioId",
+                    endereco.getId()
+            );
+
+            redirectAttributes.addFlashAttribute(
+                    "tipoToast",
+                    "sucesso"
+            );
+
+            redirectAttributes.addFlashAttribute(
+                    "mensagemToast",
+                    "Endereço adicionado com sucesso!"
+            );
+
+        } catch (IllegalArgumentException e) {
+
+            redirectAttributes.addFlashAttribute(
+                    "tipoToast",
+                    "erro"
+            );
+
+            redirectAttributes.addFlashAttribute(
+                    "mensagemToast",
+                    e.getMessage()
+            );
+        }
+
+        redirectAttributes.addAttribute(
+                "itensSelecionados",
+                itensSelecionados
+        );
+
+        return "redirect:/cliente/finalizar-compra";
     }
 
     @PostMapping("/cliente/editar-endereco/{id}")
@@ -195,25 +268,33 @@ public class EnderecoController {
 
     @PostMapping("/cliente/finalizar-compra/endereco")
     public String selecionarEndereco(
-            @RequestParam String enderecoId,
+            @RequestParam(required = false) Long enderecoId,
+            @RequestParam(required = false) Long enderecoTemporarioId,
             @RequestParam List<Long> itensSelecionados,
             HttpSession session,
             RedirectAttributes redirectAttributes) {
 
-        session.setAttribute(
-                "enderecoSelecionadoId",
-                Long.valueOf(enderecoId)
-        );
+        if (enderecoId != null) {
+            session.setAttribute(
+                    "enderecoSelecionadoId",
+                    enderecoId
+            );
 
-        redirectAttributes.addFlashAttribute(
-                "tipoToast",
-                "sucesso"
-        );
+            session.removeAttribute(
+                    "enderecoTemporarioId"
+            );
+        }
 
-        redirectAttributes.addFlashAttribute(
-                "mensagemToast",
-                "Endereço selecionado com sucesso!"
-        );
+        if (enderecoTemporarioId != null) {
+            session.setAttribute(
+                    "enderecoTemporarioId",
+                    enderecoTemporarioId
+            );
+
+            session.removeAttribute(
+                    "enderecoSelecionadoId"
+            );
+        }
 
         redirectAttributes.addAttribute(
                 "itensSelecionados",

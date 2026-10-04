@@ -25,6 +25,10 @@ public class Pagamento {
     private Cartao cartao;
 
     @ManyToOne
+    @JoinColumn(name = "cartao_temporario_id")
+    private CartaoTemporario cartaoCompra;
+
+    @ManyToOne
     @JoinColumn(name = "pedido_id", nullable = false)
     private Pedido pedido;
 }

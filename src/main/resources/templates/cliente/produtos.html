@@ -228,6 +228,8 @@
                     </a>
 
                     <form th:action="@{/cliente/carrinho/adicionar}" method="post">
+                        <input type="hidden" name="origem" value="produtos">
+
                         <input type="hidden"
                                name="variacaoId"
                                th:value="${produto.variacoes[0].id}">

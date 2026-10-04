@@ -65,7 +65,6 @@ inputQtd.addEventListener('input', function() {
 const mensagemEstoque = document.querySelector('#mensagemEstoque');
 
 function verificarEstoque() {
-
     const tamanho = document.querySelector('.tamanho-opcao.active');
     const quantidade = parseInt(inputQtd.value);
     const estoque = parseInt(tamanho.dataset.estoque);

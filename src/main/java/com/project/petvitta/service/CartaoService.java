@@ -4,9 +4,11 @@ import com.project.petvitta.dto.CartaoDTO;
 import com.project.petvitta.model.cliente.Cartao;
 import com.project.petvitta.model.cliente.Cliente;
 import com.project.petvitta.model.dominio.BandeiraCartao;
+import com.project.petvitta.model.pedido.CartaoTemporario;
 import com.project.petvitta.repository.cliente.CartaoRepository;
 import com.project.petvitta.repository.cliente.ClienteRepository;
 import com.project.petvitta.repository.dominio.BandeiraCartaoRepository;
+import com.project.petvitta.repository.pedido.CartaoTemporarioRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
@@ -18,15 +20,17 @@ public class CartaoService {
     private final CartaoRepository cartaoRepository;
     private final BandeiraCartaoRepository bandeiraCartaoRepository;
     private final ClienteRepository clienteRepository;
+    private final CartaoTemporarioRepository cartaoTemporarioRepository;
 
     public CartaoService(
             BandeiraCartaoRepository bandeiraCartaoRepository,
             CartaoRepository cartaoRepository,
-            ClienteRepository clienteRepository
+            ClienteRepository clienteRepository, CartaoTemporarioRepository cartaoTemporarioRepository
     ) {
         this.bandeiraCartaoRepository = bandeiraCartaoRepository;
         this.cartaoRepository = cartaoRepository;
         this.clienteRepository = clienteRepository;
+        this.cartaoTemporarioRepository = cartaoTemporarioRepository;
     }
 
     public List<BandeiraCartao> listarBandeiras() {
@@ -138,6 +142,33 @@ public class CartaoService {
     }
 
     @Transactional
+    public CartaoTemporario adicionarTemporario(
+            Long clienteId,
+            CartaoDTO dto
+    ) {
+        Cliente cliente = clienteRepository.findById(clienteId)
+                .orElseThrow(() ->
+                        new IllegalArgumentException("Cliente não encontrado."));
+
+        validarCartao(dto);
+
+        BandeiraCartao bandeira = bandeiraCartaoRepository.findById(dto.getBandeira())
+                .orElseThrow(() ->
+                        new IllegalArgumentException("Bandeira de cartão inválida."));
+
+        CartaoTemporario cartaoTemporario = new CartaoTemporario();
+
+        cartaoTemporario.setNumero(dto.getNumero());
+        cartaoTemporario.setNomeImpresso(dto.getNomeImpresso());
+        cartaoTemporario.setCodigoSeguranca(dto.getCodigoSeguranca());
+        cartaoTemporario.setBandeira(bandeira);
+        cartaoTemporario.setCliente(cliente);
+        cartaoTemporario.setUtilizado(false);
+
+        return cartaoTemporarioRepository.save(cartaoTemporario);
+    }
+
+    @Transactional
     public void tornarPreferencial(Long clienteId, Long cartaoId) {
 
         Cliente cliente = clienteRepository.findById(clienteId)
@@ -213,5 +244,18 @@ public class CartaoService {
     public BandeiraCartao buscarBandeira(Long id) {
         return bandeiraCartaoRepository.findById(id)
                 .orElse(null);
+    }
+
+    public CartaoTemporario buscarPorId(Long id) {
+
+        CartaoTemporario cartao =
+                cartaoTemporarioRepository.findById(id)
+                        .orElse(null);
+
+        if (cartao != null && cartao.isUtilizado()) {
+            return null;
+        }
+
+        return cartao;
     }
 }

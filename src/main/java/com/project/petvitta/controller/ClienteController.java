@@ -5,6 +5,8 @@ import com.project.petvitta.model.carrinho.Carrinho;
 import com.project.petvitta.model.cliente.Cliente;
 import com.project.petvitta.model.cliente.Cupom;
 import com.project.petvitta.model.cliente.Endereco;
+import com.project.petvitta.model.pedido.CartaoTemporario;
+import com.project.petvitta.model.pedido.EnderecoTemporario;
 import com.project.petvitta.model.pedido.Pedido;
 import com.project.petvitta.service.*;
 import jakarta.servlet.http.HttpSession;
@@ -358,6 +360,33 @@ public class ClienteController {
 
         carrinhoService.verificarExpiracao(carrinho);
 
+        Long enderecoTemporarioId =
+                (Long) session.getAttribute("enderecoTemporarioId");
+
+        EnderecoTemporario enderecoTemporario = null;
+
+        if (enderecoTemporarioId != null) {
+
+            EnderecoTemporario enderecoTemp =
+                    enderecoService.buscarTemporarioPorId(
+                            enderecoTemporarioId
+                    );
+
+            if (enderecoTemp != null &&
+                    ("Entrega".equalsIgnoreCase(
+                            enderecoTemp.getTipoEndereco().getDescricao()) ||
+                            "Cobrança e Entrega".equalsIgnoreCase(
+                                    enderecoTemp.getTipoEndereco().getDescricao()))) {
+
+                enderecoTemporario = enderecoTemp;
+            }
+        }
+
+        model.addAttribute(
+                "enderecoTemporario",
+                enderecoTemporario
+        );
+
         Endereco endereco = null;
 
         Long enderecoSelecionadoId =
@@ -400,6 +429,22 @@ public class ClienteController {
                 "itensSelecionados",
                 itensSelecionados
         );
+
+
+        CartaoTemporario cartaoTemporario = null;
+
+        Long cartaoTemporarioId =
+                (Long) session.getAttribute("cartaoTemporarioId");
+
+        if (cartaoTemporarioId != null) {
+            cartaoTemporario =
+                    cartaoService.buscarPorId(cartaoTemporarioId);
+        }
+
+
+        model.addAttribute("cliente", cliente);
+        model.addAttribute("carrinho", carrinho);
+        model.addAttribute("cartaoTemporario", cartaoTemporario);
 
         model.addAttribute(
                 "cliente",
@@ -474,9 +519,10 @@ public class ClienteController {
              * Remove somente a seleção do endereço
              * depois que o pedido foi criado.
              */
-            session.removeAttribute(
-                    "enderecoSelecionadoId"
-            );
+// Limpa os dados da compra da sessão
+            session.removeAttribute("enderecoSelecionadoId");
+            session.removeAttribute("enderecoTemporarioId");
+            session.removeAttribute("cartaoTemporarioId");
 
             redirectAttributes.addFlashAttribute(
                     "tipoToast",

@@ -10,6 +10,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const mensagemExclusao = document.getElementById('mensagemModalExclusao');
     const btnFecharExclusao = document.getElementById('btnFecharModalExclusao');
     const btnCancelarExclusao = document.getElementById('btnCancelarExclusao');
+    const salvarCartaoPerfil = document.getElementById('salvarCartaoPerfil');
 
     configurarCartao(modalCartao);
 
@@ -17,6 +18,7 @@ document.addEventListener('DOMContentLoaded', function () {
     btnAdicionarCartao.addEventListener('click', function () {
         formCartao.reset();
         formCartao.action = '/cliente/adicionar-cartao';
+        salvarCartaoPerfil.closest('.checkbox-endereco-cartao').style.display = 'none';
 
         modalCartao.querySelectorAll('.mensagem-erro').forEach(function (erro) {
             erro.textContent = '';

@@ -36,7 +36,6 @@ public class CarrinhoService {
 
     @Transactional
     public void adicionar(Long variacaoId, Integer quantidade) {
-
         if (variacaoId == null) {
             throw new IllegalArgumentException("Variação do produto não informada.");
         }
@@ -52,17 +51,15 @@ public class CarrinhoService {
                 );
 
         if (variacao.getEstoqueAtual() == null || variacao.getEstoqueAtual() < quantidade) {
-            throw new IllegalArgumentException("Estoque insuficiente.");
+            throw new IllegalArgumentException("Quantidade maior que o estoque disponível.");
         }
 
         Cliente cliente = clienteService.buscarPorId(1L);
 
-        Carrinho carrinho = carrinhoRepository
-                .findByClienteId(cliente.getId())
-                .orElse(null);
+        Carrinho carrinho = buscarPorCliente(cliente.getId());
 
+        // Criando carrinho
         if (carrinho == null) {
-
             carrinho = new Carrinho();
 
             LocalDateTime agora = LocalDateTime.now();
@@ -74,7 +71,8 @@ public class CarrinhoService {
             carrinho = carrinhoRepository.save(carrinho);
         }
 
-        for (ItemCarrinho item : carrinho.getItens()) {
+        for (int i = 0; i < carrinho.getItens().size(); i++) {
+            ItemCarrinho item = carrinho.getItens().get(i);
 
             if (item.getVariacao().getId().equals(variacao.getId())) {
                 throw new IllegalArgumentException(
@@ -83,6 +81,7 @@ public class CarrinhoService {
             }
         }
 
+        // Criando itens
         ItemCarrinho item = new ItemCarrinho();
 
         item.setQuantidade(quantidade);
@@ -91,13 +90,9 @@ public class CarrinhoService {
 
         itemCarrinhoRepository.save(item);
 
-        carrinho.setDataExpiracao(
-                LocalDateTime.now().plusMinutes(30)
-        );
+        carrinho.setDataExpiracao(LocalDateTime.now().plusMinutes(30));
 
-        variacao.setEstoqueAtual(
-                variacao.getEstoqueAtual() - quantidade
-        );
+        variacao.setEstoqueAtual(variacao.getEstoqueAtual() - quantidade);
 
         variacaoProdutoRepository.save(variacao);
         carrinhoRepository.save(carrinho);
@@ -110,8 +105,36 @@ public class CarrinhoService {
     }
 
     @Transactional
-    public void excluirItem(Long itemId) {
+    public void limparCarrinho(Long carrinhoId) {
+        if (carrinhoId == null) {
+            throw new IllegalArgumentException("Carrinho não informado.");
+        }
 
+        Cliente cliente = clienteService.buscarPorId(1L);
+
+        Carrinho carrinho = carrinhoRepository
+                .findById(carrinhoId)
+                .orElseThrow(() ->
+                        new IllegalArgumentException("Carrinho não encontrado.")
+                );
+
+        for (int i = 0; i < carrinho.getItens().size(); i++) {
+            ItemCarrinho item = carrinho.getItens().get(i);
+
+            VariacaoProduto variacao = item.getVariacao();
+
+            variacao.setEstoqueAtual(variacao.getEstoqueAtual() + item.getQuantidade());
+
+            variacaoProdutoRepository.save(variacao);
+        }
+
+        carrinho.getItens().clear();
+
+        carrinhoRepository.save(carrinho);
+    }
+
+    @Transactional
+    public void excluirItem(Long itemId) {
         if (itemId == null) {
             throw new IllegalArgumentException("Item não informado.");
         }
@@ -130,13 +153,9 @@ public class CarrinhoService {
                         new IllegalArgumentException("Item não encontrado.")
                 );
 
-        validarItemPertenceAoCarrinho(item, carrinho);
-
         VariacaoProduto variacao = item.getVariacao();
 
-        variacao.setEstoqueAtual(
-                variacao.getEstoqueAtual() + item.getQuantidade()
-        );
+        variacao.setEstoqueAtual(variacao.getEstoqueAtual() + item.getQuantidade());
 
         variacaoProdutoRepository.save(variacao);
 
@@ -144,71 +163,27 @@ public class CarrinhoService {
 
         itemCarrinhoRepository.delete(item);
 
-        carrinho.setDataExpiracao(
-                LocalDateTime.now().plusMinutes(30)
-        );
-
-        carrinhoRepository.save(carrinho);
-    }
-
-    @Transactional
-    public void limparCarrinho(Long carrinhoId) {
-
-        if (carrinhoId == null) {
-            throw new IllegalArgumentException("Carrinho não informado.");
-        }
-
-        Cliente cliente = clienteService.buscarPorId(1L);
-
-        Carrinho carrinho = carrinhoRepository
-                .findById(carrinhoId)
-                .orElseThrow(() ->
-                        new IllegalArgumentException("Carrinho não encontrado.")
-                );
-
-        if (!carrinho.getCliente().getId().equals(cliente.getId())) {
-            throw new IllegalArgumentException(
-                    "O carrinho não pertence ao cliente."
-            );
-        }
-
-        for (ItemCarrinho item : carrinho.getItens()) {
-
-            VariacaoProduto variacao = item.getVariacao();
-
-            variacao.setEstoqueAtual(
-                    variacao.getEstoqueAtual() + item.getQuantidade()
-            );
-
-            variacaoProdutoRepository.save(variacao);
-        }
-
-        carrinho.getItens().clear();
+        carrinho.setDataExpiracao(LocalDateTime.now().plusMinutes(30));
 
         carrinhoRepository.save(carrinho);
     }
 
     @Transactional
     public List<ItemCarrinho> verificarExpiracao(Carrinho carrinho) {
-
         List<ItemCarrinho> itensExpirados = new ArrayList<>();
 
         if (carrinho == null) {
             return itensExpirados;
         }
 
-        if (carrinho.getDataExpiracao() != null
-                && LocalDateTime.now().isAfter(carrinho.getDataExpiracao())) {
-
+        if (carrinho.getDataExpiracao() != null && LocalDateTime.now().isAfter(carrinho.getDataExpiracao())) {
             itensExpirados.addAll(carrinho.getItens());
 
-            for (ItemCarrinho item : carrinho.getItens()) {
-
+            for (int i = 0; i < carrinho.getItens().size(); i++) {
+                ItemCarrinho item = carrinho.getItens().get(i);
                 VariacaoProduto variacao = item.getVariacao();
 
-                variacao.setEstoqueAtual(
-                        variacao.getEstoqueAtual() + item.getQuantidade()
-                );
+                variacao.setEstoqueAtual(variacao.getEstoqueAtual() + item.getQuantidade());
 
                 variacaoProdutoRepository.save(variacao);
             }
@@ -222,19 +197,14 @@ public class CarrinhoService {
     }
 
     public boolean verificarAvisoExpiracao(Carrinho carrinho) {
-
-        if (carrinho == null
-                || carrinho.getDataExpiracao() == null) {
+        if (carrinho == null || carrinho.getDataExpiracao() == null) {
             return false;
         }
 
         LocalDateTime agora = LocalDateTime.now();
+        LocalDateTime aviso = carrinho.getDataExpiracao().minusMinutes(5);
 
-        LocalDateTime aviso =
-                carrinho.getDataExpiracao().minusMinutes(5);
-
-        return agora.isAfter(aviso)
-                && agora.isBefore(carrinho.getDataExpiracao());
+        return agora.isAfter(aviso) && agora.isBefore(carrinho.getDataExpiracao());
     }
 
     @Transactional
@@ -264,29 +234,19 @@ public class CarrinhoService {
                         new IllegalArgumentException("Item não encontrado.")
                 );
 
-        validarItemPertenceAoCarrinho(item, carrinho);
 
         VariacaoProduto variacao = item.getVariacao();
 
-        int diferenca = quantidade - item.getQuantidade();
+        if (quantidade > item.getQuantidade() && variacao.getEstoqueAtual() < quantidade - item.getQuantidade()) {
 
-        if (diferenca > 0
-                && variacao.getEstoqueAtual() < diferenca) {
-
-            throw new IllegalArgumentException(
-                    "Estoque insuficiente."
-            );
+            throw new IllegalArgumentException("Quantidade maior que o estoque disponível.");
         }
 
         variacao.setEstoqueAtual(
-                variacao.getEstoqueAtual() - diferenca
+                variacao.getEstoqueAtual() - (quantidade - item.getQuantidade())
         );
-
         item.setQuantidade(quantidade);
-
-        carrinho.setDataExpiracao(
-                LocalDateTime.now().plusMinutes(30)
-        );
+        carrinho.setDataExpiracao(LocalDateTime.now().plusMinutes(30));
 
         variacaoProdutoRepository.save(variacao);
         itemCarrinhoRepository.save(item);
@@ -295,7 +255,6 @@ public class CarrinhoService {
 
     @Transactional
     public void alterarTamanho(Long itemId, Long variacaoId) {
-
         if (itemId == null || variacaoId == null) {
             throw new IllegalArgumentException(
                     "Item e variação devem ser informados."
@@ -316,8 +275,6 @@ public class CarrinhoService {
                         new IllegalArgumentException("Item não encontrado.")
                 );
 
-        validarItemPertenceAoCarrinho(item, carrinho);
-
         VariacaoProduto variacaoAtual = item.getVariacao();
 
         VariacaoProduto novaVariacao =
@@ -332,19 +289,10 @@ public class CarrinhoService {
             return;
         }
 
-        if (!variacaoAtual.getProduto().getId()
-                .equals(novaVariacao.getProduto().getId())) {
+        for (int i = 0; i < carrinho.getItens().size(); i++) {
+            ItemCarrinho outroItem = carrinho.getItens().get(i);
 
-            throw new IllegalArgumentException(
-                    "A variação selecionada não pertence ao mesmo produto."
-            );
-        }
-
-        for (ItemCarrinho outroItem : carrinho.getItens()) {
-
-            if (!outroItem.getId().equals(item.getId())
-                    && outroItem.getVariacao().getId()
-                    .equals(novaVariacao.getId())) {
+            if (!outroItem.getId().equals(item.getId()) && outroItem.getVariacao().getId().equals(novaVariacao.getId())) {
 
                 throw new IllegalArgumentException(
                         "Este produto com este tamanho já está no carrinho."
@@ -358,21 +306,13 @@ public class CarrinhoService {
             );
         }
 
-        variacaoAtual.setEstoqueAtual(
-                variacaoAtual.getEstoqueAtual()
-                        + item.getQuantidade()
-        );
+        variacaoAtual.setEstoqueAtual(variacaoAtual.getEstoqueAtual() + item.getQuantidade());
 
-        novaVariacao.setEstoqueAtual(
-                novaVariacao.getEstoqueAtual()
-                        - item.getQuantidade()
-        );
+        novaVariacao.setEstoqueAtual(novaVariacao.getEstoqueAtual() - item.getQuantidade());
 
         item.setVariacao(novaVariacao);
 
-        carrinho.setDataExpiracao(
-                LocalDateTime.now().plusMinutes(30)
-        );
+        carrinho.setDataExpiracao(LocalDateTime.now().plusMinutes(30));
 
         variacaoProdutoRepository.save(variacaoAtual);
         variacaoProdutoRepository.save(novaVariacao);
@@ -380,18 +320,4 @@ public class CarrinhoService {
         carrinhoRepository.save(carrinho);
     }
 
-    private void validarItemPertenceAoCarrinho(
-            ItemCarrinho item,
-            Carrinho carrinho
-    ) {
-
-        if (item.getCarrinho() == null
-                || !item.getCarrinho().getId()
-                .equals(carrinho.getId())) {
-
-            throw new IllegalArgumentException(
-                    "O item não pertence ao carrinho."
-            );
-        }
-    }
 }

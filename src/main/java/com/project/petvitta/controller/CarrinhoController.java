@@ -29,12 +29,12 @@ public class CarrinhoController {
     public String adicionarCarrinho(
             @RequestParam List<Long> variacaoId,
             @RequestParam List<Integer> quantidade,
+            @RequestParam(required = false) Long produtoId,
+            @RequestParam String origem,
             RedirectAttributes redirectAttributes) {
 
         try {
-
             for (int i = 0; i < variacaoId.size(); i++) {
-
                 carrinhoService.adicionar(
                         variacaoId.get(i),
                         quantidade.get(i)
@@ -52,7 +52,32 @@ public class CarrinhoController {
             );
 
         } catch (IllegalArgumentException e) {
+            redirectAttributes.addFlashAttribute(
+                    "tipoToast",
+                    "erro"
+            );
 
+            redirectAttributes.addFlashAttribute(
+                    "mensagemToast",
+                    e.getMessage()
+            );
+        }
+
+        if (origem.equals("detalhes")) {
+            return "redirect:/cliente/detalhes-produto/" + produtoId;
+        }
+
+        return "redirect:/cliente/produtos";
+    }
+
+    @PostMapping("/cliente/carrinho/limpar-carrinho")
+    public String limparCarrinho(
+            Long carrinhoId,
+            RedirectAttributes redirectAttributes
+    ) {
+        try {
+            carrinhoService.limparCarrinho(carrinhoId);
+        } catch (IllegalArgumentException e) {
             redirectAttributes.addFlashAttribute(
                     "tipoToast",
                     "erro"
@@ -99,34 +124,10 @@ public class CarrinhoController {
         return "redirect:/cliente/carrinho";
     }
 
-    @PostMapping("/cliente/carrinho/limpar-carrinho")
-    public String limparCarrinho(
-            Long carrinhoId,
-            RedirectAttributes redirectAttributes
-    ) {
-        try {
-            carrinhoService.limparCarrinho(carrinhoId);
-        } catch (IllegalArgumentException e) {
-            redirectAttributes.addFlashAttribute(
-                    "tipoToast",
-                    "erro"
-            );
-
-            redirectAttributes.addFlashAttribute(
-                    "mensagemToast",
-                    e.getMessage()
-            );
-        }
-        return "redirect:/cliente/carrinho";
-    }
-
     @GetMapping("/cliente/carrinho")
     public String carrinho(Model model) {
-
         Cliente cliente = clienteService.buscarPorId(1L);
-
         Carrinho carrinho = carrinhoService.buscarPorCliente(cliente.getId());
-
         List<ItemCarrinho> itensExpirados = carrinhoService.verificarExpiracao(carrinho);
 
         boolean avisoExpiracao = false;
@@ -145,9 +146,23 @@ public class CarrinhoController {
     @PostMapping("/cliente/carrinho/quantidade")
     public String alterarQuantidade(
             @RequestParam Long itemId,
-            @RequestParam Integer quantidade
+            @RequestParam Integer quantidade,
+            RedirectAttributes redirectAttributes
     ) {
-        carrinhoService.alterarQuantidade(itemId, quantidade);
+        try {
+            carrinhoService.alterarQuantidade(itemId, quantidade);
+
+        } catch (IllegalArgumentException e) {
+            redirectAttributes.addFlashAttribute(
+                    "tipoToast",
+                    "erro"
+            );
+
+            redirectAttributes.addFlashAttribute(
+                    "mensagemToast",
+                    e.getMessage()
+            );
+        }
 
         return "redirect:/cliente/carrinho";
     }
@@ -155,9 +170,22 @@ public class CarrinhoController {
     @PostMapping("/cliente/carrinho/tamanho")
     public String alterarTamanho(
             @RequestParam Long itemId,
-            @RequestParam Long variacaoId
+            @RequestParam Long variacaoId,
+            RedirectAttributes redirectAttributes
     ) {
-        carrinhoService.alterarTamanho(itemId, variacaoId);
+        try {
+            carrinhoService.alterarTamanho(itemId, variacaoId);
+        } catch (IllegalArgumentException e) {
+            redirectAttributes.addFlashAttribute(
+                    "tipoToast",
+                    "erro"
+            );
+
+            redirectAttributes.addFlashAttribute(
+                    "mensagemToast",
+                    e.getMessage()
+            );
+        }
 
         return "redirect:/cliente/carrinho";
     }

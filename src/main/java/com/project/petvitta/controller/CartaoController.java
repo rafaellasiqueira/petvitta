@@ -1,6 +1,7 @@
 package com.project.petvitta.controller;
 
 import com.project.petvitta.dto.CartaoDTO;
+import com.project.petvitta.model.pedido.CartaoTemporario;
 import com.project.petvitta.service.CartaoService;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
@@ -49,13 +50,89 @@ public class CartaoController {
                 );
 
                 return "redirect:/cliente/finalizar-compra";
+            } else {
+                return "redirect:/cliente/perfil";
             }
-
-            return "redirect:/cliente/perfil";
         }
 
         try {
             cartaoService.adicionar(1L, dto);
+
+            redirectAttributes.addFlashAttribute(
+                    "tipoToast",
+                    "sucesso"
+            );
+
+            redirectAttributes.addFlashAttribute(
+                    "mensagemToast",
+                    "Cartão adicionado com sucesso!"
+            );
+
+            if ("finalizar-compra".equals(voltarPara)) {
+                redirectAttributes.addAttribute(
+                        "itensSelecionados",
+                        itensSelecionados
+                );
+
+                return "redirect:/cliente/finalizar-compra";
+            } else {
+                return "redirect:/cliente/perfil";
+            }
+
+        } catch (IllegalArgumentException e) {
+            redirectAttributes.addFlashAttribute(
+                    "tipoToast",
+                    "erro"
+            );
+
+            redirectAttributes.addFlashAttribute(
+                    "mensagemToast",
+                    e.getMessage()
+            );
+
+            if ("finalizar-compra".equals(voltarPara)) {
+                redirectAttributes.addAttribute(
+                        "itensSelecionados",
+                        itensSelecionados
+                );
+
+                return "redirect:/cliente/finalizar-compra";
+            } else {
+                return "redirect:/cliente/perfil";
+            }
+        }
+    }
+
+    @PostMapping("/cliente/adicionar-cartao-temporario")
+    public String adicionarTemporario(
+            @Valid CartaoDTO dto,
+            BindingResult result,
+            @RequestParam(required = false) List<Long> itensSelecionados,
+            HttpSession session,
+            RedirectAttributes redirectAttributes
+    ) {
+        if (result.hasErrors()) {
+            redirectAttributes.addFlashAttribute(
+                    "tipoToast",
+                    "erro"
+            );
+
+            redirectAttributes.addFlashAttribute(
+                    "mensagemToast",
+                    result.getFieldError().getDefaultMessage()
+            );
+
+            return "redirect:/cliente/finalizar-compra";
+        }
+
+        try {
+            CartaoTemporario cartaoTemporario =
+                    cartaoService.adicionarTemporario(1L, dto);
+
+            session.setAttribute(
+                    "cartaoTemporarioId",
+                    cartaoTemporario.getId()
+            );
 
             redirectAttributes.addFlashAttribute(
                     "tipoToast",
@@ -79,16 +156,12 @@ public class CartaoController {
             );
         }
 
-        if ("finalizar-compra".equals(voltarPara)) {
-            redirectAttributes.addAttribute(
-                    "itensSelecionados",
-                    itensSelecionados
-            );
+        redirectAttributes.addAttribute(
+                "itensSelecionados",
+                itensSelecionados
+        );
 
-            return "redirect:/cliente/finalizar-compra";
-        }
-
-        return "redirect:/cliente/perfil";
+        return "redirect:/cliente/finalizar-compra";
     }
 
     @PostMapping("/cliente/tornar-cartao-preferencial/{id}")

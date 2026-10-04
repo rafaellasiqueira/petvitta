@@ -103,10 +103,7 @@ public class ProdutoController {
 
         Produto produto = produtoService.buscarPorId(id);
 
-        model.addAttribute(
-                "produto",
-                produto
-        );
+        model.addAttribute("produto", produto);
 
         return "cliente/detalhes-produto";
     }

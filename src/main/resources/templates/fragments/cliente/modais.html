@@ -37,10 +37,62 @@
                        type="hidden"
                        name="itensSelecionados"
                        th:value="${itemId}">
-
             </form>
 
-            <!-- Endereços do cliente -->
+            <!-- Endereço temporário -->
+            <div th:if="${enderecoTemporario != null and (enderecoTemporario.tipoEndereco.descricao == 'Entrega' or enderecoTemporario.tipoEndereco.descricao == 'Cobrança e Entrega')}">
+
+                <label class="modalEndereco">
+                    <input type="radio"
+                           name="enderecoTemporarioId"
+                           th:value="${enderecoTemporario.id}"
+                           form="formSelecionarEndereco">
+
+                    <div class="radio-custom"></div>
+
+                    <div class="dados-endereco">
+                        <h3 th:text="${enderecoTemporario.nomeIdentificacao}"></h3>
+
+                        <span class="tipo-residencia" th:text="${enderecoTemporario.tipoResidencia.descricao}"></span>
+
+                        <div class="linha-endereco">
+                            <span class="logradouro"
+                                  th:text="${enderecoTemporario.logradouro}">
+                            </span>
+
+                            <span>,</span>
+
+                            <span class="numero"
+                                  th:text="${enderecoTemporario.numero}">
+                            </span>
+
+                            <span>-</span>
+
+                            <span class="bairro"
+                                  th:text="${enderecoTemporario.bairro}">
+                            </span>
+
+                            <span>,</span>
+
+                            <span class="cidade"
+                                  th:text="${enderecoTemporario.cidade}">
+                            </span>
+
+                            <span>-</span>
+
+                            <span class="estado"
+                                  th:text="${enderecoTemporario.estado.nome}">
+                            </span>
+                        </div>
+
+                        <span class="cep"
+                              th:text="${enderecoTemporario.cep}">
+                        </span>
+                    </div>
+                </label>
+            </div>
+
+            <!-- Endereços salvos -->
             <div th:each="endereco, posicao : ${cliente.enderecos}"
                  th:if="${endereco.tipoEndereco.descricao == 'Entrega' or endereco.tipoEndereco.descricao == 'Cobrança e Entrega'}">
 
@@ -52,16 +104,21 @@
                            form="formSelecionarEndereco">
 
                     <div class="radio-custom"></div>
+
                     <div class="dados-endereco">
 
                         <h3 th:text="${endereco.nomeIdentificacao}"></h3>
-                        <span class="tipo-residencia" th:text="${endereco.tipoResidencia.descricao}"></span>
+
+                        <span class="tipo-residencia"
+                              th:text="${endereco.tipoResidencia.descricao}">
+                        </span>
 
                         <div class="linha-endereco">
 
                             <span class="logradouro"
                                   th:text="${endereco.logradouro}">
                             </span>
+
                             <span>,</span>
 
                             <span class="numero"
@@ -91,6 +148,7 @@
                         <span class="cep"
                               th:text="${endereco.cep}">
                         </span>
+
                     </div>
 
                     <button type="button"
@@ -301,11 +359,17 @@
                               placeholder="Digite alguma observação sobre o endereço"></textarea>
                 </div>
 
+                <label class="checkbox-endereco-cartao">
+                    <input type="checkbox"
+                           name="salvarNoPerfil"
+                           id="salvarEnderecoPerfil">
+                    <p>Salvar no perfil</p>
+                </label>
+
                 <input th:each="itemId : ${itensSelecionados}"
                        type="hidden"
                        name="itensSelecionados"
                        th:value="${itemId}">
-
 
                 <!-- Botões -->
                 <div class="modalBotoes">
@@ -350,6 +414,11 @@
                 </div>
 
             </label>
+
+            <div th:if="${cupons == null or cupons.isEmpty()}" class="nenhum-cupom">
+                <h2>Nenhum cupom encontrado</h2>
+                <p>Quando você tiver um cupom eles aparecerão aqui!</p>
+            </div>
         </div>
     </div>
 </div>
@@ -357,12 +426,7 @@
 <!-- Modal cadastrar cartão -->
 <div th:fragment="modal-cadastrar-cartao" id="modalCadastrarCartao" class="modal">
     <form id="formCartao"
-          method="POST"
-          th:action="@{/cliente/adicionar-cartao}">
-
-        <input type="hidden"
-               name="voltarPara"
-               value="finalizar-compra">
+          method="POST">
 
         <div class="modalConteudo">
 
@@ -438,6 +502,13 @@
                        type="hidden"
                        name="itensSelecionados"
                        th:value="${itemId}">
+
+                <label class="checkbox-endereco-cartao">
+                    <input type="checkbox"
+                           name="salvarNoPerfil"
+                           id="salvarCartaoPerfil">
+                    <p>Salvar no perfil</p>
+                </label>
 
                 <!-- Botões -->
                 <div class="modalBotoes">

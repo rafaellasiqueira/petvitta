@@ -43,8 +43,7 @@ function verificarEstoque(produto) {
     const estoque = parseInt(tamanho.dataset.estoque);
 
     if (quantidade > estoque) {
-        mensagemEstoque.textContent =
-            'Quantidade maior que o estoque disponível.';
+        mensagemEstoque.textContent = 'Quantidade maior que o estoque disponível.';
 
         return false;
     }
@@ -61,31 +60,21 @@ document.querySelectorAll('.seletor-quantidade').forEach(seletor => {
     const itemId = produto.dataset.itemId;
 
     btnMais.onclick = () => {
-
         inputQtd.value = parseInt(inputQtd.value) + 1;
 
-        alterarQuantidade(
-            itemId,
-            inputQtd.value
-        );
-
+        alterarQuantidade(itemId, inputQtd.value);
         verificarEstoque(produto);
         atualizarSubtotal();
     };
 
     btnMenos.onclick = () => {
-
         if (parseInt(inputQtd.value) <= 1) {
             return;
         }
 
         inputQtd.value = parseInt(inputQtd.value) - 1;
 
-        alterarQuantidade(
-            itemId,
-            inputQtd.value
-        );
-
+        alterarQuantidade(itemId, inputQtd.value);
         verificarEstoque(produto);
         atualizarSubtotal();
     };
@@ -98,12 +87,22 @@ document.querySelectorAll('.seletor-quantidade').forEach(seletor => {
             this.value = 1;
         }
 
-        alterarQuantidade(
-            itemId,
-            quantidade
-        );
-
         verificarEstoque(produto);
+        atualizarSubtotal();
+    });
+
+    inputQtd.addEventListener('change', function () {
+        let quantidade = parseInt(this.value);
+
+        if (quantidade < 1) {
+            quantidade = 1;
+            this.value = 1;
+        }
+
+        if (verificarEstoque(produto)) {
+            alterarQuantidade(itemId, quantidade);
+        }
+
         atualizarSubtotal();
     });
 
@@ -111,11 +110,9 @@ document.querySelectorAll('.seletor-quantidade').forEach(seletor => {
 
 // Tamanho
 document.querySelectorAll('.produto').forEach(produto => {
-
     const botoesTamanho = produto.querySelectorAll('.tamanho-opcao');
 
     botoesTamanho.forEach(btn => {
-
         btn.onclick = () => {
 
             botoesTamanho.forEach(botao => {
@@ -127,17 +124,12 @@ document.querySelectorAll('.produto').forEach(produto => {
             const itemId = produto.dataset.itemId;
             const variacaoId = btn.dataset.variacaoId;
 
-            alterarTamanho(
-                itemId,
-                variacaoId
-            );
+            alterarTamanho(itemId, variacaoId);
 
-            const valorAtualizado =
-                produto.querySelector('.preco-produto');
+            const valorAtualizado = produto.querySelector('.preco-produto');
 
             if (valorAtualizado) {
-                valorAtualizado.innerText =
-                    btn.dataset.valor;
+                valorAtualizado.innerText = btn.dataset.valor;
             }
 
             verificarEstoque(produto);
@@ -149,11 +141,10 @@ document.querySelectorAll('.produto').forEach(produto => {
 });
 
 // Selecionar todos
-
 const checkboxTodos = document.getElementById('todos');
-
 const checkboxesProdutos = document.querySelectorAll('.checkbox-produto');
 
+// Desmarca o checkbox de todos
 checkboxesProdutos.forEach(checkbox => {
     checkbox.addEventListener('change', function () {
 
@@ -165,21 +156,17 @@ checkboxesProdutos.forEach(checkbox => {
 
 });
 
-if (checkboxTodos) {
-    checkboxTodos.addEventListener('change', function () {
-        checkboxesProdutos.forEach(checkbox => {
-            checkbox.checked = this.checked;
-        });
-        atualizarSubtotal();
+// Checkbox todos
+checkboxTodos.addEventListener('change', function () {
+    checkboxesProdutos.forEach(checkbox => {
+        checkbox.checked = this.checked;
     });
-}
-
+    atualizarSubtotal();
+});
 
 // Toast
 function mostrarToast() {
-
-    const toast =
-        document.getElementById('toastAtencao');
+    const toast = document.getElementById('toastAtencao');
 
     toast.classList.add('ativo');
 
@@ -190,7 +177,6 @@ function mostrarToast() {
 
 // Finalizar botão
 const formFinalizarCompra = document.getElementById('formFinalizarCompra');
-
 formFinalizarCompra.addEventListener('submit', function (event) {
 
     const produtosSelecionados = document.querySelectorAll(
@@ -203,22 +189,20 @@ formFinalizarCompra.addEventListener('submit', function (event) {
         return;
     }
 
-    const divItens = document.getElementById('itensSelecionados');
+    const itensSelecionados = document.getElementById('itensSelecionados');
 
-    divItens.innerHTML = '';
+    itensSelecionados.innerHTML = '';
 
     produtosSelecionados.forEach(checkbox => {
         const produto = checkbox.closest('.produto');
-
         const itemId = produto.dataset.itemId;
-
         const input = document.createElement('input');
 
         input.type = 'hidden';
         input.name = 'itensSelecionados';
         input.value = itemId;
 
-        divItens.appendChild(input);
+        itensSelecionados.appendChild(input);
     });
 
 });
