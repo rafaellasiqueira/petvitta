@@ -353,3 +353,12 @@ h2 {
     height: 24px;
     color: white;
 }
+
+.btn-detalhes {
+    background: transparent;
+    border: none;
+}
+
+.btn-detalhes i {
+    font-size: 20px;
+}

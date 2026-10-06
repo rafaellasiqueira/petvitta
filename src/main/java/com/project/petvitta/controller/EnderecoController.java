@@ -1,7 +1,7 @@
 package com.project.petvitta.controller;
 
 import com.project.petvitta.dto.EnderecoDTO;
-import com.project.petvitta.model.pedido.EnderecoTemporario;
+import com.project.petvitta.model.pedido.EnderecoCompra;
 import com.project.petvitta.service.EnderecoService;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
@@ -9,7 +9,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -46,10 +45,7 @@ public class EnderecoController {
             );
 
             if ("finalizar-compra".equals(voltarPara)) {
-                redirectAttributes.addAttribute(
-                        "itensSelecionados",
-                        itensSelecionados
-                );
+                redirectAttributes.addAttribute("itensSelecionados", itensSelecionados);
 
                 return "redirect:/cliente/finalizar-compra";
             }
@@ -99,11 +95,9 @@ public class EnderecoController {
             @Valid EnderecoDTO dto,
             BindingResult result,
             @RequestParam(required = false) List<Long> itensSelecionados,
-            HttpSession session,
             RedirectAttributes redirectAttributes
     ) {
         if (result.hasErrors()) {
-
             redirectAttributes.addFlashAttribute(
                     "tipoToast",
                     "erro"
@@ -123,17 +117,7 @@ public class EnderecoController {
         }
 
         try {
-
-            EnderecoTemporario endereco =
-                    enderecoService.adicionarTemporario(
-                            1L,
-                            dto
-                    );
-
-            session.setAttribute(
-                    "enderecoTemporarioId",
-                    endereco.getId()
-            );
+            enderecoService.adicionarTemporario(1L, dto);
 
             redirectAttributes.addFlashAttribute(
                     "tipoToast",
@@ -266,6 +250,7 @@ public class EnderecoController {
         return "redirect:/cliente/perfil";
     }
 
+
     @PostMapping("/cliente/finalizar-compra/endereco")
     public String selecionarEndereco(
             @RequestParam(required = false) Long enderecoId,
@@ -275,26 +260,38 @@ public class EnderecoController {
             RedirectAttributes redirectAttributes) {
 
         if (enderecoId != null) {
-            session.setAttribute(
-                    "enderecoSelecionadoId",
-                    enderecoId
-            );
-
-            session.removeAttribute(
-                    "enderecoTemporarioId"
-            );
+            session.setAttribute("enderecoSelecionadoId", enderecoId);
+            session.removeAttribute("enderecoTemporarioId");
         }
 
         if (enderecoTemporarioId != null) {
-            session.setAttribute(
-                    "enderecoTemporarioId",
-                    enderecoTemporarioId
-            );
-
-            session.removeAttribute(
-                    "enderecoSelecionadoId"
-            );
+            session.setAttribute("enderecoTemporarioId", enderecoTemporarioId);
+            session.removeAttribute("enderecoSelecionadoId");
         }
+
+        redirectAttributes.addAttribute("itensSelecionados", itensSelecionados);
+
+        return "redirect:/cliente/finalizar-compra";
+    }
+
+    @PostMapping("/cliente/excluir-endereco-temporario")
+    public String excluirEnderecoTemporario(
+            @RequestParam Long enderecoTemporarioId,
+            @RequestParam List<Long> itensSelecionados,
+            RedirectAttributes redirectAttributes
+    ) {
+
+        enderecoService.excluirTemporario(enderecoTemporarioId);
+
+        redirectAttributes.addFlashAttribute(
+                "tipoToast",
+                "sucesso"
+        );
+
+        redirectAttributes.addFlashAttribute(
+                "mensagemToast",
+                "Endereço excluído com sucesso!"
+        );
 
         redirectAttributes.addAttribute(
                 "itensSelecionados",

@@ -40,55 +40,74 @@
             </form>
 
             <!-- Endereço temporário -->
-            <div th:if="${enderecoTemporario != null and (enderecoTemporario.tipoEndereco.descricao == 'Entrega' or enderecoTemporario.tipoEndereco.descricao == 'Cobrança e Entrega')}">
-
+            <div th:each="enderecoCompra : ${enderecosTemporarios}"
+                 th:if="${enderecoCompra.tipoEndereco.descricao == 'Entrega' or enderecoCompra.tipoEndereco.descricao == 'Cobrança e Entrega'}">
                 <label class="modalEndereco">
+
                     <input type="radio"
                            name="enderecoTemporarioId"
-                           th:value="${enderecoTemporario.id}"
+                           th:value="${enderecoCompra.id}"
                            form="formSelecionarEndereco">
 
                     <div class="radio-custom"></div>
 
                     <div class="dados-endereco">
-                        <h3 th:text="${enderecoTemporario.nomeIdentificacao}"></h3>
+                        <h3 th:text="${enderecoCompra.nomeIdentificacao}"></h3>
 
-                        <span class="tipo-residencia" th:text="${enderecoTemporario.tipoResidencia.descricao}"></span>
+                        <span class="tipo-residencia" th:text="${enderecoCompra.tipoResidencia.descricao}"></span>
 
                         <div class="linha-endereco">
                             <span class="logradouro"
-                                  th:text="${enderecoTemporario.logradouro}">
+                                  th:text="${enderecoCompra.logradouro}">
                             </span>
 
                             <span>,</span>
 
                             <span class="numero"
-                                  th:text="${enderecoTemporario.numero}">
+                                  th:text="${enderecoCompra.numero}">
                             </span>
 
                             <span>-</span>
 
                             <span class="bairro"
-                                  th:text="${enderecoTemporario.bairro}">
+                                  th:text="${enderecoCompra.bairro}">
                             </span>
 
                             <span>,</span>
 
                             <span class="cidade"
-                                  th:text="${enderecoTemporario.cidade}">
+                                  th:text="${enderecoCompra.cidade}">
                             </span>
 
                             <span>-</span>
 
                             <span class="estado"
-                                  th:text="${enderecoTemporario.estado.nome}">
+                                  th:text="${enderecoCompra.estado.nome}">
                             </span>
                         </div>
 
                         <span class="cep"
-                              th:text="${enderecoTemporario.cep}">
+                              th:text="${enderecoCompra.cep}">
                         </span>
                     </div>
+
+                    <form th:action="@{/cliente/excluir-endereco-temporario}"
+                          method="post">
+
+                        <div th:each="itemId : ${itensSelecionados}">
+                            <input type="hidden" name="itensSelecionados" th:value="${itemId}">
+                        </div>
+
+                        <input type="hidden"
+                               name="enderecoTemporarioId"
+                               th:value="${enderecoCompra.id}">
+
+                        <button class="excluir-endereco"
+                                type="submit">
+                            <i class="fa-solid fa-trash"></i>
+
+                        </button>
+                    </form>
                 </label>
             </div>
 

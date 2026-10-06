@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Auditoria</title>
+
+    <!-- Font awesome (icones) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+    <!-- Sidebar css -->
+    <link rel="stylesheet" th:href="@{/css/admin/sidebar.css}">
+
+    <!-- Global css -->
+    <link rel="stylesheet" th:href="@{/css/admin/global.css}">
+
+</head>
+<body>
+
+<div class="container">
+    <!-- sidebar -->
+    <div th:replace="~{fragments/admin/sidebar :: sidebar}"></div>
+
+    <div class="conteudo">
+        <header class="cabecalho">
+            <h1>Auditoria</h1>
+        </header>
+        <main class="card">
+            <table>
+                <thead>
+                <tr>
+                    <th>Data</th>
+                    <th>Hora</th>
+                    <th>Usuário responsável</th>
+                    <th>Operação</th>
+                    <th> </th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="auditoria : ${auditorias}">
+                    <td th:text="${#temporals.format(auditoria.dataHora, 'dd/MM/yyyy')}"></td>
+                    <td th:text="${#temporals.format(auditoria.dataHora, 'HH:mm:ss')}"></td>
+                    <td th:text="${auditoria.usuario}"></td>
+                    <td th:text="${auditoria.operacao}"></td>
+                    <td>
+                        <button class="btn-detalhes"
+                                th:data-data="${#temporals.format(auditoria.dataHora, 'dd/MM/yyyy')}"
+                                th:data-hora="${#temporals.format(auditoria.dataHora, 'HH:mm:ss')}"
+                                th:data-usuario="${auditoria.usuario}"
+                                th:data-operacao="${auditoria.operacao}"
+                                th:data-alteracao="${auditoria.dadosAlterados}">
+                            <i class="fa-solid fa-eye"></i>
+                        </button>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </main>
+    </div>
+
+</div>
+
+<!-- modal de Detalhes -->
+<div id="modalAuditoria" class="modal">
+    <div class="modalConteudo">
+        <div class="modalCabecalho">
+            <h2>Detalhes</h2>
+            <button class="btn-fechar" id="btnFecharModal">&times;</button>
+        </div>
+        <div class="modal-body">
+            <p><strong>Data:</strong> <span id="modalData"></span></p>
+            <p><strong>Hora:</strong> <span id="modalHora"></span></p>
+            <p><strong>Usuário Responsável:</strong> <span id="modalUsuario"></span></p>
+            <p><strong>Operação:</strong> <span id="modalOperacao"></span></p>
+            <p><strong>Alterações:</strong> <span id="modalAlteracao"></span></p>
+        </div>
+    </div>
+</div>
+
+</body>
+
+<script th:src="@{/js/admin/auditoria.js}"></script>
+</html>

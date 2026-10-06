@@ -91,6 +91,21 @@
             <i class="fa-solid fa-right-left"></i>
             <span>Trocas</span>
         </a>
+
+        <!-- Auditoria -->
+        <a th:if="${paginaAtual == 'auditoria'}"
+           th:href="@{/admin/auditoria}"
+           class="menu-item ativo">
+            <i class="fa-solid fa-book"></i>
+            <span>Auditoria</span>
+        </a>
+
+        <a th:unless="${paginaAtual == 'auditoria'}"
+           th:href="@{/admin/auditoria}"
+           class="menu-item">
+            <i class="fa-solid fa-book"></i>
+            <span>Auditoria</span>
+        </a>
     </nav>
 
     <div class="menu-espaco"></div>

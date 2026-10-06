@@ -7,11 +7,10 @@ import com.project.petvitta.model.dominio.Estado;
 import com.project.petvitta.model.dominio.TipoEndereco;
 import com.project.petvitta.model.dominio.TipoLogradouro;
 import com.project.petvitta.model.dominio.TipoResidencia;
-import com.project.petvitta.model.pedido.CartaoTemporario;
-import com.project.petvitta.model.pedido.EnderecoTemporario;
+import com.project.petvitta.model.pedido.EnderecoCompra;
 import com.project.petvitta.repository.cliente.ClienteRepository;
 import com.project.petvitta.repository.dominio.*;
-import com.project.petvitta.repository.pedido.EnderecoTemporarioRepository;
+import com.project.petvitta.repository.pedido.EnderecoCompraRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
@@ -24,21 +23,23 @@ public class EnderecoService {
     private final TipoLogradouroRepository tipoLogradouroRepository;
     private final EstadoRepository estadoRepository;
     private final ClienteRepository clienteRepository;
-    private final EnderecoTemporarioRepository enderecoTemporarioRepository;
+    private final EnderecoCompraRepository enderecoCompraRepository;
+    private final AuditoriaService auditoriaService;
 
     public EnderecoService(
             TipoEnderecoRepository tipoEnderecoRepository,
             TipoResidenciaRepository tipoResidenciaRepository,
             TipoLogradouroRepository tipoLogradouroRepository,
             EstadoRepository estadoRepository,
-            ClienteRepository clienteRepository, EnderecoTemporarioRepository enderecoTemporarioRepository
+            ClienteRepository clienteRepository, EnderecoCompraRepository enderecoCompraRepository, AuditoriaService auditoriaService
     ) {
         this.tipoEnderecoRepository = tipoEnderecoRepository;
         this.tipoResidenciaRepository = tipoResidenciaRepository;
         this.tipoLogradouroRepository = tipoLogradouroRepository;
         this.estadoRepository = estadoRepository;
         this.clienteRepository = clienteRepository;
-        this.enderecoTemporarioRepository = enderecoTemporarioRepository;
+        this.enderecoCompraRepository = enderecoCompraRepository;
+        this.auditoriaService = auditoriaService;
     }
 
     public List<TipoEndereco> listarTiposEndereco() {
@@ -130,10 +131,17 @@ public class EnderecoService {
         );
 
         cliente.getEnderecos().add(endereco);
+
+        auditoriaService.registrar(
+                cliente.getEmail(),
+                "Inserção",
+                "Endereço cadastrado: " + endereco.getNomeIdentificacao() +
+                        ", CEP: " + endereco.getCep()
+        );
     }
 
     @Transactional
-    public EnderecoTemporario adicionarTemporario(
+    public EnderecoCompra adicionarTemporario(
             Long clienteId,
             EnderecoDTO dto
     ) {
@@ -145,7 +153,7 @@ public class EnderecoService {
                         )
                 );
 
-        EnderecoTemporario endereco = new EnderecoTemporario();
+        EnderecoCompra endereco = new EnderecoCompra();
 
         endereco.setNomeIdentificacao(dto.getNomeIdentificacao());
         endereco.setCep(dto.getCep());
@@ -196,7 +204,16 @@ public class EnderecoService {
                         )
         );
 
-        return enderecoTemporarioRepository.save(endereco);
+        EnderecoCompra salvo = enderecoCompraRepository.save(endereco);
+
+        auditoriaService.registrar(
+                cliente.getEmail(),
+                "Inserção",
+                "Endereço temporário cadastrado: " + endereco.getNomeIdentificacao() +
+                        ", CEP: " + endereco.getCep()
+        );
+
+        return salvo;
     }
 
     private void validarAlteracaoTipoEndereco(
@@ -273,6 +290,72 @@ public class EnderecoService {
 
         validarAlteracaoTipoEndereco(cliente, endereco, dto.getTipoEndereco());
 
+        String alteracoes = "";
+
+        if (!endereco.getNomeIdentificacao().equals(dto.getNomeIdentificacao())) {
+            alteracoes += "Nome: " + endereco.getNomeIdentificacao() +
+                    " -> " + dto.getNomeIdentificacao() + "; ";
+        }
+
+        if (!endereco.getCep().equals(dto.getCep())) {
+            alteracoes += "CEP: " + endereco.getCep() +
+                    " -> " + dto.getCep() + "; ";
+        }
+
+        if (!endereco.getLogradouro().equals(dto.getLogradouro())) {
+            alteracoes += "Logradouro: " + endereco.getLogradouro() +
+                    " -> " + dto.getLogradouro() + "; ";
+        }
+
+        if (!endereco.getBairro().equals(dto.getBairro())) {
+            alteracoes += "Bairro: " + endereco.getBairro() +
+                    " -> " + dto.getBairro() + "; ";
+        }
+
+        if (!endereco.getNumero().equals(dto.getNumero())) {
+            alteracoes += "Número: " + endereco.getNumero() +
+                    " -> " + dto.getNumero() + "; ";
+        }
+
+        if (!endereco.getCidade().equals(dto.getCidade())) {
+            alteracoes += "Cidade: " + endereco.getCidade() +
+                    " -> " + dto.getCidade() + "; ";
+        }
+
+        if (!endereco.getPais().equals(dto.getPais())) {
+            alteracoes += "País: " + endereco.getPais() +
+                    " -> " + dto.getPais() + "; ";
+        }
+
+        if (!endereco.getObservacoes().equals(dto.getObservacoes())) {
+            alteracoes += "Observações: " + endereco.getObservacoes() +
+                    " -> " + dto.getObservacoes() + "; ";
+        }
+
+        if (!endereco.getTipoEndereco().getId().equals(dto.getTipoEndereco())) {
+            alteracoes += "Tipo de endereço: " +
+                    endereco.getTipoEndereco().getId() +
+                    " -> " + dto.getTipoEndereco() + "; ";
+        }
+
+        if (!endereco.getTipoResidencia().getId().equals(dto.getTipoResidencia())) {
+            alteracoes += "Tipo de residência: " +
+                    endereco.getTipoResidencia().getId() +
+                    " -> " + dto.getTipoResidencia() + "; ";
+        }
+
+        if (!endereco.getTipoLogradouro().getId().equals(dto.getTipoLogradouro())) {
+            alteracoes += "Tipo de logradouro: " +
+                    endereco.getTipoLogradouro().getId() +
+                    " -> " + dto.getTipoLogradouro() + "; ";
+        }
+
+        if (!endereco.getEstado().getId().equals(dto.getEstado())) {
+            alteracoes += "Estado: " +
+                    endereco.getEstado().getId() +
+                    " -> " + dto.getEstado() + "; ";
+        }
+
         endereco.setNomeIdentificacao(dto.getNomeIdentificacao());
         endereco.setCep(dto.getCep());
         endereco.setLogradouro(dto.getLogradouro());
@@ -297,6 +380,15 @@ public class EnderecoService {
         endereco.setEstado(estadoRepository.findById(dto.getEstado())
                         .orElseThrow(() ->
                                 new IllegalArgumentException("Estado inválido.")));
+
+
+        if (!alteracoes.isEmpty()) {
+            auditoriaService.registrar(
+                    cliente.getEmail(),
+                    "Alteração",
+                    alteracoes
+            );
+        }
     }
 
     public void adicionarAoCliente(
@@ -336,6 +428,13 @@ public class EnderecoService {
                                     new IllegalArgumentException("Estado inválido.")));
 
             cliente.getEnderecos().add(endereco);
+
+            auditoriaService.registrar(
+                    cliente.getEmail(),
+                    "Inserção",
+                    "Endereço cadastrado: " + endereco.getNomeIdentificacao() +
+                            ", CEP: " + endereco.getCep()
+            );
         }
     }
 
@@ -398,15 +497,25 @@ public class EnderecoService {
         cliente.getEnderecos().remove(endereco);
     }
 
-    public EnderecoTemporario buscarTemporarioPorId(Long id) {
-
-        EnderecoTemporario endereco =
-                enderecoTemporarioRepository.findById(id).orElse(null);
+    public EnderecoCompra buscarTemporarioPorId(Long id) {
+        EnderecoCompra endereco = enderecoCompraRepository.findById(id).orElse(null);
 
         if (endereco != null && endereco.isUtilizado()) {
             return null;
         }
-
         return endereco;
+    }
+
+    // Busca todos os endereços temporários ainda não utilizados
+    public List<EnderecoCompra> buscarTemporariosNaoUtilizados(Long clienteId) {
+        return enderecoCompraRepository.findByClienteIdAndUtilizadoFalse(clienteId);
+    }
+
+    public void excluirTemporario(Long id) {
+        EnderecoCompra endereco = buscarTemporarioPorId(id);
+
+        if (endereco != null) {
+            enderecoCompraRepository.delete(endereco);
+        }
     }
 }

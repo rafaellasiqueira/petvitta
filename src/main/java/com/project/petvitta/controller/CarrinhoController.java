@@ -65,6 +65,8 @@ public class CarrinhoController {
 
         if (origem.equals("detalhes")) {
             return "redirect:/cliente/detalhes-produto/" + produtoId;
+        } else if (origem.equals("expirados")) {
+            return "redirect:/cliente/carrinho";
         }
 
         return "redirect:/cliente/produtos";

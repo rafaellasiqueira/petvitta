@@ -5,6 +5,7 @@ import com.project.petvitta.repository.cliente.CupomRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -23,10 +24,22 @@ public class CupomService {
             Cupom cupom = cupons.get(i);
 
             if (cupom.getValidade().isBefore(LocalDate.now())) {
-                cupomRepository.delete(cupom);
+                cupom.setAtivo(false);
+                cupomRepository.save(cupom);
             }
         }
-        return cupomRepository.findAll();
+
+        List<Cupom> cuponsAtivos = new ArrayList<>();
+
+        for (int i = 0; i < cupons.size(); i++) {
+            Cupom cupom = cupons.get(i);
+
+            if (cupom.isAtivo()) {
+                cuponsAtivos.add(cupom);
+            }
+        }
+
+        return cuponsAtivos;
     }
 
 }

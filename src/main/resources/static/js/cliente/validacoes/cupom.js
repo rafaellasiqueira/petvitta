@@ -27,29 +27,19 @@ checkboxesCupom.forEach(checkbox => {
             valorCupons += parseFloat(cupom.dataset.valor) || 0;
         });
 
-        // Não permite adicionar outro cupom depois que a compra já foi coberta
-        if (this.checked && selecionados.length > 1 && valorCupons >= valorCompra) {
+        // Não permite selecionar outro cupom se a compra já foi totalmente coberta
+        if (this.checked && selecionados.length > 2) {
+            const cuponsAnteriores = valorCupons - (parseFloat(this.closest('.modalCupom').dataset.valor) || 0);
 
-            const outrosCupons = Array.from(selecionados).filter(
-                item => item !== this
-            );
-
-            let valorOutros = 0;
-
-            outrosCupons.forEach(checkbox => {
-                const cupom = checkbox.closest('.modalCupom');
-                valorOutros += parseFloat(cupom.dataset.valor) || 0;
-            });
-
-            if (valorOutros >= valorCompra) {
+            if (cuponsAnteriores >= valorCompra) {
                 this.checked = false;
 
                 toastAtencao.querySelector('p').textContent =
-                    'A compra já pode ser paga com os cupons selecionados.';
+                    'O valor dos cupons já cobre o valor da compra.';
 
                 toastAtencao.classList.add('ativo');
 
-                setTimeout(() => {
+                setTimeout(function () {
                     toastAtencao.classList.remove('ativo');
                 }, 6000);
 
@@ -94,7 +84,6 @@ campoCupom.addEventListener('keydown', function(event) {
     const cupons = document.querySelectorAll('.modalCupom');
 
     for (let i = 0; i < cupons.length; i++) {
-
         if (cupons[i].dataset.codigo === codigo) {
 
             const checkbox = cupons[i].querySelector('.checkbox-cupom');
@@ -113,7 +102,6 @@ campoCupom.addEventListener('keydown', function(event) {
             checkbox.checked = true;
             campoCupom.value = '';
             checkbox.dispatchEvent(new Event('change'));
-
             return;
         }
     }

@@ -43,21 +43,21 @@
 
                 <!-- Endereço temporário -->
                 <div class="endereco"
-                     th:data-estado="${enderecoTemporario.estado.sigla}"
-                     th:if="${enderecoTemporario != null and (enderecoTemporario.tipoEndereco.descricao == 'Entrega' or enderecoTemporario.tipoEndereco.descricao == 'Cobrança e Entrega')}">
+                     th:data-estado="${enderecoCompra.estado.sigla}"
+                     th:if="${enderecoCompra != null and (enderecoCompra.tipoEndereco.descricao == 'Entrega' or enderecoCompra.tipoEndereco.descricao == 'Cobrança e Entrega')}">
                     <h3 id="enderecoTemporarioNome"
-                        th:text="${enderecoTemporario.nomeIdentificacao}">
+                        th:text="${enderecoCompra.nomeIdentificacao}">
                     </h3>
 
                     <p id="enderecoTemporarioLogradouro"
-                       th:text="${enderecoTemporario.logradouro + ', ' + enderecoTemporario.numero + ' - ' + enderecoTemporario.bairro + ', ' + enderecoTemporario.cidade + ' - ' + enderecoTemporario.estado.nome}">
+                       th:text="${enderecoCompra.logradouro + ', ' + enderecoCompra.numero + ' - ' + enderecoCompra.bairro + ', ' + enderecoCompra.cidade + ' - ' + enderecoCompra.estado.nome}">
                     </p>
 
-                    <span id="enderecoTemporarioCep" th:text="${'CEP: ' + enderecoTemporario.cep + ', Brasil.'}"></span>
+                    <span id="enderecoTemporarioCep" th:text="${'CEP: ' + enderecoCompra.cep + ', Brasil.'}"></span>
 
                     <input type="hidden"
                            name="enderecoTemporarioId"
-                           th:value="${enderecoTemporario.id}"
+                           th:value="${enderecoCompra.id}"
                            form="formFinalizarCompra">
 
                     <button type="button" class="btnAlterarEndereco">Alterar endereço</button>
@@ -66,7 +66,7 @@
                 <!-- Endereço salvo -->
                 <div class="endereco"
                      th:data-estado="${endereco.estado.sigla}"
-                     th:if="${enderecoTemporario == null and endereco != null}">
+                     th:if="${enderecoCompra == null and endereco != null}">
 
                     <h3 id="enderecoNome"
                         th:text="${endereco.nomeIdentificacao}">
@@ -104,7 +104,9 @@
                         <div class="informacoes-produto">
                             <h3 th:text="${item.variacao.produto.nome}"></h3>
                             <span th:text="${'Tamanho: ' + item.variacao.tamanho}"></span>
-                            <span th:text="${'Quantidade: ' + item.quantidade}"></span>
+                            <span class="quantidade-produto"
+                                  th:text="${'Quantidade: ' + item.quantidade}">
+                            </span>
                             <span class="preco"
                                   th:text="${'R$ ' + #numbers.formatDecimal(item.variacao.valorVenda * item.quantidade, 2, 2)}"></span>
                         </div>
@@ -195,41 +197,66 @@
                         </div>
                     </div>
 
-                    <div th:if="${cartaoTemporario != null}"
+                    <div th:if="${cartoesTemporarios != null and !cartoesTemporarios.isEmpty()}"
                          class="cartao-temporario">
 
-                        <label class="cartao">
-                            <input type="hidden"
-                                   name="cartaoTemporarioId"
-                                   th:value="${cartaoTemporario.id}"
-                                   form="formFinalizarCompra">
+                        <div th:each="cartao : ${cartoesTemporarios}">
+
+                            <label class="cartao">
+                                <input type="hidden"
+                                       name="cartaoTemporarioId"
+                                       th:value="${cartao.id}"
+                                       form="formFinalizarCompra">
 
 
-                            <input type="checkbox"
-                                   name="cartaoTemporario"
-                                   th:value="${cartaoTemporario.id}"
-                                   class="checkbox-cartao-temporario">
+                                <input type="checkbox"
+                                       name="cartao"
+                                       th:value="${cartao.id}"
+                                       class="checkbox-cartao-temporario">
 
-                            <div class="dados-cartao">
-                                <h3 th:text="${cartaoTemporario.bandeira.descricao}"></h3>
-                                <span th:text="'**** **** **** ' + ${cartaoTemporario.numero.substring(cartaoTemporario.numero.length() - 4)}"></span>
-                                <span th:text="${cartaoTemporario.nomeImpresso}"></span>
-                            </div>
-                        </label>
+                                <div class="container-cartao">
+                                    <div class="dados-cartao">
+                                        <h3 th:text="${cartao.bandeira.descricao}"></h3>
+                                        <span th:text="'**** **** **** ' + ${cartao.numero.substring(cartao.numero.length() - 4)}"></span>
+                                        <span th:text="${cartao.nomeImpresso}"></span>
+                                    </div>
 
-                        <div class="campo-valor-cartao">
-                            <label>Valor a pagar com este cartão</label>
+                                    <form th:action="@{/cliente/excluir-cartao-temporario}"
+                                          method="post">
 
-                            <div class="input-valor">
+                                        <div th:each="itemId : ${itensSelecionados}">
+                                            <input type="hidden" name="itensSelecionados" th:value="${itemId}">
+                                        </div>
 
-                                <span>R$</span>
+                                        <input type="hidden"
+                                               name="cartaoTemporarioId"
+                                               th:value="${cartao.id}">
 
-                                <input inputmode="decimal"
-                                       name="valorCartaoTemporario"
-                                       form="formFinalizarCompra"
-                                       min="0.01"
-                                       step="0.01"
-                                       value="10.00">
+                                        <button class="excluirCartao"
+                                                type="submit"
+                                                title="Excluir cartão">
+
+                                            <i class="fa-solid fa-trash"></i>
+
+                                        </button>
+                                    </form>
+                                </div>
+                            </label>
+
+                            <div class="campo-valor-cartao">
+                                <label>Valor a pagar com este cartão</label>
+
+                                <div class="input-valor">
+
+                                    <span>R$</span>
+
+                                    <input inputmode="decimal"
+                                           name="valorCartaoTemporario"
+                                           form="formFinalizarCompra"
+                                           min="0.01"
+                                           step="0.01"
+                                           value="10.00">
+                                </div>
                             </div>
                         </div>
                     </div>

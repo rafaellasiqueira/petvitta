@@ -10,7 +10,6 @@ import com.project.petvitta.model.cliente.Cupom;
 import com.project.petvitta.model.cliente.Endereco;
 import com.project.petvitta.model.dominio.StatusPedido;
 import com.project.petvitta.model.dominio.TipoCupom;
-import com.project.petvitta.model.dominio.TipoTelefone;
 import com.project.petvitta.model.pedido.*;
 import com.project.petvitta.repository.carrinho.CarrinhoRepository;
 import com.project.petvitta.repository.cliente.CartaoRepository;
@@ -20,6 +19,7 @@ import com.project.petvitta.repository.cliente.EnderecoRepository;
 import com.project.petvitta.repository.dominio.StatusPedidoRepository;
 import com.project.petvitta.repository.dominio.TipoCupomRepository;
 import com.project.petvitta.repository.pedido.*;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,7 +28,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class PedidoService {
@@ -43,8 +42,8 @@ public class PedidoService {
     private final CartaoRepository cartaoRepository;
     private final StatusPedidoRepository statusPedidoRepository;
     private final TipoCupomRepository tipoCupomRepository;
-    private final CartaoTemporarioRepository cartaoTemporarioRepository;
-    private final EnderecoTemporarioRepository enderecoTemporarioRepository;
+    private final CartaoCompraRepository cartaoCompraRepository;
+    private final EnderecoCompraRepository enderecoCompraRepository;
 
     public PedidoService(
             PedidoRepository pedidoRepository,
@@ -56,7 +55,7 @@ public class PedidoService {
             CupomRepository cupomRepository,
             CartaoRepository cartaoRepository,
             StatusPedidoRepository statusPedidoRepository,
-            TipoCupomRepository tipoCupomRepository, CartaoTemporarioRepository cartaoTemporarioRepository, EnderecoTemporarioRepository enderecoTemporarioRepository
+            TipoCupomRepository tipoCupomRepository, CartaoCompraRepository cartaoCompraRepository, EnderecoCompraRepository enderecoCompraRepository
     ) {
         this.pedidoRepository = pedidoRepository;
         this.itemPedidoRepository = itemPedidoRepository;
@@ -68,8 +67,8 @@ public class PedidoService {
         this.cartaoRepository = cartaoRepository;
         this.statusPedidoRepository = statusPedidoRepository;
         this.tipoCupomRepository = tipoCupomRepository;
-        this.cartaoTemporarioRepository = cartaoTemporarioRepository;
-        this.enderecoTemporarioRepository = enderecoTemporarioRepository;
+        this.cartaoCompraRepository = cartaoCompraRepository;
+        this.enderecoCompraRepository = enderecoCompraRepository;
     }
 
     public List<Pedido> listarPorCliente(Long clienteId) {
@@ -106,7 +105,7 @@ public class PedidoService {
     }
 
     @Transactional
-    public Pedido finalizarCompra(Long clienteId, FinalizarCompraDTO dto) {
+    public Pedido finalizarCompra(Long clienteId, FinalizarCompraDTO dto, HttpSession session) {
 
         Cliente cliente = clienteRepository.findById(clienteId)
                 .orElseThrow(() ->
@@ -120,18 +119,18 @@ public class PedidoService {
         validarCarrinho(carrinho);
 
         // Obter o endereço
-        Endereco endereco = null;
-        EnderecoTemporario enderecoTemporario = null;
+        EnderecoCompra enderecoCompra = null;
 
         if (dto.getEnderecoId() != null) {
-            endereco = obterEndereco(cliente, dto);
+            Endereco endereco = obterEndereco(cliente, dto);
+            enderecoCompra = copiarEndereco(endereco);
         }
 
         if (dto.getEnderecoTemporarioId() != null) {
-            enderecoTemporario = obterEnderecoTemporario(cliente, dto);
+            enderecoCompra = obterEnderecoTemporario(cliente, dto);
         }
 
-        if (endereco == null && enderecoTemporario == null) {
+        if (enderecoCompra == null && enderecoCompra == null) {
             throw new IllegalArgumentException(
                     "Selecione um endereço de entrega."
             );
@@ -155,21 +154,20 @@ public class PedidoService {
         }
 
         // Estado do endereço
-        String siglaEstado = "";
-
-        if (endereco != null) {
-            siglaEstado = endereco.getEstado().getSigla();
-        }
-
-        if (enderecoTemporario != null) {
-            siglaEstado = enderecoTemporario.getEstado().getSigla();
-        }
+        String siglaEstado = enderecoCompra.getEstado().getSigla();
 
         // Frete
         BigDecimal frete = calcularFrete(
                 quantidadeItens,
                 siglaEstado
         );
+
+        System.out.println("==============================");
+        System.out.println("SUBTOTAL: " + subtotal);
+        System.out.println("QUANTIDADE: " + quantidadeItens);
+        System.out.println("ESTADO: " + siglaEstado);
+        System.out.println("FRETE: " + frete);
+        System.out.println("==============================");
 
         // Buscar cupons
         List<Cupom> cupons = buscarCupons(dto.getCuponsIds());
@@ -182,9 +180,7 @@ public class PedidoService {
 
         if (desconto.compareTo(valorCompra) > 0) {
             BigDecimal excedente = desconto.subtract(valorCompra);
-
-            gerarCupomTroca(excedente);
-
+            gerarCupomTroca(excedente, session);
             desconto = valorCompra;
         }
 
@@ -201,8 +197,8 @@ public class PedidoService {
         pedido.setDesconto(desconto);
         pedido.setTotal(total);
         pedido.setCliente(cliente);
-        pedido.setEndereco(endereco);
-        pedido.setEnderecoCompra(enderecoTemporario);
+        pedido.setEnderecoCompra(enderecoCompra);
+        pedido.setEnderecoCompra(enderecoCompra);
         pedido.setCupons(cupons);
         pedido.setCodigo(gerarCodigo());
 
@@ -221,8 +217,10 @@ public class PedidoService {
 
         salvarPagamentos(pedidoSalvo, cliente, dto);
 
-        if (enderecoTemporario != null) {
-            enderecoTemporario.setUtilizado(true);
+        removerCuponsUsados(cupons);
+
+        if (enderecoCompra != null) {
+            enderecoCompra.setUtilizado(true);
         }
 
         carrinho.getItens().removeIf(item -> dto.getItensSelecionados().contains(item.getId()));
@@ -271,7 +269,7 @@ public class PedidoService {
         return endereco;
     }
 
-    private EnderecoTemporario obterEnderecoTemporario(
+    private EnderecoCompra obterEnderecoTemporario(
             Cliente cliente,
             FinalizarCompraDTO dto
     ) {
@@ -279,8 +277,8 @@ public class PedidoService {
             return null;
         }
 
-        EnderecoTemporario endereco =
-                enderecoTemporarioRepository.findById(
+        EnderecoCompra endereco =
+                enderecoCompraRepository.findById(
                         dto.getEnderecoTemporarioId()
                 ).orElseThrow(() ->
                         new IllegalArgumentException(
@@ -339,49 +337,87 @@ public class PedidoService {
             frete = frete.add(new BigDecimal("8.00"));
         }
 
-        // Sudeste
-        if ("SP".equalsIgnoreCase(siglaEstado) ||
-                "RJ".equalsIgnoreCase(siglaEstado) ||
-                "MG".equalsIgnoreCase(siglaEstado) ||
-                "ES".equalsIgnoreCase(siglaEstado)) {
-
-            frete = frete.add(new BigDecimal("5.00"));
+            // Valor conforme o estado de destino
+        if ("SP".equalsIgnoreCase(siglaEstado)) {
+            frete = frete.add(new BigDecimal("7.00"));
         }
-
-        // Sul
-        else if ("PR".equalsIgnoreCase(siglaEstado) ||
-                "SC".equalsIgnoreCase(siglaEstado) ||
-                "RS".equalsIgnoreCase(siglaEstado)) {
-
+        else if ("RJ".equalsIgnoreCase(siglaEstado)) {
+            frete = frete.add(new BigDecimal("8.00"));
+        }
+        else if ("MG".equalsIgnoreCase(siglaEstado)) {
+            frete = frete.add(new BigDecimal("8.00"));
+        }
+        else if ("ES".equalsIgnoreCase(siglaEstado)) {
             frete = frete.add(new BigDecimal("10.00"));
         }
-
-        // Centro-Oeste
-        else if ("GO".equalsIgnoreCase(siglaEstado) ||
-                "MT".equalsIgnoreCase(siglaEstado) ||
-                "MS".equalsIgnoreCase(siglaEstado) ||
-                "DF".equalsIgnoreCase(siglaEstado)) {
-
+        else if ("PR".equalsIgnoreCase(siglaEstado)) {
+            frete = frete.add(new BigDecimal("10.00"));
+        }
+        else if ("SC".equalsIgnoreCase(siglaEstado)) {
+            frete = frete.add(new BigDecimal("12.00"));
+        }
+        else if ("MS".equalsIgnoreCase(siglaEstado)) {
+            frete = frete.add(new BigDecimal("12.00"));
+        }
+        else if ("GO".equalsIgnoreCase(siglaEstado)) {
+            frete = frete.add(new BigDecimal("13.00"));
+        }
+        else if ("RS".equalsIgnoreCase(siglaEstado)) {
             frete = frete.add(new BigDecimal("15.00"));
         }
-
-        // Nordeste
-        else if ("BA".equalsIgnoreCase(siglaEstado) ||
-                "SE".equalsIgnoreCase(siglaEstado) ||
-                "AL".equalsIgnoreCase(siglaEstado) ||
-                "PE".equalsIgnoreCase(siglaEstado) ||
-                "PB".equalsIgnoreCase(siglaEstado) ||
-                "RN".equalsIgnoreCase(siglaEstado) ||
-                "CE".equalsIgnoreCase(siglaEstado) ||
-                "PI".equalsIgnoreCase(siglaEstado) ||
-                "MA".equalsIgnoreCase(siglaEstado)) {
-
+        else if ("DF".equalsIgnoreCase(siglaEstado)) {
+            frete = frete.add(new BigDecimal("15.00"));
+        }
+        else if ("MT".equalsIgnoreCase(siglaEstado)) {
+            frete = frete.add(new BigDecimal("16.00"));
+        }
+        else if ("BA".equalsIgnoreCase(siglaEstado)) {
+            frete = frete.add(new BigDecimal("18.00"));
+        }
+        else if ("SE".equalsIgnoreCase(siglaEstado)) {
+            frete = frete.add(new BigDecimal("19.00"));
+        }
+        else if ("AL".equalsIgnoreCase(siglaEstado)) {
             frete = frete.add(new BigDecimal("20.00"));
         }
-
-        // Norte
-        else {
+        else if ("PE".equalsIgnoreCase(siglaEstado)) {
+            frete = frete.add(new BigDecimal("21.00"));
+        }
+        else if ("PB".equalsIgnoreCase(siglaEstado)) {
+            frete = frete.add(new BigDecimal("22.00"));
+        }
+        else if ("RN".equalsIgnoreCase(siglaEstado)) {
+            frete = frete.add(new BigDecimal("23.00"));
+        }
+        else if ("CE".equalsIgnoreCase(siglaEstado)) {
+            frete = frete.add(new BigDecimal("24.00"));
+        }
+        else if ("PI".equalsIgnoreCase(siglaEstado)) {
+            frete = frete.add(new BigDecimal("24.00"));
+        }
+        else if ("MA".equalsIgnoreCase(siglaEstado)) {
             frete = frete.add(new BigDecimal("25.00"));
+        }
+        else if ("TO".equalsIgnoreCase(siglaEstado)) {
+            frete = frete.add(new BigDecimal("25.00"));
+        }
+        else if ("PA".equalsIgnoreCase(siglaEstado)) {
+            frete = frete.add(new BigDecimal("28.00"));
+        }
+        else if ("RO".equalsIgnoreCase(siglaEstado)) {
+            frete = frete.add(new BigDecimal("30.00"));
+        }
+        else if ("AC".equalsIgnoreCase(siglaEstado)) {
+            frete = frete.add(new BigDecimal("32.00"));
+        }
+        else if ("AM".equalsIgnoreCase(siglaEstado)) {
+            frete = frete.add(new BigDecimal("35.00"));
+        }
+        else if ("AP".equalsIgnoreCase(siglaEstado)) {
+            frete = frete.add(new BigDecimal("35.00"));
+        }
+        else if ("RR".equalsIgnoreCase(siglaEstado)) {
+            frete = frete.add(new BigDecimal("38.00"));
         }
 
         return frete;
@@ -399,6 +435,12 @@ public class PedidoService {
         for (int i = 0; i < cuponsIds.size(); i++) {
             Cupom cupom = cupomRepository.findById(cuponsIds.get(i))
                     .orElseThrow(() -> new IllegalArgumentException("Cupom não encontrado."));
+
+            if (!cupom.isAtivo()) {
+                throw new IllegalArgumentException(
+                        "O cupom " + cupom.getCodigo() + " não está disponível."
+                );
+            }
 
             if (cupom.getValidade().isBefore(LocalDate.now())) {
                 throw new IllegalArgumentException(
@@ -454,6 +496,10 @@ public class PedidoService {
                 Long cartaoId = dto.getCartoes().get(i).getCartaoId();
                 BigDecimal valor = dto.getCartoes().get(i).getValor();
 
+                System.out.println("CARTÃO SALVO");
+                System.out.println("ID: " + cartaoId);
+                System.out.println("VALOR: " + valor);
+
                 if (valor == null || valor.compareTo(BigDecimal.ZERO) <= 0) {
                     continue;
                 }
@@ -479,15 +525,15 @@ public class PedidoService {
 
         if (dto.getCartaoTemporarioId() != null) {
 
-            CartaoTemporario cartaoTemporario =
-                    cartaoTemporarioRepository
+            CartaoCompra cartaoCompra =
+                    cartaoCompraRepository
                             .findById(dto.getCartaoTemporarioId())
                             .orElseThrow(() ->
                                     new IllegalArgumentException(
                                             "Cartão temporário não encontrado."
                                     ));
 
-            if (!cartaoTemporario.getCliente().getId().equals(cliente.getId())) {
+            if (!cartaoCompra.getCliente().getId().equals(cliente.getId())) {
                 throw new IllegalArgumentException(
                         "O cartão não pertence ao cliente."
                 );
@@ -513,6 +559,12 @@ public class PedidoService {
                     "Selecione ao menos uma forma de pagamento."
             );
         }
+
+        System.out.println("================================");
+        System.out.println("TOTAL DA COMPRA: " + total);
+        System.out.println("VALOR DOS CARTÕES: " + valorPago);
+        System.out.println("QUANTIDADE DE CARTÕES: " + quantidadeCartoes);
+        System.out.println("================================");
 
         if (valorPago.compareTo(total) != 0) {
             throw new IllegalArgumentException(
@@ -586,11 +638,12 @@ public class PedidoService {
                         );
                     }
 
+                    CartaoCompra cartaoCompra = copiarCartao(cartao);
+
                     Pagamento pagamento = new Pagamento();
 
                     pagamento.setPedido(pedido);
-                    pagamento.setCartao(cartao);
-                    pagamento.setCartaoCompra(null);
+                    pagamento.setCartaoCompra(cartaoCompra);
                     pagamento.setValor(valor);
 
                     pagamentoRepository.save(pagamento);
@@ -600,15 +653,15 @@ public class PedidoService {
 
         if (dto.getCartaoTemporarioId() != null) {
 
-            CartaoTemporario cartaoTemporario =
-                    cartaoTemporarioRepository
+            CartaoCompra cartaoCompra =
+                    cartaoCompraRepository
                             .findById(dto.getCartaoTemporarioId())
                             .orElseThrow(() ->
                                     new IllegalArgumentException(
                                             "Cartão temporário não encontrado."
                                     ));
 
-            if (!cartaoTemporario.getCliente().getId().equals(cliente.getId())) {
+            if (!cartaoCompra.getCliente().getId().equals(cliente.getId())) {
                 throw new IllegalArgumentException(
                         "O cartão não pertence ao cliente."
                 );
@@ -622,31 +675,37 @@ public class PedidoService {
 
                 pagamento.setPedido(pedido);
                 pagamento.setCartao(null);
-                pagamento.setCartaoCompra(cartaoTemporario);
+                pagamento.setCartaoCompra(cartaoCompra);
                 pagamento.setValor(valor);
 
                 pagamentoRepository.save(pagamento);
 
-                cartaoTemporario.setUtilizado(true);
-                cartaoTemporarioRepository.save(cartaoTemporario);
+                cartaoCompra.setUtilizado(true);
+                cartaoCompraRepository.save(cartaoCompra);
             }
         }
     }
 
-    private void gerarCupomTroca(BigDecimal valor) {
+    private void gerarCupomTroca(BigDecimal valor, HttpSession session) {
         Cupom cupom = new Cupom();
 
-        cupom.setCodigo("TROCA" + System.currentTimeMillis());
+        cupom.setCodigo(
+                "TROCA - " + String.valueOf(System.currentTimeMillis()).substring(
+                        String.valueOf(System.currentTimeMillis()).length() - 5
+                )
+        );
+
         cupom.setValor(valor);
-        cupom.setValidade(LocalDate.now().plusDays(30));
+        cupom.setValidade(LocalDate.now().plusDays(120));
 
         TipoCupom tipoTroca = tipoCupomRepository.findById(2L)
-                .orElseThrow(() ->
-                        new IllegalArgumentException("Tipo de cupom não encontrado."));
+                .orElseThrow(() -> new IllegalArgumentException("Tipo de cupom não encontrado."));
 
         cupom.setTipoCupom(tipoTroca);
 
         cupomRepository.save(cupom);
+
+        session.setAttribute("cupomTrocaGerado", cupom.getCodigo());
     }
 
     private String gerarCodigo() {
@@ -762,5 +821,54 @@ public class PedidoService {
         }
 
         return resultado;
+    }
+
+    private void removerCuponsUsados(List<Cupom> cupons) {
+
+        for (int i = 0; i < cupons.size(); i++) {
+            Cupom cupom = cupons.get(i);
+
+            cupom.setAtivo(false);
+
+            cupomRepository.save(cupom);
+        }
+    }
+
+    private EnderecoCompra copiarEndereco(Endereco endereco) {
+
+        EnderecoCompra copia = new EnderecoCompra();
+
+        copia.setCliente(endereco.getCliente());
+        copia.setNomeIdentificacao(endereco.getNomeIdentificacao());
+        copia.setTipoEndereco(endereco.getTipoEndereco());
+        copia.setTipoResidencia(endereco.getTipoResidencia());
+        copia.setTipoLogradouro(endereco.getTipoLogradouro());
+        copia.setCep(endereco.getCep());
+        copia.setLogradouro(endereco.getLogradouro());
+        copia.setBairro(endereco.getBairro());
+        copia.setNumero(endereco.getNumero());
+        copia.setEstado(endereco.getEstado());
+        copia.setCidade(endereco.getCidade());
+        copia.setPais(endereco.getPais());
+        copia.setObservacoes(endereco.getObservacoes());
+
+        copia.setUtilizado(true);
+
+        return enderecoCompraRepository.save(copia);
+    }
+
+    private CartaoCompra copiarCartao(Cartao cartao) {
+
+        CartaoCompra copia = new CartaoCompra();
+
+        copia.setCliente(cartao.getCliente());
+        copia.setNumero(cartao.getNumero());
+        copia.setNomeImpresso(cartao.getNomeImpresso());
+        copia.setCodigoSeguranca(cartao.getCodigoSeguranca());
+        copia.setBandeira(cartao.getBandeira());
+
+        copia.setUtilizado(true);
+
+        return cartaoCompraRepository.save(copia);
     }
 }

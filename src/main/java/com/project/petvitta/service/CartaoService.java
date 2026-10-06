@@ -4,11 +4,11 @@ import com.project.petvitta.dto.CartaoDTO;
 import com.project.petvitta.model.cliente.Cartao;
 import com.project.petvitta.model.cliente.Cliente;
 import com.project.petvitta.model.dominio.BandeiraCartao;
-import com.project.petvitta.model.pedido.CartaoTemporario;
+import com.project.petvitta.model.pedido.CartaoCompra;
 import com.project.petvitta.repository.cliente.CartaoRepository;
 import com.project.petvitta.repository.cliente.ClienteRepository;
 import com.project.petvitta.repository.dominio.BandeiraCartaoRepository;
-import com.project.petvitta.repository.pedido.CartaoTemporarioRepository;
+import com.project.petvitta.repository.pedido.CartaoCompraRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
@@ -20,17 +20,19 @@ public class CartaoService {
     private final CartaoRepository cartaoRepository;
     private final BandeiraCartaoRepository bandeiraCartaoRepository;
     private final ClienteRepository clienteRepository;
-    private final CartaoTemporarioRepository cartaoTemporarioRepository;
+    private final CartaoCompraRepository cartaoCompraRepository;
+    private final AuditoriaService auditoriaService;
 
     public CartaoService(
             BandeiraCartaoRepository bandeiraCartaoRepository,
             CartaoRepository cartaoRepository,
-            ClienteRepository clienteRepository, CartaoTemporarioRepository cartaoTemporarioRepository
+            ClienteRepository clienteRepository, CartaoCompraRepository cartaoCompraRepository, AuditoriaService auditoriaService
     ) {
         this.bandeiraCartaoRepository = bandeiraCartaoRepository;
         this.cartaoRepository = cartaoRepository;
         this.clienteRepository = clienteRepository;
-        this.cartaoTemporarioRepository = cartaoTemporarioRepository;
+        this.cartaoCompraRepository = cartaoCompraRepository;
+        this.auditoriaService = auditoriaService;
     }
 
     public List<BandeiraCartao> listarBandeiras() {
@@ -98,6 +100,12 @@ public class CartaoService {
 
             cartao.setPreferencial(dto.isPreferencial());
             cliente.getCartoes().add(cartao);
+
+            auditoriaService.registrar(
+                    cliente.getEmail(),
+                    "Inserção",
+                    "Cartão cadastrado do cliente."
+            );
         }
     }
 
@@ -139,10 +147,16 @@ public class CartaoService {
 
         cartao.setPreferencial(dto.isPreferencial());
         cliente.getCartoes().add(cartao);
+
+        auditoriaService.registrar(
+                cliente.getEmail(),
+                "Inserção",
+                "Cartão cadastrado no perfil do cliente."
+        );
     }
 
     @Transactional
-    public CartaoTemporario adicionarTemporario(
+    public CartaoCompra adicionarTemporario(
             Long clienteId,
             CartaoDTO dto
     ) {
@@ -156,16 +170,24 @@ public class CartaoService {
                 .orElseThrow(() ->
                         new IllegalArgumentException("Bandeira de cartão inválida."));
 
-        CartaoTemporario cartaoTemporario = new CartaoTemporario();
+        CartaoCompra cartaoCompra = new CartaoCompra();
 
-        cartaoTemporario.setNumero(dto.getNumero());
-        cartaoTemporario.setNomeImpresso(dto.getNomeImpresso());
-        cartaoTemporario.setCodigoSeguranca(dto.getCodigoSeguranca());
-        cartaoTemporario.setBandeira(bandeira);
-        cartaoTemporario.setCliente(cliente);
-        cartaoTemporario.setUtilizado(false);
+        cartaoCompra.setNumero(dto.getNumero());
+        cartaoCompra.setNomeImpresso(dto.getNomeImpresso());
+        cartaoCompra.setCodigoSeguranca(dto.getCodigoSeguranca());
+        cartaoCompra.setBandeira(bandeira);
+        cartaoCompra.setCliente(cliente);
+        cartaoCompra.setUtilizado(false);
 
-        return cartaoTemporarioRepository.save(cartaoTemporario);
+        CartaoCompra salvo = cartaoCompraRepository.save(cartaoCompra);
+
+        auditoriaService.registrar(
+                cliente.getEmail(),
+                "Inserção",
+                "Cartão temporário cadastrado para a compra."
+        );
+
+        return salvo;
     }
 
     @Transactional
@@ -246,16 +268,26 @@ public class CartaoService {
                 .orElse(null);
     }
 
-    public CartaoTemporario buscarPorId(Long id) {
+    public CartaoCompra buscarPorId(Long id) {
 
-        CartaoTemporario cartao =
-                cartaoTemporarioRepository.findById(id)
-                        .orElse(null);
+        CartaoCompra cartao = cartaoCompraRepository.findById(id).orElse(null);
 
         if (cartao != null && cartao.isUtilizado()) {
             return null;
         }
 
         return cartao;
+    }
+
+    public void excluirTemporario(Long id) {
+        CartaoCompra cartao = buscarPorId(id);
+
+        if (cartao != null) {
+            cartaoCompraRepository.delete(cartao);
+        }
+    }
+
+    public List<CartaoCompra> buscarTemporariosNaoUtilizados(Long clienteId) {
+        return cartaoCompraRepository.findByClienteIdAndUtilizadoFalse(clienteId);
     }
 }

@@ -21,17 +21,19 @@ public class CarrinhoService {
     private final CarrinhoRepository carrinhoRepository;
     private final ItemCarrinhoRepository itemCarrinhoRepository;
     private final ClienteService clienteService;
+    private final AuditoriaService auditoriaService;
 
     public CarrinhoService(
             VariacaoProdutoRepository variacaoProdutoRepository,
             CarrinhoRepository carrinhoRepository,
             ItemCarrinhoRepository itemCarrinhoRepository,
-            ClienteService clienteService
+            ClienteService clienteService, AuditoriaService auditoriaService
     ) {
         this.variacaoProdutoRepository = variacaoProdutoRepository;
         this.carrinhoRepository = carrinhoRepository;
         this.itemCarrinhoRepository = itemCarrinhoRepository;
         this.clienteService = clienteService;
+        this.auditoriaService = auditoriaService;
     }
 
     @Transactional
@@ -65,7 +67,7 @@ public class CarrinhoService {
             LocalDateTime agora = LocalDateTime.now();
 
             carrinho.setDataCriacao(agora);
-            carrinho.setDataExpiracao(agora.plusMinutes(30));
+            carrinho.setDataExpiracao(agora.plusMinutes(1200));
             carrinho.setCliente(cliente);
 
             carrinho = carrinhoRepository.save(carrinho);
@@ -90,7 +92,14 @@ public class CarrinhoService {
 
         itemCarrinhoRepository.save(item);
 
-        carrinho.setDataExpiracao(LocalDateTime.now().plusMinutes(30));
+        auditoriaService.registrar(
+                cliente.getEmail(),
+                "Inserção",
+                "Produto: " + variacao.getProduto().getNome() +
+                        ", quantidade: " + quantidade
+        );
+
+        carrinho.setDataExpiracao(LocalDateTime.now().plusMinutes(1200));
 
         variacao.setEstoqueAtual(variacao.getEstoqueAtual() - quantidade);
 
@@ -163,7 +172,7 @@ public class CarrinhoService {
 
         itemCarrinhoRepository.delete(item);
 
-        carrinho.setDataExpiracao(LocalDateTime.now().plusMinutes(30));
+        carrinho.setDataExpiracao(LocalDateTime.now().plusMinutes(1200));
 
         carrinhoRepository.save(carrinho);
     }
@@ -242,15 +251,26 @@ public class CarrinhoService {
             throw new IllegalArgumentException("Quantidade maior que o estoque disponível.");
         }
 
+        int quantidadeAnterior = item.getQuantidade();
+
         variacao.setEstoqueAtual(
                 variacao.getEstoqueAtual() - (quantidade - item.getQuantidade())
         );
+
         item.setQuantidade(quantidade);
-        carrinho.setDataExpiracao(LocalDateTime.now().plusMinutes(30));
+        carrinho.setDataExpiracao(LocalDateTime.now().plusMinutes(1200));
 
         variacaoProdutoRepository.save(variacao);
         itemCarrinhoRepository.save(item);
         carrinhoRepository.save(carrinho);
+
+        auditoriaService.registrar(
+                cliente.getEmail(),
+                "Alteração",
+                "Produto: " + variacao.getProduto().getNome() +
+                        ", quantidade: " + quantidadeAnterior +
+                        " para " + quantidade
+        );
     }
 
     @Transactional
@@ -312,12 +332,14 @@ public class CarrinhoService {
 
         item.setVariacao(novaVariacao);
 
-        carrinho.setDataExpiracao(LocalDateTime.now().plusMinutes(30));
+        carrinho.setDataExpiracao(LocalDateTime.now().plusMinutes(1200));
 
         variacaoProdutoRepository.save(variacaoAtual);
         variacaoProdutoRepository.save(novaVariacao);
         itemCarrinhoRepository.save(item);
         carrinhoRepository.save(carrinho);
     }
+
+
 
 }

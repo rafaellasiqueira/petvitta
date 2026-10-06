@@ -10,7 +10,7 @@ import lombok.Setter;
 @Table(name = "cartao_compra")
 @Getter
 @Setter
-public class CartaoTemporario {
+public class CartaoCompra {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -36,6 +36,6 @@ public class CartaoTemporario {
     @JoinColumn(name = "bandeira_id", nullable = false)
     private BandeiraCartao bandeira;
 
-    public CartaoTemporario() {
+    public CartaoCompra() {
     }
 }

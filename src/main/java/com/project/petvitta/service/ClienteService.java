@@ -33,6 +33,7 @@ public class ClienteService {
 
     private final InativarMotivoRepository inativarMotivoRepository;
     private final AtivarMotivoRepository ativarMotivoRepository;
+    private final AuditoriaService auditoriaService;
 
     public ClienteService(
             ClienteRepository clienteRepository,
@@ -42,7 +43,7 @@ public class ClienteService {
             EnderecoService enderecoService,
             CartaoService cartaoService,
             InativarMotivoRepository inativarMotivoRepository,
-            AtivarMotivoRepository ativarMotivoRepository
+            AtivarMotivoRepository ativarMotivoRepository, AuditoriaService auditoriaService
     ) {
         this.clienteRepository = clienteRepository;
         this.tipoTelefoneRepository = tipoTelefoneRepository;
@@ -52,6 +53,7 @@ public class ClienteService {
         this.cartaoService = cartaoService;
         this.inativarMotivoRepository = inativarMotivoRepository;
         this.ativarMotivoRepository = ativarMotivoRepository;
+        this.auditoriaService = auditoriaService;
     }
 
     public List<TipoTelefone> listarTiposTelefone() {
@@ -140,7 +142,15 @@ public class ClienteService {
         enderecoService.adicionarAoCliente(cliente, dto.getEnderecos());
         cartaoService.adicionarAoCliente(cliente, dto.getCartoes());
 
-        return clienteRepository.save(cliente);
+        Cliente clienteSalvo = clienteRepository.save(cliente);
+
+        auditoriaService.registrar(
+                clienteSalvo.getEmail(),
+                "Inserção",
+                "Cliente cadastrado: " + clienteSalvo.getNome()
+        );
+
+        return clienteSalvo;
     }
 
     public Cliente buscarPorId(Long id) {
@@ -223,13 +233,34 @@ public class ClienteService {
                 .orElseThrow(() ->
                         new IllegalArgumentException("Tipo de telefone inválido."));
 
+        String alteracoes = "";
+
+        if (!cliente.getNome().equals(dto.getNome())) {
+            alteracoes += "Nome: " + cliente.getNome() + " -> " + dto.getNome() + "; ";
+        }
+
+        if (!cliente.getTelefone().equals(dto.getTelefone())) {
+            alteracoes += "Telefone: " + cliente.getTelefone() + " -> " + dto.getTelefone() + "; ";
+        }
+
         cliente.setNome(dto.getNome());
         cliente.setTelefone(dto.getTelefone());
         cliente.setDataNascimento(dto.getDataNascimento());
         cliente.setGenero(genero);
         cliente.setTipoTelefone(tipoTelefone);
 
-        return clienteRepository.save(cliente);
+        clienteRepository.save(cliente);
+
+        if(!alteracoes.isEmpty()){
+            auditoriaService.registrar(
+                    cliente.getEmail(),
+                    "Alteração",
+                    alteracoes
+            );
+        }
+
+
+        return cliente;
     }
 
     public void alterarSenha(
@@ -244,6 +275,12 @@ public class ClienteService {
         cliente.setSenha(senhaService.criptografar(dto.getNovaSenha()));
 
         clienteRepository.save(cliente);
+
+        auditoriaService.registrar(
+                cliente.getEmail(),
+                "Alteração",
+                "Senha do cliente alterada."
+        );
     }
 
     public void inativar(

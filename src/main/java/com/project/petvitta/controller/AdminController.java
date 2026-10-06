@@ -5,6 +5,7 @@ import com.project.petvitta.model.dominio.StatusPedido;
 import com.project.petvitta.model.pedido.Pedido;
 import com.project.petvitta.model.produto.Produto;
 import com.project.petvitta.model.produto.VariacaoProduto;
+import com.project.petvitta.service.AuditoriaService;
 import com.project.petvitta.service.ClienteService;
 import com.project.petvitta.service.PedidoService;
 import com.project.petvitta.service.ProdutoService;
@@ -23,15 +24,17 @@ public class AdminController {
     private final ClienteService clienteService;
     private final ProdutoService produtoService;
     private final PedidoService pedidoService;
+    private final AuditoriaService auditoriaService;
 
     public AdminController(
             ClienteService clienteService,
             ProdutoService produtoService,
-            PedidoService pedidoService
+            PedidoService pedidoService, AuditoriaService auditoriaService
     ) {
         this.clienteService = clienteService;
         this.produtoService = produtoService;
         this.pedidoService = pedidoService;
+        this.auditoriaService = auditoriaService;
     }
 
     @ModelAttribute
@@ -243,4 +246,11 @@ public class AdminController {
         return "admin/trocas";
     }
 
+    @GetMapping("/admin/auditoria")
+    public String auditoria(Model model) {
+        model.addAttribute("paginaAtual", "Auditoria");
+        model.addAttribute("auditorias", auditoriaService.listar());
+
+        return "admin/auditoria";
+    }
 }

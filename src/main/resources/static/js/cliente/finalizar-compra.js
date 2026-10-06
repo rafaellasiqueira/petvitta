@@ -15,49 +15,87 @@ function calcularFrete(quantidadeItens, siglaEstado) {
         frete += 8;
     }
 
-    // Sudeste
-    if (siglaEstado === 'SP' ||
-        siglaEstado === 'RJ' ||
-        siglaEstado === 'MG' ||
-        siglaEstado === 'ES') {
-
-        frete += 5;
+    // Valor conforme o estado de destino
+    if (siglaEstado === 'SP') {
+        frete += 7;
     }
-
-    // Sul
-    else if (siglaEstado === 'PR' ||
-        siglaEstado === 'SC' ||
-        siglaEstado === 'RS') {
-
+    else if (siglaEstado === 'RJ') {
+        frete += 8;
+    }
+    else if (siglaEstado === 'MG') {
+        frete += 8;
+    }
+    else if (siglaEstado === 'ES') {
         frete += 10;
     }
-
-    // Centro-Oeste
-    else if (siglaEstado === 'GO' ||
-        siglaEstado === 'MT' ||
-        siglaEstado === 'MS' ||
-        siglaEstado === 'DF') {
-
+    else if (siglaEstado === 'PR') {
+        frete += 10;
+    }
+    else if (siglaEstado === 'SC') {
+        frete += 12;
+    }
+    else if (siglaEstado === 'MS') {
+        frete += 12;
+    }
+    else if (siglaEstado === 'GO') {
+        frete += 13;
+    }
+    else if (siglaEstado === 'RS') {
         frete += 15;
     }
-
-    // Nordeste
-    else if (siglaEstado === 'BA' ||
-        siglaEstado === 'SE' ||
-        siglaEstado === 'AL' ||
-        siglaEstado === 'PE' ||
-        siglaEstado === 'PB' ||
-        siglaEstado === 'RN' ||
-        siglaEstado === 'CE' ||
-        siglaEstado === 'PI' ||
-        siglaEstado === 'MA') {
-
+    else if (siglaEstado === 'DF') {
+        frete += 15;
+    }
+    else if (siglaEstado === 'MT') {
+        frete += 16;
+    }
+    else if (siglaEstado === 'BA') {
+        frete += 18;
+    }
+    else if (siglaEstado === 'SE') {
+        frete += 19;
+    }
+    else if (siglaEstado === 'AL') {
         frete += 20;
     }
-
-    // Norte
-    else {
+    else if (siglaEstado === 'PE') {
+        frete += 21;
+    }
+    else if (siglaEstado === 'PB') {
+        frete += 22;
+    }
+    else if (siglaEstado === 'RN') {
+        frete += 23;
+    }
+    else if (siglaEstado === 'CE') {
+        frete += 24;
+    }
+    else if (siglaEstado === 'PI') {
+        frete += 24;
+    }
+    else if (siglaEstado === 'MA') {
         frete += 25;
+    }
+    else if (siglaEstado === 'TO') {
+        frete += 25;
+    }
+    else if (siglaEstado === 'PA') {
+        frete += 28;
+    }
+    else if (siglaEstado === 'RO') {
+        frete += 30;
+    }
+    else if (siglaEstado === 'AC') {
+        frete += 32;
+    }
+    else if (siglaEstado === 'AM') {
+        frete += 35;
+    }
+    else if (siglaEstado === 'AP') {
+        frete += 35;
+    }
+    else if (siglaEstado === 'RR') {
+        frete += 38;
     }
 
     return frete;
@@ -91,9 +129,7 @@ function atualizarTotal() {
     let quantidadeItens = 0;
 
     document.querySelectorAll('.quantidade-produto').forEach(function (elemento) {
-        quantidadeItens += parseInt(
-            elemento.textContent.replace('Quantidade: ', '')
-        );
+        quantidadeItens += parseInt(elemento.textContent.replace('Quantidade: ', ''));
     });
 
     const endereco = document.querySelector('.endereco');
@@ -130,15 +166,7 @@ function atualizarTotal() {
 }
 
 document.addEventListener('DOMContentLoaded', function () {
-    const checkbox = document.getElementById('mostrarOutrosCartoes');
-    const outrosCartoes = document.getElementById('outrosCartoes');
-
-    if (checkbox && outrosCartoes) {
-        checkbox.addEventListener('change', function () {
-            outrosCartoes.hidden = !this.checked;
-        });
-    }
-
+    // Abrir modal de alterar endereço
     const btnAlterarEndereco = document.querySelector('.btnAlterarEndereco')
     const modalAlterarEndereco = document.getElementById('modalAlterarEndereco');
     const btnFecharModalAlterarEndereco = document.getElementById('btnFecharModalAlterarEndereco');
@@ -155,6 +183,7 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
+    // Abrir modal
     const modalCupom = document.getElementById('modalCupons');
     const btnAbrirModalCupom = document.getElementById('btnVerCupons');
     const btnFecharModalCupom = document.getElementById('btnFecharModalCupom');
@@ -171,9 +200,17 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    atualizarTotal();
+    // Quando licar em outros cartões
+    const checkbox = document.getElementById('mostrarOutrosCartoes');
+    const outrosCartoes = document.getElementById('outrosCartoes');
 
-    const toastAtencao = document.getElementById('toastAtencao');
+    if (checkbox && outrosCartoes) {
+        checkbox.addEventListener('change', function () {
+            outrosCartoes.hidden = !this.checked;
+        });
+    }
+
+    atualizarTotal();
 
     document.querySelectorAll('.cartao-item').forEach(function (item) {
         const checkbox = item.querySelector('.checkbox-cartao');
@@ -221,18 +258,13 @@ document.addEventListener('DOMContentLoaded', function () {
             }
 
             if (valor > 0 && valor < minimo) {
-                mostrarToast(
-                    'O valor mínimo por cartão é de R$ ' +
-                    minimo.toFixed(2).replace('.', ',') +
-                    '.'
-                );
+                mostrarToast('O valor mínimo por cartão é de R$ ' + minimo.toFixed(2).replace('.', ',') + '.');
             }
         });
     });
 
-    const cartaoTemporario = document.querySelector('.cartao-temporario');
-
-    if (cartaoTemporario) {
+    // Cartões temporários
+    document.querySelectorAll('.cartao-temporario').forEach(function (cartaoTemporario) {
 
         const checkboxTemporario = cartaoTemporario.querySelector('.checkbox-cartao-temporario');
         const campoTemporario = cartaoTemporario.querySelector('.input-valor input');
@@ -271,7 +303,9 @@ document.addEventListener('DOMContentLoaded', function () {
         campoTemporario.addEventListener('blur', function () {
 
             const valor = parseFloat(this.value) || 0;
+
             const total = pegarValor(document.getElementById('total').textContent);
+
             const desconto = pegarValor(document.getElementById('desconto').textContent.replace('-', ''));
 
             let minimo = 10;
@@ -281,21 +315,15 @@ document.addEventListener('DOMContentLoaded', function () {
             }
 
             if (valor > 0 && valor < minimo) {
-                mostrarToast(
-                    'O valor mínimo por cartão é de R$ ' +
-                    minimo.toFixed(2).replace('.', ',') +
-                    '.'
-                );
+                mostrarToast('O valor mínimo por cartão é de R$ ' + minimo.toFixed(2).replace('.', ',') + '.');
             }
         });
-    }
+    });
 
     const formFinalizarCompra = document.getElementById('formFinalizarCompra');
 
     formFinalizarCompra.addEventListener('submit', function (event) {
-        const total = pegarValor(
-            document.getElementById('total').textContent
-        );
+        const total = pegarValor(document.getElementById('total').textContent);
 
         let valorCartoes = 0;
         let cartoesSelecionados = 0;
@@ -334,86 +362,31 @@ document.addEventListener('DOMContentLoaded', function () {
         });
 
         // Cartão temporário
-        const cartaoTemporario =
-            document.querySelector('.cartao-temporario');
+        document.querySelectorAll('.cartao-temporario').forEach(function (item) {
 
-        if (cartaoTemporario) {
+            const checkbox = item.querySelector('.checkbox-cartao-temporario');
+            const campo = item.querySelector('.input-valor input');
+            const idTemporario = item.querySelector('[name="cartaoTemporarioId"]');
 
-            const checkboxTemporario =
-                cartaoTemporario.querySelector(
-                    '.checkbox-cartao-temporario'
-                );
-
-            const campoTemporario =
-                cartaoTemporario.querySelector(
-                    '.input-valor input'
-                );
-
-            const idTemporario =
-                document.querySelector(
-                    '[name="cartaoTemporarioId"]'
-                );
-
-            if (checkboxTemporario.checked) {
-
-                valorCartoes +=
-                    parseFloat(campoTemporario.value) || 0;
-
+            if (checkbox && checkbox.checked && campo) {
+                valorCartoes += parseFloat(campo.value) || 0;
                 cartoesSelecionados++;
-
-                campoTemporario.disabled = false;
 
                 if (idTemporario) {
                     idTemporario.disabled = false;
                 }
 
             } else {
-
-                campoTemporario.disabled = true;
-                campoTemporario.value = '0';
+                if (campo) {
+                    campo.disabled = true;
+                    campo.value = '0';
+                }
 
                 if (idTemporario) {
                     idTemporario.disabled = true;
                 }
             }
-        }
-
-        // Verifica se selecionou algum cartão
-        if (total > 0 && cartoesSelecionados === 0) {
-            event.preventDefault();
-
-            mostrarToast(
-                'Selecione pelo menos um cartão para finalizar a compra.'
-            );
-
-            return;
-        }
-
-        // Verifica se o valor dos cartões é menor que o total
-        if (valorCartoes < total) {
-            event.preventDefault();
-
-            mostrarToast(
-                'Ainda falta informar R$ ' +
-                (total - valorCartoes)
-                    .toFixed(2)
-                    .replace('.', ',') +
-                ' para finalizar a compra.'
-            );
-
-            return;
-        }
-
-        // Verifica se o valor dos cartões é maior que o total
-        if (valorCartoes > total) {
-            event.preventDefault();
-
-            mostrarToast(
-                'O valor informado nos cartões é maior que o total da compra.'
-            );
-
-            return;
-        }
+        });
     });
 });
 

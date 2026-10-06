@@ -27,6 +27,9 @@ public class Cupom {
     @Column(nullable = false)
     private LocalDate validade;
 
+    @Column(nullable = false)
+    private boolean ativo = true;
+
     @ManyToOne
     @JoinColumn(name = "tipo_cupom_id", nullable = false)
     private TipoCupom tipoCupom;

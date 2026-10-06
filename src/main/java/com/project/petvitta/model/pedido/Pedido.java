@@ -61,12 +61,8 @@ public class Pedido {
     private Cliente cliente;
 
     @ManyToOne
-    @JoinColumn(name = "endereco_id")
-    private Endereco endereco;
-
-    @ManyToOne
-    @JoinColumn(name = "endereco_compra_id")
-    private EnderecoTemporario enderecoCompra;
+    @JoinColumn(name = "endereco_compra_id", nullable = false)
+    private EnderecoCompra enderecoCompra;
 
     @OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL)
     private List<ItemPedido> itens = new ArrayList<>();

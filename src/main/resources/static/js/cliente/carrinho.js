@@ -165,8 +165,11 @@ checkboxTodos.addEventListener('change', function () {
 });
 
 // Toast
-function mostrarToast() {
+function mostrarToast(mensagem) {
     const toast = document.getElementById('toastAtencao');
+    const mensagemToast = toast.querySelector('p');
+
+    mensagemToast.textContent = mensagem;
 
     toast.classList.add('ativo');
 
@@ -183,10 +186,14 @@ formFinalizarCompra.addEventListener('submit', function (event) {
         '.checkbox-produto:checked'
     );
 
-    if (produtosSelecionados.length === 0) {
-        event.preventDefault();
-        mostrarToast();
-        return;
+    for (let i = 0; i < produtosSelecionados.length; i++) {
+        const produto = produtosSelecionados[i].closest('.produto');
+
+        if (!verificarEstoque(produto)) {
+            event.preventDefault();
+            mostrarToast('Estoque insuficiente.');
+            return;
+        }
     }
 
     const itensSelecionados = document.getElementById('itensSelecionados');
@@ -206,7 +213,6 @@ formFinalizarCompra.addEventListener('submit', function (event) {
     });
 
 });
-
 
 atualizarSubtotal();
 

@@ -83,7 +83,7 @@
                         <th>Espécie</th>
                         <td>
                             <span th:each="especie : ${produto.especies}"
-                                  th:text="${especie.nome + ' '}">
+                                  th:text="${especie.nome + '   '}">
                             </span>
                         </td>
                     </tr>
@@ -92,7 +92,7 @@
                         <th>Idade</th>
                         <td>
                             <span th:each="faixa : ${produto.faixasEtarias}"
-                                  th:text="${faixa.nome + ' '}">
+                                  th:text="${faixa.nome + '   '}">
                             </span>
                         </td>
                     </tr>
@@ -101,7 +101,7 @@
                         <th>Porte indicado</th>
                         <td>
                             <span th:each="porte : ${produto.portes}"
-                                  th:text="${porte.nome + ' '}">
+                                  th:text="${porte.nome + '   '}">
                             </span>
                         </td>
                     </tr>
@@ -133,8 +133,9 @@
 
                     <tr>
                         <th>Sabor</th>
-                        <td th:each="sabor : ${produto.sabores}"
-                            th:text="${sabor.nome}">
+                        <td>
+                        <span th:each="sabor : ${produto.sabores}"
+                              th:text="${sabor.nome} + '   '"></span>
                         </td>
                     </tr>
 

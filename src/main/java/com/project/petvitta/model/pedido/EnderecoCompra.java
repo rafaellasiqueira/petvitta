@@ -13,7 +13,7 @@ import lombok.Setter;
 @Table(name = "endereco_compra")
 @Getter
 @Setter
-public class EnderecoTemporario {
+public class EnderecoCompra {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -65,6 +65,6 @@ public class EnderecoTemporario {
     @JoinColumn(name = "estado_id", nullable = false)
     private Estado estado;
 
-    public EnderecoTemporario() {
+    public EnderecoCompra() {
     }
 }

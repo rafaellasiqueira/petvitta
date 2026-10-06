@@ -221,7 +221,8 @@ h3 {
     gap: 2px;
 }
 
-.editar-endereco {
+.editar-endereco,
+.excluir-endereco {
     position: absolute;
     top: 8px;
     right: 8px;
@@ -512,20 +513,21 @@ label {
     color: white;
 }
 
+.container-cartao {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+}
+
 .excluirCartao {
     background: none;
     border: none;
     padding: 8px;
+    margin-left: auto;
     cursor: pointer;
     font-size: 18px;
     color: #D9534F;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.formExcluirCartao {
-    margin-left: auto;
 }
 
 h4 {

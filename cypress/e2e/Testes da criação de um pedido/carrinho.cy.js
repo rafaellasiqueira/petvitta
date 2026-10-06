@@ -9,9 +9,10 @@ describe('Carrinho de compras', () => {
             .should('be.visible')
             .and('contain', mensagem);
     }
+
     it('RF0031/RF0032 - Deve permitir adicionar um produto ao carrinho com quantidade maior que 1', () => {
-        cy.visit('/cliente/detalhes-produto/1');
         cy.viewport(1280, 720);
+        cy.visit('/cliente/detalhes-produto/1');
 
         cy.wait(2000);
 
@@ -24,7 +25,7 @@ describe('Carrinho de compras', () => {
             .click()
 
         validarToast('Produto adicionado ao carrinho com sucesso!');
-        cy.wait(5000);
+        cy.wait(3000);
 
         cy.visit('/cliente/carrinho');
 
@@ -32,8 +33,8 @@ describe('Carrinho de compras', () => {
     });
 
     it('RN0031 - Não deve permitir adicionar uma quantidade maior que a disponível em estoque', () => {
-        cy.visit('/cliente/detalhes-produto/1');
         cy.viewport(1280, 720);
+        cy.visit('/cliente/detalhes-produto/1');
 
         cy.wait(2000);
 
@@ -63,13 +64,13 @@ describe('Carrinho de compras', () => {
     });
 
     it('RF0031 - Deve permitir adicionar mais um produto ao carrinho', () => {
-        cy.visit('/cliente/produtos');
         cy.viewport(1280, 720);
+        cy.visit('/cliente/produtos');
 
         cy.wait(2000);
 
         cy.get('.produto')
-            .eq(1)
+            .eq(8)
             .find('.btn-adicionar')
             .click();
         cy.wait(20);
@@ -80,8 +81,8 @@ describe('Carrinho de compras', () => {
     });
 
     it('RF0031/RF0032 - Deve permitir visualizar a lista de itens adicionados e alterar suas quantidades', () => {
-        cy.visit('/cliente/carrinho');
         cy.viewport(1280, 720);
+        cy.visit('/cliente/carrinho');
 
         cy.wait(2000);
 
@@ -90,31 +91,39 @@ describe('Carrinho de compras', () => {
             .find('.seletor-quantidade input')
             .click()
             .clear()
-            .type('3');
-        cy.wait(20);
+            .type('3')
+            .type('{enter}');
         cy.wait(1000);
 
         cy.get('.produto')
             .eq(1)
             .find('.seletor-quantidade input')
             .click()
-            .type('3');
-        cy.wait(20);
+            .clear()
+            .type('3')
+            .type('{enter}');
         cy.wait(1000);
 
         cy.reload();
     });
 
-    it('RN0031 - Não deve permitir adicionar uma quantidade maior que a disponível em estoque no carrinho', () => {
-        cy.visit('/cliente/carrinho');
+    it('RN0031 - Não deve permitir adicionar uma quantidade maior que a disponível em estoque no carrinho e nem finalizar a compra', () => {
         cy.viewport(1280, 720);
+        cy.visit('/cliente/carrinho');
         cy.wait(2000);
 
         cy.get('.produto')
             .eq(0)
             .find('.seletor-quantidade input')
             .click()
-            .type('999');
+            .clear()
+            .type('999')
+            .type('{enter}');
+
+        cy.get('.produto')
+            .eq(0)
+            .find('.checkbox-produto')
+            .click();
         cy.wait(20);
         cy.wait(1000);
 
@@ -122,16 +131,28 @@ describe('Carrinho de compras', () => {
             .eq(1)
             .find('.seletor-quantidade input')
             .click()
-            .type('99');
-        cy.wait(20);
-        cy.wait(3000);
+            .clear()
+            .type('99')
+            .type('{enter}')
 
-        cy.reload();
+        cy.get('.produto')
+            .eq(1)
+            .find('.checkbox-produto')
+            .click();
+        cy.wait(20);
+        cy.wait(1000);
+
+        cy.get('.btn-finalizar-a-compra')
+            .click()
+
+        cy.get('#toastAtencao', { timeout: 6000 })
+            .should('be.visible')
+            .and('contain', 'Estoque insuficiente');
     });
 
     it('RF0031 - Deve permitir excluir um produto no carrinho', () => {
-        cy.visit('/cliente/carrinho');
         cy.viewport(1280, 720);
+        cy.visit('/cliente/carrinho');
         cy.wait(2000);
 
         cy.get('.produto')
@@ -141,6 +162,18 @@ describe('Carrinho de compras', () => {
         cy.wait(1000);
 
         validarToast('Item excluído do carrinho!');
+
+    });
+
+    it('CT07 - Não deve permitir finalizar a compra sem um item selecionado', () => {
+        cy.viewport(1280, 720);
+        cy.visit('/cliente/carrinho');
+        cy.wait(2000);
+
+        cy.get('.btn-finalizar-a-compra')
+            .click()
+
+        validarToast('Selecione pelo menos um produto.');
 
     });
 });

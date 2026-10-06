@@ -2,11 +2,12 @@ package com.project.petvitta.controller;
 
 import com.project.petvitta.dto.*;
 import com.project.petvitta.model.carrinho.Carrinho;
+import com.project.petvitta.model.carrinho.ItemCarrinho;
 import com.project.petvitta.model.cliente.Cliente;
 import com.project.petvitta.model.cliente.Cupom;
 import com.project.petvitta.model.cliente.Endereco;
-import com.project.petvitta.model.pedido.CartaoTemporario;
-import com.project.petvitta.model.pedido.EnderecoTemporario;
+import com.project.petvitta.model.pedido.CartaoCompra;
+import com.project.petvitta.model.pedido.EnderecoCompra;
 import com.project.petvitta.model.pedido.Pedido;
 import com.project.petvitta.service.*;
 import jakarta.servlet.http.HttpSession;
@@ -22,7 +23,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Controller
 public class ClienteController {
@@ -317,88 +317,112 @@ public class ClienteController {
             HttpSession session,
             RedirectAttributes redirectAttributes
     ) {
-
         if (!verificarClienteAtivo()) {
             return "redirect:/cliente/inativo";
         }
 
+        // Nenhum item selecionado
         if (itensSelecionados == null || itensSelecionados.isEmpty()) {
-            redirectAttributes.addFlashAttribute(
-                    "tipoToast",
-                    "erro"
-            );
-
-            redirectAttributes.addFlashAttribute(
-                    "mensagemToast",
-                    "Selecione pelo menos um produto."
-            );
+            redirectAttributes.addFlashAttribute("tipoToast", "erro");
+            redirectAttributes.addFlashAttribute("mensagemToast", "Selecione pelo menos um produto.");
 
             return "redirect:/cliente/carrinho";
         }
+
+        model.addAttribute("itensSelecionados", itensSelecionados);
 
         Cliente cliente = clienteService.buscarPorId(1L);
+        Carrinho carrinho = carrinhoService.buscarPorCliente(cliente.getId());
+        List<ItemCarrinho> itensExpirados = carrinhoService.verificarExpiracao(carrinho);
 
-        Carrinho carrinho =
-                carrinhoService.buscarPorCliente(cliente.getId());
-
-        if (carrinho == null ||
-                carrinho.getItens() == null ||
-                carrinho.getItens().isEmpty()) {
-
-            redirectAttributes.addFlashAttribute(
-                    "tipoToast",
-                    "erro"
-            );
-
-            redirectAttributes.addFlashAttribute(
-                    "mensagemToast",
-                    "Seu carrinho está vazio."
-            );
+        // Carrinho expirado
+        if (itensExpirados != null && !itensExpirados.isEmpty()) {
+            redirectAttributes.addFlashAttribute("tipoToast", "erro");
+            redirectAttributes.addFlashAttribute("mensagemToast", "Seu carrinho expirou. Adicione os produtos novamente.");
 
             return "redirect:/cliente/carrinho";
         }
 
-        carrinhoService.verificarExpiracao(carrinho);
+        // Carrinho vazio
+        if (carrinho == null || carrinho.getItens() == null || carrinho.getItens().isEmpty()) {
+            redirectAttributes.addFlashAttribute("tipoToast", "erro");
+            redirectAttributes.addFlashAttribute("mensagemToast", "Seu carrinho está vazio.");
+
+            return "redirect:/cliente/carrinho";
+        }
+
+// Endereços temporários não utilizados
+        List<EnderecoCompra> enderecosTemporarios =
+                enderecoService.buscarTemporariosNaoUtilizados(1L);
+
+        model.addAttribute(
+                "enderecosTemporarios",
+                enderecosTemporarios
+        );
+
+// Endereço temporário selecionado
+        EnderecoCompra enderecoCompra = null;
 
         Long enderecoTemporarioId =
                 (Long) session.getAttribute("enderecoTemporarioId");
 
-        EnderecoTemporario enderecoTemporario = null;
-
         if (enderecoTemporarioId != null) {
-
-            EnderecoTemporario enderecoTemp =
-                    enderecoService.buscarTemporarioPorId(
-                            enderecoTemporarioId
-                    );
-
-            if (enderecoTemp != null &&
-                    ("Entrega".equalsIgnoreCase(
-                            enderecoTemp.getTipoEndereco().getDescricao()) ||
-                            "Cobrança e Entrega".equalsIgnoreCase(
-                                    enderecoTemp.getTipoEndereco().getDescricao()))) {
-
-                enderecoTemporario = enderecoTemp;
-            }
+            enderecoCompra =
+                    enderecoService.buscarTemporarioPorId(enderecoTemporarioId);
         }
 
         model.addAttribute(
-                "enderecoTemporario",
-                enderecoTemporario
+                "enderecoCompra",
+                enderecoCompra
         );
 
+        model.addAttribute(
+                "enderecoTemporarioSelecionadoId",
+                enderecoTemporarioId
+        );
+
+
+// Endereço normal salvo
         Endereco endereco = null;
 
         Long enderecoSelecionadoId =
                 (Long) session.getAttribute("enderecoSelecionadoId");
 
-        if (enderecoSelecionadoId != null &&
-                cliente.getEnderecos() != null) {
+        if (enderecoSelecionadoId != null) {
 
-            for (Endereco enderecoAtual : cliente.getEnderecos()) {
+            for (int i = 0; i < cliente.getEnderecos().size(); i++) {
 
-                if (enderecoAtual.getId().equals(enderecoSelecionadoId) &&
-                        "Entrega".equalsIgnoreCase(
+                Endereco enderecoAtual =
+                        cliente.getEnderecos().get(i);
+
+                if (enderecoAtual.getId().equals(enderecoSelecionadoId)) {
+
+                    if ("Entrega".equalsIgnoreCase(
+                            enderecoAtual.getTipoEndereco().getDescricao()) ||
+                            "Cobrança e Entrega".equalsIgnoreCase(
+                                    enderecoAtual.getTipoEndereco().getDescricao())) {
+
+                        endereco = enderecoAtual;
+                        break;
+                    }
+                }
+            }
+        }
+
+// Se não tiver endereço selecionado
+        if (endereco == null &&
+                enderecoCompra == null &&
+                cliente.getEnderecos() != null &&
+                !cliente.getEnderecos().isEmpty()) {
+
+            for (int i = 0; i < cliente.getEnderecos().size(); i++) {
+
+                Endereco enderecoAtual =
+                        cliente.getEnderecos().get(i);
+
+                if ("Entrega".equalsIgnoreCase(
+                        enderecoAtual.getTipoEndereco().getDescricao()) ||
+                        "Cobrança e Entrega".equalsIgnoreCase(
                                 enderecoAtual.getTipoEndereco().getDescricao())) {
 
                     endereco = enderecoAtual;
@@ -407,63 +431,32 @@ public class ClienteController {
             }
         }
 
-        if (endereco == null &&
-                cliente.getEnderecos() != null &&
-                !cliente.getEnderecos().isEmpty()) {
-
-            for (Endereco enderecoAtual : cliente.getEnderecos()) {
-
-                if ("Entrega".equalsIgnoreCase(enderecoAtual.getTipoEndereco().getDescricao()) ||
-                        "Cobrança e Entrega".equalsIgnoreCase(enderecoAtual.getTipoEndereco().getDescricao())) {
-
-                    endereco = enderecoAtual;
-                    break;
-                }
-            }
-        }
-
-        List<Cupom> cupons =
-                cupomService.listarCupoms();
-
         model.addAttribute(
-                "itensSelecionados",
-                itensSelecionados
+                "endereco",
+                endereco
         );
 
-
-        CartaoTemporario cartaoTemporario = null;
-
-        Long cartaoTemporarioId =
-                (Long) session.getAttribute("cartaoTemporarioId");
-
-        if (cartaoTemporarioId != null) {
-            cartaoTemporario =
-                    cartaoService.buscarPorId(cartaoTemporarioId);
+        if (endereco != null) {
+            model.addAttribute(
+                    "enderecoSelecionadoId",
+                    endereco.getId()
+            );
         }
+
+
+        // Listar os cupons
+        List<Cupom> cupons = cupomService.listarCupoms();
+        model.addAttribute("cupons", cupons);
+
+        // Cartões temporários não utilizados
+        List<CartaoCompra> cartoesTemporarios =
+                cartaoService.buscarTemporariosNaoUtilizados(1L);
+
+        model.addAttribute("cartoesTemporarios", cartoesTemporarios);
 
 
         model.addAttribute("cliente", cliente);
         model.addAttribute("carrinho", carrinho);
-        model.addAttribute("cartaoTemporario", cartaoTemporario);
-
-        model.addAttribute(
-                "cliente",
-                cliente
-        );
-
-        model.addAttribute(
-                "carrinho",
-                carrinho
-        );
-
-        model.addAttribute("endereco", endereco);
-
-        if (endereco != null) {
-            model.addAttribute("enderecoSelecionadoId", endereco.getId());
-        }
-
-        model.addAttribute("cupons", cupons);
-
 
         return "cliente/finalizar-compra";
     }
@@ -475,13 +468,11 @@ public class ClienteController {
             HttpSession session,
             RedirectAttributes redirectAttributes
     ) {
-
         if (!verificarClienteAtivo()) {
             return "redirect:/cliente/inativo";
         }
 
         if (result.hasErrors()) {
-
             redirectAttributes.addFlashAttribute(
                     "tipoToast",
                     "erro"
@@ -489,50 +480,53 @@ public class ClienteController {
 
             redirectAttributes.addFlashAttribute(
                     "mensagemToast",
-                    result.getFieldError()
-                            .getDefaultMessage()
+                    result.getFieldError().getDefaultMessage()
+            );
+
+            redirectAttributes.addAttribute(
+                    "itensSelecionados",
+                    dto.getItensSelecionados()
             );
 
             return "redirect:/cliente/finalizar-compra";
         }
 
         try {
-
             Long clienteId = 1L;
 
-            /*
-             * O DTO já deve possuir:
-             *
-             * enderecoId
-             * valoresCartoes
-             * itensSelecionados
-             * cuponsIds
-             *
-             * Não existe mais nenhum temporário.
-             */
-            pedidoService.finalizarCompra(
-                    clienteId,
-                    dto
-            );
+            pedidoService.finalizarCompra(clienteId, dto, session);
 
-            /*
-             * Remove somente a seleção do endereço
-             * depois que o pedido foi criado.
-             */
-// Limpa os dados da compra da sessão
             session.removeAttribute("enderecoSelecionadoId");
             session.removeAttribute("enderecoTemporarioId");
             session.removeAttribute("cartaoTemporarioId");
 
-            redirectAttributes.addFlashAttribute(
-                    "tipoToast",
-                    "sucesso"
-            );
+            String cupomTroca =
+                    (String) session.getAttribute("cupomTrocaGerado");
 
-            redirectAttributes.addFlashAttribute(
-                    "mensagemToast",
-                    "Compra realizada com sucesso!"
-            );
+            if (cupomTroca != null) {
+                redirectAttributes.addFlashAttribute(
+                        "tipoToast",
+                        "sucesso"
+                );
+
+                redirectAttributes.addFlashAttribute(
+                        "mensagemToast",
+                        "Compra realizada com sucesso! Cupom de troca gerado: " + cupomTroca
+                );
+
+                session.removeAttribute("cupomTrocaGerado");
+
+            } else {
+                redirectAttributes.addFlashAttribute(
+                        "tipoToast",
+                        "sucesso"
+                );
+
+                redirectAttributes.addFlashAttribute(
+                        "mensagemToast",
+                        "Compra realizada com sucesso!"
+                );
+            }
 
             return "redirect:/cliente/pedido";
 

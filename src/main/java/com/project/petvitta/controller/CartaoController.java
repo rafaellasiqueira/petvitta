@@ -1,7 +1,7 @@
 package com.project.petvitta.controller;
 
 import com.project.petvitta.dto.CartaoDTO;
-import com.project.petvitta.model.pedido.CartaoTemporario;
+import com.project.petvitta.model.pedido.CartaoCompra;
 import com.project.petvitta.service.CartaoService;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -108,7 +109,6 @@ public class CartaoController {
             @Valid CartaoDTO dto,
             BindingResult result,
             @RequestParam(required = false) List<Long> itensSelecionados,
-            HttpSession session,
             RedirectAttributes redirectAttributes
     ) {
         if (result.hasErrors()) {
@@ -126,13 +126,7 @@ public class CartaoController {
         }
 
         try {
-            CartaoTemporario cartaoTemporario =
-                    cartaoService.adicionarTemporario(1L, dto);
-
-            session.setAttribute(
-                    "cartaoTemporarioId",
-                    cartaoTemporario.getId()
-            );
+            cartaoService.adicionarTemporario(1L, dto);
 
             redirectAttributes.addFlashAttribute(
                     "tipoToast",
@@ -224,5 +218,44 @@ public class CartaoController {
             );
         }
         return "redirect:/cliente/perfil";
+    }
+
+    @PostMapping("/cliente/excluir-cartao-temporario")
+    public String excluirCartaoTemporario(
+            @RequestParam Long cartaoTemporarioId,
+            @RequestParam List<Long> itensSelecionados,
+            HttpSession session,
+            RedirectAttributes redirectAttributes
+    ) {
+
+        cartaoService.excluirTemporario(cartaoTemporarioId);
+
+        List<Long> cartoesTemporariosId = (List<Long>) session.getAttribute("cartoesTemporariosId");
+
+        if (cartoesTemporariosId != null) {
+            cartoesTemporariosId.remove(cartaoTemporarioId);
+
+            session.setAttribute(
+                    "cartoesTemporariosId",
+                    cartoesTemporariosId
+            );
+        }
+
+        redirectAttributes.addFlashAttribute(
+                "tipoToast",
+                "sucesso"
+        );
+
+        redirectAttributes.addFlashAttribute(
+                "mensagemToast",
+                "Cartão excluído com sucesso!"
+        );
+
+        redirectAttributes.addAttribute(
+                "itensSelecionados",
+                itensSelecionados
+        );
+
+        return "redirect:/cliente/finalizar-compra";
     }
 }

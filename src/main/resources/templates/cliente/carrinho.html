@@ -31,12 +31,14 @@
         <div class="container-esquerdo">
                 <div class="carrinho-cabecalho">
                     <h1>Carrinho</h1>
-                    <form th:action="@{/cliente/carrinho/limpar-carrinho}" method="post">
-                        <input type="hidden" name="carrinhoId" th:value="${carrinho.id}">
-                        <button class="btn-limpar" type="submit">
-                            Limpar carrinho
-                        </button>
-                    </form>
+                    <div th:if="${carrinho != null}">
+                        <form th:action="@{/cliente/carrinho/limpar-carrinho}" method="post">
+                            <input type="hidden" name="carrinhoId" th:value="${carrinho.id}">
+                            <button class="btn-limpar" type="submit">
+                                Limpar carrinho
+                            </button>
+                        </form>
+                    </div>
                 </div>
 
             <!-- Carrinho vai expirar -->
@@ -74,6 +76,10 @@
                                name="quantidade"
                                th:value="${item.quantidade}">
 
+                        <input type="hidden"
+                               name="origem"
+                               value="expirados">
+
                         <button type="submit"
                                 class="btn-adicionar-novamente">
                             Adicionar novamente
@@ -97,6 +103,10 @@
                                name="quantidade"
                                th:value="${item.quantidade}">
                     </div>
+
+                    <input type="hidden"
+                           name="origem"
+                           value="expirados">
 
                     <button type="submit"
                             class="btn-adicionar-novamente">
@@ -202,7 +212,6 @@
 
             <form th:action="@{/cliente/finalizar-compra}" method="get" id="formFinalizarCompra">
                 <div id="itensSelecionados"></div>
-
                 <button type="submit" class="btn-finalizar-a-compra">Realizar a compra</button>
             </form>
         </div>
@@ -210,7 +219,7 @@
         <!-- Toast de atenção -->
         <div id="toastAtencao" class="toast">
             <i class="fa-solid fa-triangle-exclamation"></i>
-            <p>Selecione pelo menos um produto.</p>
+            <p></p>
         </div>
 
         <!-- Toast -->

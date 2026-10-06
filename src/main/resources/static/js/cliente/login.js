@@ -20,7 +20,7 @@ document.getElementById("btnEntrar").addEventListener("click", function (event) 
     const senha = document.getElementById("senha");
     const mensagemErro = document.getElementById("erroDadosAcesso");
 
-    if (email.value === "felipe@gmail.com" && senha.value === "@Felipe123") {
+    if (email.value === "anaBeatriz@gmail.com" && senha.value === "@AnaBeatriz123") {
         event.preventDefault();
         window.location.href = "/cliente/produtos";
     } else {

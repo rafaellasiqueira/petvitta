@@ -22,14 +22,11 @@ document.addEventListener('DOMContentLoaded', function () {
         tituloEndereco.textContent = 'Adicionar endereço';
         btnSalvarEndereco.textContent = 'Adicionar';
 
-        formEndereco.action =
-            '/cliente/adicionar-endereco?voltarPara=finalizar-compra';
+        formEndereco.action = '/cliente/adicionar-endereco?voltarPara=finalizar-compra';
 
         if (campoSalvarPerfil) {
             campoSalvarPerfil.style.display = '';
         }
-
-        salvarEnderecoPerfil.checked = true;
 
         modalEndereco.querySelectorAll('.mensagem-erro').forEach(function (erro) {
             erro.textContent = '';
@@ -37,7 +34,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
         modalEndereco.classList.add('active');
     });
-
 
     // Editar endereço
     document.querySelectorAll('.editar-endereco').forEach(function (botao) {
