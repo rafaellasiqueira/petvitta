@@ -351,107 +351,69 @@ public class ClienteController {
             return "redirect:/cliente/carrinho";
         }
 
-// Endereços temporários não utilizados
-        List<EnderecoCompra> enderecosTemporarios =
-                enderecoService.buscarTemporariosNaoUtilizados(1L);
+        // Endereços temporários não utilizados em outras compras
+        List<EnderecoCompra> enderecosTemporarios = enderecoService.buscarTemporariosNaoUtilizados(1L);
+        model.addAttribute("enderecosTemporarios", enderecosTemporarios);
 
-        model.addAttribute(
-                "enderecosTemporarios",
-                enderecosTemporarios
-        );
-
-// Endereço temporário selecionado
+        // Endereço temporário selecionado
         EnderecoCompra enderecoCompra = null;
 
-        Long enderecoTemporarioId =
-                (Long) session.getAttribute("enderecoTemporarioId");
+        Long enderecoTemporarioId = (Long) session.getAttribute("enderecoTemporarioId");
 
         if (enderecoTemporarioId != null) {
-            enderecoCompra =
-                    enderecoService.buscarTemporarioPorId(enderecoTemporarioId);
+            enderecoCompra = enderecoService.buscarTemporarioPorId(enderecoTemporarioId);
         }
 
-        model.addAttribute(
-                "enderecoCompra",
-                enderecoCompra
-        );
-
-        model.addAttribute(
-                "enderecoTemporarioSelecionadoId",
-                enderecoTemporarioId
-        );
+        model.addAttribute("enderecoCompra", enderecoCompra);
+        model.addAttribute("enderecoTemporarioSelecionadoId", enderecoTemporarioId);
 
 
-// Endereço normal salvo
+        // Endereço normal salvo
         Endereco endereco = null;
 
-        Long enderecoSelecionadoId =
-                (Long) session.getAttribute("enderecoSelecionadoId");
+        Long enderecoSelecionadoId = (Long) session.getAttribute("enderecoSelecionadoId");
 
         if (enderecoSelecionadoId != null) {
-
             for (int i = 0; i < cliente.getEnderecos().size(); i++) {
-
-                Endereco enderecoAtual =
-                        cliente.getEnderecos().get(i);
+                Endereco enderecoAtual = cliente.getEnderecos().get(i);
 
                 if (enderecoAtual.getId().equals(enderecoSelecionadoId)) {
-
-                    if ("Entrega".equalsIgnoreCase(
-                            enderecoAtual.getTipoEndereco().getDescricao()) ||
-                            "Cobrança e Entrega".equalsIgnoreCase(
-                                    enderecoAtual.getTipoEndereco().getDescricao())) {
-
-                        endereco = enderecoAtual;
-                        break;
-                    }
-                }
-            }
-        }
-
-// Se não tiver endereço selecionado
-        if (endereco == null &&
-                enderecoCompra == null &&
-                cliente.getEnderecos() != null &&
-                !cliente.getEnderecos().isEmpty()) {
-
-            for (int i = 0; i < cliente.getEnderecos().size(); i++) {
-
-                Endereco enderecoAtual =
-                        cliente.getEnderecos().get(i);
-
-                if ("Entrega".equalsIgnoreCase(
-                        enderecoAtual.getTipoEndereco().getDescricao()) ||
-                        "Cobrança e Entrega".equalsIgnoreCase(
-                                enderecoAtual.getTipoEndereco().getDescricao())) {
-
                     endereco = enderecoAtual;
                     break;
                 }
             }
         }
 
-        model.addAttribute(
-                "endereco",
-                endereco
-        );
+        // Se não tiver endereço selecionado
+        if (endereco == null &&
+                enderecoCompra == null &&
+                cliente.getEnderecos() != null &&
+                !cliente.getEnderecos().isEmpty()) {
 
-        if (endereco != null) {
-            model.addAttribute(
-                    "enderecoSelecionadoId",
-                    endereco.getId()
-            );
+            for (int i = 0; i < cliente.getEnderecos().size(); i++) {
+                Endereco enderecoAtual = cliente.getEnderecos().get(i);
+
+                if ("Entrega".equalsIgnoreCase(enderecoAtual.getTipoEndereco().getDescricao())
+                        || "Cobrança e Entrega".equalsIgnoreCase(
+                                enderecoAtual.getTipoEndereco().getDescricao())) {
+                    endereco = enderecoAtual;
+                    break;
+                }
+            }
         }
 
+        model.addAttribute("endereco", endereco);
+
+        if (endereco != null) {
+            model.addAttribute("enderecoSelecionadoId", endereco.getId());
+        }
 
         // Listar os cupons
         List<Cupom> cupons = cupomService.listarCupoms();
         model.addAttribute("cupons", cupons);
 
         // Cartões temporários não utilizados
-        List<CartaoCompra> cartoesTemporarios =
-                cartaoService.buscarTemporariosNaoUtilizados(1L);
-
+        List<CartaoCompra> cartoesTemporarios = cartaoService.buscarTemporariosNaoUtilizados(1L);
         model.addAttribute("cartoesTemporarios", cartoesTemporarios);
 
 
@@ -463,32 +425,12 @@ public class ClienteController {
 
     @PostMapping("/cliente/finalizar-compra")
     public String finalizarCompra(
-            @Valid FinalizarCompraDTO dto,
-            BindingResult result,
+            FinalizarCompraDTO dto,
             HttpSession session,
             RedirectAttributes redirectAttributes
     ) {
         if (!verificarClienteAtivo()) {
             return "redirect:/cliente/inativo";
-        }
-
-        if (result.hasErrors()) {
-            redirectAttributes.addFlashAttribute(
-                    "tipoToast",
-                    "erro"
-            );
-
-            redirectAttributes.addFlashAttribute(
-                    "mensagemToast",
-                    result.getFieldError().getDefaultMessage()
-            );
-
-            redirectAttributes.addAttribute(
-                    "itensSelecionados",
-                    dto.getItensSelecionados()
-            );
-
-            return "redirect:/cliente/finalizar-compra";
         }
 
         try {
@@ -500,8 +442,7 @@ public class ClienteController {
             session.removeAttribute("enderecoTemporarioId");
             session.removeAttribute("cartaoTemporarioId");
 
-            String cupomTroca =
-                    (String) session.getAttribute("cupomTrocaGerado");
+            String cupomTroca = (String) session.getAttribute("cupomTrocaGerado");
 
             if (cupomTroca != null) {
                 redirectAttributes.addFlashAttribute(

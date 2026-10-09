@@ -28,8 +28,9 @@ checkboxesCupom.forEach(checkbox => {
         });
 
         // Não permite selecionar outro cupom se a compra já foi totalmente coberta
-        if (this.checked && selecionados.length > 2) {
-            const cuponsAnteriores = valorCupons - (parseFloat(this.closest('.modalCupom').dataset.valor) || 0);
+        if (this.checked) {
+            const valorCupomAtual = parseFloat(this.closest('.modalCupom').dataset.valor) || 0;
+            const cuponsAnteriores = valorCupons - valorCupomAtual;
 
             if (cuponsAnteriores >= valorCompra) {
                 this.checked = false;
@@ -46,6 +47,8 @@ checkboxesCupom.forEach(checkbox => {
                 return;
             }
         }
+
+
 
         cuponsSelecionados.innerHTML = '';
 

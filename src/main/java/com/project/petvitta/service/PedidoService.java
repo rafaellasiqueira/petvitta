@@ -142,7 +142,7 @@ public class PedidoService {
         // Calcular subtotal
         BigDecimal subtotal = calcularSubtotal(carrinho, dto.getItensSelecionados());
 
-        // Quantidade de itens selecionados
+        // Quantidade de itens selecionados para o frete
         int quantidadeItens = 0;
 
         for (int i = 0; i < carrinho.getItens().size(); i++) {
@@ -157,17 +157,7 @@ public class PedidoService {
         String siglaEstado = enderecoCompra.getEstado().getSigla();
 
         // Frete
-        BigDecimal frete = calcularFrete(
-                quantidadeItens,
-                siglaEstado
-        );
-
-        System.out.println("==============================");
-        System.out.println("SUBTOTAL: " + subtotal);
-        System.out.println("QUANTIDADE: " + quantidadeItens);
-        System.out.println("ESTADO: " + siglaEstado);
-        System.out.println("FRETE: " + frete);
-        System.out.println("==============================");
+        BigDecimal frete = calcularFrete(quantidadeItens, siglaEstado);
 
         // Buscar cupons
         List<Cupom> cupons = buscarCupons(dto.getCuponsIds());
@@ -329,7 +319,7 @@ public class PedidoService {
 
         BigDecimal frete = BigDecimal.ZERO;
 
-        if (quantidadeItens >= 3) {
+        if (quantidadeItens >= 3 && quantidadeItens < 6) {
             frete = frete.add(new BigDecimal("4.00"));
         }
 
@@ -486,8 +476,7 @@ public class PedidoService {
         BigDecimal valorPago = BigDecimal.ZERO;
         int quantidadeCartoes = 0;
 
-        boolean possuiCupom =
-                dto.getCuponsIds() != null &&
+        boolean possuiCupom = dto.getCuponsIds() != null &&
                         !dto.getCuponsIds().isEmpty();
 
         if (dto.getCartoes() != null) {
@@ -496,9 +485,6 @@ public class PedidoService {
                 Long cartaoId = dto.getCartoes().get(i).getCartaoId();
                 BigDecimal valor = dto.getCartoes().get(i).getValor();
 
-                System.out.println("CARTÃO SALVO");
-                System.out.println("ID: " + cartaoId);
-                System.out.println("VALOR: " + valor);
 
                 if (valor == null || valor.compareTo(BigDecimal.ZERO) <= 0) {
                     continue;
@@ -542,12 +528,7 @@ public class PedidoService {
             BigDecimal valor = dto.getValorCartaoTemporario();
 
             if (valor != null && valor.compareTo(BigDecimal.ZERO) > 0) {
-
-                validarValorCartaoCupom(
-                        valor,
-                        total,
-                        possuiCupom
-                );
+                validarValorCartaoCupom(valor, total, possuiCupom);
 
                 valorPago = valorPago.add(valor);
                 quantidadeCartoes++;
@@ -559,12 +540,6 @@ public class PedidoService {
                     "Selecione ao menos uma forma de pagamento."
             );
         }
-
-        System.out.println("================================");
-        System.out.println("TOTAL DA COMPRA: " + total);
-        System.out.println("VALOR DOS CARTÕES: " + valorPago);
-        System.out.println("QUANTIDADE DE CARTÕES: " + quantidadeCartoes);
-        System.out.println("================================");
 
         if (valorPago.compareTo(total) != 0) {
             throw new IllegalArgumentException(
@@ -616,7 +591,6 @@ public class PedidoService {
             FinalizarCompraDTO dto
     ) {
         if (dto.getCartoes() != null) {
-
             for (int i = 0; i < dto.getCartoes().size(); i++) {
 
                 CartaoPagamentoDTO cartaoDTO = dto.getCartoes().get(i);

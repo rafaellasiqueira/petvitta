@@ -119,8 +119,6 @@ public class CarrinhoService {
             throw new IllegalArgumentException("Carrinho não informado.");
         }
 
-        Cliente cliente = clienteService.buscarPorId(1L);
-
         Carrinho carrinho = carrinhoRepository
                 .findById(carrinhoId)
                 .orElseThrow(() ->

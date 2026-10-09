@@ -18,25 +18,25 @@ describe('Testes de compra - PetVitta', () => {
 
         cy.get('#modalAdicionarEditarEndereco [name="tipoEndereco"]')
             .select('Entrega');
-        cy.wait(500);
+        cy.wait(200);
 
         cy.get('#modalAdicionarEditarEndereco [name="tipoResidencia"]')
             .select('Casa');
-        cy.wait(500);
+        cy.wait(200);
 
         cy.get('#modalAdicionarEditarEndereco [name="tipoLogradouro"]')
             .select('Rua');
-        cy.wait(500);
+        cy.wait(200);
 
         cy.get('#modalAdicionarEditarEndereco [name="numero"]')
             .clear()
             .type('123');
-        cy.wait(500);
+        cy.wait(200);
 
         cy.get('#modalAdicionarEditarEndereco [name="pais"]')
             .clear()
             .type('Brasil');
-        cy.wait(500);
+        cy.wait(200);
     }
 
     function preencherCartao() {
@@ -46,21 +46,21 @@ describe('Testes de compra - PetVitta', () => {
         cy.get('#modalCadastrarCartao [name="numero"]')
             .clear()
             .type('4111111111111111');
-        cy.wait(1000);
+        cy.wait(200);
 
         cy.get('#modalCadastrarCartao [name="nomeImpresso"]')
             .clear()
             .type('BRUNO HENRIQUE LIMA');
-        cy.wait(1000);
+        cy.wait(200);
 
         cy.get('#modalCadastrarCartao [name="bandeira"]')
             .select(1);
-        cy.wait(1000);
+        cy.wait(200);
 
         cy.get('#modalCadastrarCartao [name="codigoSeguranca"]')
             .clear()
             .type('123');
-        cy.wait(1000);
+        cy.wait(200);
     }
 
     function validarToast(mensagem) {
@@ -69,7 +69,7 @@ describe('Testes de compra - PetVitta', () => {
             .and('contain', mensagem);
     }
 
-    it('RF033, RF0034, RF0035, RF0036, RF0038 - Deve finalizar a compra com endereço e cartão cadastrados', () => {
+    it('RF0033, RF0034, RF0035, RF0036, RF0038 - Deve finalizar a compra com endereço e cartão cadastrados', () => {
         cy.get('.produto')
             .eq(0)
             .find('.checkbox-produto')
@@ -78,7 +78,7 @@ describe('Testes de compra - PetVitta', () => {
         cy.wait(1000);
         cy.get('.btn-finalizar-a-compra')
             .click();
-        cy.wait(3000);
+        cy.wait(4000);
 
         cy.get('.btnAlterarEndereco')
             .click();
@@ -102,7 +102,7 @@ describe('Testes de compra - PetVitta', () => {
             .closest('.cartao-item')
             .find('.checkbox-cartao')
             .check();
-        cy.wait(2000);
+        cy.wait(1000);
 
         cy.get('.cartao-item')
             .contains('.preferencial', 'Preferencial')
@@ -126,7 +126,6 @@ describe('Testes de compra - PetVitta', () => {
         cy.wait(1000);
         cy.get('.btn-finalizar-a-compra')
             .click();
-        cy.wait(3000);
 
         cy.get('.btnAlterarEndereco')
             .click();
@@ -134,26 +133,26 @@ describe('Testes de compra - PetVitta', () => {
         cy.get('#modalAlterarEndereco')
             .should('have.class', 'active');
 
-        cy.wait(1000);
+        cy.wait(500);
 
         preencherEndereco();
 
         cy.get('#modalAdicionarEditarEndereco [name="nomeIdentificacao"]')
             .clear()
             .type('Casa da mãe');
-        cy.wait(500);
+        cy.wait(200);
 
         cy.get('#modalAdicionarEditarEndereco [name="cep"]')
             .clear()
             .type('69301-030');
-        cy.wait(500);
+        cy.wait(200);
 
-        cy.wait(3000);
+        cy.wait(1000);
 
         cy.get('#btnSalvarEndereco')
             .click();
 
-        cy.wait(2000);
+        cy.wait(1000);
 
         cy.get('.btnAlterarEndereco')
             .click();
@@ -165,19 +164,19 @@ describe('Testes de compra - PetVitta', () => {
             .find('input[name="enderecoTemporarioId"]')
             .eq(0)
             .check({ force: true });
-        cy.wait(2000);
+        cy.wait(1000);
 
         cy.get('#btnConfirmarEndereco')
             .click();
 
-        cy.wait(4000);
+        cy.wait(3000);
 
         preencherCartao();
 
         cy.get('#btnSalvarCartao')
             .click();
 
-        cy.wait(3000);
+        cy.wait(1000);
 
         cy.get('.cartao-temporario')
             .find('.checkbox-cartao-temporario')
@@ -187,7 +186,7 @@ describe('Testes de compra - PetVitta', () => {
         cy.get('.cartao-temporario')
             .find('.campo-valor-cartao input')
             .clear()
-            .type('41.20');
+            .type('71.60');
         cy.wait(2000);
 
         cy.get('#btnFinalizarCompra')
@@ -203,7 +202,7 @@ describe('Testes de compra - PetVitta', () => {
         cy.wait(1000);
         cy.get('.btn-finalizar-a-compra')
             .click();
-        cy.wait(3000);
+        cy.wait(500);
 
         cy.get('.btnAlterarEndereco')
             .click();
@@ -211,14 +210,14 @@ describe('Testes de compra - PetVitta', () => {
         cy.get('#modalAlterarEndereco')
             .should('have.class', 'active');
 
-        cy.wait(3000);
+        cy.wait(2000);
 
         preencherEndereco();
 
         cy.get('#modalAdicionarEditarEndereco [name="nomeIdentificacao"]')
             .clear()
             .type('Casa da vó');
-        cy.wait(500);
+        cy.wait(200);
 
         cy.get('#modalAdicionarEditarEndereco [name="cep"]')
             .clear()
@@ -227,12 +226,12 @@ describe('Testes de compra - PetVitta', () => {
         cy.get('#modalAdicionarEditarEndereco [name="salvarNoPerfil"]')
             .check();
 
-        cy.wait(3000);
+        cy.wait(1000);
 
         cy.get('#btnSalvarEndereco')
             .click();
 
-        cy.wait(2000);
+        cy.wait(1000);
 
         cy.get('.btnAlterarEndereco')
             .click();
@@ -244,12 +243,12 @@ describe('Testes de compra - PetVitta', () => {
             .find('input[name="enderecoId"]')
             .eq(2)
             .check({ force: true });
-        cy.wait(2000);
+        cy.wait(1000);
 
         cy.get('#btnConfirmarEndereco')
             .click();
 
-        cy.wait(4000);
+        cy.wait(2000);
 
         preencherCartao();
 
@@ -259,7 +258,7 @@ describe('Testes de compra - PetVitta', () => {
         cy.get('#btnSalvarCartao')
             .click();
 
-        cy.wait(3000);
+        cy.wait(1000);
 
         cy.get('#mostrarOutrosCartoes')
             .check();
@@ -269,7 +268,7 @@ describe('Testes de compra - PetVitta', () => {
             .closest('.cartao-item')
             .find('.checkbox-cartao')
             .check();
-        cy.wait(2000);
+        cy.wait(1000);
 
         cy.get('.cartao-item')
             .contains('.preferencial', 'Preferencial')
@@ -277,20 +276,20 @@ describe('Testes de compra - PetVitta', () => {
             .find('.campo-valor-cartao input')
             .clear()
             .type('5.00');
-        cy.wait(2000);
+        cy.wait(1000);
 
         cy.get('#outrosCartoes .cartao-item')
             .first()
             .find('.checkbox-cartao')
             .check();
-        cy.wait(2000);
+        cy.wait(1000);
 
         cy.get('#outrosCartoes .cartao-item')
             .first()
             .find('.campo-valor-cartao input')
             .clear()
             .type('25.75');
-        cy.wait(2000);
+        cy.wait(1000);
 
         cy.get('#btnFinalizarCompra')
             .click();
@@ -305,7 +304,7 @@ describe('Testes de compra - PetVitta', () => {
             .closest('.cartao-item')
             .find('.checkbox-cartao')
             .check();
-        cy.wait(2000);
+        cy.wait(1000);
 
         cy.get('.cartao-item')
             .contains('.preferencial', 'Preferencial')
@@ -313,20 +312,20 @@ describe('Testes de compra - PetVitta', () => {
             .find('.campo-valor-cartao input')
             .clear()
             .type('20.00');
-        cy.wait(2000);
+        cy.wait(1000);
 
         cy.get('#outrosCartoes .cartao-item')
             .first()
             .find('.checkbox-cartao')
             .check();
-        cy.wait(2000);
+        cy.wait(1000);
 
         cy.get('#outrosCartoes .cartao-item')
             .first()
             .find('.campo-valor-cartao input')
             .clear()
             .type('10.75');
-        cy.wait(2000);
+        cy.wait(1000);
 
         cy.get('#btnFinalizarCompra')
             .click();
@@ -343,7 +342,7 @@ describe('Testes de compra - PetVitta', () => {
         cy.get('.btn-finalizar-a-compra')
             .click();
 
-        cy.wait(3000);
+        cy.wait(1000);
 
         cy.get('#btnVerCupons')
             .click();
@@ -358,13 +357,19 @@ describe('Testes de compra - PetVitta', () => {
             .eq(2)
             .check();
 
-        cy.wait(3000);
+        cy.wait(6000);
+
+        cy.get('.checkbox-cupom')
+            .eq(2)
+            .check();
 
         cy.get('.checkbox-cupom')
             .eq(1)
             .invoke('prop', 'checked', true);
 
-        cy.wait(3000);
+        cy.wait(6000);
+
+        cy.wait(2000);
 
         cy.get('#btnFecharModalCupom')
             .click();
@@ -373,7 +378,7 @@ describe('Testes de compra - PetVitta', () => {
             .click();
 
         validarToast('Apenas um cupom promocional pode ser utilizado por compra.');
-        cy.wait(3000);
+        cy.wait(1000);
 
         cy.get('#btnVerCupons')
             .click();
@@ -382,20 +387,14 @@ describe('Testes de compra - PetVitta', () => {
             .eq(0)
             .check();
 
-        cy.get('.checkbox-cupom')
-            .eq(1)
-            .check();
-
-        cy.wait(3000);
+        cy.wait(1000);
 
         cy.get('#btnFecharModalCupom')
             .click();
+        cy.wait(2000);
 
         cy.get('#btnFinalizarCompra')
             .click();
-        cy.wait(5000);
-
-        cy.visit('/cliente/perfil');
     });
 
     it('RN0035 - Deve permitir a realização da compra utilizando cartão e cupom, mesmo quando o valor a ser pago no cartão for inferior a R$ 10,00.', () => {
@@ -433,7 +432,7 @@ describe('Testes de compra - PetVitta', () => {
             .eq(2)
             .check();
 
-        cy.wait(3000);
+        cy.wait(2000);
 
         cy.get('#btnFecharModalCupom')
             .click();
@@ -451,10 +450,10 @@ describe('Testes de compra - PetVitta', () => {
             .find('.campo-valor-cartao input')
             .clear()
             .type('3.39');
+        cy.wait(3000);
 
         cy.get('#btnFinalizarCompra')
             .click();
-        cy.wait(3000);
     });
 
     it('CT06 - Não deve finalizar sem forma de pagamento', () => {

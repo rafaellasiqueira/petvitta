@@ -164,7 +164,7 @@ describe('Cadastro de clientes - Popular banco', () => {
 
             cy.get('[name="enderecos[0].cep"]')
                 .type(cliente.cep);
-            cy.wait(5000);
+            cy.wait(3000);
 
             cy.get('[name="enderecos[0].numero"]')
                 .type(cliente.numero);

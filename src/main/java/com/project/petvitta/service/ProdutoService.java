@@ -42,14 +42,6 @@ public class ProdutoService {
         this.variacaoProdutoRepository = variacaoProdutoRepository;
     }
 
-    public List<VariacaoProduto> listarVariacoes() {
-        return variacaoProdutoRepository.findAll();
-    }
-
-    public List<Produto> listarProdutos() {
-        return produtoRepository.findAll();
-    }
-
     public List<TipoRacao> listarTiposRacao() {
         return tipoRacaoRepository.findAll();
     }
@@ -279,12 +271,12 @@ public class ProdutoService {
                         new IllegalArgumentException("Produto não encontrado."));
     }
 
+    // Metodo do pedidos do admin
     public List<VariacaoProduto> filtrarEstoque(String status, String pesquisa) {
 
         List<VariacaoProduto> variacoes = variacaoProdutoRepository.findAll();
         List<VariacaoProduto> resultado = new ArrayList<>();
 
-        System.out.println("PESQUISA NO SERVICE: " + pesquisa);
 
         for (int i = 0; i < variacoes.size(); i++) {
             VariacaoProduto variacao = variacoes.get(i);
@@ -311,11 +303,8 @@ public class ProdutoService {
 
             if (encontrou) {
                 resultado.add(variacao);
-                System.out.println("ADICIONADO: " + variacao.getProduto().getNome());
             }
         }
-
-        System.out.println("TOTAL RESULTADO: " + resultado.size());
 
         return resultado;
     }

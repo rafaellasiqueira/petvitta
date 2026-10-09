@@ -7,7 +7,7 @@ function calcularFrete(quantidadeItens, siglaEstado) {
 
     let frete = 0;
 
-    if (quantidadeItens >= 3) {
+    if (quantidadeItens >= 3 && quantidadeItens < 6) {
         frete += 4;
     }
 

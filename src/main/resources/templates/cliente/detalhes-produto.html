@@ -199,17 +199,17 @@
             <span id="mensagemEstoque" class="mensagem-erro"></span>
 
             <form id="formAdicionar" method="post">
+                <!-- Para mostrar o caminho d volta para mensagem na tela de detalhes -->
                 <input type="hidden" name="origem" value="detalhes">
 
                 <input type="hidden" name="variacaoId">
 
                 <input type="hidden" name="quantidade">
 
+                <!-- Para o Controller saber de que produto se trata -->
                 <input type="hidden" name="produtoId" th:value="${produto.id}">
 
-                <button type="button" class="btn-adicionar-carrinho">
-                    Adicionar ao carrinho
-                </button>
+                <button type="button" class="btn-adicionar-carrinho">Adicionar ao carrinho</button>
             </form>
         </div>
 
