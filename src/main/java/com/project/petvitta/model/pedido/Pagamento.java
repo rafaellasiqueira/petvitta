@@ -21,11 +21,7 @@ public class Pagamento {
     private BigDecimal valor;
 
     @ManyToOne
-    @JoinColumn(name = "cartao_id")
-    private Cartao cartao;
-
-    @ManyToOne
-    @JoinColumn(name = "cartao_temporario_id")
+    @JoinColumn(name = "cartao_compra_id")
     private CartaoCompra cartaoCompra;
 
     @ManyToOne

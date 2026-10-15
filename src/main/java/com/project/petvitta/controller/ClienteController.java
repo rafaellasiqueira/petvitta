@@ -34,6 +34,7 @@ public class ClienteController {
     private final CupomService cupomService;
     private final CarrinhoService carrinhoService;
     private final PedidoService pedidoService;
+    private final TrocaService trocaService;
 
     public ClienteController(
             ClienteService clienteService,
@@ -42,7 +43,7 @@ public class ClienteController {
             ProdutoService produtoService,
             CupomService cupomService,
             CarrinhoService carrinhoService,
-            PedidoService pedidoService
+            PedidoService pedidoService, TrocaService trocaService
     ) {
         this.clienteService = clienteService;
         this.enderecoService = enderecoService;
@@ -51,6 +52,7 @@ public class ClienteController {
         this.cupomService = cupomService;
         this.carrinhoService = carrinhoService;
         this.pedidoService = pedidoService;
+        this.trocaService = trocaService;
     }
 
     @ModelAttribute
@@ -89,6 +91,11 @@ public class ClienteController {
         model.addAttribute(
                 "bandeiras",
                 cartaoService.listarBandeiras()
+        );
+
+        model.addAttribute(
+                "motivosTroca",
+                trocaService.listarMotivoTroca()
         );
     }
 
@@ -452,7 +459,7 @@ public class ClienteController {
 
                 redirectAttributes.addFlashAttribute(
                         "mensagemToast",
-                        "Compra realizada com sucesso! Cupom de troca gerado: " + cupomTroca
+                        "Compra realizada com sucesso! Cupom de Troca gerado: " + cupomTroca
                 );
 
                 session.removeAttribute("cupomTrocaGerado");
@@ -507,11 +514,65 @@ public class ClienteController {
             pedidos = pedidoService.listarPorCliente(cliente.getId());
         }
 
+        for (int i = 0; i < pedidos.size(); i++) {
+            Pedido pedido = pedidos.get(i);
+
+            if ("Em processamento".equals(
+                    pedido.getStatusPedido().getDescricao())) {
+                pedidoService.agendarVerificacaoCompra(pedido.getId());
+            }
+        }
+
         model.addAttribute("pedidos", pedidos);
         model.addAttribute("codigoPesquisa", codigo);
 
         return "cliente/pedido";
     }
+
+    @PostMapping("/cliente/pedido/solicitar-troca")
+    public String solicitarTroca(
+            @Valid @ModelAttribute SolicitarTrocaDTO dto,
+            BindingResult resultado,
+            RedirectAttributes redirectAttributes) {
+
+        if (resultado.hasErrors()) {
+            redirectAttributes.addFlashAttribute(
+                    "mensagemToast",
+                    resultado.getFieldError().getDefaultMessage());
+
+            redirectAttributes.addFlashAttribute(
+                    "tipoToast",
+                    "erro");
+
+            return "redirect:/cliente/pedido";
+        }
+
+        try {
+            Cliente cliente = clienteService.buscarPorId(1L);
+
+            trocaService.solicitarTroca(dto, cliente.getId());
+
+            redirectAttributes.addFlashAttribute(
+                    "mensagemToast",
+                    "Troca solicitada com sucesso!");
+
+            redirectAttributes.addFlashAttribute(
+                    "tipoToast",
+                    "sucesso");
+
+        } catch (IllegalArgumentException e) {
+            redirectAttributes.addFlashAttribute(
+                    "mensagemToast",
+                    e.getMessage());
+
+            redirectAttributes.addFlashAttribute(
+                    "tipoToast",
+                    "erro");
+        }
+
+        return "redirect:/cliente/pedido";
+    }
+
 
     @GetMapping("/cliente/notificacao")
     public String notificacao(Model model) {
@@ -550,4 +611,5 @@ public class ClienteController {
                 clienteId
         );
     }
+
 }

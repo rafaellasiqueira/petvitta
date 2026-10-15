@@ -48,7 +48,7 @@
                 </form>
             </div>
 
-            <!-- Pedidos  -->
+            <!-- Sem resultados  -->
             <div th:if="${pedidos.isEmpty() and (codigoPesquisa == null or codigoPesquisa.isBlank())}" class="mensagem-pedidos">
                 <h2>Nenhum pedido realizado ainda</h2>
                 <p>Faça seu primeiro pedido e acompanhe todos os detalhes por aqui.</p>
@@ -88,11 +88,13 @@
                     <!-- Entregue -->
                     <div th:if="${pedido.statusPedido.descricao == 'Entregue'}"
                          class="container-status-troca">
+
                         <span class="status-pedido entregue">Entregue</span>
 
                         <button type="button"
                                 class="btn-branco btn-solicitar-troca"
-                                id="btnAbrirModalTroca">
+                                th:data-pedido-id="${pedido.id}"
+                                th:data-modal-id="${'modalSolicitarTroca_' + pedido.id}">
                             Solicitar troca
                         </button>
                     </div>
@@ -118,9 +120,10 @@
                 <!-- Produtos -->
                 <div class="produtos-pedido">
 
+                    <!-- Três primeiros produtos -->
                     <div th:each="item, iteracao : ${pedido.itens}"
-                         class="produto-pedido"
-                         th:classappend="${iteracao.index >= 3 ? ' produto-escondido' : ''}">
+                         th:if="${iteracao.index < 3}"
+                         class="produto">
 
                         <div class="imagem-produto-pedido">
                             <img th:src="${item.variacaoProduto.produto.imagemUrl}"
@@ -128,19 +131,34 @@
                         </div>
 
                         <div class="dados-produto-pedido">
+                            <h3 th:text="${item.variacaoProduto.produto.nome}"></h3>
 
-                            <h3 th:text="${item.variacaoProduto.produto.nome}">
-                            </h3>
+                            <p th:text="${'Tamanho: ' + item.variacaoProduto.tamanho}"></p>
 
-                            <p th:text="${'Tamanho: ' + item.variacaoProduto.tamanho}">
-                            </p>
+                            <p th:text="${'Quantidade: ' + item.quantidade}"></p>
 
-                            <p th:text="${'Quantidade: ' + item.quantidade}">
-                            </p>
+                            <p th:text="${'R$ ' + #numbers.formatDecimal(item.variacaoProduto.valorVenda * item.quantidade, 2, 2)}"></p>
+                        </div>
+                    </div>
 
-                            <p th:text="${'R$ ' + #numbers.formatDecimal(item.variacaoProduto.valorVenda * item.quantidade, 2, 2)}">
-                            </p>
+                    <!-- Produtos restantes -->
+                    <div th:each="item, iteracao : ${pedido.itens}"
+                         th:unless="${iteracao.index < 3}"
+                         class="produto-escondido">
 
+                        <div class="imagem-produto-pedido">
+                            <img th:src="${item.variacaoProduto.produto.imagemUrl}"
+                                 th:alt="${item.variacaoProduto.produto.nome}">
+                        </div>
+
+                        <div class="dados-produto-pedido">
+                            <h3 th:text="${item.variacaoProduto.produto.nome}"></h3>
+
+                            <p th:text="${'Tamanho: ' + item.variacaoProduto.tamanho}"></p>
+
+                            <p th:text="${'Quantidade: ' + item.quantidade}"></p>
+
+                            <p th:text="${'R$ ' + #numbers.formatDecimal(item.variacaoProduto.valorVenda * item.quantidade, 2, 2)}"></p>
                         </div>
                     </div>
 
@@ -157,33 +175,29 @@
                 <div class="resumo-pedido">
 
                     <div class="linha-resumo-pedido">
-                        <p>Subtotal</p>
-                        <p th:text="${'R$ ' + #numbers.formatDecimal(pedido.subtotal, 2, 2)}">
-                            R$ 216,65
+                        <p>Subtotal</p><p th:text="${'R$ ' + #numbers.formatDecimal(pedido.subtotal, 2, 2)}">
                         </p>
                     </div>
 
                     <div class="linha-resumo-pedido desconto">
-                        <p>Descontos</p>
-                        <p th:text="${'-R$ ' + #numbers.formatDecimal(pedido.desconto, 2, 2)}">
-                            -R$ 10,00
+                        <p>Descontos</p><p th:text="${'-R$ ' + #numbers.formatDecimal(pedido.desconto, 2, 2)}">
                         </p>
                     </div>
 
                     <div class="linha-resumo-pedido frete">
                         <p>Frete</p>
-                        <p th:text="${'R$ ' + #numbers.formatDecimal(pedido.frete, 2, 2)}">
-                            R$ 10,00
-                        </p>
+                        <p th:text="${'R$ ' + #numbers.formatDecimal(pedido.frete, 2, 2)}"></p>
                     </div>
 
                     <div class="linha-resumo-pedido total">
                         <p>Total</p>
-                        <p th:text="${'R$ ' + #numbers.formatDecimal(pedido.total, 2, 2)}">
-                            R$ 216,00
-                        </p>
+                        <p th:text="${'R$ ' + #numbers.formatDecimal(pedido.total, 2, 2)}"></p>
                     </div>
 
+                </div>
+
+                <div th:if="${pedido.statusPedido.descricao == 'Entregue'}"
+                     th:replace="~{fragments/cliente/modais :: modal-solicitar-troca(pedido=${pedido})}">
                 </div>
             </div>
 
@@ -203,9 +217,7 @@
         </div>
 
         <!-- Modais -->
-        <div th:replace="~{fragments/cliente/modais :: modal-solicitar-troca}"></div>
         <div th:replace="~{fragments/cliente/modais :: modal-itens-recebidos}"></div>
-        <div th:replace="~{fragments/cliente/modais :: modal-cancelar-pedido}"></div>
     </main>
 </div>
 

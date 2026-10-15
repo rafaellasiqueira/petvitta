@@ -1,15 +1,12 @@
 package com.project.petvitta.service;
 
-import com.project.petvitta.dto.CartaoPagamentoDTO;
 import com.project.petvitta.dto.FinalizarCompraDTO;
 import com.project.petvitta.model.carrinho.Carrinho;
 import com.project.petvitta.model.carrinho.ItemCarrinho;
-import com.project.petvitta.model.cliente.Cartao;
 import com.project.petvitta.model.cliente.Cliente;
 import com.project.petvitta.model.cliente.Cupom;
 import com.project.petvitta.model.cliente.Endereco;
 import com.project.petvitta.model.dominio.StatusPedido;
-import com.project.petvitta.model.dominio.TipoCupom;
 import com.project.petvitta.model.pedido.*;
 import com.project.petvitta.repository.carrinho.CarrinhoRepository;
 import com.project.petvitta.repository.cliente.CartaoRepository;
@@ -20,11 +17,14 @@ import com.project.petvitta.repository.dominio.StatusPedidoRepository;
 import com.project.petvitta.repository.dominio.TipoCupomRepository;
 import com.project.petvitta.repository.pedido.*;
 import jakarta.servlet.http.HttpSession;
+
+import java.util.Set;
+import java.util.concurrent.*;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -44,6 +44,11 @@ public class PedidoService {
     private final TipoCupomRepository tipoCupomRepository;
     private final CartaoCompraRepository cartaoCompraRepository;
     private final EnderecoCompraRepository enderecoCompraRepository;
+    private final FreteService freteService;
+    private final CupomService cupomService;
+    private final PagamentoService pagamentoService;
+    private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(2);
+    private final VerificacaoCompraService verificacaoCompraService;
 
     public PedidoService(
             PedidoRepository pedidoRepository,
@@ -55,7 +60,10 @@ public class PedidoService {
             CupomRepository cupomRepository,
             CartaoRepository cartaoRepository,
             StatusPedidoRepository statusPedidoRepository,
-            TipoCupomRepository tipoCupomRepository, CartaoCompraRepository cartaoCompraRepository, EnderecoCompraRepository enderecoCompraRepository
+            TipoCupomRepository tipoCupomRepository,
+            CartaoCompraRepository cartaoCompraRepository,
+            EnderecoCompraRepository enderecoCompraRepository, FreteService freteService, CupomService cupomService, PagamentoService pagamentoService, VerificacaoCompraService verificacaoCompraService
+
     ) {
         this.pedidoRepository = pedidoRepository;
         this.itemPedidoRepository = itemPedidoRepository;
@@ -69,6 +77,10 @@ public class PedidoService {
         this.tipoCupomRepository = tipoCupomRepository;
         this.cartaoCompraRepository = cartaoCompraRepository;
         this.enderecoCompraRepository = enderecoCompraRepository;
+        this.freteService = freteService;
+        this.cupomService = cupomService;
+        this.pagamentoService = pagamentoService;
+        this.verificacaoCompraService = verificacaoCompraService;
     }
 
     public List<Pedido> listarPorCliente(Long clienteId) {
@@ -130,7 +142,7 @@ public class PedidoService {
             enderecoCompra = obterEnderecoTemporario(cliente, dto);
         }
 
-        if (enderecoCompra == null && enderecoCompra == null) {
+        if (enderecoCompra == null) {
             throw new IllegalArgumentException(
                     "Selecione um endereço de entrega."
             );
@@ -157,27 +169,27 @@ public class PedidoService {
         String siglaEstado = enderecoCompra.getEstado().getSigla();
 
         // Frete
-        BigDecimal frete = calcularFrete(quantidadeItens, siglaEstado);
+        BigDecimal frete = freteService.calcularFrete(quantidadeItens, siglaEstado);
 
         // Buscar cupons
-        List<Cupom> cupons = buscarCupons(dto.getCuponsIds());
+        List<Cupom> cupons = cupomService.buscarCupons(dto.getCuponsIds());
 
         // Calcular desconto
-        BigDecimal desconto = calcularDesconto(cupons);
+        BigDecimal desconto = cupomService.calcularDesconto(cupons);
 
         // Calcular total
         BigDecimal valorCompra = subtotal.add(frete);
 
         if (desconto.compareTo(valorCompra) > 0) {
             BigDecimal excedente = desconto.subtract(valorCompra);
-            gerarCupomTroca(excedente, session);
+            cupomService.gerarCupomTroca(excedente, session);
             desconto = valorCompra;
         }
 
         BigDecimal total = valorCompra.subtract(desconto);
 
         // Validar pagamento
-        validarPagamento(cliente, dto, total);
+        pagamentoService.validarPagamento(cliente, dto, total);
 
         Pedido pedido = new Pedido();
 
@@ -187,7 +199,6 @@ public class PedidoService {
         pedido.setDesconto(desconto);
         pedido.setTotal(total);
         pedido.setCliente(cliente);
-        pedido.setEnderecoCompra(enderecoCompra);
         pedido.setEnderecoCompra(enderecoCompra);
         pedido.setCupons(cupons);
         pedido.setCodigo(gerarCodigo());
@@ -205,15 +216,19 @@ public class PedidoService {
 
         salvarItensPedido(pedidoSalvo, carrinho, dto.getItensSelecionados());
 
-        salvarPagamentos(pedidoSalvo, cliente, dto);
+        pagamentoService.salvarPagamentos(pedidoSalvo, cliente, dto);
 
-        removerCuponsUsados(cupons);
+        List<Long> itensSelecionados = new ArrayList<>(
+                dto.getItensSelecionados()
+        );
 
         if (enderecoCompra != null) {
             enderecoCompra.setUtilizado(true);
         }
 
-        carrinho.getItens().removeIf(item -> dto.getItensSelecionados().contains(item.getId()));
+        carrinho.getItens().removeIf(
+                item -> itensSelecionados.contains(item.getId())
+        );
 
         return pedidoSalvo;
     }
@@ -313,260 +328,6 @@ public class PedidoService {
         return subtotal;
     }
 
-    private BigDecimal calcularFrete(
-            int quantidadeItens,
-            String siglaEstado) {
-
-        BigDecimal frete = BigDecimal.ZERO;
-
-        if (quantidadeItens >= 3 && quantidadeItens < 6) {
-            frete = frete.add(new BigDecimal("4.00"));
-        }
-
-        if (quantidadeItens >= 6) {
-            frete = frete.add(new BigDecimal("8.00"));
-        }
-
-            // Valor conforme o estado de destino
-        if ("SP".equalsIgnoreCase(siglaEstado)) {
-            frete = frete.add(new BigDecimal("7.00"));
-        }
-        else if ("RJ".equalsIgnoreCase(siglaEstado)) {
-            frete = frete.add(new BigDecimal("8.00"));
-        }
-        else if ("MG".equalsIgnoreCase(siglaEstado)) {
-            frete = frete.add(new BigDecimal("8.00"));
-        }
-        else if ("ES".equalsIgnoreCase(siglaEstado)) {
-            frete = frete.add(new BigDecimal("10.00"));
-        }
-        else if ("PR".equalsIgnoreCase(siglaEstado)) {
-            frete = frete.add(new BigDecimal("10.00"));
-        }
-        else if ("SC".equalsIgnoreCase(siglaEstado)) {
-            frete = frete.add(new BigDecimal("12.00"));
-        }
-        else if ("MS".equalsIgnoreCase(siglaEstado)) {
-            frete = frete.add(new BigDecimal("12.00"));
-        }
-        else if ("GO".equalsIgnoreCase(siglaEstado)) {
-            frete = frete.add(new BigDecimal("13.00"));
-        }
-        else if ("RS".equalsIgnoreCase(siglaEstado)) {
-            frete = frete.add(new BigDecimal("15.00"));
-        }
-        else if ("DF".equalsIgnoreCase(siglaEstado)) {
-            frete = frete.add(new BigDecimal("15.00"));
-        }
-        else if ("MT".equalsIgnoreCase(siglaEstado)) {
-            frete = frete.add(new BigDecimal("16.00"));
-        }
-        else if ("BA".equalsIgnoreCase(siglaEstado)) {
-            frete = frete.add(new BigDecimal("18.00"));
-        }
-        else if ("SE".equalsIgnoreCase(siglaEstado)) {
-            frete = frete.add(new BigDecimal("19.00"));
-        }
-        else if ("AL".equalsIgnoreCase(siglaEstado)) {
-            frete = frete.add(new BigDecimal("20.00"));
-        }
-        else if ("PE".equalsIgnoreCase(siglaEstado)) {
-            frete = frete.add(new BigDecimal("21.00"));
-        }
-        else if ("PB".equalsIgnoreCase(siglaEstado)) {
-            frete = frete.add(new BigDecimal("22.00"));
-        }
-        else if ("RN".equalsIgnoreCase(siglaEstado)) {
-            frete = frete.add(new BigDecimal("23.00"));
-        }
-        else if ("CE".equalsIgnoreCase(siglaEstado)) {
-            frete = frete.add(new BigDecimal("24.00"));
-        }
-        else if ("PI".equalsIgnoreCase(siglaEstado)) {
-            frete = frete.add(new BigDecimal("24.00"));
-        }
-        else if ("MA".equalsIgnoreCase(siglaEstado)) {
-            frete = frete.add(new BigDecimal("25.00"));
-        }
-        else if ("TO".equalsIgnoreCase(siglaEstado)) {
-            frete = frete.add(new BigDecimal("25.00"));
-        }
-        else if ("PA".equalsIgnoreCase(siglaEstado)) {
-            frete = frete.add(new BigDecimal("28.00"));
-        }
-        else if ("RO".equalsIgnoreCase(siglaEstado)) {
-            frete = frete.add(new BigDecimal("30.00"));
-        }
-        else if ("AC".equalsIgnoreCase(siglaEstado)) {
-            frete = frete.add(new BigDecimal("32.00"));
-        }
-        else if ("AM".equalsIgnoreCase(siglaEstado)) {
-            frete = frete.add(new BigDecimal("35.00"));
-        }
-        else if ("AP".equalsIgnoreCase(siglaEstado)) {
-            frete = frete.add(new BigDecimal("35.00"));
-        }
-        else if ("RR".equalsIgnoreCase(siglaEstado)) {
-            frete = frete.add(new BigDecimal("38.00"));
-        }
-
-        return frete;
-    }
-
-    private List<Cupom> buscarCupons(List<Long> cuponsIds) {
-        if (cuponsIds == null || cuponsIds.isEmpty()) {
-            return new ArrayList<>();
-        }
-
-        List<Cupom> cupons = new ArrayList<>();
-
-        int promocionais = 0;
-
-        for (int i = 0; i < cuponsIds.size(); i++) {
-            Cupom cupom = cupomRepository.findById(cuponsIds.get(i))
-                    .orElseThrow(() -> new IllegalArgumentException("Cupom não encontrado."));
-
-            if (!cupom.isAtivo()) {
-                throw new IllegalArgumentException(
-                        "O cupom " + cupom.getCodigo() + " não está disponível."
-                );
-            }
-
-            if (cupom.getValidade().isBefore(LocalDate.now())) {
-                throw new IllegalArgumentException(
-                        "O cupom " + cupom.getCodigo() + " está vencido."
-                );
-            }
-
-            if ("Promocional".equalsIgnoreCase(cupom.getTipoCupom().getNome())) {
-                promocionais++;
-            }
-            cupons.add(cupom);
-        }
-
-        if (promocionais > 1) {
-            throw new IllegalArgumentException(
-                    "Apenas um cupom promocional pode ser utilizado por compra."
-            );
-        }
-
-        return cupons;
-    }
-
-    private BigDecimal calcularDesconto(List<Cupom> cupons) {
-
-        BigDecimal desconto = BigDecimal.ZERO;
-
-        for (int i = 0; i < cupons.size(); i++) {
-            desconto = desconto.add(cupons.get(i).getValor());
-        }
-
-        return desconto;
-    }
-
-    private void validarPagamento(
-            Cliente cliente,
-            FinalizarCompraDTO dto,
-            BigDecimal total
-    ) {
-        if (total.compareTo(BigDecimal.ZERO) <= 0) {
-            return;
-        }
-
-        BigDecimal valorPago = BigDecimal.ZERO;
-        int quantidadeCartoes = 0;
-
-        boolean possuiCupom = dto.getCuponsIds() != null &&
-                        !dto.getCuponsIds().isEmpty();
-
-        if (dto.getCartoes() != null) {
-            for (int i = 0; i < dto.getCartoes().size(); i++) {
-
-                Long cartaoId = dto.getCartoes().get(i).getCartaoId();
-                BigDecimal valor = dto.getCartoes().get(i).getValor();
-
-
-                if (valor == null || valor.compareTo(BigDecimal.ZERO) <= 0) {
-                    continue;
-                }
-
-                Cartao cartao = cartaoRepository.findById(cartaoId)
-                        .orElseThrow(() ->
-                                new IllegalArgumentException(
-                                        "Cartão não encontrado."
-                                ));
-
-                if (!cartao.getCliente().getId().equals(cliente.getId())) {
-                    throw new IllegalArgumentException(
-                            "O cartão não pertence ao cliente."
-                    );
-                }
-
-                validarValorCartaoCupom(valor, total, possuiCupom);
-
-                valorPago = valorPago.add(valor);
-                quantidadeCartoes++;
-            }
-        }
-
-        if (dto.getCartaoTemporarioId() != null) {
-
-            CartaoCompra cartaoCompra =
-                    cartaoCompraRepository
-                            .findById(dto.getCartaoTemporarioId())
-                            .orElseThrow(() ->
-                                    new IllegalArgumentException(
-                                            "Cartão temporário não encontrado."
-                                    ));
-
-            if (!cartaoCompra.getCliente().getId().equals(cliente.getId())) {
-                throw new IllegalArgumentException(
-                        "O cartão não pertence ao cliente."
-                );
-            }
-
-            BigDecimal valor = dto.getValorCartaoTemporario();
-
-            if (valor != null && valor.compareTo(BigDecimal.ZERO) > 0) {
-                validarValorCartaoCupom(valor, total, possuiCupom);
-
-                valorPago = valorPago.add(valor);
-                quantidadeCartoes++;
-            }
-        }
-
-        if (quantidadeCartoes == 0) {
-            throw new IllegalArgumentException(
-                    "Selecione ao menos uma forma de pagamento."
-            );
-        }
-
-        if (valorPago.compareTo(total) != 0) {
-            throw new IllegalArgumentException(
-                    "O valor dos cartões deve ser igual ao total da compra."
-            );
-        }
-    }
-
-    private void validarValorCartaoCupom(
-            BigDecimal valor,
-            BigDecimal total,
-            boolean possuiCupom
-    ) {
-
-        if (valor.compareTo(BigDecimal.ZERO) <= 0) {
-            throw new IllegalArgumentException(
-                    "O valor do cartão deve ser maior que zero."
-            );
-        }
-
-        if (valor.compareTo(new BigDecimal("10.00")) < 0 && !(possuiCupom && total.compareTo(new BigDecimal("10.00")) < 0)) {
-            throw new IllegalArgumentException(
-                    "Cada cartão deve pagar no mínimo R$ 10,00."
-            );
-        }
-    }
-
     private void salvarItensPedido(
             Pedido pedido,
             Carrinho carrinho,
@@ -585,103 +346,6 @@ public class PedidoService {
         }
     }
 
-    private void salvarPagamentos(
-            Pedido pedido,
-            Cliente cliente,
-            FinalizarCompraDTO dto
-    ) {
-        if (dto.getCartoes() != null) {
-            for (int i = 0; i < dto.getCartoes().size(); i++) {
-
-                CartaoPagamentoDTO cartaoDTO = dto.getCartoes().get(i);
-
-                BigDecimal valor = cartaoDTO.getValor();
-
-                if (valor != null && valor.compareTo(BigDecimal.ZERO) > 0) {
-
-                    Cartao cartao = cartaoRepository
-                            .findById(cartaoDTO.getCartaoId())
-                            .orElseThrow(() ->
-                                    new IllegalArgumentException(
-                                            "Cartão não encontrado."
-                                    ));
-
-                    if (!cartao.getCliente().getId().equals(cliente.getId())) {
-                        throw new IllegalArgumentException(
-                                "O cartão não pertence ao cliente."
-                        );
-                    }
-
-                    CartaoCompra cartaoCompra = copiarCartao(cartao);
-
-                    Pagamento pagamento = new Pagamento();
-
-                    pagamento.setPedido(pedido);
-                    pagamento.setCartaoCompra(cartaoCompra);
-                    pagamento.setValor(valor);
-
-                    pagamentoRepository.save(pagamento);
-                }
-            }
-        }
-
-        if (dto.getCartaoTemporarioId() != null) {
-
-            CartaoCompra cartaoCompra =
-                    cartaoCompraRepository
-                            .findById(dto.getCartaoTemporarioId())
-                            .orElseThrow(() ->
-                                    new IllegalArgumentException(
-                                            "Cartão temporário não encontrado."
-                                    ));
-
-            if (!cartaoCompra.getCliente().getId().equals(cliente.getId())) {
-                throw new IllegalArgumentException(
-                        "O cartão não pertence ao cliente."
-                );
-            }
-
-            BigDecimal valor = dto.getValorCartaoTemporario();
-
-            if (valor != null && valor.compareTo(BigDecimal.ZERO) > 0) {
-
-                Pagamento pagamento = new Pagamento();
-
-                pagamento.setPedido(pedido);
-                pagamento.setCartao(null);
-                pagamento.setCartaoCompra(cartaoCompra);
-                pagamento.setValor(valor);
-
-                pagamentoRepository.save(pagamento);
-
-                cartaoCompra.setUtilizado(true);
-                cartaoCompraRepository.save(cartaoCompra);
-            }
-        }
-    }
-
-    private void gerarCupomTroca(BigDecimal valor, HttpSession session) {
-        Cupom cupom = new Cupom();
-
-        cupom.setCodigo(
-                "TROCA - " + String.valueOf(System.currentTimeMillis()).substring(
-                        String.valueOf(System.currentTimeMillis()).length() - 5
-                )
-        );
-
-        cupom.setValor(valor);
-        cupom.setValidade(LocalDate.now().plusDays(120));
-
-        TipoCupom tipoTroca = tipoCupomRepository.findById(2L)
-                .orElseThrow(() -> new IllegalArgumentException("Tipo de cupom não encontrado."));
-
-        cupom.setTipoCupom(tipoTroca);
-
-        cupomRepository.save(cupom);
-
-        session.setAttribute("cupomTrocaGerado", cupom.getCodigo());
-    }
-
     private String gerarCodigo() {
         int numero;
 
@@ -692,18 +356,33 @@ public class PedidoService {
         return String.valueOf(numero);
     }
 
+    private EnderecoCompra copiarEndereco(Endereco endereco) {
+
+        EnderecoCompra copia = new EnderecoCompra();
+
+        copia.setCliente(endereco.getCliente());
+        copia.setNomeIdentificacao(endereco.getNomeIdentificacao());
+        copia.setTipoEndereco(endereco.getTipoEndereco());
+        copia.setTipoResidencia(endereco.getTipoResidencia());
+        copia.setTipoLogradouro(endereco.getTipoLogradouro());
+        copia.setCep(endereco.getCep());
+        copia.setLogradouro(endereco.getLogradouro());
+        copia.setBairro(endereco.getBairro());
+        copia.setNumero(endereco.getNumero());
+        copia.setEstado(endereco.getEstado());
+        copia.setCidade(endereco.getCidade());
+        copia.setPais(endereco.getPais());
+        copia.setObservacoes(endereco.getObservacoes());
+
+        copia.setUtilizado(true);
+
+        return enderecoCompraRepository.save(copia);
+    }
+
     public void alterarStatus(Long pedidoId, String descricao) {
         Pedido pedido = pedidoRepository.findById(pedidoId).orElseThrow();
 
         StatusPedido status = statusPedidoRepository.findByDescricao(descricao).orElseThrow();
-
-        if (descricao.equals("Aprovada")) {
-            definirDataAprovacao(pedido);
-        }
-
-        if (descricao.equals("Reprovada")) {
-            definirDataReprovacao(pedido);
-        }
 
         if (descricao.equals("Em transporte")) {
             definirDataPrevisaoEntrega(pedido);
@@ -720,33 +399,6 @@ public class PedidoService {
         pedido.setStatusPedido(status);
 
         pedidoRepository.save(pedido);
-    }
-
-    public List<StatusPedido> listarProximosStatus(String statusAtual) {
-        List<StatusPedido> status = new ArrayList<>();
-
-        if (statusAtual.equals("Em processamento")) {
-            status.add(statusPedidoRepository.findByDescricao("Aprovada").orElseThrow());
-            status.add(statusPedidoRepository.findByDescricao("Reprovada").orElseThrow());
-        }
-
-        if (statusAtual.equals("Aprovada")) {
-            status.add(statusPedidoRepository.findByDescricao("Em transporte").orElseThrow());
-        }
-
-        if (statusAtual.equals("Em transporte")) {
-            status.add(statusPedidoRepository.findByDescricao("Entregue").orElseThrow());
-        }
-
-        return status;
-    }
-
-    private void definirDataAprovacao(Pedido pedido) {
-        pedido.setDataAprovacao(LocalDateTime.now());
-    }
-
-    private void definirDataReprovacao(Pedido pedido) {
-        pedido.setDataReprovacaoPagamento(LocalDateTime.now());
     }
 
     private void definirDataPrevisaoEntrega(Pedido pedido) {
@@ -797,52 +449,11 @@ public class PedidoService {
         return resultado;
     }
 
-    private void removerCuponsUsados(List<Cupom> cupons) {
-
-        for (int i = 0; i < cupons.size(); i++) {
-            Cupom cupom = cupons.get(i);
-
-            cupom.setAtivo(false);
-
-            cupomRepository.save(cupom);
-        }
-    }
-
-    private EnderecoCompra copiarEndereco(Endereco endereco) {
-
-        EnderecoCompra copia = new EnderecoCompra();
-
-        copia.setCliente(endereco.getCliente());
-        copia.setNomeIdentificacao(endereco.getNomeIdentificacao());
-        copia.setTipoEndereco(endereco.getTipoEndereco());
-        copia.setTipoResidencia(endereco.getTipoResidencia());
-        copia.setTipoLogradouro(endereco.getTipoLogradouro());
-        copia.setCep(endereco.getCep());
-        copia.setLogradouro(endereco.getLogradouro());
-        copia.setBairro(endereco.getBairro());
-        copia.setNumero(endereco.getNumero());
-        copia.setEstado(endereco.getEstado());
-        copia.setCidade(endereco.getCidade());
-        copia.setPais(endereco.getPais());
-        copia.setObservacoes(endereco.getObservacoes());
-
-        copia.setUtilizado(true);
-
-        return enderecoCompraRepository.save(copia);
-    }
-
-    private CartaoCompra copiarCartao(Cartao cartao) {
-
-        CartaoCompra copia = new CartaoCompra();
-
-        copia.setCliente(cartao.getCliente());
-        copia.setNumero(cartao.getNumero());
-        copia.setNomeImpresso(cartao.getNomeImpresso());
-        copia.setCodigoSeguranca(cartao.getCodigoSeguranca());
-        copia.setBandeira(cartao.getBandeira());
-
-        copia.setUtilizado(true);
-
-        return cartaoCompraRepository.save(copia);
+    public void agendarVerificacaoCompra(Long pedidoId) {
+        scheduler.schedule(
+                () -> verificacaoCompraService.processarVerificacaoCompra(pedidoId),
+                5,
+                TimeUnit.SECONDS
+        );
     }
 }

@@ -55,8 +55,9 @@
                         <input type="text"
                                id="inputPesquisa"
                                name="pesquisa"
-                               placeholder="Buscar pelo nome do produto"
-                               th:value="${pesquisa}"></div>
+                               th:value="${pesquisa}"
+                               placeholder="Buscar pelo nome do produto">
+                    </div>
                     <button type="button" class="btn-cadastrar" id="btnCadastrar">Registrar entrada</button>
                 </div>
         </form>
@@ -91,8 +92,17 @@
                 </tbody>
             </table>
 
-            <div th:if="${#lists.isEmpty(variacoes)}" class="sem-resultados">
-                <p>Nenhum produto encontrado.</p>
+            <!-- Sem resultados -->
+            <div th:if="${#lists.isEmpty(variacoes) and (pesquisa == null or pesquisa.isBlank()) and (statusSelecionado == null or statusSelecionado == '' or statusSelecionado == 'Todos')}"
+                 class="sem-resultados">
+                <h2>Nenhum produto cadastrado</h2>
+                <p>Os produtos cadastrados aparecerão aqui.</p>
+            </div>
+
+            <div th:if="${#lists.isEmpty(variacoes) and ((pesquisa != null and !pesquisa.isBlank()) or (statusSelecionado != null and statusSelecionado != '' and statusSelecionado != 'Todos'))}"
+                 class="sem-resultados">
+                <h2>Nenhum produto encontrado</h2>
+                <p>Não encontramos nenhum produto com os filtros informados.</p>
             </div>
 
             <!-- modal cadastro -->

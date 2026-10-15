@@ -7,6 +7,7 @@ import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "cupom")
@@ -25,7 +26,7 @@ public class Cupom {
     private BigDecimal valor;
 
     @Column(nullable = false)
-    private LocalDate validade;
+    private LocalDateTime validade;
 
     @Column(nullable = false)
     private boolean ativo = true;

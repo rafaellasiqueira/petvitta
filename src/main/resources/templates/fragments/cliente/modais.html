@@ -549,9 +549,15 @@
     </form>
 </div>
 
-<!-- Modal solicitar troca -->
-<div th:fragment="modal-solicitar-troca" id="modalSolicitarTroca" class="modal">
-    <form id="formSolicitarTroca">
+<!-- Modal solicitar Troca -->
+<div th:fragment="modal-solicitar-troca(pedido)"
+     th:id="${'modalSolicitarTroca_' + pedido.id}"
+     class="modal">
+    <form th:action="@{/cliente/pedido/solicitar-troca}" method="post" id="formSolicitarTroca">
+
+        <input type="hidden"
+               name="pedidoId"
+               th:value="${pedido.id}">
 
         <div class="modalConteudo">
 
@@ -568,97 +574,52 @@
                 <div class="campo-formulario">
                     <label>Itens para troca</label>
 
-                    <!-- Produto 1 -->
-                    <label class="item-troca">
+                    <div th:each="item : ${pedido.itens}">
+                        <label class="item-troca">
 
-                        <input type="checkbox"
-                               class="checkbox-troca"
-                               name="produtos"
-                               value="racao-choice">
+                            <input type="checkbox"
+                                   class="checkbox-troca"
+                                   name="produtos"
+                                   th:value="${item.id}">
 
-                        <div class="dados-item-troca">
-                            <div class="informacoes-item">
-                                <h3>Ração Cães Adultos Frango e Carne Choice</h3>
-                                <p>Tamanho: 10.1 KG</p>
+                            <div class="dados-item-troca">
+                                <div class="informacoes-item">
+                                    <h3 th:text="${item.variacaoProduto.produto.nome}"></h3>
+                                    <p th:text="${'Tamanho: ' + item.variacaoProduto.tamanho}"></p>
+                                    <p th:text="${'Comprado: ' + item.quantidade}"></p>
+                                </div>
+
+                                <div class="quantidade-troca">
+                                    <label>Quantidade</label>
+
+                                    <input type="number"
+                                           th:id="${'quantidade_' + item.id}"
+                                           min="1"
+                                           th:max="${item.quantidade}"
+                                           value="1">
+                                </div>
                             </div>
 
-                            <div class="quantidade-troca">
-                                <label for="quantidadeChoice">Quantidade</label>
-
-                                <input type="number"
-                                       id="quantidadeChoice"
-                                       name="quantidadeChoice"
-                                       min="1"
-                                       max="1"
-                                       value="1">
-                            </div>
-                        </div>
-                    </label>
-
-                    <!-- Produto 2 -->
-                    <label class="item-troca">
-
-                        <input type="checkbox"
-                               class="checkbox-troca"
-                               name="produtos"
-                               value="racao-golden">
-
-                        <div class="dados-item-troca">
-                            <div class="informacoes-item">
-                                <h3>Ração GoldeN Special Gatos Adultos Sabor Frango e Carne</h3>
-                                <p>Tamanho: 10.1 KG</p>
-                            </div>
-
-                            <div class="quantidade-troca">
-                                <label for="quantidadeGolden">Quantidade</label>
-
-                                <input type="number"
-                                       id="quantidadeGolden"
-                                       name="quantidadeGolden"
-                                       min="1"
-                                       max="1"
-                                       value="1">
-                            </div>
-                        </div>
-                    </label>
+                        </label>
+                    </div>
                 </div>
 
-                <!-- Motivo da troca -->
+                <!-- Motivo da Troca -->
                 <div class="campo-formulario">
-
-                    <label for="motivoTroca">Motivo da troca</label>
+                    <label>Motivo da troca</label>
 
                     <select id="motivoTroca" name="motivoTroca" required>
+                        <option value="" disabled selected hidden>Selecione o motivo</option>
 
-                        <option value="" disabled selected hidden>
-                            Selecione o motivo
-                        </option>
-
-                        <option value="produto-incorreto">
-                            Produto enviado incorretamente
-                        </option>
-
-                        <option value="produto-vencido">
-                            Produto vencido ou próximo do vencimento
-                        </option>
-
-                        <option value="embalagem-violada">
-                            Embalagem violada
-                        </option>
-
-                        <option value="produto-diferente">
-                            Produto diferente do enunciado
-                        </option>
-
-                        <option value="outro">
-                            Outro
+                        <option th:each="motivo : ${motivosTroca}"
+                                th:value="${motivo.id}"
+                                th:text="${motivo.descricao}">
                         </option>
                     </select>
                 </div>
 
                 <!-- Justificativa -->
                 <div class="campo-formulario">
-
                     <label for="justificativaTroca">Justificativa</label>
 
                     <textarea id="justificativaTroca"
@@ -675,36 +636,10 @@
                     <button type="button" class="btn-cancelar" id="btnCancelarTroca">Cancelar</button>
                     <button type="submit" class="btn-adicionar" id="btnSolicitarTroca">Solicitar troca</button>
                 </div>
+
             </div>
         </div>
     </form>
-</div>
-
-<!-- Modal cancelar pedido -->
-<div th:fragment="modal-cancelar-pedido" id="modalCancelarPedido" class="modal">
-
-    <div class="modalConteudo">
-
-        <!-- Cabeçalho -->
-        <div class="modalCabecalho">
-            <h2>Cancelar pedido</h2>
-            <button type="button" class="btn-fechar" id="btnFecharModalCancelarPedido">&times;</button>
-        </div>
-
-        <div class="modal-body">
-
-            <div class="mensagem-cancelar-pedido">
-                <p>Tem certeza de que deseja cancelar este pedido?</p>
-                <p>Essa ação não poderá ser desfeita.</p>
-            </div>
-
-            <!-- Botões -->
-            <div class="modalBotoes">
-                <button type="button" class="btn-cancelar" id="btnNaoCancelarPedido">Não cancelar</button>
-                <button type="button" class="btn-confirmar-cancelamento" id="btnConfirmarCancelamento">Cancelar pedido</button>
-            </div>
-        </div>
-    </div>
 </div>
 
 <!-- Modal itens recebidos -->

@@ -201,8 +201,15 @@
                 </tbody>
             </table>
 
-            <div th:if="${#lists.isEmpty(clientes)}" class="sem-resultados">
-                <p>Nenhum cliente encontrado.</p>
+            <!-- Sem resultados -->
+            <div th:if="${clientes.isEmpty() and (nome == null or nome.isBlank()) and (cpf == null or cpf.isBlank()) and (email == null or email.isBlank()) and (telefone == null or telefone.isBlank()) and (dataNascimento == null or dataNascimento.isBlank()) and genero == null and status == null}" class="sem-resultados">
+                <h2>Nenhum cliente cadastrado ainda</h2>
+                <p>Os clientes cadastrados aparecerão aqui.</p>
+            </div>
+
+            <div th:if="${clientes.isEmpty() and ((nome != null and !nome.isBlank()) or (cpf != null and !cpf.isBlank()) or (email != null and !email.isBlank()) or (telefone != null and !telefone.isBlank()) or (dataNascimento != null and !dataNascimento.isBlank()) or genero != null or status != null)}" class="sem-resultados">
+                <h2>Nenhum cliente encontrado</h2>
+                <p>Não encontramos nenhum cliente com os filtros informados.</p>
             </div>
         </main>
 

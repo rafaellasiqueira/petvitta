@@ -1,8 +1,8 @@
 describe('Testes de compra - PetVitta', () => {
 
-    afterEach(() => {
+    /* afterEach(() => {
         cy.pause();
-    });
+    }); */
 
     beforeEach(() => {
         cy.viewport(1280, 720);

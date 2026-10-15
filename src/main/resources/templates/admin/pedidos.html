@@ -56,10 +56,10 @@
                         <div class="pesquisa">
                             <i class="fa-solid fa-magnifying-glass"></i>
                             <input type="text"
-                                   name="pesquisa"
                                    id="inputPesquisa"
-                                   placeholder="Buscar pelo código ou cliente"
-                                   th:value="${pesquisa}">
+                                   name="pesquisa"
+                                   th:value="${pesquisa}"
+                                   placeholder="Buscar pelo código ou cliente..">
                         </div>
                     </div>
                 </form>
@@ -88,7 +88,8 @@
                             <input type="hidden" name="pedidoId" th:value="${pedido.id}">
                             <input type="hidden" name="descricao" class="descricao-status">
 
-                            <select class="dropdown">
+
+                            <select class="dropdown" th:data-status-original="${pedido.statusPedido.descricao}">
                                 <option th:value="${pedido.statusPedido.descricao}"
                                         th:text="${pedido.statusPedido.descricao}">
                                 </option>
@@ -122,12 +123,23 @@
                            th:data-subtotal="${'R$ ' + pedido.subtotal}"
                            th:data-descontos="${'R$ ' + pedido.desconto}"
                            th:data-total="${'R$ ' + pedido.total}"
-                           th:data-endereco="${pedido.endereco.logradouro + ', ' + pedido.endereco.numero + ' - ' + pedido.endereco.cidade + ' - ' + pedido.endereco.estado}">
+                           th:data-endereco="${pedido.enderecoCompra.logradouro + ', ' + pedido.enderecoCompra.numero + ' - ' + pedido.enderecoCompra.cidade + ' - ' + pedido.enderecoCompra.estado}">
                         </i>
                     </td>
                 </tr>
                 </tbody>
             </table>
+
+            <!-- Sem resultados -->
+            <div th:if="${pedidos.isEmpty() and (pesquisa == null or pesquisa.isBlank()) and (statusSelecionado == null or statusSelecionado == '' or statusSelecionado == 'Todos')}" class="sem-resultados">
+                <h2>Nenhum pedido realizado ainda</h2>
+                <p>Os pedidos realizados pelos clientes aparecerão aqui.</p>
+            </div>
+
+            <div th:if="${pedidos.isEmpty() and ((pesquisa != null and !pesquisa.isBlank()) or (statusSelecionado != null and statusSelecionado != '' and statusSelecionado != 'Todos'))}" class="sem-resultados">
+                <h2>Nenhum pedido encontrado</h2>
+                <p>Não encontramos nenhum pedido com os filtros informados.</p>
+            </div>
 
             <!-- modal de detalhes -->
             <div id="modalPedidos" class="modal">

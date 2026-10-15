@@ -7,25 +7,28 @@ const dropdowns = document.querySelectorAll(".dropdown");
 
 let dropdownSelecionado = null;
 let statusNovo = null;
+let statusOriginal = null;
 
 dropdowns.forEach(function(dropdown) {
     dropdown.addEventListener("change", function() {
         dropdownSelecionado = this;
         statusNovo = this.value;
+        statusOriginal = this.dataset.statusOriginal;
 
         modalStatusPedido.classList.add("active");
     });
 });
 
-// Fechar modal
-btnFecharModalStatus.addEventListener("click", function() {
-    modalStatusPedido.classList.remove("active");
-});
+// Fechar modal e cancelar mudança
+function cancelarMudancaStatus() {
+    dropdownSelecionado.value = statusOriginal;
 
-// Cancelar mudança
-btnNaoStatus.addEventListener("click", function() {
     modalStatusPedido.classList.remove("active");
-});
+}
+
+btnFecharModalStatus.addEventListener("click", cancelarMudancaStatus);
+
+btnNaoStatus.addEventListener("click", cancelarMudancaStatus);
 
 // Confirmar mudança
 btnConfirmarStatus.addEventListener("click", function() {
@@ -34,7 +37,6 @@ btnConfirmarStatus.addEventListener("click", function() {
     form.querySelector(".descricao-status").value = statusNovo;
     form.submit();
 });
-
 
 // Modal de detalhes
 const modalPedidos = document.getElementById("modalPedidos");

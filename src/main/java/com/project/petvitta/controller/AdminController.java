@@ -5,10 +5,8 @@ import com.project.petvitta.model.dominio.StatusPedido;
 import com.project.petvitta.model.pedido.Pedido;
 import com.project.petvitta.model.produto.Produto;
 import com.project.petvitta.model.produto.VariacaoProduto;
-import com.project.petvitta.service.AuditoriaService;
-import com.project.petvitta.service.ClienteService;
-import com.project.petvitta.service.PedidoService;
-import com.project.petvitta.service.ProdutoService;
+import com.project.petvitta.model.troca.Troca;
+import com.project.petvitta.service.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -25,16 +23,19 @@ public class AdminController {
     private final ProdutoService produtoService;
     private final PedidoService pedidoService;
     private final AuditoriaService auditoriaService;
+    private final TrocaService trocaService;
 
     public AdminController(
             ClienteService clienteService,
             ProdutoService produtoService,
-            PedidoService pedidoService, AuditoriaService auditoriaService
+            PedidoService pedidoService,
+            AuditoriaService auditoriaService, TrocaService trocaService
     ) {
         this.clienteService = clienteService;
         this.produtoService = produtoService;
         this.pedidoService = pedidoService;
         this.auditoriaService = auditoriaService;
+        this.trocaService = trocaService;
     }
 
     @ModelAttribute
@@ -224,15 +225,11 @@ public class AdminController {
             @RequestParam(required = false) String pesquisa,
             Model model) {
 
-        System.out.println("STATUS: " + status);
-        System.out.println("PESQUISA: " + pesquisa);
-
         model.addAttribute("paginaAtual", "estoque");
 
-        model.addAttribute(
-                "variacoes",
-                produtoService.filtrarEstoque(status, pesquisa)
-        );
+        List<VariacaoProduto> variacoes = produtoService.filtrarEstoque(status, pesquisa);
+
+        model.addAttribute("variacoes", variacoes);
 
         model.addAttribute("statusSelecionado", status);
         model.addAttribute("pesquisa", pesquisa);
@@ -241,9 +238,41 @@ public class AdminController {
     }
 
     @GetMapping("/admin/trocas")
-    public String trocas(Model model) {
+    public String trocas(
+            @RequestParam(required = false) String status,
+            @RequestParam(required = false) String pesquisa,
+            Model model) {
         model.addAttribute("paginaAtual", "trocas");
+
+        List<Troca> trocas = trocaService.filtrarTroca(status, pesquisa);
+
+        model.addAttribute("trocas", trocas);
+
+        model.addAttribute("statusSelecionado", status);
+        model.addAttribute("pesquisa", pesquisa);
+
         return "admin/trocas";
+    }
+
+    @PostMapping("/admin/trocas/status")
+    public String alterarStatusTroca(
+            @RequestParam Long trocaId,
+            @RequestParam String descricao,
+            RedirectAttributes redirectAttributes) {
+
+        trocaService.alterarStatus(trocaId, descricao);
+
+        redirectAttributes.addFlashAttribute(
+                "tipoToast",
+                "sucesso"
+        );
+
+        redirectAttributes.addFlashAttribute(
+                "mensagemToast",
+                "Status alterado com sucesso!"
+        );
+
+        return "redirect:/admin/pedidos";
     }
 
     @GetMapping("/admin/auditoria")

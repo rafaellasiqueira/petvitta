@@ -58,9 +58,9 @@ public class Cliente {
     private String justificativaAtivacao;
 
     @OneToMany(
-            mappedBy = "cliente", /* Cliente controla */
+            mappedBy = "cliente",
             cascade = CascadeType.ALL,
-            orphanRemoval = true /* Pode ser removido do banco */
+            orphanRemoval = true
     )
     private List<Endereco> enderecos = new ArrayList<>();
 

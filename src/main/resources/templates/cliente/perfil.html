@@ -336,7 +336,7 @@
                             <span class="tipo-cupom troca" th:if="${cupom.tipoCupom.id == 2}">Troca</span>
                             <span class="tipo-cupom promocional" th:if="${cupom.tipoCupom.id == 1}">Promocional</span>
                             <h4 th:text="${cupom.codigo}"></h4>
-                            <h4 th:text="'Validade: ' + ${#temporals.format(cupom.validade, 'dd/MM/yyyy')}"></h4>
+                            <h4 th:text="'Validade: ' + ${#temporals.format(cupom.validade, 'dd/MM/yyyy HH:mm')}"></h4>
                         </div>
                         <div class="valor-cupom" th:text="'R$ ' + ${#numbers.formatDecimal(cupom.valor, 2, 2)}"></div>
                     </div>

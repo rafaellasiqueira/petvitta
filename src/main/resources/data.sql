@@ -184,5 +184,18 @@ INSERT IGNORE INTO fornecedor (nome_fantasia) VALUES
 ('Cão & Gato Nutrição'),
 ('PetSupply');
 
+-- Motivos para troca
+INSERT IGNORE INTO motivo_troca (descricao) VALUES
+('Produto enviado incorretamente'),
+('Produto vencido ou próximo do vencimento'),
+('Embalagem violada'),
+('Produto diferente do enunciado'),
+('Outro');
 
+-- Status troca
+INSERT IGNORE INTO status_troca (descricao) VALUES
+('Em troca'),
+('Troca Autorizada'),
+('Troca Recusada'),
+('Trocado');
 

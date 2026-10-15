@@ -2,7 +2,6 @@ package com.project.petvitta.model.pedido;
 
 import com.project.petvitta.model.cliente.Cliente;
 import com.project.petvitta.model.cliente.Cupom;
-import com.project.petvitta.model.cliente.Endereco;
 import com.project.petvitta.model.dominio.*;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -87,17 +86,10 @@ public class Pedido {
         }
 
         return quantidade;
-
-
     }
 
     public List<String> getProximosStatus() {
         List<String> status = new ArrayList<>();
-
-        if (statusPedido.getDescricao().equals("Em processamento")) {
-            status.add("Aprovada");
-            status.add("Reprovada");
-        }
 
         if (statusPedido.getDescricao().equals("Aprovada")) {
             status.add("Em transporte");

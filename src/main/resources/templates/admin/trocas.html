@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pt-BR" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="pt-BR" xmlns:th="http://www.w3.org/1999/xhtml" xmlns="http://www.w3.org/1999/html">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -32,23 +32,31 @@
         <main class="card">
 
             <!-- filtros -->
-            <div class="filtros">
+            <form th:action="@{/admin/trocas}" method="get" id="formFiltro" class="filtros">
+                <input type="hidden"
+                       name="status"
+                       id="statusSelecionado"
+                       th:value="${statusSelecionado}">
+
                 <div class="botoes">
-                    <button class="btn-filtro active">Todas</button>
-                    <button class="btn-filtro">Solicitadas</button>
-                    <button class="btn-filtro">Trocas aceitas</button>
-                    <button class="btn-filtro">Itens enviados</button>
-                    <button class="btn-filtro">Trocas processadas</button>
-                    <button class="btn-filtro">Recusadas</button>
+                    <button class="btn-filtro" data-status="Todos">Todos</button>
+                    <button class="btn-filtro" data-status="EmTroca">Em troca</button>
+                    <button class="btn-filtro" data-status="TrocaAutorizada">Troca autorizada</button>
+                    <button class="btn-filtro" data-status="TrocaRecusada">Troca recusada</button>
+                    <button class="btn-filtro" data-status="Trocado">Trocado</button>
                 </div>
 
                 <div class="pesquisa">
                     <i class="fa-solid fa-magnifying-glass"></i>
-                    <input type="text" id="inputPesquisa" placeholder="Buscar por cliente ou código...">
+                    <input type="text"
+                           id="inputPesquisa"
+                           name="pesquisa"
+                           th:value="${pesquisa}"
+                           placeholder="Buscar por cliente ou código...">
                 </div>
-            </div>
+            </form>
 
-                <table class="tabela-trocas">
+                <table th:if="${not #lists.isEmpty(trocas)}" class="tabela-trocas">
                     <thead>
                     <tr>
                         <th class="col-codigo">Código</th>
@@ -63,412 +71,145 @@
 
                     <tbody>
 
-                    <tr>
-                        <td class="col-codigo">TROC001</td>
-                        <td class="col-cliente">Larissa Lima</td>
+                    <tr th:each="troca : ${trocas}">
+                        <td th:text="${'TROC-' + troca.codigo}" class="col-codigo"></td>
 
-                        <td class="col-produto"
-                            title="4x Ração Golden Cães Adultos 15kg, 3x Ração Golden Gatos">
-                            4x Ração Golden Cães Adultos 15kg, 3x Ração Golden Gatos
+                        <td th:text="${troca.cliente.nome}" class="col-cliente"></td>
+
+                        <!-- Produtos -->
+                        <td class="col-produto">
+                        <span th:each="item, iteracao : ${troca.itens}"
+                              th:if="${iteracao.index < 1}"
+                              th:text="${item.quantidade + 'x ' + item.itemPedido.variacaoProduto.produto.nome}">
+                        </span>
+
+                            <span th:if="${troca.itens.size() > 1}"
+                                  title="Existem mais produtos nesta troca">...</span>
                         </td>
 
+                        <!-- Motivo -->
                         <td class="col-motivo"
-                            title="Produto vencido ou próximo do vencimento">
-                            Produto vencido ou próximo do vencimento
+                            th:title="${troca.motivoTroca.descricao}"
+                            th:text="${troca.motivoTroca.descricao}">
                         </td>
 
-                        <td class="col-data">18/08/2026</td>
+                        <!-- Data da solicitação -->
+                        <td class="col-data"
+                            th:text="${#temporals.format(troca.dataSolicitacao, 'dd/MM/yyyy HH:mm')}">
+                        </td>
 
+                        <!-- Status -->
                         <td class="col-acao">
-                            <select class="dropdown">
-                                <option value="Solicitada" selected>Solicitada</option>
-                                <option value="Troca aceita">Troca aceita</option>
-                                <option value="Item enviado">Item enviado</option>
-                                <option value="Item recebido">Item recebido</option>
-                                <option value="Troca processada">Troca processada</option>
-                                <option value="Recusada">Recusada</option>
-                            </select>
+                            <form th:action="@{/admin/trocas/status}" method="post" class="form-status">
+                                <input type="hidden" name="trocaId" th:value="${troca.id}">
+                                <input type="hidden" name="descricao" class="descricao-status">
+
+
+                                <select class="dropdown" th:data-status-original="${troca.statusTroca.descricao}">
+                                <option th:value="${troca.statusTroca.descricao}"
+                                        th:text="${troca.statusTroca.descricao}">
+                                </option>
+
+                                <option th:each="status : ${troca.proximosStatus}"
+                                        th:value="${status}"
+                                        th:text="${status}">
+                                </option>
+                                </select>
+                            </form>
                         </td>
 
+                        <!-- Detalhes -->
                         <td class="col-detalhes">
+                            <div class="produtos-troca" style="display: none;">
+                                <span th:each="itemTroca : ${troca.itens}"
+                                      class="produto"
+                                      th:data-nome="${itemTroca.itemPedido.variacaoProduto.produto.nome}"
+                                      th:data-quantidade="${itemTroca.quantidade}">
+                                </span>
+                            </div>
+
                             <i class="fa-solid fa-eye btn-detalhes"
-                               data-codigo="TROC001"
-                               data-cliente="Larissa Lima"
-                               data-produto="4x Ração Golden Cães Adultos 15kg, 3x Ração Golden Gatos"
-                               data-motivo="Produto vencido ou próximo do vencimento"
-                               data-justificativa="A ração recebida estava próxima da data de vencimento e algumas embalagens apresentavam sinais de alteração."
-                               data-solicitado="18/08/2026"></i>
+                               th:data-codigo="${'TROC-' + troca.codigo}"
+                               th:data-status="${troca.statusTroca.descricao}"
+                               th:data-cliente="${troca.cliente.nome}"
+                               th:data-motivo="${troca.motivoTroca.descricao}"
+                               th:data-justificativa="${troca.justificativaTroca}"
+                               th:data-solicitado="${#temporals.format(troca.dataSolicitacao, 'dd/MM/yyyy')}">
+                            </i>
                         </td>
                     </tr>
-
-
-                    <tr>
-                        <td class="col-codigo">TROC002</td>
-                        <td class="col-cliente">Marcos Oliveira</td>
-
-                        <td class="col-produto"
-                            title="2x Ração Premier Cães 15kg">
-                            2x Ração Premier Cães 15kg
-                        </td>
-
-                        <td class="col-motivo"
-                            title="Embalagem violada">
-                            Embalagem violada
-                        </td>
-
-                        <td class="col-data">18/08/2026</td>
-
-                        <td class="col-acao">
-                            <select class="dropdown">
-                                <option value="Solicitada" selected>Solicitada</option>
-                                <option value="Troca aceita">Troca aceita</option>
-                                <option value="Item enviado">Item enviado</option>
-                                <option value="Item recebido">Item recebido</option>
-                                <option value="Troca processada">Troca processada</option>
-                                <option value="Recusada">Recusada</option>
-                            </select>
-                        </td>
-
-                        <td class="col-detalhes">
-                            <i class="fa-solid fa-eye btn-detalhes"
-                               data-codigo="TROC002"
-                               data-cliente="Marcos Oliveira"
-                               data-produto="2x Ração Premier Cães 15kg"
-                               data-motivo="Embalagem violada"
-                               data-justificativa="A embalagem chegou aberta e apresentava um rasgo na lateral."
-                               data-solicitado="18/08/2026"></i>
-                        </td>
-                    </tr>
-
-
-                    <tr>
-                        <td class="col-codigo">TROC003</td>
-                        <td class="col-cliente">Camila Santos</td>
-
-                        <td class="col-produto"
-                            title="3x Petisco Pedigree Dentastix">
-                            3x Petisco Pedigree Dentastix
-                        </td>
-
-                        <td class="col-motivo"
-                            title="Produto enviado incorretamente">
-                            Produto enviado incorretamente
-                        </td>
-
-                        <td class="col-data">19/08/2026</td>
-
-                        <td class="col-acao">
-                            <select class="dropdown">
-                                <option value="Solicitada" selected>Solicitada</option>
-                                <option value="Troca aceita">Troca aceita</option>
-                                <option value="Item enviado">Item enviado</option>
-                                <option value="Item recebido">Item recebido</option>
-                                <option value="Troca processada">Troca processada</option>
-                                <option value="Recusada">Recusada</option>
-                            </select>
-                        </td>
-
-                        <td class="col-detalhes">
-                            <i class="fa-solid fa-eye btn-detalhes"
-                               data-codigo="TROC003"
-                               data-cliente="Camila Santos"
-                               data-produto="3x Petisco Pedigree Dentastix"
-                               data-motivo="Produto enviado incorretamente"
-                               data-justificativa="Solicitei o produto de um determinado sabor, mas recebeu uma versão diferente."
-                               data-solicitado="19/08/2026"></i>
-                        </td>
-                    </tr>
-
-
-                    <tr>
-                        <td class="col-codigo">TROC004</td>
-                        <td class="col-cliente">Rafael Souza</td>
-
-                        <td class="col-produto"
-                            title="1x Suplemento Nutralife 500g">
-                            1x Suplemento Nutralife 500g
-                        </td>
-
-                        <td class="col-motivo"
-                            title="Produto diferente do enunciado">
-                            Produto diferente do enunciado
-                        </td>
-
-                        <td class="col-data">19/08/2026</td>
-
-                        <td class="col-acao">
-                            <select class="dropdown">
-                                <option value="Solicitada" selected>Solicitada</option>
-                                <option value="Troca aceita">Troca aceita</option>
-                                <option value="Item enviado">Item enviado</option>
-                                <option value="Item recebido">Item recebido</option>
-                                <option value="Troca processada">Troca processada</option>
-                                <option value="Recusada">Recusada</option>
-                            </select>
-                        </td>
-
-                        <td class="col-detalhes">
-                            <i class="fa-solid fa-eye btn-detalhes"
-                               data-codigo="TROC004"
-                               data-cliente="Rafael Souza"
-                               data-produto="1x Suplemento Nutralife 500g"
-                               data-motivo="Produto diferente do enunciado"
-                               data-justificativa="O produto recebido possui características diferentes das apresentadas na descrição do anúncio."
-                               data-solicitado="19/08/2026"></i>
-                        </td>
-                    </tr>
-
-
-                    <tr>
-                        <td class="col-codigo">TROC005</td>
-                        <td class="col-cliente">Beatriz Costa</td>
-
-                        <td class="col-produto"
-                            title="2x Ração Royal Canin Gatos 10kg">
-                            2x Ração Royal Canin Gatos 10kg
-                        </td>
-
-                        <td class="col-motivo"
-                            title="Outro">
-                            Outro
-                        </td>
-
-                        <td class="col-data">20/08/2026</td>
-
-                        <td class="col-acao">
-                            <select class="dropdown">
-                                <option value="Solicitada" selected>Solicitada</option>
-                                <option value="Troca aceita">Troca aceita</option>
-                                <option value="Item enviado">Item enviado</option>
-                                <option value="Item recebido">Item recebido</option>
-                                <option value="Troca processada">Troca processada</option>
-                                <option value="Recusada">Recusada</option>
-                            </select>
-                        </td>
-
-                        <td class="col-detalhes">
-                            <i class="fa-solid fa-eye btn-detalhes"
-                               data-codigo="TROC005"
-                               data-cliente="Beatriz Costa"
-                               data-produto="2x Ração Royal Canin Gatos 10kg"
-                               data-motivo="Outro"
-                               data-justificativa="Solicitei a troca porque o produto não atendeu às suas expectativas."
-                               data-solicitado="20/08/2026"></i>
-                        </td>
-                    </tr>
-
-
-                    <tr>
-                        <td class="col-codigo">TROC006</td>
-                        <td class="col-cliente">João Pereira</td>
-
-                        <td class="col-produto"
-                            title="5x Petisco Premier Cookie para Cães">
-                            5x Petisco Premier Cookie para Cães
-                        </td>
-
-                        <td class="col-motivo"
-                            title="Produto vencido ou próximo do vencimento">
-                            Produto vencido ou próximo do vencimento
-                        </td>
-
-                        <td class="col-data">20/08/2026</td>
-
-                        <td class="col-acao">
-                            <select class="dropdown">
-                                <option value="Solicitada" selected>Solicitada</option>
-                                <option value="Troca aceita">Troca aceita</option>
-                                <option value="Item enviado">Item enviado</option>
-                                <option value="Item recebido">Item recebido</option>
-                                <option value="Troca processada">Troca processada</option>
-                                <option value="Recusada">Recusada</option>
-                            </select>
-                        </td>
-
-                        <td class="col-detalhes">
-                            <i class="fa-solid fa-eye btn-detalhes"
-                               data-codigo="TROC006"
-                               data-cliente="João Pereira"
-                               data-produto="5x Petisco Premier Cookie para Cães"
-                               data-motivo="Produto vencido ou próximo do vencimento"
-                               data-justificativa="Os produtos recebidos possuem prazo de validade muito próximo do vencimento."
-                               data-solicitado="20/08/2026"></i>
-                        </td>
-                    </tr>
-
-
-                    <tr>
-                        <td class="col-codigo">TROC007</td>
-                        <td class="col-cliente">Juliana Martins</td>
-
-                        <td class="col-produto"
-                            title="1x Ração GranPlus Cães Adultos 15kg">
-                            1x Ração GranPlus Cães Adultos 15kg
-                        </td>
-
-                        <td class="col-motivo"
-                            title="Produto enviado incorretamente">
-                            Produto enviado incorretamente
-                        </td>
-
-                        <td class="col-data">21/08/2026</td>
-
-                        <td class="col-acao">
-                            <select class="dropdown">
-                                <option value="Solicitada" selected>Solicitada</option>
-                                <option value="Troca aceita">Troca aceita</option>
-                                <option value="Item enviado">Item enviado</option>
-                                <option value="Item recebido">Item recebido</option>
-                                <option value="Troca processada">Troca processada</option>
-                                <option value="Recusada">Recusada</option>
-                            </select>
-                        </td>
-
-                        <td class="col-detalhes">
-                            <i class="fa-solid fa-eye btn-detalhes"
-                               data-codigo="TROC007"
-                               data-cliente="Juliana Martins"
-                               data-produto="1x Ração GranPlus Cães Adultos 15kg"
-                               data-motivo="Produto enviado incorretamente"
-                               data-justificativa="Foi enviada uma ração destinada a uma faixa etária diferente da solicitada."
-                               data-solicitado="21/08/2026"></i>
-                        </td>
-                    </tr>
-
-
-                    <tr>
-                        <td class="col-codigo">TROC008</td>
-                        <td class="col-cliente">Pedro Almeida</td>
-
-                        <td class="col-produto"
-                            title="2x Suplemento Vetnil 120g">
-                            2x Suplemento Vetnil 120g
-                        </td>
-
-                        <td class="col-motivo"
-                            title="Embalagem violada">
-                            Embalagem violada
-                        </td>
-
-                        <td class="col-data">21/08/2026</td>
-
-                        <td class="col-acao">
-                            <select class="dropdown">
-                                <option value="Solicitada" selected>Solicitada</option>
-                                <option value="Troca aceita">Troca aceita</option>
-                                <option value="Item enviado">Item enviado</option>
-                                <option value="Item recebido">Item recebido</option>
-                                <option value="Troca processada">Troca processada</option>
-                                <option value="Recusada">Recusada</option>
-                            </select>
-                        </td>
-
-                        <td class="col-detalhes">
-                            <i class="fa-solid fa-eye btn-detalhes"
-                               data-codigo="TROC008"
-                               data-cliente="Pedro Almeida"
-                               data-produto="2x Suplemento Vetnil 120g"
-                               data-motivo="Embalagem violada"
-                               data-justificativa="As embalagens apresentavam sinais de abertura e não estavam devidamente lacradas."
-                               data-solicitado="21/08/2026"></i>
-                        </td>
-                    </tr>
-
-
-                    <tr>
-                        <td class="col-codigo">TROC009</td>
-                        <td class="col-cliente">Ana Rodrigues</td>
-
-                        <td class="col-produto"
-                            title="3x Ração Premier Gatos Adultos 10kg">
-                            3x Ração Premier Gatos Adultos 10kg
-                        </td>
-
-                        <td class="col-motivo"
-                            title="Produto diferente do enunciado">
-                            Produto diferente do enunciado
-                        </td>
-
-                        <td class="col-data">22/08/2026</td>
-
-                        <td class="col-acao">
-                            <select class="dropdown">
-                                <option value="Solicitada" selected>Solicitada</option>
-                                <option value="Troca aceita">Troca aceita</option>
-                                <option value="Item enviado">Item enviado</option>
-                                <option value="Item recebido">Item recebido</option>
-                                <option value="Troca processada">Troca processada</option>
-                                <option value="Recusada">Recusada</option>
-                            </select>
-                        </td>
-
-                        <td class="col-detalhes">
-                            <i class="fa-solid fa-eye btn-detalhes"
-                               data-codigo="TROC009"
-                               data-cliente="Ana Rodrigues"
-                               data-produto="3x Ração Premier Gatos Adultos 10kg"
-                               data-motivo="Produto diferente do enunciado"
-                               data-justificativa="A embalagem e as informações do produto recebido não correspondem às informações apresentadas no anúncio."
-                               data-solicitado="22/08/2026"></i>
-                        </td>
-                    </tr>
-
-                    <tr>
-                        <td class="col-codigo">TROC010</td>
-                        <td class="col-cliente">Ana Rodrigues</td>
-
-                        <td class="col-produto"
-                            title="3x Ração Premier Gatos Adultos 10kg">
-                            3x Ração Premier Gatos Adultos 10kg
-                        </td>
-
-                        <td class="col-motivo"
-                            title="Produto diferente do enunciado">
-                            Produto diferente do enunciado
-                        </td>
-
-                        <td class="col-data">22/08/2026</td>
-
-                        <td class="col-acao">
-                            <select class="dropdown">
-                                <option value="Solicitada" selected>Solicitada</option>
-                                <option value="Troca aceita">Troca aceita</option>
-                                <option value="Item enviado">Item enviado</option>
-                                <option value="Item recebido">Item recebido</option>
-                                <option value="Troca processada">Troca processada</option>
-                                <option value="Recusada">Recusada</option>
-                            </select>
-                        </td>
-
-                        <td class="col-detalhes">
-                            <i class="fa-solid fa-eye btn-detalhes"
-                               data-codigo="TROC009"
-                               data-cliente="Ana Rodrigues"
-                               data-produto="3x Ração Premier Gatos Adultos 10kg"
-                               data-motivo="Produto diferente do enunciado"
-                               data-justificativa="A embalagem e as informações do produto recebido não correspondem às informações apresentadas no anúncio."
-                               data-solicitado="22/08/2026"></i>
-                        </td>
-                    </tr>
-
                     </tbody>
                 </table>
 
-            <!-- modal de Detalhes -->
+            <!-- Sem resultados -->
+            <div th:if="${trocas.isEmpty() and (pesquisa == null or pesquisa.isBlank()) and (statusSelecionado == null or statusSelecionado == '' or statusSelecionado == 'Todos')}" class="sem-resultados">
+                <h2>Nenhum pedido de troca realizado ainda</h2>
+                <p>Os pedidos de trocas realizados pelos clientes aparecerão aqui.</p>
+            </div>
+
+            <div th:if="${trocas.isEmpty() and ((pesquisa != null and !pesquisa.isBlank()) or (statusSelecionado != null and statusSelecionado != '' and statusSelecionado != 'Todos'))}" class="sem-resultados">
+                <h2>Nenhum pedido de troca encontrado</h2>
+                <p>Não encontramos nenhum pedido de troca com os filtros informados.</p>
+            </div>
+
+            <!-- Modal de detalhes da troca -->
             <div id="modalTrocas" class="modal">
                 <div class="modalConteudo">
                     <div class="modalCabecalho">
                         <h2 id="modalStatus"></h2>
                         <button class="btn-fechar" id="btnFecharModal">&times;</button>
                     </div>
+
                     <div class="modal-body">
-                        <p><strong>Codigo:</strong> <span id="modalCodigo"></span></p>
-                        <p><strong>Cliente:</strong> <span id="modalCliente"></span></p>
-                        <p><strong>Produto:</strong> <span id="modalProduto"></span></p>
-                        <p><strong>Motivo:</strong> <span id="modalMotivo"></span></p>
-                        <p><strong>Justificativa:</strong> <span id="modalJustificativa"></span></p>
-                        <p><strong>Solicitado em:</strong> <span id="modalSolicitado"></span></p>
-                        <p id="secaoStatus"><strong id="labelStatus"></strong><span id="modalDataStatus"></span></p>
+                        <p>
+                            <strong>Código da troca:</strong>
+                            <span id="modalCodigo"></span>
+                        </p>
+
+                        <p>
+                            <strong>Cliente:</strong>
+                            <span id="modalCliente"></span>
+                        </p>
+
+                        <p>
+                            <strong>Motivo:</strong>
+                            <span id="modalMotivo"></span>
+                        </p>
+
+                        <p>
+                            <strong>Justificativa:</strong>
+                            <span id="modalJustificativa"></span>
+                        </p>
+
+                        <p>
+                            <strong>Data da solicitação:</strong>
+                            <span id="modalSolicitado"></span>
+                        </p>
+
+                        <p id="secaoAutorizacao">
+                            <strong>Data de autorização:</strong>
+                            <span id="modalAutorizacao"></span>
+                        </p>
+
+                        <p id="secaoReprovacao">
+                            <strong>Data de reprovação:</strong>
+                            <span id="modalReprovacao"></span>
+                        </p>
+
+                        <p id="secaoTroca">
+                            <strong>Data da troca:</strong>
+                            <span id="modalDataTroca"></span>
+                        </p>
+
+                        <p id="secaoStatus">
+                            <strong id="labelStatus"></strong>
+                            <span id="modalDataStatus"></span>
+                        </p>
+
+                        <div class="secao">
+                            <p><strong>Produtos:</strong></p>
+                            <div id="modalProdutos"></div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -507,29 +248,36 @@
                 </div>
             </div>
 
-            <!-- Modal de confirmação de recusa -->
-            <div id="modalRecusa" class="modal">
+            <!-- Modal de confirmação de cada status -->
+            <div id="modalStatusTroca" class="modal">
                 <div class="modalConteudo">
                     <div class="modalCabecalho">
                         <h2>Atenção</h2>
-                        <button class="btn-fechar" id="btnFecharRecusa">&times;</button>
+                        <button class="btn-fechar" id="btnFecharModalStatus">&times;</button>
                     </div>
-
                     <div class="modal-body">
-                        <p>Tem certeza que deseja recusar esta troca?</p>
-                        <p>Após a recusa, o status não poderá ser alterado.</p>
-
+                        <p>Tem certeza que deseja mudar o status desta troca?</p>
+                        <p>Após a mudança, o status não poderá ser alterado.</p>
                         <div class="modalBotoes">
-                            <button id="btnCancelarRecusa" class="btn-cancelar">Cancelar</button>
-                            <button id="btnConfirmarRecusa" class="btn-confirmar">Recusar troca</button>
+                            <button id="btnNaoStatus" class="btn-cancelar">Cancelar</button>
+                            <button id="btnConfirmarStatus" class="btn-confirmar">Mudar status</button>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <div id="toast" class="toast">
-                <i class="fa-solid fa-circle-xmark"></i>
-                <p id="toastMensagem"></p>
+            <!-- Toast -->
+            <div id="toast"
+                 class="toast ativo"
+                 th:if="${mensagemToast}">
+
+                <i th:if="${tipoToast == 'erro'}"
+                   class="fa-solid fa-circle-xmark"></i>
+
+                <i th:if="${tipoToast != 'erro'}"
+                   class="fa-solid fa-check"></i>
+
+                <p th:text="${mensagemToast}"></p>
             </div>
         </main>
     </div>
@@ -538,5 +286,8 @@
 
 <!-- Trocas JavaScript -->
 <script th:src="@{/js/admin/trocas.js}"></script>
+
+<!-- Toast JavaScript -->
+<script th:src="@{/js/cliente/componentes/toast.js}"></script>
 
 </html>

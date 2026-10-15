@@ -273,10 +273,8 @@ public class ProdutoService {
 
     // Metodo do pedidos do admin
     public List<VariacaoProduto> filtrarEstoque(String status, String pesquisa) {
-
         List<VariacaoProduto> variacoes = variacaoProdutoRepository.findAll();
         List<VariacaoProduto> resultado = new ArrayList<>();
-
 
         for (int i = 0; i < variacoes.size(); i++) {
             VariacaoProduto variacao = variacoes.get(i);
@@ -292,7 +290,6 @@ public class ProdutoService {
 
             // Filtro por nome
             if (pesquisa != null && !pesquisa.isBlank()) {
-
                 String nomeProduto = variacao.getProduto().getNome().toLowerCase();
                 String nomePesquisa = pesquisa.trim().toLowerCase();
 

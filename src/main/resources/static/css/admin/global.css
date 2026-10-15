@@ -362,3 +362,18 @@ h2 {
 .btn-detalhes i {
     font-size: 20px;
 }
+
+.sem-resultados {
+    text-align: center;
+    font-family: 'Nunito', sans-serif;
+    font-size: 14px;
+    color:#5F7370;
+}
+
+.sem-resultados h2 {
+    text-align: center;
+    font-family: 'Fredoka', sans-serif;
+    font-size: 18px;
+    color:#5F7370;
+    margin: 8px;
+}

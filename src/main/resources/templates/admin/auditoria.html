@@ -55,6 +55,13 @@
                 </tr>
                 </tbody>
             </table>
+
+            <!-- Sem resultados -->
+            <div th:if="${auditorias.isEmpty()}" class="sem-resultados">
+                <h2>Nenhum registro encontrado</h2>
+                <p>Os registros de auditoria aparecerão aqui quando houver movimentações no sistema.</p>
+            </div>
+
         </main>
     </div>
 
