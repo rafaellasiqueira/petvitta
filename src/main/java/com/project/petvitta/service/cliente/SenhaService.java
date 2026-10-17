@@ -1,4 +1,4 @@
-package com.project.petvitta.service;
+package com.project.petvitta.service.cliente;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;

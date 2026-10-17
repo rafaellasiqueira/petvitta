@@ -1,4 +1,4 @@
-package com.project.petvitta.service;
+package com.project.petvitta.service.cliente;
 
 import com.project.petvitta.dto.CartaoDTO;
 import com.project.petvitta.dto.ClienteCadastroDTO;
@@ -14,6 +14,7 @@ import com.project.petvitta.repository.dominio.AtivarMotivoRepository;
 import com.project.petvitta.repository.dominio.GeneroRepository;
 import com.project.petvitta.repository.dominio.InativarMotivoRepository;
 import com.project.petvitta.repository.dominio.TipoTelefoneRepository;
+import com.project.petvitta.service.AuditoriaService;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;

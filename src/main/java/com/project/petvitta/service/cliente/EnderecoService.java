@@ -1,4 +1,4 @@
-package com.project.petvitta.service;
+package com.project.petvitta.service.cliente;
 
 import com.project.petvitta.dto.EnderecoDTO;
 import com.project.petvitta.model.cliente.Cliente;
@@ -11,6 +11,7 @@ import com.project.petvitta.model.pedido.EnderecoCompra;
 import com.project.petvitta.repository.cliente.ClienteRepository;
 import com.project.petvitta.repository.dominio.*;
 import com.project.petvitta.repository.pedido.EnderecoCompraRepository;
+import com.project.petvitta.service.AuditoriaService;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 

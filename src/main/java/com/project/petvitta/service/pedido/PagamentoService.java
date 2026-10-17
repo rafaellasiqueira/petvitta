@@ -1,4 +1,4 @@
-package com.project.petvitta.service;
+package com.project.petvitta.service.pedido;
 
 import com.project.petvitta.dto.CartaoPagamentoDTO;
 import com.project.petvitta.dto.FinalizarCompraDTO;

@@ -1,4 +1,4 @@
-package com.project.petvitta.service;
+package com.project.petvitta.service.pedido;
 
 import org.springframework.stereotype.Service;
 import java.math.BigDecimal;

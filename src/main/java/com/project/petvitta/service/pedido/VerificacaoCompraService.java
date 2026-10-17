@@ -1,4 +1,4 @@
-package com.project.petvitta.service;
+package com.project.petvitta.service.pedido;
 
 import com.project.petvitta.model.cliente.Cliente;
 import com.project.petvitta.model.cliente.Cupom;
@@ -9,6 +9,7 @@ import com.project.petvitta.repository.dominio.StatusPedidoRepository;
 import com.project.petvitta.repository.pedido.ItemPedidoRepository;
 import com.project.petvitta.repository.pedido.PagamentoRepository;
 import com.project.petvitta.repository.pedido.PedidoRepository;
+import com.project.petvitta.service.cliente.CupomService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

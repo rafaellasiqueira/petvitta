@@ -1,4 +1,4 @@
-package com.project.petvitta.service;
+package com.project.petvitta.service.cliente;
 
 import com.project.petvitta.dto.CartaoDTO;
 import com.project.petvitta.model.cliente.Cartao;
@@ -9,6 +9,7 @@ import com.project.petvitta.repository.cliente.CartaoRepository;
 import com.project.petvitta.repository.cliente.ClienteRepository;
 import com.project.petvitta.repository.dominio.BandeiraCartaoRepository;
 import com.project.petvitta.repository.pedido.CartaoCompraRepository;
+import com.project.petvitta.service.AuditoriaService;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 

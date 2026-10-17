@@ -216,9 +216,8 @@ document.querySelectorAll(".form-retorno-estoque").forEach(function(form) {
     });
 });
 
-
 // Fechar ou cancelar o modal de estoque
-document.querySelectorAll(".btnFecharEstoque").forEach(function(botao) {
+document.querySelectorAll(".btnFecharModalEstoque").forEach(function(botao) {
     botao.addEventListener("click", cancelarMudancaStatus);
 });
 

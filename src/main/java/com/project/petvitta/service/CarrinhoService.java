@@ -3,10 +3,13 @@ package com.project.petvitta.service;
 import com.project.petvitta.model.carrinho.Carrinho;
 import com.project.petvitta.model.carrinho.ItemCarrinho;
 import com.project.petvitta.model.cliente.Cliente;
+import com.project.petvitta.model.cliente.Notificacao;
 import com.project.petvitta.model.produto.VariacaoProduto;
 import com.project.petvitta.repository.carrinho.CarrinhoRepository;
 import com.project.petvitta.repository.carrinho.ItemCarrinhoRepository;
+import com.project.petvitta.repository.cliente.NotificacaoRepository;
 import com.project.petvitta.repository.produto.VariacaoProdutoRepository;
+import com.project.petvitta.service.cliente.ClienteService;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
@@ -22,18 +25,20 @@ public class CarrinhoService {
     private final ItemCarrinhoRepository itemCarrinhoRepository;
     private final ClienteService clienteService;
     private final AuditoriaService auditoriaService;
+    private final NotificacaoRepository notificacaoRepository;
 
     public CarrinhoService(
             VariacaoProdutoRepository variacaoProdutoRepository,
             CarrinhoRepository carrinhoRepository,
             ItemCarrinhoRepository itemCarrinhoRepository,
-            ClienteService clienteService, AuditoriaService auditoriaService
+            ClienteService clienteService, AuditoriaService auditoriaService, NotificacaoRepository notificacaoRepository
     ) {
         this.variacaoProdutoRepository = variacaoProdutoRepository;
         this.carrinhoRepository = carrinhoRepository;
         this.itemCarrinhoRepository = itemCarrinhoRepository;
         this.clienteService = clienteService;
         this.auditoriaService = auditoriaService;
+        this.notificacaoRepository = notificacaoRepository;
     }
 
     @Transactional
@@ -67,7 +72,7 @@ public class CarrinhoService {
             LocalDateTime agora = LocalDateTime.now();
 
             carrinho.setDataCriacao(agora);
-            carrinho.setDataExpiracao(agora.plusMinutes(1200));
+            carrinho.setDataExpiracao(agora.plusMinutes(20));
             carrinho.setCliente(cliente);
 
             carrinho = carrinhoRepository.save(carrinho);
@@ -99,7 +104,7 @@ public class CarrinhoService {
                         ", quantidade: " + quantidade
         );
 
-        carrinho.setDataExpiracao(LocalDateTime.now().plusMinutes(1200));
+        carrinho.setDataExpiracao(LocalDateTime.now().plusMinutes(20));
 
         variacao.setEstoqueAtual(variacao.getEstoqueAtual() - quantidade);
 
@@ -170,7 +175,7 @@ public class CarrinhoService {
 
         itemCarrinhoRepository.delete(item);
 
-        carrinho.setDataExpiracao(LocalDateTime.now().plusMinutes(1200));
+        carrinho.setDataExpiracao(LocalDateTime.now().plusMinutes(20));
 
         carrinhoRepository.save(carrinho);
     }
@@ -211,7 +216,23 @@ public class CarrinhoService {
         LocalDateTime agora = LocalDateTime.now();
         LocalDateTime aviso = carrinho.getDataExpiracao().minusMinutes(5);
 
-        return agora.isAfter(aviso) && agora.isBefore(carrinho.getDataExpiracao());
+        boolean faltamCincoMinutos = agora.isAfter(aviso) && agora.isBefore(carrinho.getDataExpiracao());
+
+        if (faltamCincoMinutos && carrinho.getItens() != null && !carrinho.getItens().isEmpty()) {
+
+            Notificacao notificacao = new Notificacao();
+
+            notificacao.setTitulo("Seu carrinho expira em 5 minutos!");
+            notificacao.setMensagem(
+                    "Atenção! Seu carrinho está prestes a expirar. " +
+                            "Finalize sua compra para não perder seus produtos."
+            );
+            notificacao.setCliente(carrinho.getCliente());
+
+            notificacaoRepository.save(notificacao);
+        }
+
+        return faltamCincoMinutos;
     }
 
     @Transactional
@@ -256,7 +277,7 @@ public class CarrinhoService {
         );
 
         item.setQuantidade(quantidade);
-        carrinho.setDataExpiracao(LocalDateTime.now().plusMinutes(1200));
+        carrinho.setDataExpiracao(LocalDateTime.now().plusMinutes(20));
 
         variacaoProdutoRepository.save(variacao);
         itemCarrinhoRepository.save(item);
@@ -330,7 +351,7 @@ public class CarrinhoService {
 
         item.setVariacao(novaVariacao);
 
-        carrinho.setDataExpiracao(LocalDateTime.now().plusMinutes(1200));
+        carrinho.setDataExpiracao(LocalDateTime.now().plusMinutes(20));
 
         variacaoProdutoRepository.save(variacaoAtual);
         variacaoProdutoRepository.save(novaVariacao);

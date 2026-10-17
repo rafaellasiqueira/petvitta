@@ -1,4 +1,4 @@
-package com.project.petvitta.service;
+package com.project.petvitta.service.cliente;
 
 import com.project.petvitta.model.cliente.Cupom;
 import com.project.petvitta.model.dominio.TipoCupom;
@@ -8,7 +8,6 @@ import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -61,18 +60,6 @@ public class CupomService {
         for (int i = 0; i < cuponsIds.size(); i++) {
             Cupom cupom = cupomRepository.findById(cuponsIds.get(i))
                     .orElseThrow(() -> new IllegalArgumentException("Cupom não encontrado."));
-
-            if (!cupom.isAtivo()) {
-                throw new IllegalArgumentException(
-                        "O cupom " + cupom.getCodigo() + " não está disponível."
-                );
-            }
-
-            if (cupom.getValidade().isBefore(LocalDateTime.now())) {
-                throw new IllegalArgumentException(
-                        "O cupom " + cupom.getCodigo() + " está vencido."
-                );
-            }
 
             if ("Promocional".equalsIgnoreCase(cupom.getTipoCupom().getNome())) {
                 promocionais++;

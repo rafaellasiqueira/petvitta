@@ -7,7 +7,6 @@ import com.project.petvitta.dto.SolicitarTrocaDTO;
 import com.project.petvitta.model.cliente.Cupom;
 import com.project.petvitta.model.cliente.Notificacao;
 import com.project.petvitta.model.dominio.MotivoTroca;
-import com.project.petvitta.model.dominio.StatusPedido;
 import com.project.petvitta.model.dominio.StatusTroca;
 import com.project.petvitta.model.pedido.ItemPedido;
 import com.project.petvitta.model.pedido.Pedido;
@@ -22,9 +21,11 @@ import com.project.petvitta.repository.pedido.PedidoRepository;
 import com.project.petvitta.repository.produto.VariacaoProdutoRepository;
 import com.project.petvitta.repository.troca.ItemTrocaRepository;
 import com.project.petvitta.repository.troca.TrocaRepository;
+import com.project.petvitta.service.cliente.CupomService;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -166,7 +167,7 @@ public class TrocaService {
     }
 
     public List<Troca> filtrarTroca(String status, String pesquisa) {
-        List<Troca> trocas = trocaRepository.findAll();
+        List<Troca> trocas = trocaRepository.findAllByOrderByIdDesc();
         List<Troca> resultado = new ArrayList<>();
 
         for (int i = 0; i < trocas.size(); i++) {
@@ -336,9 +337,25 @@ public class TrocaService {
 
         trocaRepository.save(troca);
 
-        // Gera o cupom com o valor total da compra
-        return cupomService.gerarCupomTroca(
-                troca.getPedido().getTotal()
-        );
+        // Calcula o valor somente dos itens solicitados para troca
+        BigDecimal valorTotal = BigDecimal.ZERO;
+
+        for (int i = 0; i < troca.getItens().size(); i++) {
+            ItemTroca itemTroca = troca.getItens().get(i);
+
+            BigDecimal valorUnitario = itemTroca
+                    .getItemPedido()
+                    .getVariacaoProduto()
+                    .getValorVenda();
+
+            BigDecimal valorQuantidade = valorUnitario.multiply(
+                    BigDecimal.valueOf(itemTroca.getQuantidade())
+            );
+
+            valorTotal = valorTotal.add(valorQuantidade);
+        }
+
+        // Gera o cupom com o valor dos itens da troca
+        return cupomService.gerarCupomTroca(valorTotal);
     }
 }

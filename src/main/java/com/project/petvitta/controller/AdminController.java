@@ -1,24 +1,19 @@
 package com.project.petvitta.controller;
 
-import com.project.petvitta.dto.ItemRetornoEstoqueDTO;
 import com.project.petvitta.dto.RetornoEstoqueDTO;
-import com.project.petvitta.dto.SolicitarTrocaDTO;
 import com.project.petvitta.model.cliente.Cliente;
 import com.project.petvitta.model.cliente.Cupom;
-import com.project.petvitta.model.dominio.StatusPedido;
 import com.project.petvitta.model.pedido.Pedido;
-import com.project.petvitta.model.produto.Produto;
 import com.project.petvitta.model.produto.VariacaoProduto;
 import com.project.petvitta.model.troca.Troca;
 import com.project.petvitta.service.*;
-import jakarta.validation.Valid;
+import com.project.petvitta.service.cliente.ClienteService;
+import com.project.petvitta.service.pedido.PedidoService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 

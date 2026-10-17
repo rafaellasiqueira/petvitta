@@ -1,4 +1,4 @@
-package com.project.petvitta.service;
+package com.project.petvitta.service.cliente;
 
 import com.project.petvitta.model.cliente.Notificacao;
 import com.project.petvitta.repository.cliente.NotificacaoRepository;

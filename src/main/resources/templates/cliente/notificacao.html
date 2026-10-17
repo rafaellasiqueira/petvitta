@@ -43,7 +43,8 @@
                 <p th:text="${notificacao.mensagem}"></p>
 
                 <a th:if="${!notificacao.lida}"
-                   th:href="@{/cliente/notificacao/lida/{id}(id=${notificacao.id})}">
+                   th:href="@{/cliente/notificacao/lida/{id}(id=${notificacao.id})}"
+                    class="marcar-lida">
                     Marcar como lida
                 </a>
 

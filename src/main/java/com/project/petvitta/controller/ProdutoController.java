@@ -1,11 +1,9 @@
 package com.project.petvitta.controller;
 
-import com.project.petvitta.model.carrinho.Carrinho;
-import com.project.petvitta.model.cliente.Cliente;
 import com.project.petvitta.model.produto.Produto;
 import com.project.petvitta.service.CarrinhoService;
-import com.project.petvitta.service.ClienteService;
-import com.project.petvitta.service.NotificacaoService;
+import com.project.petvitta.service.cliente.ClienteService;
+import com.project.petvitta.service.cliente.NotificacaoService;
 import com.project.petvitta.service.ProdutoService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

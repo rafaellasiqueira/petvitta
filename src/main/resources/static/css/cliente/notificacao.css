@@ -44,3 +44,13 @@ h1 {
     font-family: 'Nunito', sans-serif;
     font-weight: 500;
 }
+
+.marcar-lida {
+    font-family: 'Fredoka', sans-serif;
+    background: white;
+    border: none;
+    font-size: 15px;
+    font-weight: 400;
+    color: #5F7370;
+    text-decoration: underline;
+}

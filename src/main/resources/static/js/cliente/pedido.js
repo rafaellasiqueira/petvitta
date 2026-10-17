@@ -40,7 +40,7 @@ document.addEventListener('DOMContentLoaded', function () {
         botao.addEventListener('click', function () {
             const modal = this.closest('.modal');
 
-            modal.querySelectorAll('input[type="checkbox"]').forEach(function (input) {
+            modal.querySelectorAll('.checkbox-troca').forEach(function (input) {
                 input.checked = false;
             });
 
@@ -48,9 +48,9 @@ document.addEventListener('DOMContentLoaded', function () {
                 input.value = 1;
             });
 
-            modal.querySelector('#motivoTroca').selectedIndex = 0;
-            modal.querySelector('#justificativaTroca').value = '';
-            modal.querySelector('#mensagemErroTroca').textContent = '';
+            modal.querySelector('.motivo-troca').selectedIndex = 0;
+            modal.querySelector('.justificativa-troca').value = '';
+            modal.querySelector('.mensagem-erro-troca').textContent = '';
 
             modal.classList.remove('active');
         });
@@ -61,7 +61,7 @@ document.addEventListener('DOMContentLoaded', function () {
         botao.addEventListener('click', function () {
             const modal = this.closest('.modal');
 
-            modal.querySelectorAll('input[type="checkbox"]').forEach(function (input) {
+            modal.querySelectorAll('.checkbox-troca').forEach(function (input) {
                 input.checked = false;
             });
 
@@ -69,9 +69,9 @@ document.addEventListener('DOMContentLoaded', function () {
                 input.value = 1;
             });
 
-            modal.querySelector('#motivoTroca').selectedIndex = 0;
-            modal.querySelector('#justificativaTroca').value = '';
-            modal.querySelector('#mensagemErroTroca').textContent = '';
+            modal.querySelector('.motivo-troca').selectedIndex = 0;
+            modal.querySelector('.justificativa-troca').value = '';
+            modal.querySelector('.mensagem-erro-troca').textContent = '';
 
             modal.classList.remove('active');
         });

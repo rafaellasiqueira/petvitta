@@ -1,4 +1,4 @@
-package com.project.petvitta.service;
+package com.project.petvitta.service.pedido;
 
 import com.project.petvitta.dto.FinalizarCompraDTO;
 import com.project.petvitta.model.carrinho.Carrinho;
@@ -16,9 +16,9 @@ import com.project.petvitta.repository.cliente.EnderecoRepository;
 import com.project.petvitta.repository.dominio.StatusPedidoRepository;
 import com.project.petvitta.repository.dominio.TipoCupomRepository;
 import com.project.petvitta.repository.pedido.*;
+import com.project.petvitta.service.cliente.CupomService;
 import jakarta.servlet.http.HttpSession;
 
-import java.util.Set;
 import java.util.concurrent.*;
 
 import org.springframework.stereotype.Service;
@@ -84,7 +84,7 @@ public class PedidoService {
     }
 
     public List<Pedido> listarPorCliente(Long clienteId) {
-        return pedidoRepository.findByClienteId(clienteId);
+        return pedidoRepository.findByClienteIdOrderByIdDesc(clienteId);
     }
 
     public List<Pedido> buscarPorCodigo(String codigo, Long clienteId) {
@@ -180,9 +180,22 @@ public class PedidoService {
         // Calcular total
         BigDecimal valorCompra = subtotal.add(frete);
 
-        if (desconto.compareTo(valorCompra) > 0) {
+        boolean cupomVencido = false;
+
+        for (int i = 0; i < cupons.size(); i++) {
+            Cupom cupom = cupons.get(i);
+
+            if (cupom.getValidade().isBefore(LocalDateTime.now()) || !cupom.isAtivo()) {
+                cupomVencido = true;
+                break;
+            }
+        }
+
+        if (!cupomVencido &&  desconto.compareTo(valorCompra) > 0) {
             BigDecimal excedente = desconto.subtract(valorCompra);
+
             cupomService.gerarCupomTroca(excedente, session);
+
             desconto = valorCompra;
         }
 
@@ -414,7 +427,7 @@ public class PedidoService {
     }
 
     public List<Pedido> filtrarPedidos(String status, String pesquisa) {
-        List<Pedido> todos = pedidoRepository.findAll();
+        List<Pedido> todos = pedidoRepository.findAllByOrderByIdDesc();
         List<Pedido> resultado = new ArrayList<>();
 
         for (int i = 0; i < todos.size(); i++) {

@@ -1,8 +1,7 @@
 package com.project.petvitta.controller;
 
 import com.project.petvitta.dto.EnderecoDTO;
-import com.project.petvitta.model.pedido.EnderecoCompra;
-import com.project.petvitta.service.EnderecoService;
+import com.project.petvitta.service.cliente.EnderecoService;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
