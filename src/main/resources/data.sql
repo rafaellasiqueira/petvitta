@@ -197,5 +197,7 @@ INSERT IGNORE INTO status_troca (descricao) VALUES
 ('Em troca'),
 ('Troca Autorizada'),
 ('Troca Recusada'),
+('Item Enviado'),
+('Item Recebido'),
 ('Trocado');
 

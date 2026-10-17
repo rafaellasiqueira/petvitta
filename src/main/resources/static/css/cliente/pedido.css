@@ -28,6 +28,7 @@ h1 {
 /* Card pedido */
 .card-pedido {
     width: 100%;
+    box-sizing: border-box;
     background: #FFFFFF;
     border: 1px solid #E1E9E7;
     border-radius: 8px;
@@ -39,13 +40,18 @@ h1 {
     display: flex;
     align-items: flex-start;
     justify-content: space-between;
+    gap: 16px;
     padding: 0 2px 8px;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .informacoes-pedido {
     display: flex;
     flex-direction: column;
     gap: 4px;
+    flex: 1;
+    min-width: 0;
 }
 
 .informacoes-pedido h2 {
@@ -65,19 +71,32 @@ h1 {
 
 /* Status do pedido */
 .status-pedido {
-    display: flex;
+    display: inline-flex;
     align-items: center;
     justify-content: center;
-    padding: 6px 12px;
+
+    box-sizing: border-box;
+    width: fit-content;
+    min-width: max-content;
+    height: 32px;
+    padding: 0 12px;
+
+    white-space: nowrap;
+    flex-shrink: 0;
+
     color: #FFFFFF;
     border-radius: 8px;
     font-family: 'Nunito', sans-serif;
     font-size: 14px;
     font-weight: 500;
-    height: 32px;
+    line-height: 1;
 }
 
 .pagamento-recusado {
+    background: #EF2945;
+}
+
+.troca-recusada {
     background: #EF2945;
 }
 
@@ -102,19 +121,26 @@ h1 {
     background: #E1CE8A;
 }
 
-.troca-autorizada {
-    background: #0E1413;
-    color: white;
-}
-
-.troca-finalizada {
+.em-troca,
+.troca-autorizada,
+.item-enviado,
+.item-recebido-troca,
+.trocado {
     background: #0E1413;
     color: white;
 }
 
 .container-status-troca {
     display: flex;
+    align-items: center;
+    justify-content: flex-end;
     gap: 8px;
+    flex-shrink: 0;
+}
+
+.cabecalho-pedido > .status-pedido {
+    flex-shrink: 0;
+    margin-left: auto;
 }
 
 .btn-branco {
@@ -131,8 +157,23 @@ h1 {
     cursor: pointer;
 }
 
+.btn-enviado {
+    width: auto;
+    height: 32px;
+    font-family: 'Fredoka', sans-serif;
+    background: white;
+    border: 1px solid #0E1413;
+    border-radius: 8px;
+    padding: 0px 8px;
+    font-size: 14px;
+    font-weight: 500;
+    color: #0E1413;
+    cursor: pointer;
+}
+
 .btn-branco:hover,
-.btn-cancelar-pedido {
+.btn-cancelar-pedido:hover,
+.btn-enviado:hover {
     background: #EDF2F1;
 }
 
@@ -165,10 +206,8 @@ h1 {
     padding: 0 8px;
 }
 
-.produto-pedido {
+.produto {
     display: flex;
-    align-items: center;
-    min-height: 82px;
 }
 
 /* Imagem */

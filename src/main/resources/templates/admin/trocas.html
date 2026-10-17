@@ -39,11 +39,11 @@
                        th:value="${statusSelecionado}">
 
                 <div class="botoes">
-                    <button class="btn-filtro" data-status="Todos">Todos</button>
-                    <button class="btn-filtro" data-status="EmTroca">Em troca</button>
-                    <button class="btn-filtro" data-status="TrocaAutorizada">Troca autorizada</button>
-                    <button class="btn-filtro" data-status="TrocaRecusada">Troca recusada</button>
-                    <button class="btn-filtro" data-status="Trocado">Trocado</button>
+                    <button type="button" class="btn-filtro" data-status="Todos">Todos</button>
+                    <button type="button" class="btn-filtro" data-status="EmTroca">Em troca</button>
+                    <button type="button" class="btn-filtro" data-status="TrocaAutorizada">Troca autorizada</button>
+                    <button type="button" class="btn-filtro" data-status="TrocaRecusada">Troca recusada</button>
+                    <button type="button" class="btn-filtro" data-status="Trocado">Trocado</button>
                 </div>
 
                 <div class="pesquisa">
@@ -78,13 +78,14 @@
 
                         <!-- Produtos -->
                         <td class="col-produto">
-                        <span th:each="item, iteracao : ${troca.itens}"
+                        <div th:each="item, iteracao : ${troca.itens}"
                               th:if="${iteracao.index < 1}"
-                              th:text="${item.quantidade + 'x ' + item.itemPedido.variacaoProduto.produto.nome}">
-                        </span>
+                              th:text="${item.quantidade + 'x ' + item.itemPedido.variacaoProduto.produto.nome}"
+                              th:title="${item.itemPedido.variacaoProduto.produto.nome}">
+                        </div>
 
-                            <span th:if="${troca.itens.size() > 1}"
-                                  title="Existem mais produtos nesta troca">...</span>
+                            <div th:if="${troca.itens.size() > 1}"
+                                  title="Existem mais produtos nesta troca">...</div>
                         </td>
 
                         <!-- Motivo -->
@@ -134,12 +135,98 @@
                                th:data-cliente="${troca.cliente.nome}"
                                th:data-motivo="${troca.motivoTroca.descricao}"
                                th:data-justificativa="${troca.justificativaTroca}"
-                               th:data-solicitado="${#temporals.format(troca.dataSolicitacao, 'dd/MM/yyyy')}">
+                               th:data-solicitado="${#temporals.format(troca.dataSolicitacao, 'dd/MM/yyyy HH:mm')}"
+                               th:data-aprovado="${troca.dataAprovacao != null ? #temporals.format(troca.dataAprovacao, 'dd/MM/yyyy HH:mm') : ''}"
+                               th:data-reprovado="${troca.dataReprovacao != null ? #temporals.format(troca.dataReprovacao, 'dd/MM/yyyy HH:mm') : ''}"
+                               th:data-enviado="${troca.dataEnviado != null ? #temporals.format(troca.dataEnviado, 'dd/MM/yyyy HH:mm') : ''}"
+                               th:data-recebido="${troca.dataRecebido != null ? #temporals.format(troca.dataRecebido, 'dd/MM/yyyy HH:mm') : ''}"
+                               th:data-trocado="${troca.dataTrocado != null ? #temporals.format(troca.dataTrocado, 'dd/MM/yyyy HH:mm') : ''}">
                             </i>
                         </td>
                     </tr>
                     </tbody>
                 </table>
+
+                <div th:each="troca : ${trocas}">
+                    <div th:id="${'modalEstoque_' + troca.id}" class="modal">
+                        <div class="modalConteudo">
+
+                            <div class="modalCabecalho">
+                                <h2>Retorno ao Estoque</h2>
+                                <button type="button"
+                                        class="btn-fechar btnFecharModalEstoque">
+                                    &times;
+                                </button>
+
+                            </div>
+
+                            <form th:action="@{/admin/trocas/voltar-estoque}"
+                                  method="post"
+                                  class="form-retorno-estoque">
+
+                                <input type="hidden"
+                                       name="trocaId"
+                                       th:value="${troca.id}">
+
+                                <div class="modal-body">
+                                    <p>
+                                        Confira os itens recebidos e informe a quantidade
+                                        que deseja devolver ao estoque.
+                                    </p>
+
+                                    <div th:each="itemTroca : ${troca.itens}">
+                                        <div class="item-troca">
+
+                                            <input type="checkbox"
+                                                   class="checkbox-troca"
+                                                   th:value="${itemTroca.id}">
+
+                                            <div class="dados-item-troca">
+                                                <div class="informacoes-item">
+                                                    <h3 th:text="${itemTroca.itemPedido.variacaoProduto.produto.nome}"></h3>
+
+                                                    <p th:text="${'Tamanho: ' + itemTroca.itemPedido.variacaoProduto.tamanho}"></p>
+
+                                                    <p th:text="${'Quantidade da troca: ' + itemTroca.quantidade}"></p>
+                                                </div>
+
+                                                <div class="quantidade-troca">
+                                                    <label>Quantidade</label>
+
+                                                    <input type="number"
+                                                           th:id="${'quantidade_' + itemTroca.id}"
+                                                           min="1"
+                                                           th:max="${itemTroca.quantidade}"
+                                                           value="1">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <p class="mensagem-erro"></p>
+                                </div>
+
+                                <div class="modalBotoes">
+
+                                    <button type="submit"
+                                            name="retornarEstoque"
+                                            value="false"
+                                            class="btn-cancelar">
+                                        Não retornar ao estoque
+                                    </button>
+
+                                    <button type="submit"
+                                            name="retornarEstoque"
+                                            value="true"
+                                            class="btn-inativar-modal">
+                                        Confirmar retorno
+                                    </button>
+
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
 
             <!-- Sem resultados -->
             <div th:if="${trocas.isEmpty() and (pesquisa == null or pesquisa.isBlank()) and (statusSelecionado == null or statusSelecionado == '' or statusSelecionado == 'Todos')}" class="sem-resultados">
@@ -196,6 +283,16 @@
                             <span id="modalReprovacao"></span>
                         </p>
 
+                        <p id="secaoEnvio">
+                            <strong>Data de envio:</strong>
+                            <span id="modalEnviado"></span>
+                        </p>
+
+                        <p id="secaoRecebimento">
+                            <strong>Data de recebimento:</strong>
+                            <span id="modalRecebido"></span>
+                        </p>
+
                         <p id="secaoTroca">
                             <strong>Data da troca:</strong>
                             <span id="modalDataTroca"></span>
@@ -210,40 +307,6 @@
                             <p><strong>Produtos:</strong></p>
                             <div id="modalProdutos"></div>
                         </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- modal estoque -->
-            <div id="modalEstoque" class="modal">
-                <div class="modalConteudo">
-
-                    <div class="modalCabecalho">
-                        <h2>Retorno ao Estoque</h2>
-                        <button class="btn-fechar" id="btnFecharEstoque">&times;</button>
-                    </div>
-
-                    <div class="modal-body">
-                        <p>Informe a quantidade que será retornada ao estoque:</p>
-
-                        <div id="listaItensEstoque" style="margin-bottom: 20px;"></div>
-                        <button id="btnConfirmarEstoque" class="btn-confirmar">Confirmar</button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- modal itens cupons -->
-            <div id="modalResumo" class="modal">
-                <div class="modalConteudo">
-                    <div class="modalCabecalho">
-                        <h2>Resumo da Troca</h2>
-                        <button class="btn-fechar" id="btnFecharResumo">&times;</button>
-                    </div>
-                    <div class="modal-body">
-                        <p><strong>Itens recebidos:</strong></p>
-                        <ul id="resumoItens"></ul>
-                        <p><strong>Cupom de troca:</strong></p>
-                        <p id="resumoCupom"></p>
                     </div>
                 </div>
             </div>

@@ -1,6 +1,7 @@
 package com.project.petvitta.model.troca;
 
 import com.project.petvitta.model.cliente.Cliente;
+import com.project.petvitta.model.cliente.Notificacao;
 import com.project.petvitta.model.dominio.MotivoTroca;
 import com.project.petvitta.model.dominio.StatusPedido;
 import com.project.petvitta.model.dominio.StatusTroca;
@@ -36,6 +37,12 @@ public class Troca {
     private LocalDateTime dataReprovacao;
 
     @Column
+    private LocalDateTime dataEnviado;
+
+    @Column
+    private LocalDateTime dataRecebido;
+
+    @Column
     private LocalDateTime dataTrocado;
 
     @Column(nullable = false, length = 500)
@@ -62,6 +69,12 @@ public class Troca {
     @JoinColumn(name = "status_troca_id")
     private StatusTroca statusTroca;
 
+    @OneToMany(mappedBy = "troca",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true)
+    private List<Notificacao> notificacoes = new ArrayList<>();
+
+
     public List<String> getProximosStatus() {
         List<String> status = new ArrayList<>();
 
@@ -70,7 +83,11 @@ public class Troca {
             status.add("Troca Recusada");
         }
 
-        if (statusTroca.getDescricao().equals("Troca Autorizada")) {
+        if (statusTroca.getDescricao().equals("Item Enviado")) {
+            status.add("Item Recebido");
+        }
+
+        if (statusTroca.getDescricao().equals("Item Recebido")) {
             status.add("Trocado");
         }
 

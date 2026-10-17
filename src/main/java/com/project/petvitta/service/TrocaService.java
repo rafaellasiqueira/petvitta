@@ -1,7 +1,11 @@
 package com.project.petvitta.service;
 
+import com.project.petvitta.dto.ItemRetornoEstoqueDTO;
 import com.project.petvitta.dto.ItemTrocaDTO;
+import com.project.petvitta.dto.RetornoEstoqueDTO;
 import com.project.petvitta.dto.SolicitarTrocaDTO;
+import com.project.petvitta.model.cliente.Cupom;
+import com.project.petvitta.model.cliente.Notificacao;
 import com.project.petvitta.model.dominio.MotivoTroca;
 import com.project.petvitta.model.dominio.StatusPedido;
 import com.project.petvitta.model.dominio.StatusTroca;
@@ -10,10 +14,13 @@ import com.project.petvitta.model.pedido.Pedido;
 import com.project.petvitta.model.produto.VariacaoProduto;
 import com.project.petvitta.model.troca.ItemTroca;
 import com.project.petvitta.model.troca.Troca;
+import com.project.petvitta.repository.cliente.NotificacaoRepository;
 import com.project.petvitta.repository.dominio.MotivoTrocaRepository;
 import com.project.petvitta.repository.dominio.StatusTrocaRepository;
 import com.project.petvitta.repository.pedido.ItemPedidoRepository;
 import com.project.petvitta.repository.pedido.PedidoRepository;
+import com.project.petvitta.repository.produto.VariacaoProdutoRepository;
+import com.project.petvitta.repository.troca.ItemTrocaRepository;
 import com.project.petvitta.repository.troca.TrocaRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
@@ -30,22 +37,34 @@ public class TrocaService {
     private final PedidoRepository pedidoRepository;
     private final TrocaRepository trocaRepository;
     private final StatusTrocaRepository statusTrocaRepository;
+    private final ItemTrocaRepository itemTrocaRepository;
+    private final VariacaoProdutoRepository variacaoProdutoRepository;
+    private final CupomService cupomService;
+    private final NotificacaoRepository notificacaoRepository;
 
     public TrocaService(
             MotivoTrocaRepository motivoTrocaRepository,
             ItemPedidoRepository itemPedidoRepository,
             PedidoRepository pedidoRepository,
-            TrocaRepository trocaRepository, StatusTrocaRepository statusTrocaRepository) {
+            TrocaRepository trocaRepository, StatusTrocaRepository statusTrocaRepository, ItemTrocaRepository itemTrocaRepository, VariacaoProdutoRepository variacaoProdutoRepository, CupomService cupomService, NotificacaoRepository notificacaoRepository) {
 
         this.motivoTrocaRepository = motivoTrocaRepository;
         this.itemPedidoRepository = itemPedidoRepository;
         this.pedidoRepository = pedidoRepository;
         this.trocaRepository = trocaRepository;
         this.statusTrocaRepository = statusTrocaRepository;
+        this.itemTrocaRepository = itemTrocaRepository;
+        this.variacaoProdutoRepository = variacaoProdutoRepository;
+        this.cupomService = cupomService;
+        this.notificacaoRepository = notificacaoRepository;
     }
 
     public List<MotivoTroca> listarMotivoTroca() {
-        return motivoTrocaRepository.findAll();
+        return motivoTrocaRepository.findAllByOrderByIdAsc();
+    }
+
+    public List<Troca> buscarPorCliente(Long clienteId) {
+        return trocaRepository.findByClienteId(clienteId);
     }
 
     @Transactional
@@ -66,6 +85,11 @@ public class TrocaService {
                 .findById(dto.getPedidoId())
                 .orElseThrow(() -> new IllegalArgumentException(
                         "Pedido não encontrado."));
+
+        if (!pedido.getCliente().getId().equals(clienteId)) {
+            throw new IllegalArgumentException(
+                    "Você não tem permissão para solicitar troca deste pedido.");
+        }
 
         Troca troca = new Troca();
 
@@ -187,10 +211,26 @@ public class TrocaService {
 
         if(descricao.equals("Troca Autorizada")) {
             troca.setDataAprovacao(LocalDateTime.now());
+
+            Notificacao notificacao = new Notificacao();
+
+            notificacao.setTitulo("Sua solicitação de troca foi autorizada!");
+            notificacao.setMensagem(
+                    "A troca do seu pedido foi autorizada. " +
+                            "Acompanhe as próximas atualizações."
+            );
+            notificacao.setTroca(troca);
+            notificacao.setCliente(troca.getCliente());
+
+            notificacaoRepository.save(notificacao);
         }
 
         if(descricao.equals("Troca Recusada")) {
             troca.setDataReprovacao(LocalDateTime.now());
+        }
+
+        if(descricao.equals("Item Recebido")) {
+            troca.setDataRecebido(LocalDateTime.now());
         }
 
         if(descricao.equals("Trocado")) {
@@ -200,5 +240,105 @@ public class TrocaService {
         troca.setStatusTroca(status);
 
         trocaRepository.save(troca);
+    }
+
+    @Transactional
+    public Troca itemEnviado(Long trocaId, Long clienteId) {
+
+        Troca troca = trocaRepository
+                .findById(trocaId)
+                .orElseThrow(() -> new IllegalArgumentException(
+                        "Troca não encontrada."));
+
+        if (!troca.getCliente().getId().equals(clienteId)) {
+            throw new IllegalArgumentException(
+                    "Você não tem permissão para alterar esta troca.");
+        }
+
+        StatusTroca status = statusTrocaRepository
+                .findByDescricao("Item Enviado")
+                .orElseThrow(() ->
+                        new IllegalArgumentException(
+                                "Status da troca não encontrado."
+                        ));
+
+        troca.setStatusTroca(status);
+        troca.setDataEnviado(LocalDateTime.now());
+
+        return trocaRepository.save(troca);
+    }
+
+    @Transactional
+    public Cupom retornoItens(RetornoEstoqueDTO dto) {
+
+        if (dto == null) {
+            throw new IllegalArgumentException("Dados inválidos.");
+        }
+
+        Troca troca = trocaRepository
+                .findById(dto.getTrocaId())
+                .orElseThrow(() -> new IllegalArgumentException(
+                        "Troca não encontrada."));
+
+        // Só devolve os itens ao estoque se essa opção foi escolhida
+        if (dto.isRetornarEstoque()) {
+
+            if (dto.getItens() == null || dto.getItens().isEmpty()) {
+                throw new IllegalArgumentException(
+                        "Selecione pelo menos um item.");
+            }
+
+            for (int i = 0; i < dto.getItens().size(); i++) {
+
+                ItemRetornoEstoqueDTO itemDTO = dto.getItens().get(i);
+
+                ItemTroca itemTroca = itemTrocaRepository
+                        .findById(itemDTO.getItemTrocaId())
+                        .orElseThrow(() -> new IllegalArgumentException(
+                                "Item da troca não encontrado."));
+
+                if (!itemTroca.getTroca().getId().equals(troca.getId())) {
+                    throw new IllegalArgumentException(
+                            "O item não pertence a esta troca.");
+                }
+
+                Integer quantidade = itemDTO.getQuantidade();
+
+                if (quantidade == null || quantidade < 1
+                        || quantidade > itemTroca.getQuantidade()) {
+                    throw new IllegalArgumentException(
+                            "Quantidade inválida para retorno ao estoque.");
+                }
+
+                VariacaoProduto variacao = itemTroca.getItemPedido()
+                        .getVariacaoProduto();
+
+                variacao.setEstoqueAtual(
+                        variacao.getEstoqueAtual() + quantidade
+                );
+
+                variacaoProdutoRepository.save(variacao);
+            }
+        }
+
+        // Finaliza o recebimento da troca
+        LocalDateTime agora = LocalDateTime.now();
+
+        troca.setDataRecebido(agora);
+        troca.setDataTrocado(agora);
+
+        StatusTroca status = statusTrocaRepository
+                .findByDescricao("Trocado")
+                .orElseThrow(() -> new IllegalArgumentException(
+                        "Status Trocado não encontrado."));
+
+        troca.setStatusTroca(status);
+
+        trocaRepository.save(troca);
+
+        // Gera o cupom com o valor total da compra
+        return cupomService.gerarCupomTroca(
+                troca.getPedido().getTotal()
+        );
     }
 }

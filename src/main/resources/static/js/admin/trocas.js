@@ -31,12 +31,12 @@ const btnFecharModalStatus = document.getElementById("btnFecharModalStatus");
 const btnNaoStatus = document.getElementById("btnNaoStatus");
 const btnConfirmarStatus = document.getElementById("btnConfirmarStatus");
 
-
 const dropdowns = document.querySelectorAll(".dropdown");
 
 let dropdownSelecionado = null;
 let statusNovo = null;
 let statusOriginal = null;
+let modalEstoqueSelecionado = null;
 
 dropdowns.forEach(function(dropdown) {
     dropdown.addEventListener("change", function() {
@@ -44,7 +44,20 @@ dropdowns.forEach(function(dropdown) {
         statusNovo = this.value;
         statusOriginal = this.dataset.statusOriginal;
 
-        modalStatusTroca.classList.add("active");
+        if (statusNovo === "Item Recebido") {
+            const form = this.closest("form");
+            const trocaId = form.querySelector(
+                'input[name="trocaId"]'
+            ).value;
+
+            modalEstoqueSelecionado = document.getElementById(
+                "modalEstoque_" + trocaId
+            );
+
+            modalEstoqueSelecionado.classList.add("active");
+        } else {
+            modalStatusTroca.classList.add("active");
+        }
     });
 });
 
@@ -52,7 +65,11 @@ dropdowns.forEach(function(dropdown) {
 function cancelarMudancaStatus() {
     dropdownSelecionado.value = statusOriginal;
 
-    modalStatusTroca.classList.remove("active");
+    if (statusNovo === "Item Recebido") {
+        modalEstoqueSelecionado.classList.remove("active");
+    } else {
+        modalStatusTroca.classList.remove("active");
+    }
 }
 
 btnFecharModalStatus.addEventListener("click", cancelarMudancaStatus);
@@ -97,17 +114,29 @@ document.querySelectorAll(".btn-detalhes").forEach(function(botao) {
 
         document.getElementById("secaoAutorizacao").style.display = "none";
         document.getElementById("secaoReprovacao").style.display = "none";
+        document.getElementById("secaoEnvio").style.display = "none";
+        document.getElementById("secaoRecebimento").style.display = "none";
         document.getElementById("secaoTroca").style.display = "none";
         document.getElementById("secaoStatus").style.display = "none";
 
-        if (this.dataset.autorizacao) {
-            document.getElementById("modalAutorizacao").textContent = this.dataset.autorizacao;
+        if (this.dataset.aprovado) {
+            document.getElementById("modalAutorizacao").textContent = this.dataset.aprovado;
             document.getElementById("secaoAutorizacao").style.display = "block";
         }
 
-        if (this.dataset.reprovacao) {
-            document.getElementById("modalReprovacao").textContent = this.dataset.reprovacao;
+        if (this.dataset.reprovado) {
+            document.getElementById("modalReprovacao").textContent = this.dataset.reprovado;
             document.getElementById("secaoReprovacao").style.display = "block";
+        }
+
+        if (this.dataset.enviado) {
+            document.getElementById("modalEnviado").textContent = this.dataset.enviado;
+            document.getElementById("secaoEnvio").style.display = "block";
+        }
+
+        if (this.dataset.recebido) {
+            document.getElementById("modalRecebido").textContent = this.dataset.recebido;
+            document.getElementById("secaoRecebimento").style.display = "block";
         }
 
         if (this.dataset.trocado) {
@@ -122,3 +151,74 @@ document.querySelectorAll(".btn-detalhes").forEach(function(botao) {
 btnFecharModal.addEventListener("click", function() {
     modalTrocas.classList.remove("active");
 });
+
+// Formulario do estoque antes de enviar
+document.querySelectorAll(".form-retorno-estoque").forEach(function(form) {
+
+    form.addEventListener("submit", function(event) {
+
+        this.querySelectorAll(".dados-estoque").forEach(function(campo) {
+            campo.remove();
+        });
+
+        const mensagemErro = this.querySelector(".mensagem-erro");
+
+        mensagemErro.textContent = "";
+
+        // Verifica qual botão foi clicado
+        if (event.submitter.value === "false") {
+            return;
+        }
+
+        const selecionados = this.querySelectorAll(".checkbox-troca:checked");
+
+        if (selecionados.length === 0) {
+            event.preventDefault();
+            mensagemErro.textContent = "Selecione pelo menos um produto.";
+            return;
+        }
+
+        for (let i = 0; i < selecionados.length; i++) {
+
+            const itemId = selecionados[i].value;
+
+            const campoQuantidade = this.querySelector(
+                "#quantidade_" + itemId
+            );
+
+            const quantidade = Number(campoQuantidade.value);
+            const maximo = Number(campoQuantidade.max);
+
+            if (quantidade < 1 || quantidade > maximo) {
+                event.preventDefault();
+
+                mensagemErro.textContent =
+                    "Informe uma quantidade válida para cada produto.";
+
+                campoQuantidade.focus();
+                return;
+            }
+
+            const campoId = document.createElement("input");
+            campoId.type = "hidden";
+            campoId.name = "itens[" + i + "].itemTrocaId";
+            campoId.value = itemId;
+            campoId.className = "dados-estoque";
+            this.appendChild(campoId);
+
+            const campoQtd = document.createElement("input");
+            campoQtd.type = "hidden";
+            campoQtd.name = "itens[" + i + "].quantidade";
+            campoQtd.value = quantidade;
+            campoQtd.className = "dados-estoque";
+            this.appendChild(campoQtd);
+        }
+    });
+});
+
+
+// Fechar ou cancelar o modal de estoque
+document.querySelectorAll(".btnFecharEstoque").forEach(function(botao) {
+    botao.addEventListener("click", cancelarMudancaStatus);
+});
+

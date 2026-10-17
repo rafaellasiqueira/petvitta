@@ -19,9 +19,27 @@ document.addEventListener('DOMContentLoaded', function () {
 
             pedidoId.textContent = botao.dataset.pedido;
             pedidoData.textContent = botao.dataset.data;
-            pedidoStatus.textContent = botao.dataset.status;
-            pedidoPagamento.textContent = botao.dataset.pagamento;
-            pedidoItens.textContent = botao.dataset.itens;
+
+            if (botao.dataset.status === "Reprovada") {
+                pedidoStatus.textContent = "Reprovada";
+            } else {
+                pedidoStatus.textContent = "Aprovada";
+            }
+
+            const temCartao = botao.dataset.cartao === "true";
+            const temCupom = botao.dataset.cupom === "true";
+
+            let pagamento = "";
+
+            if (temCartao && temCupom) {
+                pagamento = "Cartão + Cupom";
+            } else if (temCartao) {
+                pagamento = "Cartão";
+            } else if (temCupom) {
+                pagamento = "Cupom";
+            }
+            pedidoPagamento.textContent = pagamento;
+
             pedidoValor.textContent = botao.dataset.valor;
 
             modal.classList.add('active');

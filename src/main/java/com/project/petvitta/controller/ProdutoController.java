@@ -5,6 +5,7 @@ import com.project.petvitta.model.cliente.Cliente;
 import com.project.petvitta.model.produto.Produto;
 import com.project.petvitta.service.CarrinhoService;
 import com.project.petvitta.service.ClienteService;
+import com.project.petvitta.service.NotificacaoService;
 import com.project.petvitta.service.ProdutoService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -21,15 +22,17 @@ public class ProdutoController {
     private final ProdutoService produtoService;
     private final ClienteService clienteService;
     private final CarrinhoService carrinhoService;
+    private final NotificacaoService notificacaoService;
 
     public ProdutoController(
             ProdutoService produtoService,
             ClienteService clienteService,
-            CarrinhoService carrinhoService
-    ) {
+            CarrinhoService carrinhoService, NotificacaoService notificacaoService
+            ) {
         this.produtoService = produtoService;
         this.clienteService = clienteService;
         this.carrinhoService = carrinhoService;
+        this.notificacaoService = notificacaoService;
     }
 
     @GetMapping("/cliente/produtos")
@@ -53,6 +56,9 @@ public class ProdutoController {
         if (!clienteService.clienteAtivo(1L)) {
             return "redirect:/cliente/inativo";
         }
+
+        boolean temNotificacaoNaoLida = notificacaoService.temNotificacaoNaoLida(1l);
+        model.addAttribute("temNotificacaoNaoLida", temNotificacaoNaoLida);
 
         model.addAttribute("tiposRacao", produtoService.listarTiposRacao());
         model.addAttribute("tiposPetisco", produtoService.listarTiposPetisco());

@@ -48,7 +48,6 @@
                         <button type="button" class="btn-filtro" data-status="Aprovada">Aprovada</button>
                         <button type="button" class="btn-filtro" data-status="Em transporte">Em transporte</button>
                         <button type="button" class="btn-filtro" data-status="Entregue">Entregue</button>
-                        <button type="button" class="btn-filtro" data-status="Cancelado">Cancelado</button>
                         <button type="button" class="btn-filtro" data-status="Reprovada">Reprovada</button>
                     </div>
 
@@ -118,7 +117,6 @@
                            th:data-aprovacao="${pedido.dataAprovacao != null ? #temporals.format(pedido.dataAprovacao, 'dd/MM/yyyy') : '-'}"
                            th:data-previsao="${pedido.dataPrevisaoEntrega != null ? #temporals.format(pedido.dataPrevisaoEntrega, 'dd/MM/yyyy') : '-'}"
                            th:data-entrega="${pedido.dataEntrega != null ? #temporals.format(pedido.dataEntrega, 'dd/MM/yyyy') : '-'}"
-                           th:data-cancelamento="${pedido.dataCancelamento != null ? #temporals.format(pedido.dataCancelamento, 'dd/MM/yyyy') : '-'}"
                            th:data-reprovacao="${pedido.dataReprovacaoPagamento != null ? #temporals.format(pedido.dataReprovacaoPagamento, 'dd/MM/yyyy') : '-'}"
                            th:data-subtotal="${'R$ ' + pedido.subtotal}"
                            th:data-descontos="${'R$ ' + pedido.desconto}"
@@ -165,11 +163,6 @@
                         <p id="secaoEntrega">
                             <strong>Data de entrega:</strong>
                             <span id="modalEntrega"></span>
-                        </p>
-
-                        <p id="secaoCancelamento">
-                            <strong>Data de cancelamento:</strong>
-                            <span id="modalCancelamento"></span>
                         </p>
 
                         <p id="secaoReprovacao">

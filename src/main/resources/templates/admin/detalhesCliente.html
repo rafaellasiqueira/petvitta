@@ -101,7 +101,7 @@
         <div class="card">
             <h2>Transações</h2>
 
-            <table>
+            <table th:if="${not #lists.isEmpty(pedidos)}">
                 <thead>
                 <tr>
                     <th>Pedido</th>
@@ -113,58 +113,43 @@
                 </thead>
 
                 <tbody>
-                <tr>
-                    <td>PED-2031</td>
-                    <td>12/07/2026</td>
-                    <td>R$ 396,35</td>
-                    <td>Aprovado</td>
-                    <td>
-                        <i class="fa-solid fa-eye btn-ver-pedido"
-                           title="Ver detalhes do pedido"
-                           data-pedido="PED-2031"
-                           data-data="12/07/2026"
-                           data-status="Concluído"
-                           data-pagamento="Cartão R$316,35 + cupom PROMO80"
-                           data-itens="Ração Cães Adultos Choice 10.1KG (1); Ração GoldeN Gatos 10.1KG (2)"
-                           data-valor="R$ 396,35"></i>
-                    </td>
-                </tr>
+                <tr th:each="pedido : ${pedidos}">
 
-                <tr>
-                    <td>PED-1988</td>
-                    <td>02/06/2026</td>
-                    <td>R$ 89,90</td>
-                    <td>Aprovado</td>
-                    <td>
-                        <i class="fa-solid fa-eye btn-ver-pedido"
-                           title="Ver detalhes do pedido"
-                           data-pedido="PED-1988"
-                           data-data="02/06/2026"
-                           data-status="Cancelado"
-                           data-pagamento="Cartão de crédito (Mastercard)"
-                           data-itens="Ração Cães Adultos Choice 10.1KG (1); Ração GoldeN Gatos 10.1KG (2)"
-                           data-valor="R$ 396,35"></i>
-                    </td>
-                </tr>
+                    <td th:text="${'PED-' + pedido.codigo}"></td>
 
-                <tr>
-                    <td>PED-1750</td>
-                    <td>15/03/2026</td>
-                    <td>R$ 210,00</td>
-                    <td>Aprovado</td>
+                    <td th:text="${#temporals.format(pedido.data, 'dd/MM/yyyy')}"></td>
+
+                    <td th:text="${'R$ ' + #numbers.formatDecimal(pedido.total, 1, 2, 'COMMA')}"></td>
+
+                    <td th:if="${pedido.statusPedido.descricao == 'Reprovada'}">
+                        Reprovada
+                    </td>
+
+                    <td th:unless="${pedido.statusPedido.descricao == 'Reprovada'}">
+                        Aprovada
+                    </td>
+
                     <td>
                         <i class="fa-solid fa-eye btn-ver-pedido"
                            title="Ver detalhes do pedido"
-                           data-pedido="PED-1750"
-                           data-data="15/03/2026"
-                           data-status="Concluído"
-                           data-pagamento="2 cartões: Visa (R$150,00) + Mastercard (R$60,00)"
-                           data-itens="Ração Cães Adultos Choice 10.1KG (1); Ração GoldeN Gatos 10.1KG (2)"
-                           data-valor="R$ 396,35"></i>
+                           th:data-pedido="${pedido.codigo}"
+                           th:data-data="${#temporals.format(pedido.data, 'dd/MM/yyyy')}"
+                           th:data-status="${pedido.statusPedido.descricao}"
+                           th:data-cartao="${not #lists.isEmpty(pedido.pagamentos)}"
+                           th:data-cupom="${not #lists.isEmpty(pedido.cupons)}"
+                           th:data-valor="${'R$ ' + #numbers.formatDecimal(pedido.total, 1, 2, 'COMMA')}">
+                        </i>
                     </td>
                 </tr>
                 </tbody>
             </table>
+
+            <!-- Sem resultados -->
+            <div th:if="${pedidos.isEmpty()}"
+                 class="sem-resultados">
+                <h2>Nenhuma transação realizada ainda</h2>
+                <p>As compras realizadas por este cliente aparecerão aqui.</p>
+            </div>
         </div>
     </div>
 </div>
@@ -182,7 +167,6 @@
             <p><strong>Data:</strong> <span id="modalPedidoData"></span></p>
             <p><strong>Status:</strong> <span id="modalPedidoStatus"></span></p>
             <p><strong>Forma de pagamento:</strong> <span id="modalPedidoPagamento"></span></p>
-            <p><strong>Itens:</strong> <span id="modalPedidoItens"></span></p>
             <p><strong>Valor total:</strong> <span id="modalPedidoValor"></span></p>
         </div>
     </div>

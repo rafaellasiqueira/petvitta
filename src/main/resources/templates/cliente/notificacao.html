@@ -29,28 +29,34 @@
 
     <main class="conteudo">
         <div class="container-principal">
+
             <div class="notificacao-cabecalho">
-                <h1>Notificação</h1>
+                <h1>Notificações</h1>
             </div>
 
+            <!-- Notificações cadastradas -->
             <div class="card"
-                 th:if="${avisoExpiracao}">
-                <h2>Atenção!</h2>
+                 th:each="notificacao : ${notificacoes}">
 
-                <p>Seu carrinho irá expirar em 5 minutos.</p>
+                <h2 th:text="${notificacao.titulo}"></h2>
+
+                <p th:text="${notificacao.mensagem}"></p>
+
+                <a th:if="${!notificacao.lida}"
+                   th:href="@{/cliente/notificacao/lida/{id}(id=${notificacao.id})}">
+                    Marcar como lida
+                </a>
 
             </div>
 
+            <!-- Quando não houver nenhuma notificação -->
             <div class="sem-resultados"
-                 th:if="${!avisoExpiracao}">
-
+                 th:if="${#lists.isEmpty(notificacoes)}">
                 <h2>Nenhuma notificação</h2>
-
                 <p>Você não possui nenhuma notificação no momento.</p>
-
             </div>
-        </div>
 
+        </div>
     </main>
 </div>
 

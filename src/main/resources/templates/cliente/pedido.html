@@ -66,20 +66,92 @@
                     <div class="informacoes-pedido">
                         <h2 th:text="${'PED-' + pedido.codigo}"></h2>
 
-                        <p th:text="${'Pedido feito em: ' + #temporals.format(pedido.data, 'dd/MM/yyyy')}"></p>
+                        <p th:text="${'Pedido feito em: ' + #temporals.format(pedido.data, 'dd/MM/yyyy HH:mm')}"></p>
 
                         <p th:if="${pedido.statusPedido.descricao == 'Aprovada'}"
-                           th:text="${'Pagamento aprovado em: ' + #temporals.format(pedido.dataAprovacao, 'dd/MM/yyyy')}"></p>
+                           th:text="${'Pagamento aprovado em: ' + #temporals.format(pedido.dataAprovacao, 'dd/MM/yyyy HH:mm')}"></p>
 
                         <p th:if="${pedido.statusPedido.descricao == 'Reprovada'}"
-                           th:text="${'Pagamento reprovado em: ' + #temporals.format(pedido.dataReprovacaoPagamento, 'dd/MM/yyyy')}"></p>
+                           th:text="${'Pagamento reprovado em: ' + #temporals.format(pedido.dataReprovacaoPagamento, 'dd/MM/yyyy HH:mm')}"></p>
 
                         <p th:if="${pedido.statusPedido.descricao == 'Em transporte'}"
-                           th:text="${'Previsão de entrega: ' + #temporals.format(pedido.dataPrevisaoEntrega, 'dd/MM/yyyy')}"></p>
+                           th:text="${'Previsão de entrega: ' + #temporals.format(pedido.dataPrevisaoEntrega, 'dd/MM/yyyy HH:mm')}"></p>
 
                         <p th:if="${pedido.statusPedido.descricao == 'Entregue'}"
-                           th:text="${'Entregue em: ' + #temporals.format(pedido.dataEntrega, 'dd/MM/yyyy')}"></p>
+                           th:text="${'Entregue em: ' + #temporals.format(pedido.dataEntrega, 'dd/MM/yyyy HH:mm')}"></p>
+
+                        <p th:each="troca : ${trocas}"
+                           th:if="${troca.pedido.id == pedido.id and troca.statusTroca.descricao == 'Em troca'}"
+                           th:text="${'Troca solicitada em: ' + #temporals.format(troca.dataSolicitacao, 'dd/MM/yyyy HH:mm')}">
+                        </p>
+
+                        <p th:each="troca : ${trocas}"
+                           th:if="${troca.pedido.id == pedido.id and troca.statusTroca.descricao == 'Troca Autorizada'}"
+                           th:text="${'Troca autorizada em: ' + #temporals.format(troca.dataAprovacao, 'dd/MM/yyyy HH:mm')}">
+                        </p>
+
+                        <p th:each="troca : ${trocas}"
+                           th:if="${troca.pedido.id == pedido.id and troca.statusTroca.descricao == 'Troca Recusada'}"
+                           th:text="${'Troca recusada em: ' + #temporals.format(troca.dataReprovacao, 'dd/MM/yyyy HH:mm')}">
+                        </p>
+
+                        <p th:each="troca : ${trocas}"
+                           th:if="${troca.pedido.id == pedido.id and troca.statusTroca.descricao == 'Item Enviado'}"
+                           th:text="${'Produto enviado em: ' + #temporals.format(troca.dataEnviado, 'dd/MM/yyyy HH:mm')}">
+                        </p>
+
+                        <p th:each="troca : ${trocas}"
+                           th:if="${troca.pedido.id == pedido.id and troca.statusTroca.descricao == 'Item Recebido'}"
+                           th:text="${'Produto recebido em: ' + #temporals.format(troca.dataRecebido, 'dd/MM/yyyy HH:mm')}">
+                        </p>
+
+                        <p th:each="troca : ${trocas}"
+                           th:if="${troca.pedido.id == pedido.id and troca.statusTroca.descricao == 'Trocado'}"
+                           th:text="${'Troca concluída em: ' + #temporals.format(troca.dataTrocado, 'dd/MM/yyyy HH:mm')}">
+                        </p>
                     </div>
+
+                    <!-- Em troca -->
+                    <span th:each="troca : ${trocas}"
+                          th:if="${troca.pedido.id == pedido.id and troca.statusTroca.descricao == 'Em troca'}"
+                          class="status-pedido em-troca">Em troca</span>
+
+                    <!-- Troca Autorizada -->
+                    <div th:each="troca : ${trocas}"
+                         th:if="${troca.pedido.id == pedido.id and troca.statusTroca.descricao == 'Troca Autorizada'}"
+                         class="container-status-troca">
+
+                        <span class="status-pedido troca-autorizada">Troca Autorizada</span>
+
+                        <form th:action="@{/cliente/troca/item-enviado}" method="post">
+                            <input type="hidden" name="trocaId" th:value="${troca.id}">
+
+                            <button type="submit" class="btn-enviado">
+                                Item enviado
+                            </button>
+                        </form>
+                    </div>
+
+                    <!-- Troca Recusada -->
+                    <span th:each="troca : ${trocas}"
+                          th:if="${troca.pedido.id == pedido.id and troca.statusTroca.descricao == 'Troca Recusada'}"
+                          class="status-pedido troca-recusada">
+                        Troca Recusada</span>
+
+                    <!-- Item Enviado -->
+                    <span th:each="troca : ${trocas}"
+                          th:if="${troca.pedido.id == pedido.id and troca.statusTroca.descricao == 'Item Enviado'}"
+                          class="status-pedido item-enviado">Item Enviado</span>
+
+                    <!-- Item Recebido -->
+                    <span th:each="troca : ${trocas}"
+                          th:if="${troca.pedido.id == pedido.id and troca.statusTroca.descricao == 'Item Recebido'}"
+                          class="status-pedido item-recebido-troca">Item Recebido</span>
+
+                    <!-- Trocado -->
+                    <span th:each="troca : ${trocas}"
+                          th:if="${troca.pedido.id == pedido.id and troca.statusTroca.descricao == 'Trocado'}"
+                          class="status-pedido trocado">Trocado</span>
 
                     <!-- Pagamento recusado -->
                     <span th:if="${pedido.statusPedido.descricao == 'Reprovada'}"
@@ -89,12 +161,16 @@
                     <div th:if="${pedido.statusPedido.descricao == 'Entregue'}"
                          class="container-status-troca">
 
-                        <span class="status-pedido entregue">Entregue</span>
+                        <span th:if="${trocas.?[pedido.id == #vars.pedido.id].isEmpty()}"
+                              class="status-pedido entregue">
+                            Entregue
+                        </span>
 
                         <button type="button"
                                 class="btn-branco btn-solicitar-troca"
                                 th:data-pedido-id="${pedido.id}"
-                                th:data-modal-id="${'modalSolicitarTroca_' + pedido.id}">
+                                th:data-modal-id="${'modalSolicitarTroca_' + pedido.id}"
+                                th:if="${trocas.?[pedido.id == #vars.pedido.id].isEmpty()}">
                             Solicitar troca
                         </button>
                     </div>

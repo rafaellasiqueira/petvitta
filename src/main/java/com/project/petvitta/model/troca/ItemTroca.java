@@ -18,9 +18,6 @@ public class ItemTroca {
     @Column(nullable = false)
     private Integer quantidade;
 
-    @Column(nullable = false)
-    private boolean voltarEstoque = false;
-
     @ManyToOne
     @JoinColumn(name = "troca_id", nullable = false)
     private Troca troca;

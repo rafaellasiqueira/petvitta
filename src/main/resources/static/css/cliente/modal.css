@@ -304,6 +304,7 @@
     font-family: 'Nunito', sans-serif;
     font-size: 14px;
     color: #60716E;
+    margin-bottom: 0px;
 }
 
 /* Quantidade */
@@ -318,6 +319,7 @@
     font-size: 14px;
     font-weight: 400;
     color: #3A4A48;
+    margin: 8px 0px 0px 0px;
 }
 
 .quantidade-troca input {

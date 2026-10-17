@@ -111,26 +111,38 @@ public class CupomService {
         }
     }
 
-    public void gerarCupomTroca(BigDecimal valor, HttpSession session) {
+    public Cupom gerarCupomTroca(BigDecimal valor) {
+
         Cupom cupom = new Cupom();
 
+        String numero = String.valueOf(System.currentTimeMillis());
+
         cupom.setCodigo(
-                "TROCA - " + String.valueOf(System.currentTimeMillis()).substring(
-                        String.valueOf(System.currentTimeMillis()).length() - 5
-                )
+                "TROCA - " + numero.substring(numero.length() - 5)
         );
 
         cupom.setValor(valor);
         cupom.setValidade(LocalDateTime.now().plusDays(120));
 
         TipoCupom tipoTroca = tipoCupomRepository.findById(2L)
-                .orElseThrow(() -> new IllegalArgumentException("Tipo de cupom não encontrado."));
+                .orElseThrow(() ->
+                        new IllegalArgumentException(
+                                "Tipo de cupom não encontrado."
+                        ));
 
         cupom.setTipoCupom(tipoTroca);
 
-        cupomRepository.save(cupom);
+        return cupomRepository.save(cupom);
+    }
 
-        session.setAttribute("cupomTrocaGerado", cupom.getCodigo());
+    public void gerarCupomTroca(BigDecimal valor, HttpSession session) {
+
+        Cupom cupom = gerarCupomTroca(valor);
+
+        session.setAttribute(
+                "cupomTrocaGerado",
+                cupom.getCodigo()
+        );
     }
 
 }

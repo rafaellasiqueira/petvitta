@@ -5,6 +5,7 @@ import com.project.petvitta.model.carrinho.ItemCarrinho;
 import com.project.petvitta.model.cliente.Cliente;
 import com.project.petvitta.service.CarrinhoService;
 import com.project.petvitta.service.ClienteService;
+import com.project.petvitta.service.NotificacaoService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,10 +20,12 @@ import java.util.List;
 public class CarrinhoController {
     private final CarrinhoService carrinhoService;
     private final ClienteService clienteService;
+    private final NotificacaoService notificacaoService;
 
-    public CarrinhoController(CarrinhoService carrinhoService, ClienteService clienteService) {
+    public CarrinhoController(CarrinhoService carrinhoService, ClienteService clienteService, NotificacaoService notificacaoService) {
         this.carrinhoService = carrinhoService;
         this.clienteService = clienteService;
+        this.notificacaoService = notificacaoService;
     }
 
     @PostMapping("/cliente/carrinho/adicionar")
@@ -129,6 +132,10 @@ public class CarrinhoController {
     @GetMapping("/cliente/carrinho")
     public String carrinho(Model model) {
         Cliente cliente = clienteService.buscarPorId(1L);
+
+        boolean temNotificacaoNaoLida = notificacaoService.temNotificacaoNaoLida(1l);
+        model.addAttribute("temNotificacaoNaoLida", temNotificacaoNaoLida);
+
         Carrinho carrinho = carrinhoService.buscarPorCliente(cliente.getId());
         List<ItemCarrinho> itensExpirados = carrinhoService.verificarExpiracao(carrinho);
 

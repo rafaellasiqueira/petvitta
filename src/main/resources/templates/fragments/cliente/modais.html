@@ -553,7 +553,9 @@
 <div th:fragment="modal-solicitar-troca(pedido)"
      th:id="${'modalSolicitarTroca_' + pedido.id}"
      class="modal">
-    <form th:action="@{/cliente/pedido/solicitar-troca}" method="post" id="formSolicitarTroca">
+    <form th:action="@{/cliente/pedido/solicitar-troca}"
+          method="post"
+          class="form-solicitar-troca">
 
         <input type="hidden"
                name="pedidoId"
@@ -608,7 +610,7 @@
                 <div class="campo-formulario">
                     <label>Motivo da troca</label>
 
-                    <select id="motivoTroca" name="motivoTroca" required>
+                    <select class="motivo-troca" name="motivoTroca" required>
                         <option value="" disabled selected hidden>Selecione o motivo</option>
 
                         <option th:each="motivo : ${motivosTroca}"
@@ -620,16 +622,16 @@
 
                 <!-- Justificativa -->
                 <div class="campo-formulario">
-                    <label for="justificativaTroca">Justificativa</label>
+                    <label>Justificativa</label>
 
-                    <textarea id="justificativaTroca"
+                    <textarea class="justificativa-troca"
                               name="justificativaTroca"
                               placeholder="Descreva o motivo da solicitação de troca"
                               maxlength="500"
                               required></textarea>
                 </div>
 
-                <p id="mensagemErroTroca" class="mensagem-erro-troca"></p>
+                <p class="mensagem-erro-troca"></p>
 
                 <!-- Botões -->
                 <div class="modalBotoes">

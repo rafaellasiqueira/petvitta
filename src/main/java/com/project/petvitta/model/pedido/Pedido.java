@@ -70,6 +70,9 @@ public class Pedido {
     @JoinColumn(name = "status_pedido_id")
     private StatusPedido statusPedido;
 
+    @OneToMany(mappedBy = "pedido")
+    private List<Pagamento> pagamentos = new ArrayList<>();
+
     @ManyToMany
     @JoinTable(
             name = "pedido_cupom",

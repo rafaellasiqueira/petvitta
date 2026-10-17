@@ -337,7 +337,4 @@ public class CarrinhoService {
         itemCarrinhoRepository.save(item);
         carrinhoRepository.save(carrinho);
     }
-
-
-
 }

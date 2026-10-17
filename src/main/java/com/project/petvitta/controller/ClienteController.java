@@ -6,19 +6,18 @@ import com.project.petvitta.model.carrinho.ItemCarrinho;
 import com.project.petvitta.model.cliente.Cliente;
 import com.project.petvitta.model.cliente.Cupom;
 import com.project.petvitta.model.cliente.Endereco;
+import com.project.petvitta.model.cliente.Notificacao;
 import com.project.petvitta.model.pedido.CartaoCompra;
 import com.project.petvitta.model.pedido.EnderecoCompra;
 import com.project.petvitta.model.pedido.Pedido;
+import com.project.petvitta.model.troca.Troca;
 import com.project.petvitta.service.*;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.ArrayList;
@@ -35,6 +34,7 @@ public class ClienteController {
     private final CarrinhoService carrinhoService;
     private final PedidoService pedidoService;
     private final TrocaService trocaService;
+    private final NotificacaoService notificacaoService;
 
     public ClienteController(
             ClienteService clienteService,
@@ -43,7 +43,7 @@ public class ClienteController {
             ProdutoService produtoService,
             CupomService cupomService,
             CarrinhoService carrinhoService,
-            PedidoService pedidoService, TrocaService trocaService
+            PedidoService pedidoService, TrocaService trocaService, NotificacaoService notificacaoService
     ) {
         this.clienteService = clienteService;
         this.enderecoService = enderecoService;
@@ -53,6 +53,7 @@ public class ClienteController {
         this.carrinhoService = carrinhoService;
         this.pedidoService = pedidoService;
         this.trocaService = trocaService;
+        this.notificacaoService = notificacaoService;
     }
 
     @ModelAttribute
@@ -179,6 +180,8 @@ public class ClienteController {
         }
 
         Cliente cliente = clienteService.buscarPorId(1L);
+        boolean temNotificacaoNaoLida = notificacaoService.temNotificacaoNaoLida(1l);
+        model.addAttribute("temNotificacaoNaoLida", temNotificacaoNaoLida);
 
         model.addAttribute(
                 "cliente",
@@ -505,6 +508,8 @@ public class ClienteController {
             Model model) {
 
         Cliente cliente = clienteService.buscarPorId(1L);
+        boolean temNotificacaoNaoLida = notificacaoService.temNotificacaoNaoLida(1l);
+        model.addAttribute("temNotificacaoNaoLida", temNotificacaoNaoLida);
 
         List<Pedido> pedidos;
 
@@ -523,6 +528,9 @@ public class ClienteController {
             }
         }
 
+        List<Troca> trocas = trocaService.buscarPorCliente(cliente.getId());
+
+        model.addAttribute("trocas", trocas);
         model.addAttribute("pedidos", pedidos);
         model.addAttribute("codigoPesquisa", codigo);
 
@@ -573,6 +581,37 @@ public class ClienteController {
         return "redirect:/cliente/pedido";
     }
 
+    @PostMapping("/cliente/troca/item-enviado")
+    public String itemEnviado(
+            Long trocaId,
+            RedirectAttributes redirectAttributes) {
+
+        try {
+            Cliente cliente = clienteService.buscarPorId(1L);
+
+            trocaService.itemEnviado(trocaId, cliente.getId());
+
+            redirectAttributes.addFlashAttribute(
+                    "mensagemToast",
+                    "Item enviado!");
+
+            redirectAttributes.addFlashAttribute(
+                    "tipoToast",
+                    "sucesso");
+
+        } catch (IllegalArgumentException e) {
+            redirectAttributes.addFlashAttribute(
+                    "mensagemToast",
+                    e.getMessage());
+
+            redirectAttributes.addFlashAttribute(
+                    "tipoToast",
+                    "erro");
+        }
+
+        return "redirect:/cliente/pedido";
+    }
+
 
     @GetMapping("/cliente/notificacao")
     public String notificacao(Model model) {
@@ -580,8 +619,24 @@ public class ClienteController {
         if (!verificarClienteAtivo()) {
             return "redirect:/cliente/inativo";
         }
+        Cliente cliente = clienteService.buscarPorId(1L);
+
+        boolean temNotificacaoNaoLida = notificacaoService.temNotificacaoNaoLida(1l);
+        model.addAttribute("temNotificacaoNaoLida", temNotificacaoNaoLida);
+
+        List<Notificacao> notificacoes = notificacaoService.buscarPorClienteId(cliente.getId());
+
+        model.addAttribute("notificacoes", notificacoes);
 
         return "cliente/notificacao";
+    }
+
+    @GetMapping("/cliente/notificacao/lida/{id}")
+    public String marcarComoLida(@PathVariable Long id) {
+
+        notificacaoService.marcarComoLida(id);
+
+        return "redirect:/cliente/notificacao";
     }
 
     @GetMapping("/cliente/inativo")

@@ -21,10 +21,9 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
-    const modalSolicitarTroca = document.getElementById('modalSolicitarTroca');
-    const btnFechar = document.getElementById('btnFecharModalTroca');
+    const btnFechar = document.querySelectorAll('.btn-fechar');
     const botoesSolicitarTroca = document.querySelectorAll('.btn-solicitar-troca');
-    const btnCancelar = document.getElementById('btnCancelarTroca');
+    const btnCancelar = document.querySelectorAll('.btn-cancelar');
 
     // Abrir o modal correspondente ao pedido
     botoesSolicitarTroca.forEach(function (botao) {
@@ -32,78 +31,106 @@ document.addEventListener('DOMContentLoaded', function () {
             const modalId = this.dataset.modalId;
             const modal = document.getElementById(modalId);
 
-            if (modal) {
-                modal.classList.add('active');
-            } else {
-                console.error('Modal não encontrado:', modalId);
-            }
+            modal.classList.add('active');
         });
     });
 
-    // Fechar modal pelo X ou pelo botão Cancelar
-    document.querySelectorAll('.btn-fechar, .btn-cancelar').forEach(function (botao) {
+    // Fechar pelo X
+    btnFechar.forEach(function (botao) {
         botao.addEventListener('click', function () {
             const modal = this.closest('.modal');
 
-            if (modal) {
-                modal.classList.remove('active');
-            }
+            modal.querySelectorAll('input[type="checkbox"]').forEach(function (input) {
+                input.checked = false;
+            });
+
+            modal.querySelectorAll('input[type="number"]').forEach(function (input) {
+                input.value = 1;
+            });
+
+            modal.querySelector('#motivoTroca').selectedIndex = 0;
+            modal.querySelector('#justificativaTroca').value = '';
+            modal.querySelector('#mensagemErroTroca').textContent = '';
+
+            modal.classList.remove('active');
         });
     });
 
+    // Fechar pelo botão Cancelar
+    btnCancelar.forEach(function (botao) {
+        botao.addEventListener('click', function () {
+            const modal = this.closest('.modal');
+
+            modal.querySelectorAll('input[type="checkbox"]').forEach(function (input) {
+                input.checked = false;
+            });
+
+            modal.querySelectorAll('input[type="number"]').forEach(function (input) {
+                input.value = 1;
+            });
+
+            modal.querySelector('#motivoTroca').selectedIndex = 0;
+            modal.querySelector('#justificativaTroca').value = '';
+            modal.querySelector('#mensagemErroTroca').textContent = '';
+
+            modal.classList.remove('active');
+        });
+    });
 
     // Formulario
-    document.getElementById('formSolicitarTroca').addEventListener('submit', function (event) {
-        event.preventDefault();
+    document.querySelectorAll('.form-solicitar-troca').forEach(function (form) {
 
-        document.querySelectorAll('.dados-troca').forEach(function (campo) {
-            campo.remove();
-        });
+        form.addEventListener('submit', function (event) {
+            event.preventDefault();
 
-        const selecionados = document.querySelectorAll('.checkbox-troca:checked');
-        const mensagemErroTroca = document.getElementById('mensagemErroTroca');
+            this.querySelectorAll('.dados-troca').forEach(function (campo) {
+                campo.remove();
+            });
 
-        if (selecionados.length === 0) {
-            mensagemErroTroca.textContent = 'Selecione pelo menos um produto para trocar.';
-            return;
-        }
+            const selecionados = this.querySelectorAll('.checkbox-troca:checked');
+            const mensagemErro = this.querySelector('.mensagem-erro-troca');
+            const justificativa = this.querySelector('.justificativa-troca');
 
-        const justificativaTroca = document.getElementById('justificativaTroca');
-
-        if (justificativaTroca.value.trim().length > 500) {
-            mensagemErroTroca.textContent = 'Digite até 500 caracteres.';
-            justificativaTroca.focus();
-            return;
-        }
-
-        for (let i = 0; i < selecionados.length; i++) {
-            const itemId = selecionados[i].value;
-            const campoQuantidade = document.getElementById('quantidade_' + itemId);
-            const quantidade = Number(campoQuantidade.value);
-            const maximo = Number(campoQuantidade.max);
-
-            if (quantidade < 1 || quantidade > maximo) {
-                mensagemErroTroca.textContent = 'Informe uma quantidade válida para cada produto.';
-                campoQuantidade.focus();
+            if (selecionados.length === 0) {
+                mensagemErro.textContent = 'Selecione pelo menos um produto para trocar.';
                 return;
             }
 
-            const campoId = document.createElement('input');
-            campoId.type = 'hidden';
-            campoId.name = 'itens[' + i + '].itemPedidoId';
-            campoId.value = itemId;
-            campoId.className = 'dados-troca';
-            this.appendChild(campoId);
+            for (let i = 0; i < selecionados.length; i++) {
+                const itemId = selecionados[i].value;
+                const campoQuantidade = this.querySelector('#quantidade_' + itemId);
+                const quantidade = Number(campoQuantidade.value);
+                const maximo = Number(campoQuantidade.max);
 
-            const campoQtd = document.createElement('input');
-            campoQtd.type = 'hidden';
-            campoQtd.name = 'itens[' + i + '].quantidade';
-            campoQtd.value = quantidade;
-            campoQtd.className = 'dados-troca';
-            this.appendChild(campoQtd);
-        }
+                if (quantidade < 1 || quantidade > maximo) {
+                    mensagemErro.textContent = 'Informe uma quantidade válida para cada produto.';
+                    campoQuantidade.focus();
+                    return;
+                }
 
-        this.submit();
+                const campoId = document.createElement('input');
+                campoId.type = 'hidden';
+                campoId.name = 'itens[' + i + '].itemPedidoId';
+                campoId.value = itemId;
+                campoId.className = 'dados-troca';
+                this.appendChild(campoId);
+
+                const campoQtd = document.createElement('input');
+                campoQtd.type = 'hidden';
+                campoQtd.name = 'itens[' + i + '].quantidade';
+                campoQtd.value = quantidade;
+                campoQtd.className = 'dados-troca';
+                this.appendChild(campoQtd);
+            }
+
+            if (justificativa.value.trim().length > 500) {
+                mensagemErro.textContent = 'Digite até 500 caracteres.';
+                justificativa.focus();
+                return;
+            }
+
+            this.submit();
+        });
     });
 });
 

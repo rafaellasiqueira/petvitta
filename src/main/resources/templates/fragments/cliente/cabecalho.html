@@ -37,11 +37,16 @@
                 <span>Meus pedidos</span>
             </a>
 
-            <!-- Notificacao -->
+            <!-- Notificação -->
             <a th:href="@{/cliente/notificacao}"
                class="menu-container">
+
                 <div class="icone-notificacao">
                     <i class="fa-solid fa-bell"></i>
+
+                    <span class="bolinha-notificacao"
+                          th:if="${temNotificacaoNaoLida}">
+                    </span>
                 </div>
             </a>
 

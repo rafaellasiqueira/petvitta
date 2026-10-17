@@ -1,14 +1,20 @@
 package com.project.petvitta.controller;
 
+import com.project.petvitta.dto.ItemRetornoEstoqueDTO;
+import com.project.petvitta.dto.RetornoEstoqueDTO;
+import com.project.petvitta.dto.SolicitarTrocaDTO;
 import com.project.petvitta.model.cliente.Cliente;
+import com.project.petvitta.model.cliente.Cupom;
 import com.project.petvitta.model.dominio.StatusPedido;
 import com.project.petvitta.model.pedido.Pedido;
 import com.project.petvitta.model.produto.Produto;
 import com.project.petvitta.model.produto.VariacaoProduto;
 import com.project.petvitta.model.troca.Troca;
 import com.project.petvitta.service.*;
+import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -212,6 +218,10 @@ public class AdminController {
     ) {
         Cliente cliente = clienteService.buscarPorId(id);
 
+        List<Pedido> pedidos = pedidoService.listarPorCliente(cliente.getId());
+
+        model.addAttribute("pedidos", pedidos);
+
         model.addAttribute("paginaAtual", "clientes");
         model.addAttribute("cliente", cliente);
         model.addAttribute("enderecos", cliente.getEnderecos());
@@ -272,7 +282,36 @@ public class AdminController {
                 "Status alterado com sucesso!"
         );
 
-        return "redirect:/admin/pedidos";
+        return "redirect:/admin/trocas";
+    }
+
+    @PostMapping("/admin/trocas/voltar-estoque")
+    public String voltarEstoque(
+            @ModelAttribute RetornoEstoqueDTO dto,
+            RedirectAttributes redirectAttributes) {
+
+        try {
+            Cupom cupom = trocaService.retornoItens(dto);
+
+            redirectAttributes.addFlashAttribute(
+                    "mensagemToast",
+                    "Troca finalizada com sucesso! Cupom de Troca gerado: R$ "
+                            + cupom.getValor()
+            );
+
+            redirectAttributes.addFlashAttribute(
+                    "tipoToast", "sucesso");
+
+        } catch (IllegalArgumentException e) {
+
+            redirectAttributes.addFlashAttribute(
+                    "mensagemToast", e.getMessage());
+
+            redirectAttributes.addFlashAttribute(
+                    "tipoToast", "erro");
+        }
+
+        return "redirect:/admin/trocas";
     }
 
     @GetMapping("/admin/auditoria")
