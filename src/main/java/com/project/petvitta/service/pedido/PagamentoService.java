@@ -11,16 +11,22 @@ import com.project.petvitta.repository.cliente.CartaoRepository;
 import com.project.petvitta.repository.pedido.CartaoCompraRepository;
 import com.project.petvitta.repository.pedido.PagamentoRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 
 @Service
 public class PagamentoService {
+
     private final CartaoRepository cartaoRepository;
     private final CartaoCompraRepository cartaoCompraRepository;
     private final PagamentoRepository pagamentoRepository;
 
-    public PagamentoService(CartaoRepository cartaoRepository, CartaoCompraRepository cartaoCompraRepository, PagamentoRepository pagamentoRepository) {
+    public PagamentoService(
+            CartaoRepository cartaoRepository,
+            CartaoCompraRepository cartaoCompraRepository,
+            PagamentoRepository pagamentoRepository
+    ) {
         this.cartaoRepository = cartaoRepository;
         this.cartaoCompraRepository = cartaoCompraRepository;
         this.pagamentoRepository = pagamentoRepository;
@@ -38,58 +44,67 @@ public class PagamentoService {
         BigDecimal valorPago = BigDecimal.ZERO;
         int quantidadeCartoes = 0;
 
-        boolean possuiCupom = dto.getCuponsIds() != null &&
-                !dto.getCuponsIds().isEmpty();
+        boolean possuiCupom = dto.getCuponsIds() != null && !dto.getCuponsIds().isEmpty();
 
         if (dto.getCartoes() != null) {
             for (int i = 0; i < dto.getCartoes().size(); i++) {
 
-                Long cartaoId = dto.getCartoes().get(i).getCartaoId();
-                BigDecimal valor = dto.getCartoes().get(i).getValor();
+                CartaoPagamentoDTO cartaoDTO = dto.getCartoes().get(i);
 
+                Long cartaoId = cartaoDTO.getCartaoId();
+                Long cartaoTemporarioId = cartaoDTO.getCartaoTemporarioId();
+
+                BigDecimal valor = cartaoDTO.getValor();
 
                 if (valor == null || valor.compareTo(BigDecimal.ZERO) <= 0) {
                     continue;
                 }
 
-                Cartao cartao = cartaoRepository.findById(cartaoId)
-                        .orElseThrow(() ->
-                                new IllegalArgumentException(
-                                        "Cartão não encontrado."
-                                ));
-
-                if (!cartao.getCliente().getId().equals(cliente.getId())) {
+                // Deve ser informado somente um tipo de cartão.
+                if (cartaoId == null && cartaoTemporarioId == null) {
                     throw new IllegalArgumentException(
-                            "O cartão não pertence ao cliente."
+                            "Selecione um cartão válido."
                     );
                 }
 
-                validarValorCartaoCupom(valor, total, possuiCupom);
-
-                valorPago = valorPago.add(valor);
-                quantidadeCartoes++;
-            }
-        }
-
-        if (dto.getCartaoTemporarioId() != null) {
-
-            CartaoCompra cartaoCompra =
-                    cartaoCompraRepository
-                            .findById(dto.getCartaoTemporarioId())
+                // Valida cartão salvo.
+                if (cartaoId != null) {
+                    Cartao cartao = cartaoRepository.findById(cartaoId)
                             .orElseThrow(() ->
                                     new IllegalArgumentException(
-                                            "Cartão temporário não encontrado."
+                                            "Cartão não encontrado."
                                     ));
 
-            if (!cartaoCompra.getCliente().getId().equals(cliente.getId())) {
-                throw new IllegalArgumentException(
-                        "O cartão não pertence ao cliente."
-                );
-            }
+                    if (!cartao.getCliente().getId().equals(cliente.getId())) {
+                        throw new IllegalArgumentException(
+                                "O cartão não pertence ao cliente."
+                        );
+                    }
+                }
 
-            BigDecimal valor = dto.getValorCartaoTemporario();
+                // Valida cartão temporário.
+                else {
+                    CartaoCompra cartaoCompra = cartaoCompraRepository
+                                    .findById(cartaoTemporarioId)
+                                    .orElseThrow(() ->
+                                            new IllegalArgumentException(
+                                                    "Cartão temporário não encontrado."
+                                            ));
 
-            if (valor != null && valor.compareTo(BigDecimal.ZERO) > 0) {
+                    if (!cartaoCompra.getCliente().getId()
+                            .equals(cliente.getId())) {
+                        throw new IllegalArgumentException(
+                                "O cartão não pertence ao cliente."
+                        );
+                    }
+
+                    if (cartaoCompra.isUtilizado()) {
+                        throw new IllegalArgumentException(
+                                "Este cartão temporário já foi utilizado."
+                        );
+                    }
+                }
+
                 validarValorCartaoCupom(valor, total, possuiCupom);
 
                 valorPago = valorPago.add(valor);
@@ -115,82 +130,91 @@ public class PagamentoService {
             BigDecimal total,
             boolean possuiCupom
     ) {
-
         if (valor.compareTo(BigDecimal.ZERO) <= 0) {
             throw new IllegalArgumentException(
                     "O valor do cartão deve ser maior que zero."
             );
         }
 
-        if (valor.compareTo(new BigDecimal("10.00")) < 0 && !(possuiCupom && total.compareTo(new BigDecimal("10.00")) < 0)) {
+        BigDecimal valorMinimo = new BigDecimal("10.00");
+
+        if (valor.compareTo(valorMinimo) < 0 && !(possuiCupom && total.compareTo(valorMinimo) < 0)) {
             throw new IllegalArgumentException(
                     "Cada cartão deve pagar no mínimo R$ 10,00."
             );
         }
     }
 
+    @Transactional
     public void salvarPagamentos(
             Pedido pedido,
             Cliente cliente,
             FinalizarCompraDTO dto
     ) {
-        if (dto.getCartoes() != null) {
-            for (int i = 0; i < dto.getCartoes().size(); i++) {
-
-                CartaoPagamentoDTO cartaoDTO = dto.getCartoes().get(i);
-
-                BigDecimal valor = cartaoDTO.getValor();
-
-                if (valor != null && valor.compareTo(BigDecimal.ZERO) > 0) {
-
-                    Cartao cartao = cartaoRepository
-                            .findById(cartaoDTO.getCartaoId())
-                            .orElseThrow(() ->
-                                    new IllegalArgumentException(
-                                            "Cartão não encontrado."
-                                    ));
-
-                    if (!cartao.getCliente().getId().equals(cliente.getId())) {
-                        throw new IllegalArgumentException(
-                                "O cartão não pertence ao cliente."
-                        );
-                    }
-
-                    CartaoCompra cartaoCompra = copiarCartao(cartao);
-
-                    Pagamento pagamento = new Pagamento();
-
-                    pagamento.setPedido(pedido);
-                    pagamento.setCartaoCompra(cartaoCompra);
-                    pagamento.setValor(valor);
-
-                    pagamentoRepository.save(pagamento);
-                }
-            }
+        if (dto.getCartoes() == null) {
+            return;
         }
 
-        if (dto.getCartaoTemporarioId() != null) {
+        for (int i = 0; i < dto.getCartoes().size(); i++) {
+            CartaoPagamentoDTO cartaoDTO = dto.getCartoes().get(i);
 
-            CartaoCompra cartaoCompra =
-                    cartaoCompraRepository
-                            .findById(dto.getCartaoTemporarioId())
-                            .orElseThrow(() ->
-                                    new IllegalArgumentException(
-                                            "Cartão temporário não encontrado."
-                                    ));
+            Long cartaoId = cartaoDTO.getCartaoId();
+            Long cartaoTemporarioId = cartaoDTO.getCartaoTemporarioId();
+            BigDecimal valor = cartaoDTO.getValor();
 
-            if (!cartaoCompra.getCliente().getId().equals(cliente.getId())) {
-                throw new IllegalArgumentException(
-                        "O cartão não pertence ao cliente."
-                );
+            if (valor == null || valor.compareTo(BigDecimal.ZERO) <= 0) {
+                continue;
             }
 
-            BigDecimal valor = dto.getValorCartaoTemporario();
+            // Salva pagamento com cartão já cadastrado.
+            if (cartaoId != null && cartaoTemporarioId == null) {
 
-            if (valor != null && valor.compareTo(BigDecimal.ZERO) > 0) {
+                Cartao cartao = cartaoRepository.findById(cartaoId)
+                        .orElseThrow(() ->
+                                new IllegalArgumentException(
+                                        "Cartão não encontrado."
+                                ));
+
+                if (!cartao.getCliente().getId()
+                        .equals(cliente.getId())) {
+                    throw new IllegalArgumentException(
+                            "O cartão não pertence ao cliente."
+                    );
+                }
+
+                CartaoCompra cartaoCompra = copiarCartao(cartao);
 
                 Pagamento pagamento = new Pagamento();
+                pagamento.setPedido(pedido);
+                pagamento.setCartaoCompra(cartaoCompra);
+                pagamento.setValor(valor);
 
+                pagamentoRepository.save(pagamento);
+            }
+
+            // Salva pagamento com cartão temporário.
+            else if (cartaoTemporarioId != null && cartaoId == null) {
+                CartaoCompra cartaoCompra = cartaoCompraRepository
+                                .findById(cartaoTemporarioId)
+                                .orElseThrow(() ->
+                                        new IllegalArgumentException(
+                                                "Cartão temporário não encontrado."
+                                        ));
+
+                if (!cartaoCompra.getCliente().getId()
+                        .equals(cliente.getId())) {
+                    throw new IllegalArgumentException(
+                            "O cartão não pertence ao cliente."
+                    );
+                }
+
+                if (cartaoCompra.isUtilizado()) {
+                    throw new IllegalArgumentException(
+                            "Este cartão temporário já foi utilizado."
+                    );
+                }
+
+                Pagamento pagamento = new Pagamento();
                 pagamento.setPedido(pedido);
                 pagamento.setCartaoCompra(cartaoCompra);
                 pagamento.setValor(valor);
@@ -199,6 +223,12 @@ public class PagamentoService {
 
                 cartaoCompra.setUtilizado(true);
                 cartaoCompraRepository.save(cartaoCompra);
+            }
+
+            else {
+                throw new IllegalArgumentException(
+                        "Selecione um cartão válido."
+                );
             }
         }
     }

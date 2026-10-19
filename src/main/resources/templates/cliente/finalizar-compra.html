@@ -184,10 +184,8 @@
                                 <span>R$</span>
 
                                 <input inputmode="decimal"
-                                       th:id="'valorCartao' + ${cartao.id}"
-                                       th:name="'valoresCartoes[' + ${cartao.id} + ']'"
                                        form="formFinalizarCompra"
-                                       min="0.01"
+                                       min="10.00"
                                        step="0.01"
                                        value="10.00"
                                        placeholder="Digite o valor">
@@ -195,20 +193,18 @@
                         </div>
                     </div>
 
-                    <div th:if="${cartoesTemporarios != null and !cartoesTemporarios.isEmpty()}"
-                         class="cartao-temporario">
+                    <div th:if="${cartoesTemporarios != null and !cartoesTemporarios.isEmpty()}">
 
-                        <div th:each="cartao : ${cartoesTemporarios}">
+                        <div th:each="cartao : ${cartoesTemporarios}"
+                             class="cartao-temporario">
+
+                            <input type="hidden"
+                                   name="cartaoTemporarioId"
+                                   th:value="${cartao.id}"
+                                   form="formFinalizarCompra">
 
                             <label class="cartao">
-                                <input type="hidden"
-                                       name="cartaoTemporarioId"
-                                       th:value="${cartao.id}"
-                                       form="formFinalizarCompra">
-
-
                                 <input type="checkbox"
-                                       name="cartao"
                                        th:value="${cartao.id}"
                                        class="checkbox-cartao-temporario">
 
@@ -286,8 +282,6 @@
                                     <span>R$</span>
 
                                     <input inputmode="decimal"
-                                           th:id="'valorCartao' + ${cartao.id}"
-                                           th:name="'valoresCartoes[' + ${cartao.id} + ']'"
                                            form="formFinalizarCompra"
                                            min="10.00"
                                            step="0.01"

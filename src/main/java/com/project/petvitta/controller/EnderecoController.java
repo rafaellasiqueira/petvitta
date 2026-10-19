@@ -252,20 +252,24 @@ public class EnderecoController {
 
     @PostMapping("/cliente/finalizar-compra/endereco")
     public String selecionarEndereco(
-            @RequestParam(required = false) Long enderecoId,
-            @RequestParam(required = false) Long enderecoTemporarioId,
+            @RequestParam(required = false) String enderecoSelecionado,
             @RequestParam List<Long> itensSelecionados,
             HttpSession session,
             RedirectAttributes redirectAttributes) {
 
-        if (enderecoId != null) {
-            session.setAttribute("enderecoSelecionadoId", enderecoId);
-            session.removeAttribute("enderecoTemporarioId");
-        }
+        if (enderecoSelecionado != null) {
+            if (enderecoSelecionado.startsWith("temporario-")) {
+                Long enderecoTemporarioId = Long.valueOf(enderecoSelecionado.replace("temporario-", ""));
 
-        if (enderecoTemporarioId != null) {
-            session.setAttribute("enderecoTemporarioId", enderecoTemporarioId);
-            session.removeAttribute("enderecoSelecionadoId");
+                session.setAttribute("enderecoTemporarioId", enderecoTemporarioId);
+                session.removeAttribute("enderecoSelecionadoId");
+
+            } else if (enderecoSelecionado.startsWith("salvo-")) {
+                Long enderecoId = Long.valueOf(enderecoSelecionado.replace("salvo-", ""));
+
+                session.setAttribute("enderecoSelecionadoId", enderecoId);
+                session.removeAttribute("enderecoTemporarioId");
+            }
         }
 
         redirectAttributes.addAttribute("itensSelecionados", itensSelecionados);

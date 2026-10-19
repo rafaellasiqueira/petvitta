@@ -25,7 +25,8 @@ public class ProdutoController {
     public ProdutoController(
             ProdutoService produtoService,
             ClienteService clienteService,
-            CarrinhoService carrinhoService, NotificacaoService notificacaoService
+            CarrinhoService carrinhoService,
+            NotificacaoService notificacaoService
             ) {
         this.produtoService = produtoService;
         this.clienteService = clienteService;

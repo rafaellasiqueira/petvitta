@@ -38,10 +38,7 @@ public class CarrinhoController {
 
         try {
             for (int i = 0; i < variacaoId.size(); i++) {
-                carrinhoService.adicionar(
-                        variacaoId.get(i),
-                        quantidade.get(i)
-                );
+                carrinhoService.adicionar(variacaoId.get(i), quantidade.get(i));
             }
 
             redirectAttributes.addFlashAttribute(

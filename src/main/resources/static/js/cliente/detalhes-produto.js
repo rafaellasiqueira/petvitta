@@ -29,7 +29,6 @@ if (primeiroTamanho) {
     atualizarSubtotal();
 }
 
-
 // Trocar tamanho
 botoesTamanho.forEach(btn => {
     btn.onclick = function() {

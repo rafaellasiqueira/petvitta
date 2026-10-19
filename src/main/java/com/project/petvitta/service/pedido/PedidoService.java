@@ -180,18 +180,20 @@ public class PedidoService {
         // Calcular total
         BigDecimal valorCompra = subtotal.add(frete);
 
-        boolean cupomVencido = false;
+
+        // Gerar cupom de troca
+        boolean cupomInvalido = false;
 
         for (int i = 0; i < cupons.size(); i++) {
             Cupom cupom = cupons.get(i);
 
             if (cupom.getValidade().isBefore(LocalDateTime.now()) || !cupom.isAtivo()) {
-                cupomVencido = true;
+                cupomInvalido = true;
                 break;
             }
         }
 
-        if (!cupomVencido &&  desconto.compareTo(valorCompra) > 0) {
+        if (!cupomInvalido &&  desconto.compareTo(valorCompra) > 0) {
             BigDecimal excedente = desconto.subtract(valorCompra);
 
             cupomService.gerarCupomTroca(excedente, session);
@@ -231,9 +233,7 @@ public class PedidoService {
 
         pagamentoService.salvarPagamentos(pedidoSalvo, cliente, dto);
 
-        List<Long> itensSelecionados = new ArrayList<>(
-                dto.getItensSelecionados()
-        );
+        List<Long> itensSelecionados = new ArrayList<>(dto.getItensSelecionados());
 
         if (enderecoCompra != null) {
             enderecoCompra.setUtilizado(true);
@@ -295,8 +295,7 @@ public class PedidoService {
             return null;
         }
 
-        EnderecoCompra endereco =
-                enderecoCompraRepository.findById(
+        EnderecoCompra endereco = enderecoCompraRepository.findById(
                         dto.getEnderecoTemporarioId()
                 ).orElseThrow(() ->
                         new IllegalArgumentException(

@@ -102,11 +102,10 @@ public class CupomService {
 
         Cupom cupom = new Cupom();
 
-        String numero = String.valueOf(System.currentTimeMillis());
-
-        cupom.setCodigo(
-                "TROCA - " + numero.substring(numero.length() - 5)
-        );
+        String numero;
+        do {
+            numero = String.valueOf((int) (Math.random() * 9000) + 1000);
+        } while (cupomRepository.findByCodigo(numero).isPresent());
 
         cupom.setValor(valor);
         cupom.setValidade(LocalDateTime.now().plusDays(120));

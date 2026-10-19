@@ -1,8 +1,5 @@
 const formFiltro = document.getElementById("formFiltro");
-
-const filtros = formFiltro.querySelectorAll(
-    'input[type="checkbox"], input[type="radio"]'
-);
+const filtros = formFiltro.querySelectorAll('input[type="checkbox"], input[type="radio"]');
 
 filtros.forEach(function (filtro) {
     filtro.addEventListener("change", function () {

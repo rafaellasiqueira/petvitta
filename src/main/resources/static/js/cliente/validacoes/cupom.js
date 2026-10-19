@@ -5,6 +5,7 @@ const cuponsSelecionados = document.getElementById('cuponsSelecionados');
 checkboxesCupom.forEach(checkbox => {
     checkbox.addEventListener('change', function () {
 
+        // Verificar somente um promocional
         const promocionaisSelecionados = document.querySelectorAll(
             '.modalCupom[data-tipo="Promocional"] .checkbox-cupom:checked'
         );
@@ -14,6 +15,7 @@ checkboxesCupom.forEach(checkbox => {
             return;
         }
 
+        // Não permite selecionar outro cupom se a compra já foi totalmente coberta
         const selecionados = document.querySelectorAll('.checkbox-cupom:checked');
 
         const subtotal = pegarValor(document.getElementById('subtotal').textContent);
@@ -27,7 +29,6 @@ checkboxesCupom.forEach(checkbox => {
             valorCupons += parseFloat(cupom.dataset.valor) || 0;
         });
 
-        // Não permite selecionar outro cupom se a compra já foi totalmente coberta
         if (this.checked) {
             const valorCupomAtual = parseFloat(this.closest('.modalCupom').dataset.valor) || 0;
             const cuponsAnteriores = valorCupons - valorCupomAtual;
@@ -48,8 +49,7 @@ checkboxesCupom.forEach(checkbox => {
             }
         }
 
-
-
+        // Criar div com cupons selecionados
         cuponsSelecionados.innerHTML = '';
 
         const cuponsAtuais = document.querySelectorAll('.checkbox-cupom:checked');
@@ -74,6 +74,7 @@ checkboxesCupom.forEach(checkbox => {
     });
 });
 
+// Ao pesquisar um cupom
 const campoCupom = document.getElementById('campoCupom');
 
 campoCupom.addEventListener('keydown', function(event) {

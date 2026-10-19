@@ -45,8 +45,8 @@
                 <label class="modalEndereco">
 
                     <input type="radio"
-                           name="enderecoTemporarioId"
-                           th:value="${enderecoCompra.id}"
+                           name="enderecoSelecionado"
+                           th:value="|temporario-${enderecoCompra.id}|"
                            form="formSelecionarEndereco">
 
                     <div class="radio-custom"></div>
@@ -118,8 +118,8 @@
                 <label class="modalEndereco">
 
                     <input type="radio"
-                           name="enderecoId"
-                           th:value="${endereco.id}"
+                           name="enderecoSelecionado"
+                           th:value="|salvo-${endereco.id}|"
                            form="formSelecionarEndereco">
 
                     <div class="radio-custom"></div>

@@ -167,8 +167,7 @@ public class ProdutoService {
 
                 for (int j = 0; j < produto.getFaixasEtarias().size(); j++) {
 
-                    String idadeProduto =
-                            produto.getFaixasEtarias().get(j).getNome();
+                    String idadeProduto = produto.getFaixasEtarias().get(j).getNome();
 
                     if (idade.contains(idadeProduto)) {
                         encontrouIdade = true;
@@ -187,8 +186,7 @@ public class ProdutoService {
 
                 for (int j = 0; j < produto.getPortes().size(); j++) {
 
-                    String porteProduto =
-                            produto.getPortes().get(j).getNome();
+                    String porteProduto = produto.getPortes().get(j).getNome();
 
                     if (porte.contains(porteProduto)) {
                         encontrouPorte = true;
@@ -222,22 +220,16 @@ public class ProdutoService {
                 BigDecimal valorMaximo = produto.getValorMaximo();
 
                 if (valorMinimo == null || valorMaximo == null) {
-
                     encontrou = false;
 
                 } else {
-
                     // Preço mínimo informado
-                    if (precoMinimo != null &&
-                            valorMinimo.compareTo(precoMinimo) < 0) {
-
+                    if (precoMinimo != null && valorMinimo.compareTo(precoMinimo) < 0) {
                         encontrou = false;
                     }
 
                     // Preço máximo informado
-                    if (precoMaximo != null &&
-                            valorMaximo.compareTo(precoMaximo) > 0) {
-
+                    if (precoMaximo != null && valorMaximo.compareTo(precoMaximo) > 0) {
                         encontrou = false;
                     }
                 }

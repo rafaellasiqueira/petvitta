@@ -47,16 +47,13 @@
                     class="marcar-lida">
                     Marcar como lida
                 </a>
-
             </div>
 
-            <!-- Quando não houver nenhuma notificação -->
             <div class="sem-resultados"
                  th:if="${#lists.isEmpty(notificacoes)}">
                 <h2>Nenhuma notificação</h2>
                 <p>Você não possui nenhuma notificação no momento.</p>
             </div>
-
         </div>
     </main>
 </div>

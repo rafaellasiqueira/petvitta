@@ -183,7 +183,7 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    // Abrir modal
+    // Abrir modal cupom
     const modalCupom = document.getElementById('modalCupons');
     const btnAbrirModalCupom = document.getElementById('btnVerCupons');
     const btnFecharModalCupom = document.getElementById('btnFecharModalCupom');
@@ -200,7 +200,7 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    // Quando licar em outros cartões
+    // Quando clicar em outros cartões
     const checkbox = document.getElementById('mostrarOutrosCartoes');
     const outrosCartoes = document.getElementById('outrosCartoes');
 
@@ -328,7 +328,7 @@ document.addEventListener('DOMContentLoaded', function () {
         let valorCartoes = 0;
         let cartoesSelecionados = 0;
 
-        // Remove inputs criados anteriormente
+        // Remove os inputs dinâmicos anteriores
         formFinalizarCompra.querySelectorAll('.input-cartao-dinamico').forEach(function (input) {
             input.remove();
         });
@@ -340,9 +340,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
             if (checkbox && checkbox.checked && campo) {
                 valorCartoes += parseFloat(campo.value) || 0;
-                cartoesSelecionados++;
 
-                const indice = cartoesSelecionados - 1;
+                const indice = cartoesSelecionados++;
 
                 const inputId = document.createElement('input');
                 inputId.type = 'hidden';
@@ -361,30 +360,31 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         });
 
-        // Cartão temporário
+        // Cartões temporários
         document.querySelectorAll('.cartao-temporario').forEach(function (item) {
-
             const checkbox = item.querySelector('.checkbox-cartao-temporario');
             const campo = item.querySelector('.input-valor input');
             const idTemporario = item.querySelector('[name="cartaoTemporarioId"]');
 
-            if (checkbox && checkbox.checked && campo) {
+            if (checkbox && checkbox.checked && campo && idTemporario) {
                 valorCartoes += parseFloat(campo.value) || 0;
-                cartoesSelecionados++;
 
-                if (idTemporario) {
-                    idTemporario.disabled = false;
-                }
+                const indice = cartoesSelecionados++;
 
-            } else {
-                if (campo) {
-                    campo.disabled = true;
-                    campo.value = '0';
-                }
+                const inputId = document.createElement('input');
+                inputId.type = 'hidden';
+                inputId.name = 'cartoes[' + indice + '].cartaoTemporarioId';
+                inputId.value = idTemporario.value;
+                inputId.classList.add('input-cartao-dinamico');
 
-                if (idTemporario) {
-                    idTemporario.disabled = true;
-                }
+                const inputValor = document.createElement('input');
+                inputValor.type = 'hidden';
+                inputValor.name = 'cartoes[' + indice + '].valor';
+                inputValor.value = campo.value;
+                inputValor.classList.add('input-cartao-dinamico');
+
+                formFinalizarCompra.appendChild(inputId);
+                formFinalizarCompra.appendChild(inputValor);
             }
         });
     });

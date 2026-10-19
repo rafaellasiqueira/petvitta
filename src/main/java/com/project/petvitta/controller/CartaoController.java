@@ -222,22 +222,10 @@ public class CartaoController {
     public String excluirCartaoTemporario(
             @RequestParam Long cartaoTemporarioId,
             @RequestParam List<Long> itensSelecionados,
-            HttpSession session,
             RedirectAttributes redirectAttributes
     ) {
 
         cartaoService.excluirTemporario(cartaoTemporarioId);
-
-        List<Long> cartoesTemporariosId = (List<Long>) session.getAttribute("cartoesTemporariosId");
-
-        if (cartoesTemporariosId != null) {
-            cartoesTemporariosId.remove(cartaoTemporarioId);
-
-            session.setAttribute(
-                    "cartoesTemporariosId",
-                    cartoesTemporariosId
-            );
-        }
 
         redirectAttributes.addFlashAttribute(
                 "tipoToast",

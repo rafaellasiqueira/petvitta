@@ -66,7 +66,6 @@ public class VerificacaoCompraService {
             Cliente cliente = pedido.getCliente();
             cliente.setRanking(cliente.getRanking() + 10);
 
-
         } else {
             pedido.setStatusPedido(
                     statusPedidoRepository.findByDescricao("Reprovada")

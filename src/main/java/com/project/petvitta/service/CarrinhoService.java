@@ -272,9 +272,7 @@ public class CarrinhoService {
 
         int quantidadeAnterior = item.getQuantidade();
 
-        variacao.setEstoqueAtual(
-                variacao.getEstoqueAtual() - (quantidade - item.getQuantidade())
-        );
+        variacao.setEstoqueAtual(variacao.getEstoqueAtual() - (quantidade - item.getQuantidade()));
 
         item.setQuantidade(quantidade);
         carrinho.setDataExpiracao(LocalDateTime.now().plusMinutes(20));
@@ -331,6 +329,7 @@ public class CarrinhoService {
         for (int i = 0; i < carrinho.getItens().size(); i++) {
             ItemCarrinho outroItem = carrinho.getItens().get(i);
 
+            // !OutroItem se não ele vai pegar o mesmo item
             if (!outroItem.getId().equals(item.getId()) && outroItem.getVariacao().getId().equals(novaVariacao.getId())) {
 
                 throw new IllegalArgumentException(

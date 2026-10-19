@@ -20,7 +20,5 @@ public class FinalizarCompraDTO {
 
     private List<CartaoPagamentoDTO> cartoes;
 
-    private Long cartaoTemporarioId;
-
     private BigDecimal valorCartaoTemporario;
 }

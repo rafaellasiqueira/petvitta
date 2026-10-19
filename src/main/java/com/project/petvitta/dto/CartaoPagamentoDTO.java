@@ -9,5 +9,6 @@ import java.math.BigDecimal;
 @Setter
 public class CartaoPagamentoDTO {
     private Long cartaoId;
+    private Long cartaoTemporarioId;
     private BigDecimal valor;
 }

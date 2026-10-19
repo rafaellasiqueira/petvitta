@@ -376,8 +376,6 @@ public class ClienteController {
         }
 
         model.addAttribute("enderecoCompra", enderecoCompra);
-        model.addAttribute("enderecoTemporarioSelecionadoId", enderecoTemporarioId);
-
 
         // Endereço normal salvo
         Endereco endereco = null;
@@ -412,12 +410,7 @@ public class ClienteController {
                 }
             }
         }
-
         model.addAttribute("endereco", endereco);
-
-        if (endereco != null) {
-            model.addAttribute("enderecoSelecionadoId", endereco.getId());
-        }
 
         // Listar os cupons
         List<Cupom> cupons = cupomService.listarCupoms();
@@ -426,7 +419,6 @@ public class ClienteController {
         // Cartões temporários não utilizados
         List<CartaoCompra> cartoesTemporarios = cartaoService.buscarTemporariosNaoUtilizados(1L);
         model.addAttribute("cartoesTemporarios", cartoesTemporarios);
-
 
         model.addAttribute("cliente", cliente);
         model.addAttribute("carrinho", carrinho);
@@ -451,7 +443,6 @@ public class ClienteController {
 
             session.removeAttribute("enderecoSelecionadoId");
             session.removeAttribute("enderecoTemporarioId");
-            session.removeAttribute("cartaoTemporarioId");
 
             String cupomTroca = (String) session.getAttribute("cupomTrocaGerado");
 
@@ -523,8 +514,7 @@ public class ClienteController {
         for (int i = 0; i < pedidos.size(); i++) {
             Pedido pedido = pedidos.get(i);
 
-            if ("Em processamento".equals(
-                    pedido.getStatusPedido().getDescricao())) {
+            if ("Em processamento".equals(pedido.getStatusPedido().getDescricao())) {
                 pedidoService.agendarVerificacaoCompra(pedido.getId());
             }
         }

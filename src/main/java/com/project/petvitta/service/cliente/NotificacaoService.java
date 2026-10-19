@@ -30,7 +30,6 @@ public class NotificacaoService {
                 ));
 
         notificacao.setLida(true);
-
         notificacaoRepository.save(notificacao);
     }
 }
