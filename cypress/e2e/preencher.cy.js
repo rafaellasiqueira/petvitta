@@ -173,10 +173,11 @@ describe('Cadastro de clientes - Popular banco', () => {
                 .type('Brasil');
 
 
-            // =========================
-            // CARTÃO
-            // =========================
+// =========================
+// CARTÕES
+// =========================
 
+// Primeiro cartão
             cy.get('[name="cartoes[0].numero"]')
                 .type(cliente.cartao);
 
@@ -192,10 +193,39 @@ describe('Cadastro de clientes - Popular banco', () => {
             cy.get('[name="cartoes[0].preferencial"][value="true"]')
                 .check();
 
+            cy.get('#btnAdicionarCartao')
+                .click();
 
-            // =========================
-            // CADASTRAR
-            // =========================
+
+// Segundo cartão
+            cy.get('[name="cartoes[1].numero"]')
+                .type('4111111111111111');
+
+            cy.get('[name="cartoes[1].nomeImpresso"]')
+                .type(cliente.nome.toUpperCase());
+
+            cy.get('[name="cartoes[1].bandeira"]')
+                .select('1');
+
+            cy.get('[name="cartoes[1].codigoSeguranca"]')
+                .type('123');
+
+
+            cy.get('#btnAdicionarCartao')
+                .click();
+
+// Terceiro cartão
+            cy.get('[name="cartoes[2].numero"]')
+                .type('4117111111110000');
+
+            cy.get('[name="cartoes[2].nomeImpresso"]')
+                .type(cliente.nome.toUpperCase());
+
+            cy.get('[name="cartoes[2].bandeira"]')
+                .select('1');
+
+            cy.get('[name="cartoes[2].codigoSeguranca"]')
+                .type('123');
 
             cy.get('#btnSalvarCliente')
                 .click();

@@ -104,9 +104,10 @@ public class CupomService {
 
         String numero;
         do {
-            numero = String.valueOf((int) (Math.random() * 9000) + 1000);
+            numero = "TROCA - " + ((int) (Math.random() * 9000) + 1000);
         } while (cupomRepository.findByCodigo(numero).isPresent());
 
+        cupom.setCodigo(numero);
         cupom.setValor(valor);
         cupom.setValidade(LocalDateTime.now().plusDays(120));
 
@@ -125,10 +126,7 @@ public class CupomService {
 
         Cupom cupom = gerarCupomTroca(valor);
 
-        session.setAttribute(
-                "cupomTrocaGerado",
-                cupom.getCodigo()
-        );
+        session.setAttribute("cupomTrocaGerado", cupom.getCodigo());
     }
 
 }

@@ -203,6 +203,10 @@ public class PedidoService {
 
         BigDecimal total = valorCompra.subtract(desconto);
 
+        if (total.compareTo(BigDecimal.ZERO) < 0) {
+            total = BigDecimal.ZERO;
+        }
+
         // Validar pagamento
         pagamentoService.validarPagamento(cliente, dto, total);
 

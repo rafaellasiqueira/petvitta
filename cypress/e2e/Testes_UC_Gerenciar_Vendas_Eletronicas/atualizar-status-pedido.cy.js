@@ -26,7 +26,27 @@ describe('Atualizar status do pedido', () => {
         cy.get('#modalStatusPedido')
             .should('be.visible');
 
-        cy.wait(1000);
+        cy.wait(2000);
+
+        cy.get('#btnConfirmarStatus')
+            .should('be.visible')
+            .and('not.be.disabled')
+            .click();
+
+        cy.wait(2000);
+
+        validarToast("Status alterado com sucesso!");
+
+        cy.get('table tbody tr')
+            .eq(4)
+            .find('.dropdown')
+            .wait(500)
+            .select('Em transporte');
+
+        cy.get('#modalStatusPedido')
+            .should('be.visible');
+
+        cy.wait(2000);
 
         cy.get('#btnConfirmarStatus')
             .should('be.visible')
@@ -69,10 +89,28 @@ describe('Atualizar status do pedido', () => {
 
         validarToast("Status alterado com sucesso!");
 
+        cy.get('table tbody tr')
+            .eq(4)
+            .find('.dropdown')
+            .wait(500)
+            .select('Entregue');
+
+        cy.get('#modalStatusPedido')
+            .should('be.visible');
+
+        cy.wait(500);
+
+        cy.get('#btnConfirmarStatus')
+            .should('be.visible')
+            .and('not.be.disabled')
+            .click();
+
+        cy.wait(1000);
+
+        validarToast("Status alterado com sucesso!");
+
         cy.wait(2000);
 
         cy.visit('/cliente/pedido');
     });
-
-
 });

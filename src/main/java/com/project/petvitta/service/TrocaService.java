@@ -92,6 +92,12 @@ public class TrocaService {
                     "Você não tem permissão para solicitar troca deste pedido.");
         }
 
+        if (!"Entregue".equals(pedido.getStatusPedido().getDescricao())) {
+            throw new IllegalArgumentException(
+                    "Somente pedidos entregues podem ser solicitados para troca."
+            );
+        }
+
         Troca troca = new Troca();
 
         troca.setDataSolicitacao(LocalDateTime.now());
@@ -337,7 +343,7 @@ public class TrocaService {
 
         trocaRepository.save(troca);
 
-        // Calcula o valor somente dos itens solicitados para troca
+        // Calcula o valor dos itens solicitados para troca
         BigDecimal valorTotal = BigDecimal.ZERO;
 
         for (int i = 0; i < troca.getItens().size(); i++) {
@@ -355,7 +361,12 @@ public class TrocaService {
             valorTotal = valorTotal.add(valorQuantidade);
         }
 
-        // Gera o cupom com o valor dos itens da troca
+        // Adiciona o frete do pedido
+        BigDecimal frete = troca.getPedido().getFrete();
+
+        valorTotal = valorTotal.add(frete);
+
+        // Gera o cupom com o valor dos itens e do frete
         return cupomService.gerarCupomTroca(valorTotal);
     }
 }

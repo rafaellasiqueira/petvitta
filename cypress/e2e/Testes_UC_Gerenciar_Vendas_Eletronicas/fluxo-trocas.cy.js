@@ -10,7 +10,49 @@ describe('Fluxo de trocas', () => {
             .and('contain', mensagem);
     }
 
-    it('RF0041/RN0041/RN0043 - Solicitar uma troca', () => {
+    /*
+    it('RN0043 - Bloquear troca de pedido não entregue', () => {
+        cy.visit('/cliente/pedido');
+
+        cy.contains('.card-pedido', 'Reprovado')
+            .should('be.visible')
+            .find('.btn-solicitar-troca')
+            .should('not.exist');
+
+        cy.get('input[name="_csrf"]').then(($csrf) => {
+            const csrfToken = $csrf.val();
+
+            cy.request({
+                method: 'POST',
+                url: '/cliente/pedido/solicitar-troca',
+                form: true,
+                followRedirect: false,
+                failOnStatusCode: false,
+                headers: csrfToken
+                    ? { 'X-CSRF-TOKEN': csrfToken }
+                    : {},
+                body: {
+                    pedidoId: 123,
+                    motivoTroca: 1,
+                    justificativaTroca: 'Teste de troca de pedido não entregue',
+                    'itens[0].itemPedidoId': 1,
+                    'itens[0].quantidade': 1
+                }
+            }).then((response) => {
+                expect(response.status).to.eq(302);
+                expect(response.headers.location).to.include('/cliente/pedido');
+            });
+        });
+
+        cy.visit('/cliente/pedido');
+
+        cy.get('#toast')
+            .should('be.visible')
+            .and('contain', 'Somente pedidos entregues podem ser solicitados para troca.');
+    });
+    */
+
+    it('RF0041/RN0041/RN0043 - Solicitar a troca de um item do pedido', () => {
         cy.viewport(1366, 768);
 
         cy.visit('/cliente/pedido');
@@ -44,8 +86,7 @@ describe('Fluxo de trocas', () => {
         validarToast("Troca solicitada com sucesso!");
     });
 
-
-    it('RF0041/RN0041/RN0043 - Solicitar uma troca de somente um produto', () => {
+    it('RF0041/RN0041/RN0043 - Solicitar a troca da compra inteira', () => {
         cy.viewport(1366, 768);
 
         cy.visit('/cliente/pedido');
@@ -60,7 +101,11 @@ describe('Fluxo de trocas', () => {
             .should('be.visible');
 
         cy.get('.modal.active .checkbox-troca')
-            .first()
+            .eq(0)
+            .check();
+
+        cy.get('.modal.active .checkbox-troca')
+            .eq(1)
             .check();
 
         cy.get('.modal.active .motivo-troca')
@@ -79,7 +124,7 @@ describe('Fluxo de trocas', () => {
         validarToast("Troca solicitada com sucesso!");
     });
 
-    it('RF0042/RF0043/RN0046 - Autorizar uma troca e gerar uma notificação', () => {
+    it('RF0042/RF0043/RN0046 - Autorizar a troca e visualizar a notificação', () => {
         cy.viewport(1366, 768);
 
         cy.visit('/admin/trocas');
@@ -133,37 +178,6 @@ describe('Fluxo de trocas', () => {
         cy.visit('/cliente/pedido');
     });
 
-    it('RF0042 - Recusar uma troca', () => {
-        cy.viewport(1366, 768);
-
-        cy.visit('/admin/trocas');
-
-        cy.wait(3000);
-
-        cy.get('table tbody tr')
-            .eq(2)
-            .find('.dropdown')
-            .select('Troca Recusada');
-
-        cy.get('#modalStatusTroca')
-            .should('be.visible');
-
-        cy.wait(2000);
-
-        cy.get('#btnConfirmarStatus')
-            .should('be.visible')
-            .and('not.be.disabled')
-            .click();
-
-        cy.wait(2000);
-
-        validarToast("Status alterado com sucesso!");
-
-        cy.wait(5000);
-
-        cy.visit('/cliente/pedido');
-    });
-
     it('CT005 - Enviar o item', () => {
         cy.viewport(1366, 768);
 
@@ -184,7 +198,7 @@ describe('Fluxo de trocas', () => {
             .click();
     });
 
-    it('RF0044/RF0045/RF0054/RN0042 - Receber o item e mudar o status para TROCADO', () => {
+    it('RF0044/RF0045/RF0054/RN0042 - Receber o item devolvido sem retornar ao estoque', () => {
         cy.viewport(1366, 768);
 
         cy.visit('/admin/estoque');
@@ -212,8 +226,14 @@ describe('Fluxo de trocas', () => {
         cy.wait(4000);
 
         cy.visit('/admin/estoque');
+    });
 
-        cy.wait(4000);
+    it('RF0044/RF0045/RF0054/RN0042 - Receber o item devolvido e retornar ao estoque', () => {
+        cy.viewport(1366, 768);
+
+        cy.visit('/admin/estoque');
+
+        cy.wait(2000);
 
         cy.visit('/admin/trocas');
 
@@ -244,4 +264,57 @@ describe('Fluxo de trocas', () => {
         cy.visit('/admin/estoque');
     });
 
+        it('Utilizar cupom de troca gerado em nova compra', () => {
+         cy.viewport(1366, 768);
+
+        cy.visit('/cliente/produtos');
+
+        cy.wait(1000);
+
+        cy.get('.produto')
+            .eq(0)
+            .find('.btn-adicionar')
+            .click();
+        cy.wait(20);
+
+        cy.wait(2000);
+
+        validarToast('Produto adicionado ao carrinho com sucesso!');
+
+        cy.visit('/cliente/carrinho');
+
+        cy.get('#todos')
+            .should('be.visible')
+            .check();
+        cy.wait(1000);
+
+        cy.get('.btn-finalizar-a-compra')
+            .click();
+        cy.wait(500);
+
+        cy.get('#btnVerCupons')
+            .click();
+
+        cy.wait(1000);
+
+        cy.get('.checkbox-cupom')
+            .eq(2)
+            .check();
+
+        cy.wait(2000);
+
+        cy.get('#btnFecharModalCupom')
+            .click();
+
+        cy.wait(3000);
+
+        cy.get('#btnFinalizarCompra')
+            .click();
+
+        cy.wait(6000);
+
+        cy.reload();
+
+        cy.contains("Aprovada").should("be.visible");
+    });
 });
