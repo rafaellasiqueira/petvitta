@@ -10,47 +10,47 @@ describe('Fluxo de trocas', () => {
             .and('contain', mensagem);
     }
 
-    /*
-    it('RN0043 - Bloquear troca de pedido não entregue', () => {
+
+    it('RN0043 - Bloquear troca de pedido não entregue (back-end)', () => {
         cy.visit('/cliente/pedido');
 
-        cy.contains('.card-pedido', 'Reprovado')
-            .should('be.visible')
-            .find('.btn-solicitar-troca')
-            .should('not.exist');
+        cy.wait(3000);
 
-        cy.get('input[name="_csrf"]').then(($csrf) => {
-            const csrfToken = $csrf.val();
+        cy.get('.card-pedido').first().within(() => {
+            cy.get('.status-pedido')
+                .should('not.contain', 'Entregue');
+        });
+
+        cy.get('.card-pedido').first().then(($pedido) => {
+            const pedidoId = $pedido.find('[name="pedidoId"]').val();
 
             cy.request({
                 method: 'POST',
                 url: '/cliente/pedido/solicitar-troca',
                 form: true,
                 followRedirect: false,
-                failOnStatusCode: false,
-                headers: csrfToken
-                    ? { 'X-CSRF-TOKEN': csrfToken }
-                    : {},
                 body: {
-                    pedidoId: 123,
+                    pedidoId: pedidoId,
                     motivoTroca: 1,
-                    justificativaTroca: 'Teste de troca de pedido não entregue',
+                    justificativaTroca: 'Teste de troca',
                     'itens[0].itemPedidoId': 1,
                     'itens[0].quantidade': 1
                 }
             }).then((response) => {
                 expect(response.status).to.eq(302);
-                expect(response.headers.location).to.include('/cliente/pedido');
+                expect(response.headers.location)
+                    .to.include('/cliente/pedido');
+
             });
+
+            cy.reload();
+
+            cy.get('#toast', { timeout: 6000 })
+                .should('be.visible')
+                .and('contain', 'Somente pedidos entregues podem ser solicitados para troca.');
+
         });
-
-        cy.visit('/cliente/pedido');
-
-        cy.get('#toast')
-            .should('be.visible')
-            .and('contain', 'Somente pedidos entregues podem ser solicitados para troca.');
     });
-    */
 
     it('RF0041/RN0041/RN0043 - Solicitar a troca de um item do pedido', () => {
         cy.viewport(1366, 768);
@@ -186,15 +186,13 @@ describe('Fluxo de trocas', () => {
         cy.wait(2000);
 
         cy.get('.btn-enviado')
-            .should('have.length.at.least', 1)
-            .first()
+            .eq(0)
             .click();
 
         cy.visit('/cliente/pedido');
 
         cy.get('.btn-enviado')
-            .should('have.length.at.least', 1)
-            .first()
+            .eq(0)
             .click();
     });
 
@@ -203,7 +201,7 @@ describe('Fluxo de trocas', () => {
 
         cy.visit('/admin/estoque');
 
-        cy.wait(2000);
+        cy.wait(3000);
 
         cy.visit('/admin/trocas');
 
@@ -264,7 +262,7 @@ describe('Fluxo de trocas', () => {
         cy.visit('/admin/estoque');
     });
 
-        it('Utilizar cupom de troca gerado em nova compra', () => {
+        it('CT08 - Utilizar cupom de troca gerado em nova compra', () => {
          cy.viewport(1366, 768);
 
         cy.visit('/cliente/produtos');

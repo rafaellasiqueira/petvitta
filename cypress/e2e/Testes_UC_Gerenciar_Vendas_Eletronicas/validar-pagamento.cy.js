@@ -490,7 +490,6 @@ describe('Validar Pagamento', () => {
         cy.wait(2000);
 
         cy.intercept('POST', '**/cliente/finalizar-compra', (req) => {
-
             const dados = new URLSearchParams(req.body);
 
             dados.delete('cuponsIds');
