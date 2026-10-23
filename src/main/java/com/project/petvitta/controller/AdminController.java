@@ -9,6 +9,7 @@ import com.project.petvitta.model.troca.Troca;
 import com.project.petvitta.service.*;
 import com.project.petvitta.service.cliente.ClienteService;
 import com.project.petvitta.service.pedido.PedidoService;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -68,11 +69,44 @@ public class AdminController {
         return "admin/login";
     }
 
+    @PostMapping("/admin/login")
+    public String realizarLogin(
+            @RequestParam String email,
+            @RequestParam String senha,
+            HttpSession session,
+            RedirectAttributes redirectAttributes) {
+
+        if ("admin@petvittaclub.com".equals(email) && "@Admin123".equals(senha)) {
+            session.setAttribute("perfil", "ADMIN");
+            return "redirect:/admin/dashboard";
+        }
+
+        redirectAttributes.addFlashAttribute(
+                "tipoToast",
+                "erro"
+        );
+
+        redirectAttributes.addFlashAttribute(
+                "mensagemToast",
+                "E-mail ou senha incorretos. Verifique os dados e tente novamente."
+        );
+
+        return "redirect:/admin/login";
+    }
+
     @GetMapping("/admin/dashboard")
-    public String dashboard(Model model) {
-        model.addAttribute(
-                "paginaAtual",
-                "dashboard");
+    public String dashboard(
+            Model model,
+            HttpSession session) {
+
+        String perfil = (String) session.getAttribute("perfil");
+
+        if (!"ADMIN".equals(perfil)) {
+            return "redirect:/admin/login";
+        }
+
+        model.addAttribute("paginaAtual", "dashboard");
+        model.addAttribute("dadosVendas", pedidoService.listarVendasPorCategoria());
 
         return "admin/dashboard";
     }
@@ -315,5 +349,13 @@ public class AdminController {
         model.addAttribute("auditorias", auditoriaService.listar());
 
         return "admin/auditoria";
+    }
+
+    @GetMapping("/admin/sair")
+    public String logout(HttpSession session) {
+
+        session.invalidate();
+
+        return "redirect:/admin/login";
     }
 }

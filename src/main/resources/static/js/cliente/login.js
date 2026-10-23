@@ -13,20 +13,3 @@ function mostrarSenha() {
     }
 
 }
-
-document.getElementById("btnEntrar").addEventListener("click", function (event) {
-
-    const email = document.getElementById("email");
-    const senha = document.getElementById("senha");
-    const mensagemErro = document.getElementById("erroDadosAcesso");
-
-    if (email.value === "anaBeatriz@gmail.com" && senha.value === "@AnaBeatriz123") {
-        event.preventDefault();
-        window.location.href = "/cliente/produtos";
-    } else {
-        event.preventDefault();
-        mensagemErro.textContent = "E-mail ou senha incorretos. Verifique os dados e tente novamente.";
-        mensagemErro.hidden = false;
-    }
-
-});

@@ -101,10 +101,37 @@ public class ClienteController {
         );
     }
 
+
     @GetMapping("/cliente/login")
     public String login() {
         return "cliente/login";
     }
+
+    @PostMapping("/cliente/login")
+    public String realizarLogin(
+            @RequestParam String email,
+            @RequestParam String senha,
+            HttpSession session,
+            RedirectAttributes redirectAttributes) {
+
+        if ("anaBeatriz@gmail.com".equals(email) && "@AnaBeatriz123".equals(senha)) {
+            session.setAttribute("perfil", "CLIENTE");
+            return "redirect:/cliente/produtos";
+        }
+
+        redirectAttributes.addFlashAttribute(
+                "tipoToast",
+                "erro"
+        );
+
+        redirectAttributes.addFlashAttribute(
+                "mensagemToast",
+                "E-mail ou senha incorretos. Verifique os dados e tente novamente."
+        );
+
+        return "redirect:/cliente/login";
+    }
+
 
     @GetMapping("/cliente/cadastrar")
     public String cadastrar(Model model) {
@@ -645,8 +672,9 @@ public class ClienteController {
     }
 
     @GetMapping("/cliente/sair")
-    public String sair() {
-        return "cliente/login";
+    public String sair(HttpSession session) {
+        session.invalidate();
+        return "redirect:/cliente/login";
     }
 
     private boolean verificarClienteAtivo() {

@@ -30,34 +30,38 @@
 
             <div class="cabecalho-grafico">
                 <h2>Histórico de vendas</h2>
-                <div class="filtros">
-                    <div class="data">
-                        <input type="date"
-                                id="dataInicio">
 
+                <div class="filtros">
+                    <!-- Tipo de comparação -->
+                        <div class="opcoes-comparacao">
+                            <button type="button" class="btn-comparacao ativo" data-tipo="categorias">
+                                Categorias
+                            </button>
+                            <button type="button" class="btn-comparacao" data-tipo="produtos">
+                                Produtos
+                            </button>
+                        </div>
+
+                    <!-- Período -->
+                    <div class="data">
+                        <input type="date" id="dataInicio" aria-label="Data inicial">
                         <span class="separador">-</span>
-                        <input type="date"
-                                id="dataFim">
+                        <input type="date" id="dataFim" aria-label="Data final">
                     </div>
 
-                    <button type="button"
-                            class="btn-aplicar"
-                            id="btnAplicar">
-                        Aplicar
-                    </button>
-
-                    <button type="button"
-                            class="btn-exportar"
-                            id="btnExportar">
-                        Exportar CSV
-                    </button>
+                    <!-- Ações -->
+                    <div class="acoes">
+                        <button type="button" class="btn-aplicar" id="btnAplicar">
+                            Aplicar
+                        </button>
+                        <button type="button" class="btn-exportar" id="btnExportar">
+                            Exportar CSV
+                        </button>
+                    </div>
                 </div>
             </div>
 
-            <div id="mensagemErro"
-                    class="mensagem-erro"
-                    hidden>
-            </div>
+            <span class="linha-filtro"></span>
 
             <div class="grafico-container">
                 <canvas id="graficoVendas"></canvas>
@@ -70,6 +74,12 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <!-- Dashboard -->
+<script th:inline="javascript">
+    const dadosVendas = /*[[${dadosVendas}]]*/ {};
+    const categorias = Object.keys(dadosVendas);
+</script>
+
+
 <script th:src="@{/js/admin/dashboard.js}"></script>
 
 </body>

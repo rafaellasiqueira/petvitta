@@ -37,7 +37,9 @@
             <h1>Seja bem-vindo!</h1>
             <p>Faça login e aproveite tudo o que a PetVitta Club tem para oferecer!</p>
 
-            <form class="form-login" method="post">
+            <form class="form-login"
+                  th:action="@{/cliente/login}"
+                  method="post">
                 <div class="campo-grupo">
                     <label for="email">E-mail</label>
 
@@ -65,11 +67,25 @@
                     </div>
                 </div>
 
-                <p class="mensagem-erro-dados-de-acesso" hidden id="erroDadosAcesso"></p>
-                <a th:href="@{/cliente/produtos}" class="btnEntrar" id="btnEntrar">Entrar</a>
+                <button type="submit" class="btnEntrar" id="btnEntrar">Entrar</button>
                 <a th:href="@{/cliente/cadastrar}" class="btnCadastrar">Não possui uma conta ainda? Cadastra-se</a>
             </form>
         </div>
+
+        <!-- Toast de erro -->
+        <div id="toast"
+             class="toast ativo"
+             th:if="${mensagemToast}">
+
+            <i th:if="${tipoToast == 'erro'}"
+               class="fa-solid fa-circle-xmark"></i>
+
+            <i th:if="${tipoToast != 'erro'}"
+               class="fa-solid fa-check"></i>
+
+            <p th:text="${mensagemToast}"></p>
+        </div>
+
     </main>
 </div>
 
@@ -78,6 +94,9 @@
 
 <!-- Mostrar-senha.js -->
 <script th:src="@{/js/cliente/componentes/mostrar-senha.js}"></script>
+
+<!-- Toast.js -->
+<script th:src="@{/js/cliente/componentes/toast.js}"></script>
 
 </body>
 </html>

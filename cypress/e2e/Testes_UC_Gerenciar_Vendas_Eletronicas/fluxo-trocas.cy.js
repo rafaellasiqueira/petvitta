@@ -165,11 +165,11 @@ describe('Fluxo de trocas', () => {
             .and('not.be.disabled')
             .click();
 
-        cy.wait(2000);
+        cy.wait(1000);
 
         validarToast("Status alterado com sucesso!");
 
-        cy.wait(2000);
+        cy.wait(1000);
 
         cy.visit('/cliente/notificacao');
 

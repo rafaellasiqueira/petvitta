@@ -19,14 +19,14 @@ body {
     color: #292929;
 }
 
-h1 {
+.container-principal h1 {
     font-family: 'Fredoka', sans-serif;
     font-size: 24px;
     font-weight: 500;
     color: #0E1413;
 }
 
-p {
+.container-principal p {
     font-family: 'Nunito', sans-serif;
     font-size: 14px;
     font-weight: 500;
@@ -163,4 +163,45 @@ p {
     color: #EA2B41 !important;
     border-radius: 8px;
     background-color: #FEF7F8;
+}
+
+/* Toast */
+.toast {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    display: none;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 20px;
+    background-color: #1C9B86;
+    color: white;
+    border-radius: 8px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    z-index: 1000;
+}
+
+.toast.ativo {
+    display: flex;
+}
+
+/* Toast de erro */
+.toast:has(.fa-circle-xmark) {
+    background-color: #EA2B41;
+}
+
+/* Toast de atenção */
+.toast:has(.fa-triangle-exclamation) {
+    background-color: #F4AC2D;
+}
+
+.toast-icone {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    color: white;
 }

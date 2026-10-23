@@ -66,6 +66,23 @@ public class ProdutoService {
         return porteRepository.findAll();
     }
 
+    public List<String> listarCategorias() {
+
+        List<String> categorias = new ArrayList<>();
+        List<Produto> produtos = produtoRepository.findAll();
+
+        for (int i = 0; i < produtos.size(); i++) {
+
+            String categoria = produtos.get(i).getCategoria();
+
+            if (!categorias.contains(categoria)) {
+                categorias.add(categoria);
+            }
+        }
+
+        return categorias;
+    }
+
     public List<Produto> filtrar(
             String verTodos,
             String nome,

@@ -22,7 +22,9 @@
             <h1>Seja bem-vindo!</h1>
             <p>Administre com inteligência e precisão</p>
 
-            <form method="post">
+            <form id="formLoginAdmin"
+                  th:action="@{/admin/login}"
+                  method="post">
                 <div class="input-grupo">
                     <label for="email">E-mail</label>
                     <input type="email"
@@ -52,12 +54,24 @@
                     </div>
                 </div>
 
-                <p class="mensagem-erro-dados-de-acesso" hidden id="erroDadosAcesso"></p>
-
                 <button type="submit" id="btnEntrar">Entrar</button>
 
             </form>
         </div>
+    </div>
+
+    <!-- Toast de erro -->
+    <div id="toast"
+         class="toast ativo"
+         th:if="${mensagemToast}">
+
+        <i th:if="${tipoToast == 'erro'}"
+           class="fa-solid fa-circle-xmark"></i>
+
+        <i th:if="${tipoToast != 'erro'}"
+           class="fa-solid fa-check"></i>
+
+        <p th:text="${mensagemToast}"></p>
     </div>
 
     <div class="lado-direito">
@@ -68,5 +82,9 @@
 
 <!-- Login JavaScript -->
 <script th:src="@{/js/admin/login.js}"></script>
+
+<!-- Toast.js -->
+<script th:src="@{/js/cliente/componentes/toast.js}"></script>
+
 </body>
 </html>

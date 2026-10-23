@@ -1,117 +1,136 @@
-.cabecalho-grafico {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    width: 100%;
-    margin-bottom: 24px;
-    gap: 20px;
-}
-
 .card {
     margin: 12px 16px;
+    padding: 20px;
     background-color: #FFFFFF;
-    border-radius: 8px;
-    padding: 12px;
+    border-radius: 12px;
     display: flex;
     flex-direction: column;
     gap: 12px;
     height: calc(100vh - 88px);
+    min-height: 480px;
+    box-sizing: border-box;
 }
 
-.grafico-container {
-    position: relative;
-    width: 100%;
-    height: 100%;
-    min-height: 0;
-    margin-top: 10px;
-}
-
-.grafico-container canvas {
-    width: 100% !important;
-    height: 100% !important;
+.cabecalho-grafico {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 16px;
 }
 
 .cabecalho-grafico h2 {
+    margin: 0;
     font-family: 'Fredoka', sans-serif;
     font-size: 20px;
-    color: #1C9B86;
     font-weight: 500;
+    color: #1C9B86;
     white-space: nowrap;
-    margin: 0;
 }
 
 .filtros {
     display: flex;
     align-items: center;
     justify-content: flex-end;
-    gap: 4px;
     flex-wrap: wrap;
+    gap: 12px;
 }
 
-/* Checkbox */
-.checkbox {
+.container-comparacao {
+    width: 100%;
+    height: 36px;
     display: flex;
     align-items: center;
-    gap: 8px;
-    padding: 8px 6px;
-    cursor: pointer;
+    justify-content: center;
 }
 
-.checkbox span {
-    font-size: 16px;
-    font-weight: 500;
+.opcoes-comparacao {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px;
+    width: auto;
+    background: #EDF2F1;
+    border-radius: 10px;
+}
+
+.linha-filtro {
+    display: block;
+    width: 100%;
+    height: 1px;
+    background-color: #E8EFEE;
+}
+
+.btn-comparacao {
+    height: 30px;
+    padding: 0 14px;
+    border: none;
+    border-radius: 8px;
+    background: transparent;
+    color: #1C9B86;
     font-family: 'Fredoka', sans-serif;
-    color: #2D3A38;
-    white-space: nowrap;
-}
-
-.checkbox input {
-    accent-color: #1C9B86;
-    width: 18px;
-    height: 18px;
+    font-size: 14px;
+    font-weight: 500;
     cursor: pointer;
 }
 
-/* Separadores */
-.separador {
-    color: #B8C7C3;
-    font-size: 14px;
+.btn-comparacao.ativo {
+    background: #1C9B86;
+    color: #FFFFFF;
 }
 
 .data {
     display: flex;
     align-items: center;
     gap: 8px;
-    margin-left: 8px;
 }
 
 .data input {
+    box-sizing: border-box;
+    height: 36px;
+    padding: 0 10px;
     border: 1px solid #D9E2E0;
     border-radius: 8px;
-    outline: none;
-    padding: 0 10px;
-    height: 34px;
+    background: #FFFFFF;
+    color: #1F2A29;
     font-family: 'Nunito', sans-serif;
     font-size: 14px;
-    color: #1F2A29;
-    background: #FFFFFF;
+    outline: none;
+    width: 130px;
 }
 
-.filtros button {
-    height: 34px;
-    margin-left: 8px;
+.data input:focus {
+    border-color: #1C9B86;
+    box-shadow: 0 0 0 3px rgba(28, 155, 134, 0.15);
+}
+
+.separador {
+    color: #8FA19D;
+    font-size: 14px;
+}
+
+.acoes {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.acoes button {
+    box-sizing: border-box;
+    height: 36px;
+    padding: 0 18px;
     border: none;
     border-radius: 8px;
     color: #FFFFFF;
-    font-size: 14px;
     font-family: 'Fredoka', sans-serif;
+    font-size: 14px;
     font-weight: 500;
+    white-space: nowrap;
     cursor: pointer;
+    transition: background-color 0.2s ease;
 }
 
-/* Aplicar */
 .btn-aplicar {
-    width: 90px;
     background: #1C9B86;
 }
 
@@ -119,24 +138,23 @@
     background: #16806F;
 }
 
-/* Exportar */
 .btn-exportar {
-    width: 132px;
     background: #0E1413;
 }
+
 .btn-exportar:hover {
     background: #262B2A;
 }
 
-
-/* Mensagem de erro */
-.mensagem-erro {
+.grafico-container {
+    position: relative;
+    flex: 1;
     width: 100%;
-    padding: 10px 14px;
-    margin-bottom: 15px;
-    border-radius: 8px;
-    background: #FDECEC;
-    color: #B42318;
-    font-family: 'Nunito', sans-serif;
-    font-size: 14px;
+    min-height: 300px;
+}
+
+.grafico-container canvas {
+    display: block;
+    width: 100%;
+    height: 100%;
 }

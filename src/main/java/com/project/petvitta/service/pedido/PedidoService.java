@@ -16,9 +16,13 @@ import com.project.petvitta.repository.cliente.EnderecoRepository;
 import com.project.petvitta.repository.dominio.StatusPedidoRepository;
 import com.project.petvitta.repository.dominio.TipoCupomRepository;
 import com.project.petvitta.repository.pedido.*;
+import com.project.petvitta.service.ProdutoService;
 import com.project.petvitta.service.cliente.CupomService;
 import jakarta.servlet.http.HttpSession;
 
+import java.time.LocalDate;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.*;
 
 import org.springframework.stereotype.Service;
@@ -49,6 +53,7 @@ public class PedidoService {
     private final PagamentoService pagamentoService;
     private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(2);
     private final VerificacaoCompraService verificacaoCompraService;
+    private final ProdutoService produtoService;
 
     public PedidoService(
             PedidoRepository pedidoRepository,
@@ -62,7 +67,7 @@ public class PedidoService {
             StatusPedidoRepository statusPedidoRepository,
             TipoCupomRepository tipoCupomRepository,
             CartaoCompraRepository cartaoCompraRepository,
-            EnderecoCompraRepository enderecoCompraRepository, FreteService freteService, CupomService cupomService, PagamentoService pagamentoService, VerificacaoCompraService verificacaoCompraService
+            EnderecoCompraRepository enderecoCompraRepository, FreteService freteService, CupomService cupomService, PagamentoService pagamentoService, VerificacaoCompraService verificacaoCompraService, ProdutoService produtoService
 
     ) {
         this.pedidoRepository = pedidoRepository;
@@ -81,6 +86,7 @@ public class PedidoService {
         this.cupomService = cupomService;
         this.pagamentoService = pagamentoService;
         this.verificacaoCompraService = verificacaoCompraService;
+        this.produtoService = produtoService;
     }
 
     public List<Pedido> listarPorCliente(Long clienteId) {
@@ -463,6 +469,75 @@ public class PedidoService {
         }
 
         return resultado;
+    }
+
+    public Map<String, List<BigDecimal>> listarVendasPorCategoria(
+            LocalDate dataInicio, LocalDate dataFim) {
+
+        if (dataInicio == null || dataFim == null) {
+            int ano = LocalDate.now().getYear();
+
+            dataInicio = LocalDate.of(ano, 1, 1);
+            dataFim = LocalDate.of(ano, 12, 31);
+        }
+
+        Map<String, List<BigDecimal>> dados = new HashMap<>();
+
+        List<String> categorias = produtoService.listarCategorias();
+
+        for (int i = 0; i < categorias.size(); i++) {
+            List<BigDecimal> valores = new ArrayList<>();
+
+            LocalDate mes = dataInicio.withDayOfMonth(1);
+            LocalDate ultimoMes = dataFim.withDayOfMonth(1);
+
+            while (!mes.isAfter(ultimoMes)) {
+                valores.add(BigDecimal.ZERO);
+                mes = mes.plusMonths(1);
+            }
+
+            dados.put(categorias.get(i), valores);
+        }
+
+        List<Pedido> pedidos =
+                pedidoRepository.findByStatusPedido_Descricao("Entregue");
+
+        for (int i = 0; i < pedidos.size(); i++) {
+            Pedido pedido = pedidos.get(i);
+
+            if (pedido.getDataEntrega() == null) {
+                continue;
+            }
+
+            LocalDate entrega = pedido.getDataEntrega().toLocalDate();
+
+            if (entrega.isBefore(dataInicio) || entrega.isAfter(dataFim)) {
+                continue;
+            }
+
+            int mes = (int) java.time.temporal.ChronoUnit.MONTHS.between(
+                    dataInicio.withDayOfMonth(1),
+                    entrega.withDayOfMonth(1));
+
+            for (int j = 0; j < pedido.getItens().size(); j++) {
+                ItemPedido item = pedido.getItens().get(j);
+
+                String categoria = item.getVariacaoProduto()
+                        .getProduto().getCategoria();
+
+                if (dados.containsKey(categoria)) {
+                    BigDecimal valor = item.getVariacaoProduto()
+                            .getValorVenda()
+                            .multiply(BigDecimal.valueOf(item.getQuantidade()));
+
+                    List<BigDecimal> valores = dados.get(categoria);
+
+                    valores.set(mes, valores.get(mes).add(valor));
+                }
+            }
+        }
+
+        return dados;
     }
 
     public void agendarVerificacaoCompra(Long pedidoId) {
