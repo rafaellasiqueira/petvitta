@@ -62,10 +62,10 @@ describe('Alteração de senha do cliente', () => {
             .type('PetVitta@123');
 
         cy.get('[name="novaSenha"]')
-            .type('Ab@123');
+            .type('Ab@1234');
 
         cy.get('[name="confirmarSenha"]')
-            .type('Ab@123');
+            .type('Ab@1234');
 
         enviarFormulario();
 

@@ -10,6 +10,7 @@ import com.project.petvitta.service.*;
 import com.project.petvitta.service.cliente.ClienteService;
 import com.project.petvitta.service.pedido.PedidoService;
 import jakarta.servlet.http.HttpSession;
+import org.springframework.cglib.core.Local;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -97,7 +98,8 @@ public class AdminController {
     @GetMapping("/admin/dashboard")
     public String dashboard(
             Model model,
-            HttpSession session) {
+            HttpSession session,
+            RedirectAttributes redirectAttributes) {
 
         String perfil = (String) session.getAttribute("perfil");
 
@@ -106,7 +108,63 @@ public class AdminController {
         }
 
         model.addAttribute("paginaAtual", "dashboard");
-        model.addAttribute("dadosVendas", pedidoService.listarVendasPorCategoria());
+
+        int ano = LocalDate.now().getYear();
+
+        LocalDate dataInicio = LocalDate.of(ano, 1, 1);
+        LocalDate dataFim = LocalDate.of(ano, 12, 31);
+
+        model.addAttribute("dataInicio", dataInicio);
+        model.addAttribute("dataFim", dataFim);
+
+        try {
+            model.addAttribute(
+                    "dadosVendas", pedidoService.listarVendasPorCategoria(dataInicio, dataFim)
+            );
+        } catch (IllegalArgumentException e) {
+            redirectAttributes.addFlashAttribute(
+                    "mensagemToast", e.getMessage()
+            );
+            redirectAttributes.addFlashAttribute(
+                    "tipoToast", "erro"
+            );
+
+            return "redirect:/admin/dashboard";
+        }
+
+        return "admin/dashboard";
+    }
+
+    @PostMapping("/admin/dashboard/aplicar-datas")
+    public String filtrarDashboard(
+            @RequestParam LocalDate dataInicio,
+            @RequestParam LocalDate dataFim,
+            Model model,
+            HttpSession session,
+            RedirectAttributes redirectAttributes) {
+
+        String perfil = (String) session.getAttribute("perfil");
+
+        if (!"ADMIN".equals(perfil)) {
+            return "redirect:/admin/login";
+        }
+
+        model.addAttribute("paginaAtual", "dashboard");
+        model.addAttribute("dataInicio", dataInicio);
+        model.addAttribute("dataFim", dataFim);
+
+        try {
+            model.addAttribute("dadosVendas", pedidoService.listarVendasPorCategoria(dataInicio, dataFim));
+        } catch (IllegalArgumentException e) {
+            redirectAttributes.addFlashAttribute(
+                    "mensagemToast", e.getMessage()
+            );
+            redirectAttributes.addFlashAttribute(
+                    "tipoToast", "erro"
+            );
+
+            return "redirect:/admin/dashboard";
+        }
 
         return "admin/dashboard";
     }

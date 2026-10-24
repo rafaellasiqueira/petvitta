@@ -471,36 +471,45 @@ public class PedidoService {
         return resultado;
     }
 
-    public Map<String, List<BigDecimal>> listarVendasPorCategoria(
-            LocalDate dataInicio, LocalDate dataFim) {
-
-        if (dataInicio == null || dataFim == null) {
+    public Map<String, List<BigDecimal>> listarVendasPorCategoria(LocalDate dataInicio, LocalDate dataFim) {
+        if(dataInicio == null || dataFim == null) {
             int ano = LocalDate.now().getYear();
 
             dataInicio = LocalDate.of(ano, 1, 1);
             dataFim = LocalDate.of(ano, 12, 31);
         }
 
-        Map<String, List<BigDecimal>> dados = new HashMap<>();
+        if (dataFim.isBefore(dataInicio)) {
+            throw new IllegalArgumentException(
+                    "A data final não pode ser anterior à data inicial."
+            );
+        }
+
+        if (dataFim.isBefore(dataInicio.plusMonths(1)) || dataFim.isAfter(dataInicio.plusMonths(24))) {
+            throw new IllegalArgumentException(
+                    "O intervalo entre a data de início e a data de fim deve ser de no mínimo 1 mês e no máximo 24 meses."
+            );
+        }
+
+        Map<String, List<BigDecimal>> dadosGrafico = new HashMap<>();
 
         List<String> categorias = produtoService.listarCategorias();
 
-        for (int i = 0; i < categorias.size(); i++) {
+        for(int i = 0; i < categorias.size(); i++) {
             List<BigDecimal> valores = new ArrayList<>();
 
-            LocalDate mes = dataInicio.withDayOfMonth(1);
-            LocalDate ultimoMes = dataFim.withDayOfMonth(1);
+            LocalDate mesInicio = dataInicio.withDayOfMonth(1);
+            LocalDate mesFim = dataFim.withDayOfMonth(1);
 
-            while (!mes.isAfter(ultimoMes)) {
+            while(!mesInicio.isAfter(mesFim)) {
                 valores.add(BigDecimal.ZERO);
-                mes = mes.plusMonths(1);
+                mesInicio = mesInicio.plusMonths(1);
             }
 
-            dados.put(categorias.get(i), valores);
+            dadosGrafico.put(categorias.get(i), valores);
         }
 
-        List<Pedido> pedidos =
-                pedidoRepository.findByStatusPedido_Descricao("Entregue");
+        List<Pedido> pedidos = pedidoRepository.findByStatusPedido_Descricao("Entregue");
 
         for (int i = 0; i < pedidos.size(); i++) {
             Pedido pedido = pedidos.get(i);
@@ -509,35 +518,33 @@ public class PedidoService {
                 continue;
             }
 
-            LocalDate entrega = pedido.getDataEntrega().toLocalDate();
+            LocalDate dataEntrega = pedido.getDataEntrega().toLocalDate();
 
-            if (entrega.isBefore(dataInicio) || entrega.isAfter(dataFim)) {
+            if (dataEntrega.isBefore(dataInicio) || dataEntrega.isAfter(dataFim)) {
                 continue;
             }
 
-            int mes = (int) java.time.temporal.ChronoUnit.MONTHS.between(
-                    dataInicio.withDayOfMonth(1),
-                    entrega.withDayOfMonth(1));
+            int indice = (dataEntrega.getYear() - dataInicio.getYear()) * 12
+                    + dataEntrega.getMonthValue() - dataInicio.getMonthValue();
 
             for (int j = 0; j < pedido.getItens().size(); j++) {
                 ItemPedido item = pedido.getItens().get(j);
 
-                String categoria = item.getVariacaoProduto()
-                        .getProduto().getCategoria();
+                String categoria = item.getVariacaoProduto().getProduto().getCategoria();
 
-                if (dados.containsKey(categoria)) {
-                    BigDecimal valor = item.getVariacaoProduto()
+                if (dadosGrafico.containsKey(categoria)) {
+                    BigDecimal total = item.getVariacaoProduto()
                             .getValorVenda()
                             .multiply(BigDecimal.valueOf(item.getQuantidade()));
 
-                    List<BigDecimal> valores = dados.get(categoria);
+                    List<BigDecimal> valores = dadosGrafico.get(categoria);
 
-                    valores.set(mes, valores.get(mes).add(valor));
+                    valores.set(indice, valores.get(indice).add(total));
                 }
             }
         }
 
-        return dados;
+        return dadosGrafico;
     }
 
     public void agendarVerificacaoCompra(Long pedidoId) {

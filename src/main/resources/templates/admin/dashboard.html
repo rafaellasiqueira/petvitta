@@ -32,32 +32,37 @@
                 <h2>Histórico de vendas</h2>
 
                 <div class="filtros">
-                    <!-- Tipo de comparação -->
-                        <div class="opcoes-comparacao">
-                            <button type="button" class="btn-comparacao ativo" data-tipo="categorias">
-                                Categorias
-                            </button>
-                            <button type="button" class="btn-comparacao" data-tipo="produtos">
-                                Produtos
-                            </button>
+                    <div class="opcoes-comparacao">
+                        <button type="button" class="btn-comparacao ativo" data-tipo="categorias">
+                            Categorias
+                        </button>
+                        <button type="button" class="btn-comparacao" data-tipo="produtos">
+                            Produtos
+                        </button>
+                    </div>
+
+                    <form id="formDatas" method="POST"
+                          th:action="@{/admin/dashboard/aplicar-datas}">
+                        <div class="data">
+                            <input type="date" id="dataInicio" name="dataInicio"
+                                   th:value="${dataInicio}">
+
+                            <span class="separador">-</span>
+
+                            <input type="date" id="dataFim" name="dataFim"
+                                   th:value="${dataFim}">
                         </div>
 
-                    <!-- Período -->
-                    <div class="data">
-                        <input type="date" id="dataInicio" aria-label="Data inicial">
-                        <span class="separador">-</span>
-                        <input type="date" id="dataFim" aria-label="Data final">
-                    </div>
+                        <div class="acoes">
+                            <button type="submit" class="btn-aplicar" id="btnAplicar">
+                                Aplicar
+                            </button>
 
-                    <!-- Ações -->
-                    <div class="acoes">
-                        <button type="button" class="btn-aplicar" id="btnAplicar">
-                            Aplicar
-                        </button>
-                        <button type="button" class="btn-exportar" id="btnExportar">
-                            Exportar CSV
-                        </button>
-                    </div>
+                            <button type="button" class="btn-exportar" id="btnExportar">
+                                Exportar CSV
+                            </button>
+                        </div>
+                    </form>
                 </div>
             </div>
 
@@ -65,6 +70,20 @@
 
             <div class="grafico-container">
                 <canvas id="graficoVendas"></canvas>
+            </div>
+
+            <!-- Toast -->
+            <div id="toast"
+                 class="toast ativo"
+                 th:if="${mensagemToast}">
+
+                <i th:if="${tipoToast == 'erro'}"
+                   class="fa-solid fa-circle-xmark"></i>
+
+                <i th:if="${tipoToast != 'erro'}"
+                   class="fa-solid fa-check"></i>
+
+                <p th:text="${mensagemToast}"></p>
             </div>
         </main>
     </div>
@@ -81,6 +100,10 @@
 
 
 <script th:src="@{/js/admin/dashboard.js}"></script>
+
+<!-- Toast.js -->
+<script th:src="@{/js/cliente/componentes/toast.js}"></script>
+
 
 </body>
 </html>

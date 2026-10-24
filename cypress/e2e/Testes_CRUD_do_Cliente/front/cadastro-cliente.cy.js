@@ -151,7 +151,7 @@ describe('Cadastro de cliente', () => {
 
         cy.get('[name="senha"]')
             .clear()
-            .type('Teste@');
+            .type('Teste@@');
         cy.wait(300);
 
         enviarFormulario();
