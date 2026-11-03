@@ -16,6 +16,7 @@ import com.project.petvitta.repository.cliente.EnderecoRepository;
 import com.project.petvitta.repository.dominio.StatusPedidoRepository;
 import com.project.petvitta.repository.dominio.TipoCupomRepository;
 import com.project.petvitta.repository.pedido.*;
+import com.project.petvitta.repository.troca.TrocaRepository;
 import com.project.petvitta.service.ProdutoService;
 import com.project.petvitta.service.cliente.CupomService;
 import jakarta.servlet.http.HttpSession;
@@ -54,6 +55,7 @@ public class PedidoService {
     private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(2);
     private final VerificacaoCompraService verificacaoCompraService;
     private final ProdutoService produtoService;
+    private final TrocaRepository trocaRepository;
 
     public PedidoService(
             PedidoRepository pedidoRepository,
@@ -67,7 +69,7 @@ public class PedidoService {
             StatusPedidoRepository statusPedidoRepository,
             TipoCupomRepository tipoCupomRepository,
             CartaoCompraRepository cartaoCompraRepository,
-            EnderecoCompraRepository enderecoCompraRepository, FreteService freteService, CupomService cupomService, PagamentoService pagamentoService, VerificacaoCompraService verificacaoCompraService, ProdutoService produtoService
+            EnderecoCompraRepository enderecoCompraRepository, FreteService freteService, CupomService cupomService, PagamentoService pagamentoService, VerificacaoCompraService verificacaoCompraService, ProdutoService produtoService, TrocaRepository trocaRepository
 
     ) {
         this.pedidoRepository = pedidoRepository;
@@ -87,6 +89,7 @@ public class PedidoService {
         this.pagamentoService = pagamentoService;
         this.verificacaoCompraService = verificacaoCompraService;
         this.produtoService = produtoService;
+        this.trocaRepository = trocaRepository;
     }
 
     public List<Pedido> listarPorCliente(Long clienteId) {
@@ -471,7 +474,7 @@ public class PedidoService {
         return resultado;
     }
 
-    public Map<String, List<BigDecimal>> listarVendasPorCategoria(LocalDate dataInicio, LocalDate dataFim) {
+    public Map<String, List<BigDecimal>> listarVendasPorCategoria(LocalDate dataInicio, LocalDate dataFim, List<String> categorias) {
         if(dataInicio == null || dataFim == null) {
             int ano = LocalDate.now().getYear();
 
@@ -493,7 +496,6 @@ public class PedidoService {
 
         Map<String, List<BigDecimal>> dadosGrafico = new HashMap<>();
 
-        List<String> categorias = produtoService.listarCategorias();
 
         for(int i = 0; i < categorias.size(); i++) {
             List<BigDecimal> valores = new ArrayList<>();
@@ -510,6 +512,8 @@ public class PedidoService {
         }
 
         List<Pedido> pedidos = pedidoRepository.findByStatusPedido_Descricao("Entregue");
+
+        pedidos.removeIf(pedido -> trocaRepository.existsByPedido_IdAndStatusTroca_Descricao(pedido.getId(), "Em troca"));
 
         for (int i = 0; i < pedidos.size(); i++) {
             Pedido pedido = pedidos.get(i);

@@ -97,6 +97,9 @@ public class AdminController {
 
     @GetMapping("/admin/dashboard")
     public String dashboard(
+            @RequestParam(required = false) LocalDate dataInicio,
+            @RequestParam(required = false) LocalDate dataFim,
+            @RequestParam(required = false) List<String> categorias,
             Model model,
             HttpSession session,
             RedirectAttributes redirectAttributes) {
@@ -111,57 +114,34 @@ public class AdminController {
 
         int ano = LocalDate.now().getYear();
 
-        LocalDate dataInicio = LocalDate.of(ano, 1, 1);
-        LocalDate dataFim = LocalDate.of(ano, 12, 31);
+        // Define as datas padrão caso nenhum filtro seja enviado
+        if (dataInicio == null) {
+            dataInicio = LocalDate.of(ano, 1, 1);
+        }
+
+        if (dataFim == null) {
+            dataFim = LocalDate.of(ano, 12, 31);
+        }
+
+        // Busca todas as categorias disponíveis
+        List<String> todasCategorias = produtoService.listarCategorias();
+
+        if (categorias == null) {
+            categorias = todasCategorias;
+        }
 
         model.addAttribute("dataInicio", dataInicio);
         model.addAttribute("dataFim", dataFim);
+        model.addAttribute("categorias", todasCategorias);
+        model.addAttribute("categoriasSelecionadas", categorias);
 
         try {
-            model.addAttribute(
-                    "dadosVendas", pedidoService.listarVendasPorCategoria(dataInicio, dataFim)
-            );
+            model.addAttribute("dadosVendas", pedidoService.listarVendasPorCategoria(dataInicio, dataFim, categorias));
+
         } catch (IllegalArgumentException e) {
-            redirectAttributes.addFlashAttribute(
-                    "mensagemToast", e.getMessage()
-            );
-            redirectAttributes.addFlashAttribute(
-                    "tipoToast", "erro"
-            );
 
-            return "redirect:/admin/dashboard";
-        }
-
-        return "admin/dashboard";
-    }
-
-    @PostMapping("/admin/dashboard/aplicar-datas")
-    public String filtrarDashboard(
-            @RequestParam LocalDate dataInicio,
-            @RequestParam LocalDate dataFim,
-            Model model,
-            HttpSession session,
-            RedirectAttributes redirectAttributes) {
-
-        String perfil = (String) session.getAttribute("perfil");
-
-        if (!"ADMIN".equals(perfil)) {
-            return "redirect:/admin/login";
-        }
-
-        model.addAttribute("paginaAtual", "dashboard");
-        model.addAttribute("dataInicio", dataInicio);
-        model.addAttribute("dataFim", dataFim);
-
-        try {
-            model.addAttribute("dadosVendas", pedidoService.listarVendasPorCategoria(dataInicio, dataFim));
-        } catch (IllegalArgumentException e) {
-            redirectAttributes.addFlashAttribute(
-                    "mensagemToast", e.getMessage()
-            );
-            redirectAttributes.addFlashAttribute(
-                    "tipoToast", "erro"
-            );
+            redirectAttributes.addFlashAttribute("mensagemToast", e.getMessage());
+            redirectAttributes.addFlashAttribute("tipoToast", "erro");
 
             return "redirect:/admin/dashboard";
         }

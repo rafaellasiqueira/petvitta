@@ -1,4 +1,16 @@
 document.addEventListener('DOMContentLoaded', () => {
+    // Filtro
+    const formDatas = document.getElementById('formDatas');
+    const filtros = formDatas.querySelectorAll('input[type="checkbox"]');
+
+    filtros.forEach(function (filtro) {
+        filtro.addEventListener("change", function () {
+            formDatas.submit();
+        });
+    });
+
+
+    // Grafico
     const canvas = document.getElementById('graficoVendas');
 
     const listaCategorias = categorias || [];
@@ -56,6 +68,17 @@ document.addEventListener('DOMContentLoaded', () => {
                 plugins: {
                     legend: {
                         position: 'bottom'
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: context => {
+                                return context.dataset.label + ': ' +
+                                    Number(context.raw).toLocaleString('pt-BR', {
+                                        style: 'currency',
+                                        currency: 'BRL'
+                                    });
+                            }
+                        }
                     }
                 },
                 scales: {

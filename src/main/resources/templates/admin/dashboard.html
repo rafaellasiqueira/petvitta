@@ -28,21 +28,14 @@
 
         <main class="card">
 
-            <div class="cabecalho-grafico">
-                <h2>Histórico de vendas</h2>
+            <form id="formDatas" method="GET"
+                  th:action="@{/admin/dashboard}">
 
-                <div class="filtros">
-                    <div class="opcoes-comparacao">
-                        <button type="button" class="btn-comparacao ativo" data-tipo="categorias">
-                            Categorias
-                        </button>
-                        <button type="button" class="btn-comparacao" data-tipo="produtos">
-                            Produtos
-                        </button>
-                    </div>
+                <div class="cabecalho-grafico">
+                    <h2>Histórico de vendas</h2>
 
-                    <form id="formDatas" method="POST"
-                          th:action="@{/admin/dashboard/aplicar-datas}">
+                    <div class="filtros">
+
                         <div class="data">
                             <input type="date" id="dataInicio" name="dataInicio"
                                    th:value="${dataInicio}">
@@ -62,11 +55,27 @@
                                 Exportar CSV
                             </button>
                         </div>
-                    </form>
-                </div>
-            </div>
 
-            <span class="linha-filtro"></span>
+                    </div>
+                </div>
+
+                <span class="linha-filtro"></span>
+
+                <div class="categorias">
+
+                    <label th:each="categoria : ${categorias}"
+                           class="checkbox">
+
+                        <input type="checkbox"
+                               name="categorias"
+                               th:value="${categoria}"
+                               th:checked="${categoriasSelecionadas.contains(categoria)}">
+
+                        <p th:text="${categoria}"></p>
+
+                    </label>
+                </div>
+            </form>
 
             <div class="grafico-container">
                 <canvas id="graficoVendas"></canvas>
