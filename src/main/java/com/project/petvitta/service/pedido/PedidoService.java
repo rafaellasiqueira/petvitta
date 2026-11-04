@@ -513,7 +513,7 @@ public class PedidoService {
 
         List<Pedido> pedidos = pedidoRepository.findByStatusPedido_Descricao("Entregue");
 
-        pedidos.removeIf(pedido -> trocaRepository.existsByPedido_IdAndStatusTroca_Descricao(pedido.getId(), "Em troca"));
+        pedidos.removeIf(pedido -> trocaRepository.existsByPedido_Id(pedido.getId()));
 
         for (int i = 0; i < pedidos.size(); i++) {
             Pedido pedido = pedidos.get(i);

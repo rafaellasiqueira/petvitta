@@ -9,5 +9,5 @@ import java.util.List;
 public interface TrocaRepository extends JpaRepository<Troca, Long> {
     List<Troca> findByClienteId(Long clienteId);
     List<Troca> findAllByOrderByIdDesc();
-    boolean existsByPedido_IdAndStatusTroca_Descricao(Long pedidoId, String descricao);
+    boolean existsByPedido_Id(Long pedidoId);
 }

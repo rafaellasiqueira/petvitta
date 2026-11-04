@@ -237,15 +237,11 @@ describe('Gráfico', () => {
         cy.get('#btnEntrar')
             .click();
 
-        cy.visit('/admin/dashboard');
-
         let inicio;
 
         cy.get('#btnAplicar').then(() => {
             inicio = performance.now();
         });
-
-        cy.wait(2000);
 
         cy.get('#btnAplicar').click();
 
