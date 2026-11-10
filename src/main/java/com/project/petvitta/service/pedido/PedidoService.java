@@ -496,7 +496,6 @@ public class PedidoService {
 
         Map<String, List<BigDecimal>> dadosGrafico = new HashMap<>();
 
-
         for(int i = 0; i < categorias.size(); i++) {
             List<BigDecimal> valores = new ArrayList<>();
 

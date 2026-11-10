@@ -237,6 +237,24 @@ describe('Gráfico', () => {
         cy.get('#btnEntrar')
             .click();
 
+        cy.wait(2000);
+
+        cy.contains('label.checkbox', 'Suplemento')
+            .find('input')
+            .uncheck();
+
+        cy.wait(1000);
+
+        cy.get('#dataInicio')
+            .clear()
+            .type('2025-11-01');
+
+        cy.get('#dataFim')
+            .clear()
+            .type('2026-11-01');
+
+        cy.wait(2000);
+
         let inicio;
 
         cy.get('#btnAplicar').then(() => {
