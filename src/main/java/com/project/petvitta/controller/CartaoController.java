@@ -29,8 +29,15 @@ public class CartaoController {
             BindingResult result,
             @RequestParam(required = false) String voltarPara,
             @RequestParam(required = false) List<Long> itensSelecionados,
+            HttpSession session,
             RedirectAttributes redirectAttributes
     ) {
+        String perfil = (String) session.getAttribute("perfil");
+
+        if (!"CLIENTE".equals(perfil)) {
+            return "redirect:/cliente/login";
+        }
+
         if (result.hasErrors()) {
             redirectAttributes.addFlashAttribute(
                     "tipoToast",
@@ -107,8 +114,15 @@ public class CartaoController {
             @Valid CartaoDTO dto,
             BindingResult result,
             @RequestParam(required = false) List<Long> itensSelecionados,
+            HttpSession session,
             RedirectAttributes redirectAttributes
     ) {
+        String perfil = (String) session.getAttribute("perfil");
+
+        if (!"CLIENTE".equals(perfil)) {
+            return "redirect:/cliente/login";
+        }
+
         if (result.hasErrors()) {
             redirectAttributes.addFlashAttribute(
                     "tipoToast",
@@ -159,8 +173,15 @@ public class CartaoController {
     @PostMapping("/cliente/tornar-cartao-preferencial/{id}")
     public String tornarPreferencial(
             @PathVariable Long id,
+            HttpSession session,
             RedirectAttributes redirectAttributes
     ) {
+        String perfil = (String) session.getAttribute("perfil");
+
+        if (!"CLIENTE".equals(perfil)) {
+            return "redirect:/cliente/login";
+        }
+
         try {
             cartaoService.tornarPreferencial(1L, id);
             redirectAttributes.addFlashAttribute(
@@ -189,8 +210,15 @@ public class CartaoController {
     @PostMapping("/cliente/excluir-cartao/{id}")
     public String excluir(
             @PathVariable Long id,
+            HttpSession session,
             RedirectAttributes redirectAttributes
     ) {
+        String perfil = (String) session.getAttribute("perfil");
+
+        if (!"CLIENTE".equals(perfil)) {
+            return "redirect:/cliente/login";
+        }
+
         try {
             cartaoService.excluirCartao(1L, id);
 
@@ -222,8 +250,14 @@ public class CartaoController {
     public String excluirCartaoTemporario(
             @RequestParam Long cartaoTemporarioId,
             @RequestParam List<Long> itensSelecionados,
+            HttpSession session,
             RedirectAttributes redirectAttributes
     ) {
+        String perfil = (String) session.getAttribute("perfil");
+
+        if (!"CLIENTE".equals(perfil)) {
+            return "redirect:/cliente/login";
+        }
 
         cartaoService.excluirTemporario(cartaoTemporarioId);
 

@@ -5,6 +5,7 @@ import com.project.petvitta.service.CarrinhoService;
 import com.project.petvitta.service.cliente.ClienteService;
 import com.project.petvitta.service.cliente.NotificacaoService;
 import com.project.petvitta.service.ProdutoService;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -49,8 +50,15 @@ public class ProdutoController {
             @RequestParam(required = false) BigDecimal precoMinimo,
             @RequestParam(required = false) BigDecimal precoMaximo,
             @RequestParam(required = false) String categoria,
+            HttpSession session,
             Model model
     ) {
+
+        String perfil = (String) session.getAttribute("perfil");
+
+        if (!"CLIENTE".equals(perfil)) {
+            return "redirect:/cliente/login";
+        }
 
         if (!clienteService.clienteAtivo(1L)) {
             return "redirect:/cliente/inativo";
@@ -103,8 +111,19 @@ public class ProdutoController {
     @GetMapping("/cliente/detalhes-produto/{id}")
     public String detalhesProduto(
             @PathVariable Long id,
+            HttpSession session,
             Model model
     ) {
+
+        String perfil = (String) session.getAttribute("perfil");
+
+        if (!"CLIENTE".equals(perfil)) {
+            return "redirect:/cliente/login";
+        }
+
+        if (!clienteService.clienteAtivo(1L)) {
+            return "redirect:/cliente/inativo";
+        }
 
         Produto produto = produtoService.buscarPorId(id);
 

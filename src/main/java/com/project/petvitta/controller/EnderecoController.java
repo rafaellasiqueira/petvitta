@@ -30,8 +30,15 @@ public class EnderecoController {
             BindingResult result,
             @RequestParam(required = false) String voltarPara,
             @RequestParam(required = false) List<Long> itensSelecionados,
+            HttpSession session,
             RedirectAttributes redirectAttributes
     ) {
+        String perfil = (String) session.getAttribute("perfil");
+
+        if (!"CLIENTE".equals(perfil)) {
+            return "redirect:/cliente/login";
+        }
+
         if (result.hasErrors()) {
             redirectAttributes.addFlashAttribute(
                     "tipoToast",
@@ -94,8 +101,15 @@ public class EnderecoController {
             @Valid EnderecoDTO dto,
             BindingResult result,
             @RequestParam(required = false) List<Long> itensSelecionados,
+            HttpSession session,
             RedirectAttributes redirectAttributes
     ) {
+        String perfil = (String) session.getAttribute("perfil");
+
+        if (!"CLIENTE".equals(perfil)) {
+            return "redirect:/cliente/login";
+        }
+
         if (result.hasErrors()) {
             redirectAttributes.addFlashAttribute(
                     "tipoToast",
@@ -156,8 +170,15 @@ public class EnderecoController {
             @PathVariable Long id,
             @RequestParam(required = false) String voltarPara,
             @RequestParam(required = false) List<Long> itensSelecionados,
+            HttpSession session,
             RedirectAttributes redirectAttributes
     ) {
+        String perfil = (String) session.getAttribute("perfil");
+
+        if (!"CLIENTE".equals(perfil)) {
+            return "redirect:/cliente/login";
+        }
+
         if (result.hasErrors()) {
             redirectAttributes.addFlashAttribute(
                     "tipoToast",
@@ -221,8 +242,15 @@ public class EnderecoController {
     @PostMapping("/cliente/excluir-endereco/{id}")
     public String excluir(
             @PathVariable Long id,
+            HttpSession session,
             RedirectAttributes redirectAttributes
     ) {
+        String perfil = (String) session.getAttribute("perfil");
+
+        if (!"CLIENTE".equals(perfil)) {
+            return "redirect:/cliente/login";
+        }
+
         try {
             enderecoService.excluir(1L, id);
             redirectAttributes.addFlashAttribute(
@@ -257,6 +285,12 @@ public class EnderecoController {
             HttpSession session,
             RedirectAttributes redirectAttributes) {
 
+        String perfil = (String) session.getAttribute("perfil");
+
+        if (!"CLIENTE".equals(perfil)) {
+            return "redirect:/cliente/login";
+        }
+
         if (enderecoSelecionado != null) {
             if (enderecoSelecionado.startsWith("temporario-")) {
                 Long enderecoTemporarioId = Long.valueOf(enderecoSelecionado.replace("temporario-", ""));
@@ -281,8 +315,14 @@ public class EnderecoController {
     public String excluirEnderecoTemporario(
             @RequestParam Long enderecoTemporarioId,
             @RequestParam List<Long> itensSelecionados,
+            HttpSession session,
             RedirectAttributes redirectAttributes
     ) {
+        String perfil = (String) session.getAttribute("perfil");
+
+        if (!"CLIENTE".equals(perfil)) {
+            return "redirect:/cliente/login";
+        }
 
         enderecoService.excluirTemporario(enderecoTemporarioId);
 

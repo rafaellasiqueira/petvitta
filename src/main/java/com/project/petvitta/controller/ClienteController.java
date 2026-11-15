@@ -201,10 +201,16 @@ public class ClienteController {
     }
 
     @GetMapping("/cliente/perfil")
-    public String perfil(Model model) {
+    public String perfil(Model model, HttpSession session) {
 
         if (!verificarClienteAtivo()) {
             return "redirect:/cliente/inativo";
+        }
+
+        String perfil = (String) session.getAttribute("perfil");
+
+        if (!"CLIENTE".equals(perfil)) {
+            return "redirect:/cliente/login";
         }
 
         Cliente cliente = clienteService.buscarPorId(1L);
@@ -238,11 +244,18 @@ public class ClienteController {
     public String alterar(
             @Valid ClienteEdicaoDTO dto,
             BindingResult result,
+            HttpSession session,
             RedirectAttributes redirectAttributes
     ) {
 
         if (!verificarClienteAtivo()) {
             return "redirect:/cliente/inativo";
+        }
+
+        String perfil = (String) session.getAttribute("perfil");
+
+        if (!"CLIENTE".equals(perfil)) {
+            return "redirect:/cliente/login";
         }
 
         if (result.hasErrors()) {
@@ -296,11 +309,18 @@ public class ClienteController {
     public String alterarSenha(
             @Valid AlterarSenhaDTO dto,
             BindingResult result,
+            HttpSession session,
             RedirectAttributes redirectAttributes
     ) {
 
         if (!verificarClienteAtivo()) {
             return "redirect:/cliente/inativo";
+        }
+
+        String perfil = (String) session.getAttribute("perfil");
+
+        if (!"CLIENTE".equals(perfil)) {
+            return "redirect:/cliente/login";
         }
 
         if (result.hasErrors()) {
@@ -357,6 +377,12 @@ public class ClienteController {
     ) {
         if (!verificarClienteAtivo()) {
             return "redirect:/cliente/inativo";
+        }
+
+        String perfil = (String) session.getAttribute("perfil");
+
+        if (!"CLIENTE".equals(perfil)) {
+            return "redirect:/cliente/login";
         }
 
         // Nenhum item selecionado
@@ -463,6 +489,12 @@ public class ClienteController {
             return "redirect:/cliente/inativo";
         }
 
+        String perfil = (String) session.getAttribute("perfil");
+
+        if (!"CLIENTE".equals(perfil)) {
+            return "redirect:/cliente/login";
+        }
+
         try {
             Long clienteId = 1L;
 
@@ -524,7 +556,15 @@ public class ClienteController {
     @GetMapping("/cliente/pedido")
     public String pedidos(
             @RequestParam(required = false) String codigo,
-            Model model) {
+            HttpSession session,
+            Model model
+    ) {
+
+        String perfil = (String) session.getAttribute("perfil");
+
+        if (!"CLIENTE".equals(perfil)) {
+            return "redirect:/cliente/login";
+        }
 
         Cliente cliente = clienteService.buscarPorId(1L);
         boolean temNotificacaoNaoLida = notificacaoService.temNotificacaoNaoLida(1l);
@@ -559,7 +599,14 @@ public class ClienteController {
     public String solicitarTroca(
             @Valid @ModelAttribute SolicitarTrocaDTO dto,
             BindingResult resultado,
+            HttpSession session,
             RedirectAttributes redirectAttributes) {
+
+        String perfil = (String) session.getAttribute("perfil");
+
+        if (!"CLIENTE".equals(perfil)) {
+            return "redirect:/cliente/login";
+        }
 
         if (resultado.hasErrors()) {
             redirectAttributes.addFlashAttribute(
@@ -602,7 +649,14 @@ public class ClienteController {
     @PostMapping("/cliente/troca/item-enviado")
     public String itemEnviado(
             Long trocaId,
+            HttpSession session,
             RedirectAttributes redirectAttributes) {
+
+        String perfil = (String) session.getAttribute("perfil");
+
+        if (!"CLIENTE".equals(perfil)) {
+            return "redirect:/cliente/login";
+        }
 
         try {
             Cliente cliente = clienteService.buscarPorId(1L);
@@ -632,11 +686,20 @@ public class ClienteController {
 
 
     @GetMapping("/cliente/notificacao")
-    public String notificacao(Model model) {
+    public String notificacao(
+            Model model,
+            HttpSession session) {
 
         if (!verificarClienteAtivo()) {
             return "redirect:/cliente/inativo";
         }
+
+        String perfil = (String) session.getAttribute("perfil");
+
+        if (!"CLIENTE".equals(perfil)) {
+            return "redirect:/cliente/login";
+        }
+
         Cliente cliente = clienteService.buscarPorId(1L);
 
         boolean temNotificacaoNaoLida = notificacaoService.temNotificacaoNaoLida(1l);
@@ -650,7 +713,15 @@ public class ClienteController {
     }
 
     @GetMapping("/cliente/notificacao/lida/{id}")
-    public String marcarComoLida(@PathVariable Long id) {
+    public String marcarComoLida(
+            @PathVariable Long id,
+            HttpSession session) {
+
+        String perfil = (String) session.getAttribute("perfil");
+
+        if (!"CLIENTE".equals(perfil)) {
+            return "redirect:/cliente/login";
+        }
 
         notificacaoService.marcarComoLida(id);
 
@@ -658,10 +729,17 @@ public class ClienteController {
     }
 
     @GetMapping("/cliente/inativo")
-    public String inativo(Model model) {
+    public String inativo(
+            Model model,
+            HttpSession session) {
 
-        Cliente cliente =
-                clienteService.buscarPorId(1L);
+        String perfil = (String) session.getAttribute("perfil");
+
+        if (!"CLIENTE".equals(perfil)) {
+            return "redirect:/cliente/login";
+        }
+
+        Cliente cliente = clienteService.buscarPorId(1L);
 
         model.addAttribute(
                 "cliente",

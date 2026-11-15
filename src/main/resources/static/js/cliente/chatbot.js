@@ -1,101 +1,100 @@
-document.addEventListener('DOMContentLoaded', () => {
-    const chatbot = document.getElementById('chatbot');
-    const btnAbrir = document.getElementById('btnAbrirChatbot');
-    const btnFechar = document.getElementById('btnFecharChatbot');
-    const form = document.getElementById('formChatbot');
-    const input = document.getElementById('inputChatbot');
-    const mensagens = document.getElementById('chatbotMensagens');
 
-    // Abrir chatbot
-    btnAbrir.addEventListener('click', () => {
-        chatbot.classList.add('active');
-    });
+const formulario = document.querySelector('#formChatbot');
+const campoMensagem = document.querySelector('#inputChatbot');
+const areaMensagens = document.querySelector('#chatbotMensagens');
+const botaoEnviar = document.querySelector('#btnEnviarChatbot');
 
-    // Fechar chatbot
-    btnFechar.addEventListener('click', () => {
-        chatbot.classList.remove('active');
-    });
+const chatbot = document.querySelector('#chatbot');
+const botaoAbrir = document.querySelector('#btnAbrirChatbot');
+const botaoFechar = document.querySelector('#btnFecharChatbot');
 
-    // Enviar mensagem
-    form.addEventListener('submit', (event) => {
-        event.preventDefault();
+// Abre o chatbot
+botaoAbrir.addEventListener('click', () => {
+    chatbot.classList.add('active');
+});
 
-        const texto = input.value.trim();
+// Fecha o chatbot
+botaoFechar.addEventListener('click', () => {
+    chatbot.classList.remove('active');
+});
 
-        if (texto === '') {
-            return;
-        }
+// Adiciona uma mensagem na conversa
+function adicionarMensagem(texto, tipo) {
 
-        adicionarMensagem(texto, 'usuario');
-        input.value = '';
+    const mensagem = document.createElement('div');
 
-        // Resposta do chatbot
-        const mensagem = texto.toLowerCase(); /* Tudo em letras minusculas */
+    mensagem.classList.add('mensagem', tipo);
+    mensagem.textContent = texto;
 
-        // Cachorro
-        if (mensagem.includes('cachorro')) {
+    areaMensagens.appendChild(mensagem);
 
-            adicionarMensagem(
-                '🐶 Recomendo a Ração Cães Adultos Frango e Carne Choice por R$ 156,75!',
-                'bot'
-            );
-
-        // Gato
-        } else if (mensagem.includes('gato')) {
-
-            adicionarMensagem(
-                '🐱 Recomendo a Ração GoldeN Special Gatos Adultos sabor Frango e Carne por R$ 59,90!',
-                'bot'
-            );
-
-        // Petisco
-        } else if (mensagem.includes('petisco')) {
-
-            adicionarMensagem(
-                '🐾 Recomendo o Petisco Dreamies Sabor Queijo para Gatos por R$ 7,90!',
-                'bot'
-            );
-
-        // Suplemento
-        } else if (mensagem.includes('suplemento')) {
-
-            adicionarMensagem(
-                '🐾 Recomendo o Suplemento Gatos Nutrifull Organnact por R$ 59,08!',
-                'bot'
-            );
+    areaMensagens.scrollTop = areaMensagens.scrollHeight;
+}
 
 
-        // Ração
-        } else if (mensagem.includes('ração')) {
+// Envia a mensagem para o Gemini
+async function enviarMensagem(texto) {
 
-            adicionarMensagem(
-                '🐾 Temos várias rações! Você procura para cachorro ou gato?',
-                'bot'
-            );
+    try {
 
-        // Resposta padrão
-        } else {
-            adicionarMensagem(
-                'Posso recomendar produtos para cachorro, gato, petiscos ou suplementos! 🐾',
-                'bot'
+        botaoEnviar.disabled = true;
+
+        const resposta = await fetch('/api/chatbot/mensagem', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                mensagem: texto
+            })
+        });
+
+        // Converte a resposta do servidor para JSON
+        const dados = await resposta.json();
+
+        // Verifica se o servidor retornou algum erro
+        if (!resposta.ok) {
+
+            console.error('Erro retornado pelo servidor:', dados);
+
+            throw new Error(
+                `Erro HTTP ${resposta.status}: ${dados.resposta || 'Falha ao consultar o chatbot.'}`
             );
         }
-    });
 
-    // Adicionar mensagem
-    function adicionarMensagem(texto, tipo) {
-        const mensagem = document.createElement('div');
-        mensagem.classList.add('mensagem');
+        // Exibe a resposta da Gemini
+        adicionarMensagem(dados.resposta, 'mensagem-bot');
 
-        if (tipo === 'usuario') {
-            mensagem.classList.add('mensagem-usuario');
-        } else {
-            mensagem.classList.add('mensagem-bot');
-        }
+    } catch (erro) {
 
-        mensagem.innerHTML = `<p>${texto}</p>`;
-        mensagens.appendChild(mensagem);
-        mensagens.scrollTop = mensagens.scrollHeight;
+        console.error('Erro no chatbot:', erro);
+
+        adicionarMensagem(
+            'Desculpe, não consegui responder agora. Tente novamente! 🐾',
+            'mensagem-bot'
+        );
+
+    } finally {
+
+        botaoEnviar.disabled = false;
+    }
+}
+
+
+// Evento de envio do formulário
+formulario.addEventListener('submit', async (evento) => {
+
+    evento.preventDefault();
+
+    const texto = campoMensagem.value.trim();
+
+    if (!texto) {
+        return;
     }
 
+    adicionarMensagem(texto, 'mensagem-usuario');
+
+    campoMensagem.value = '';
+
+    await enviarMensagem(texto);
 });

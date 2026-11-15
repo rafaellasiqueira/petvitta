@@ -6,6 +6,7 @@ import com.project.petvitta.model.cliente.Cliente;
 import com.project.petvitta.service.CarrinhoService;
 import com.project.petvitta.service.cliente.ClienteService;
 import com.project.petvitta.service.cliente.NotificacaoService;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -34,7 +35,14 @@ public class CarrinhoController {
             @RequestParam List<Integer> quantidade,
             @RequestParam(required = false) Long produtoId,
             @RequestParam String origem,
+            HttpSession session,
             RedirectAttributes redirectAttributes) {
+
+        String perfil = (String) session.getAttribute("perfil");
+
+        if (!"CLIENTE".equals(perfil)) {
+            return "redirect:/cliente/login";
+        }
 
         try {
             for (int i = 0; i < variacaoId.size(); i++) {
@@ -75,8 +83,16 @@ public class CarrinhoController {
     @PostMapping("/cliente/carrinho/limpar-carrinho")
     public String limparCarrinho(
             Long carrinhoId,
+            HttpSession session,
             RedirectAttributes redirectAttributes
     ) {
+
+        String perfil = (String) session.getAttribute("perfil");
+
+        if (!"CLIENTE".equals(perfil)) {
+            return "redirect:/cliente/login";
+        }
+
         try {
             carrinhoService.limparCarrinho(carrinhoId);
         } catch (IllegalArgumentException e) {
@@ -97,8 +113,16 @@ public class CarrinhoController {
     @PostMapping("/cliente/carrinho/excluir/{id}")
     public String excluir(
             @PathVariable Long id,
+            HttpSession session,
             RedirectAttributes redirectAttributes
     ) {
+
+        String perfil = (String) session.getAttribute("perfil");
+
+        if (!"CLIENTE".equals(perfil)) {
+            return "redirect:/cliente/login";
+        }
+
         try {
             carrinhoService.excluirItem(id);
 
@@ -127,7 +151,16 @@ public class CarrinhoController {
     }
 
     @GetMapping("/cliente/carrinho")
-    public String carrinho(Model model) {
+    public String carrinho(
+            Model model,
+            HttpSession session) {
+
+        String perfil = (String) session.getAttribute("perfil");
+
+        if (!"CLIENTE".equals(perfil)) {
+            return "redirect:/cliente/login";
+        }
+
         Cliente cliente = clienteService.buscarPorId(1L);
 
         boolean temNotificacaoNaoLida = notificacaoService.temNotificacaoNaoLida(1l);
@@ -153,8 +186,15 @@ public class CarrinhoController {
     public String alterarQuantidade(
             @RequestParam Long itemId,
             @RequestParam Integer quantidade,
+            HttpSession session,
             RedirectAttributes redirectAttributes
     ) {
+        String perfil = (String) session.getAttribute("perfil");
+
+        if (!"CLIENTE".equals(perfil)) {
+            return "redirect:/cliente/login";
+        }
+
         try {
             carrinhoService.alterarQuantidade(itemId, quantidade);
 
@@ -177,8 +217,15 @@ public class CarrinhoController {
     public String alterarTamanho(
             @RequestParam Long itemId,
             @RequestParam Long variacaoId,
+            HttpSession session,
             RedirectAttributes redirectAttributes
     ) {
+        String perfil = (String) session.getAttribute("perfil");
+
+        if (!"CLIENTE".equals(perfil)) {
+            return "redirect:/cliente/login";
+        }
+
         try {
             carrinhoService.alterarTamanho(itemId, variacaoId);
         } catch (IllegalArgumentException e) {
