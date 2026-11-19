@@ -3,7 +3,7 @@
     right: 24px;
     bottom: 82px;
     width: 360px;
-    height: 480px;
+    height: 560px;
     background: #FFFFFF;
     display: flex;
     flex-direction: column;
@@ -12,6 +12,7 @@
     font-family: 'Nunito', sans-serif;
     opacity: 0;
     visibility: hidden;
+    border-radius: 2px;
     pointer-events: none; /* Evita cliques quando invisível */
 }
 
@@ -147,6 +148,54 @@
     color: #B7C4C1;
 }
 
+.chatbot-mensagens a {
+    color: #fff;
+}
+
+.chatbot-avaliacao {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-top: 8px;
+}
+
+.opcao-avaliacao {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.opcao-avaliacao span {
+    font-size: 12px;
+    color: #FFFFFF;
+}
+
+.opcao-avaliacao button {
+    cursor: pointer;
+}
+
+.opcao-avaliacao button.selecionado {
+    color: #FFFFFF;
+}
+
+.opcao-avaliacao button:disabled {
+    cursor: default;
+}
+
+.chatbot-avaliacao button {
+    background: none;
+    border: none;
+    color: #FFFFFF;
+    cursor: pointer;
+    font-size: 15px;
+    padding: 4px;
+}
+
+.chatbot-avaliacao button:hover,
+.chatbot-avaliacao button.selecionado {
+    color: #1C9B86;
+}
+
 /* Botão enviar */
 
 .chatbot-form button {
@@ -176,4 +225,27 @@
     justify-content: center;
     cursor: pointer;
     z-index: 10000;
+}
+
+/* Limpar conversa */
+.lado-direito-chatbot {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.separador {
+    width: 2px;
+    height: 22px;
+    background-color: #B8C7C3;
+    flex-shrink: 0;
+}
+
+.btn-limpar-chatbot {
+    background: transparent;
+    border: none;
+    color: #B8C7C3;
+    font-size: 16px;
+    cursor: pointer;
+    padding: 8px;
 }

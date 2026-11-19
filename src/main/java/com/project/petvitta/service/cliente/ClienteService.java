@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ClienteService {
@@ -68,6 +69,26 @@ public class ClienteService {
     }
     public List<AtivarMotivo> listarMotivosAtivacao() {
         return ativarMotivoRepository.findAllByOrderByIdAsc();
+    }
+
+
+    public Cliente realizarLogin(String email, String senha) {
+
+        Optional<Cliente> clienteOptional = clienteRepository.findByEmail(email);
+
+        if (clienteOptional.isEmpty()) {
+            return null;
+        }
+
+        Cliente cliente = clienteOptional.get();
+
+        try {
+            senhaService.verificarSenha(senha, cliente.getSenha());
+            return cliente;
+
+        } catch (IllegalArgumentException e) {
+            return null;
+        }
     }
 
     public Cliente cadastrar(ClienteCadastroDTO dto) {

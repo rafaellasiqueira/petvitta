@@ -3,6 +3,8 @@ package com.project.petvitta.controller;
 import com.project.petvitta.dto.*;
 import com.project.petvitta.model.carrinho.Carrinho;
 import com.project.petvitta.model.carrinho.ItemCarrinho;
+import com.project.petvitta.model.chat.Conversa;
+import com.project.petvitta.model.chat.Mensagem;
 import com.project.petvitta.model.cliente.Cliente;
 import com.project.petvitta.model.cliente.Cupom;
 import com.project.petvitta.model.cliente.Endereco;
@@ -12,6 +14,7 @@ import com.project.petvitta.model.pedido.EnderecoCompra;
 import com.project.petvitta.model.pedido.Pedido;
 import com.project.petvitta.model.troca.Troca;
 import com.project.petvitta.service.*;
+import com.project.petvitta.service.chat.ConversaService;
 import com.project.petvitta.service.cliente.*;
 import com.project.petvitta.service.pedido.PedidoService;
 import jakarta.servlet.http.HttpSession;
@@ -36,6 +39,7 @@ public class ClienteController {
     private final PedidoService pedidoService;
     private final TrocaService trocaService;
     private final NotificacaoService notificacaoService;
+    private final ConversaService conversaService;
 
     public ClienteController(
             ClienteService clienteService,
@@ -44,7 +48,7 @@ public class ClienteController {
             ProdutoService produtoService,
             CupomService cupomService,
             CarrinhoService carrinhoService,
-            PedidoService pedidoService, TrocaService trocaService, NotificacaoService notificacaoService
+            PedidoService pedidoService, TrocaService trocaService, NotificacaoService notificacaoService, ConversaService conversaService
     ) {
         this.clienteService = clienteService;
         this.enderecoService = enderecoService;
@@ -55,6 +59,7 @@ public class ClienteController {
         this.pedidoService = pedidoService;
         this.trocaService = trocaService;
         this.notificacaoService = notificacaoService;
+        this.conversaService = conversaService;
     }
 
     @ModelAttribute
@@ -114,8 +119,13 @@ public class ClienteController {
             HttpSession session,
             RedirectAttributes redirectAttributes) {
 
-        if ("anaBeatriz@gmail.com".equals(email) && "@AnaBeatriz123".equals(senha)) {
+        Cliente cliente = clienteService.realizarLogin(email, senha);
+
+        if (cliente != null) {
+
             session.setAttribute("perfil", "CLIENTE");
+            session.setAttribute("clienteId", cliente.getId());
+
             return "redirect:/cliente/produtos";
         }
 
@@ -203,7 +213,7 @@ public class ClienteController {
     @GetMapping("/cliente/perfil")
     public String perfil(Model model, HttpSession session) {
 
-        if (!verificarClienteAtivo()) {
+        if (!verificarClienteAtivo(session)) {
             return "redirect:/cliente/inativo";
         }
 
@@ -213,29 +223,22 @@ public class ClienteController {
             return "redirect:/cliente/login";
         }
 
-        Cliente cliente = clienteService.buscarPorId(1L);
-        boolean temNotificacaoNaoLida = notificacaoService.temNotificacaoNaoLida(1l);
+        Long clienteId = (Long) session.getAttribute("clienteId");
+
+        Conversa conversa = conversaService.buscarOuCriar(clienteId);
+
+        List<Mensagem> mensagens = conversaService.buscarUltimasMensagens(conversa.getId());
+
+        Cliente cliente = clienteService.buscarPorId(clienteId);
+
+        boolean temNotificacaoNaoLida = notificacaoService.temNotificacaoNaoLida(clienteId);
+
+        model.addAttribute("mensagens", mensagens);
         model.addAttribute("temNotificacaoNaoLida", temNotificacaoNaoLida);
-
-        model.addAttribute(
-                "cliente",
-                cliente
-        );
-
-        model.addAttribute(
-                "enderecos",
-                cliente.getEnderecos()
-        );
-
-        model.addAttribute(
-                "cartoes",
-                cliente.getCartoes()
-        );
-
-        model.addAttribute(
-                "cupons",
-                cupomService.listarCupoms()
-        );
+        model.addAttribute("cliente", cliente);
+        model.addAttribute("enderecos", cliente.getEnderecos());
+        model.addAttribute("cartoes", cliente.getCartoes());
+        model.addAttribute("cupons", cupomService.listarCupoms());
 
         return "cliente/perfil";
     }
@@ -248,7 +251,7 @@ public class ClienteController {
             RedirectAttributes redirectAttributes
     ) {
 
-        if (!verificarClienteAtivo()) {
+        if (!verificarClienteAtivo(session)) {
             return "redirect:/cliente/inativo";
         }
 
@@ -275,7 +278,9 @@ public class ClienteController {
 
         try {
 
-            clienteService.alterar(1L, dto);
+            Long clienteId = (Long) session.getAttribute("clienteId");
+
+            clienteService.alterar(clienteId, dto);
 
             redirectAttributes.addFlashAttribute(
                     "tipoToast",
@@ -313,7 +318,7 @@ public class ClienteController {
             RedirectAttributes redirectAttributes
     ) {
 
-        if (!verificarClienteAtivo()) {
+        if (!verificarClienteAtivo(session)) {
             return "redirect:/cliente/inativo";
         }
 
@@ -340,7 +345,9 @@ public class ClienteController {
 
         try {
 
-            clienteService.alterarSenha(1L, dto);
+            Long clienteId = (Long) session.getAttribute("clienteId");
+
+            clienteService.alterarSenha(clienteId, dto);
 
             redirectAttributes.addFlashAttribute(
                     "tipoToast",
@@ -375,7 +382,7 @@ public class ClienteController {
             HttpSession session,
             RedirectAttributes redirectAttributes
     ) {
-        if (!verificarClienteAtivo()) {
+        if (!verificarClienteAtivo(session)) {
             return "redirect:/cliente/inativo";
         }
 
@@ -384,6 +391,8 @@ public class ClienteController {
         if (!"CLIENTE".equals(perfil)) {
             return "redirect:/cliente/login";
         }
+
+        Long clienteId = (Long) session.getAttribute("clienteId");
 
         // Nenhum item selecionado
         if (itensSelecionados == null || itensSelecionados.isEmpty()) {
@@ -395,7 +404,7 @@ public class ClienteController {
 
         model.addAttribute("itensSelecionados", itensSelecionados);
 
-        Cliente cliente = clienteService.buscarPorId(1L);
+        Cliente cliente = clienteService.buscarPorId(clienteId);
         Carrinho carrinho = carrinhoService.buscarPorCliente(cliente.getId());
         List<ItemCarrinho> itensExpirados = carrinhoService.verificarExpiracao(carrinho);
 
@@ -416,7 +425,7 @@ public class ClienteController {
         }
 
         // Endereços temporários não utilizados em outras compras
-        List<EnderecoCompra> enderecosTemporarios = enderecoService.buscarTemporariosNaoUtilizados(1L);
+        List<EnderecoCompra> enderecosTemporarios = enderecoService.buscarTemporariosNaoUtilizados(clienteId);
         model.addAttribute("enderecosTemporarios", enderecosTemporarios);
 
         // Endereço temporário selecionado
@@ -457,12 +466,13 @@ public class ClienteController {
 
                 if ("Entrega".equalsIgnoreCase(enderecoAtual.getTipoEndereco().getDescricao())
                         || "Cobrança e Entrega".equalsIgnoreCase(
-                                enderecoAtual.getTipoEndereco().getDescricao())) {
+                        enderecoAtual.getTipoEndereco().getDescricao())) {
                     endereco = enderecoAtual;
                     break;
                 }
             }
         }
+
         model.addAttribute("endereco", endereco);
 
         // Listar os cupons
@@ -470,7 +480,7 @@ public class ClienteController {
         model.addAttribute("cupons", cupons);
 
         // Cartões temporários não utilizados
-        List<CartaoCompra> cartoesTemporarios = cartaoService.buscarTemporariosNaoUtilizados(1L);
+        List<CartaoCompra> cartoesTemporarios = cartaoService.buscarTemporariosNaoUtilizados(clienteId);
         model.addAttribute("cartoesTemporarios", cartoesTemporarios);
 
         model.addAttribute("cliente", cliente);
@@ -485,7 +495,7 @@ public class ClienteController {
             HttpSession session,
             RedirectAttributes redirectAttributes
     ) {
-        if (!verificarClienteAtivo()) {
+        if (!verificarClienteAtivo(session)) {
             return "redirect:/cliente/inativo";
         }
 
@@ -496,7 +506,7 @@ public class ClienteController {
         }
 
         try {
-            Long clienteId = 1L;
+            Long clienteId = (Long) session.getAttribute("clienteId");
 
             pedidoService.finalizarCompra(clienteId, dto, session);
 
@@ -560,14 +570,27 @@ public class ClienteController {
             Model model
     ) {
 
+        if (!verificarClienteAtivo(session)) {
+            return "redirect:/cliente/inativo";
+        }
+
         String perfil = (String) session.getAttribute("perfil");
 
         if (!"CLIENTE".equals(perfil)) {
             return "redirect:/cliente/login";
         }
 
-        Cliente cliente = clienteService.buscarPorId(1L);
-        boolean temNotificacaoNaoLida = notificacaoService.temNotificacaoNaoLida(1l);
+        Long clienteId = (Long) session.getAttribute("clienteId");
+
+        Cliente cliente = clienteService.buscarPorId(clienteId);
+
+        Conversa conversa = conversaService.buscarOuCriar(clienteId);
+
+        List<Mensagem> mensagens = conversaService.buscarUltimasMensagens(conversa.getId());
+
+        model.addAttribute("mensagens", mensagens);
+
+        boolean temNotificacaoNaoLida = notificacaoService.temNotificacaoNaoLida(clienteId);
         model.addAttribute("temNotificacaoNaoLida", temNotificacaoNaoLida);
 
         List<Pedido> pedidos;
@@ -602,6 +625,10 @@ public class ClienteController {
             HttpSession session,
             RedirectAttributes redirectAttributes) {
 
+        if (!verificarClienteAtivo(session)) {
+            return "redirect:/cliente/inativo";
+        }
+
         String perfil = (String) session.getAttribute("perfil");
 
         if (!"CLIENTE".equals(perfil)) {
@@ -621,7 +648,9 @@ public class ClienteController {
         }
 
         try {
-            Cliente cliente = clienteService.buscarPorId(1L);
+            Long clienteId = (Long) session.getAttribute("clienteId");
+
+            Cliente cliente = clienteService.buscarPorId(clienteId);
 
             trocaService.solicitarTroca(dto, cliente.getId());
 
@@ -652,6 +681,10 @@ public class ClienteController {
             HttpSession session,
             RedirectAttributes redirectAttributes) {
 
+        if (!verificarClienteAtivo(session)) {
+            return "redirect:/cliente/inativo";
+        }
+
         String perfil = (String) session.getAttribute("perfil");
 
         if (!"CLIENTE".equals(perfil)) {
@@ -659,7 +692,9 @@ public class ClienteController {
         }
 
         try {
-            Cliente cliente = clienteService.buscarPorId(1L);
+            Long clienteId = (Long) session.getAttribute("clienteId");
+
+            Cliente cliente = clienteService.buscarPorId(clienteId);
 
             trocaService.itemEnviado(trocaId, cliente.getId());
 
@@ -690,7 +725,12 @@ public class ClienteController {
             Model model,
             HttpSession session) {
 
-        if (!verificarClienteAtivo()) {
+
+        if (!verificarClienteAtivo(session)) {
+            return "redirect:/cliente/inativo";
+        }
+
+        if (!verificarClienteAtivo(session)) {
             return "redirect:/cliente/inativo";
         }
 
@@ -700,9 +740,18 @@ public class ClienteController {
             return "redirect:/cliente/login";
         }
 
-        Cliente cliente = clienteService.buscarPorId(1L);
+        Long clienteId = (Long) session.getAttribute("clienteId");
 
-        boolean temNotificacaoNaoLida = notificacaoService.temNotificacaoNaoLida(1l);
+        Conversa conversa = conversaService.buscarOuCriar(clienteId);
+
+        List<Mensagem> mensagens = conversaService.buscarUltimasMensagens(conversa.getId());
+
+
+        model.addAttribute("mensagens", mensagens);
+
+        Cliente cliente = clienteService.buscarPorId(clienteId);
+
+        boolean temNotificacaoNaoLida = notificacaoService.temNotificacaoNaoLida(clienteId);
         model.addAttribute("temNotificacaoNaoLida", temNotificacaoNaoLida);
 
         List<Notificacao> notificacoes = notificacaoService.buscarPorClienteId(cliente.getId());
@@ -716,6 +765,10 @@ public class ClienteController {
     public String marcarComoLida(
             @PathVariable Long id,
             HttpSession session) {
+
+        if (!verificarClienteAtivo(session)) {
+            return "redirect:/cliente/inativo";
+        }
 
         String perfil = (String) session.getAttribute("perfil");
 
@@ -733,13 +786,19 @@ public class ClienteController {
             Model model,
             HttpSession session) {
 
+        if (!verificarClienteAtivo(session)) {
+            return "redirect:/cliente/inativo";
+        }
+
         String perfil = (String) session.getAttribute("perfil");
 
         if (!"CLIENTE".equals(perfil)) {
             return "redirect:/cliente/login";
         }
 
-        Cliente cliente = clienteService.buscarPorId(1L);
+        Long clienteId = (Long) session.getAttribute("clienteId");
+
+        Cliente cliente = clienteService.buscarPorId(clienteId);
 
         model.addAttribute(
                 "cliente",
@@ -755,9 +814,9 @@ public class ClienteController {
         return "redirect:/cliente/login";
     }
 
-    private boolean verificarClienteAtivo() {
+    private boolean verificarClienteAtivo(HttpSession session) {
 
-        Long clienteId = 1L;
+        Long clienteId = (Long) session.getAttribute("clienteId");
 
         return clienteService.clienteAtivo(
                 clienteId

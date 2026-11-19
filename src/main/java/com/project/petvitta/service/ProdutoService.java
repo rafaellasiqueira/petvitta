@@ -315,5 +315,109 @@ public class ProdutoService {
         return resultado;
     }
 
+    public String montarCatalogoParaGemini() {
+        List<Produto> produtos = produtoRepository.findByAtivoTrue();
+
+        if (produtos.isEmpty()) {
+            return "Nenhum produto disponível no catálogo.";
+        }
+
+        String catalogo = "";
+
+        for (int i = 0; i < produtos.size(); i++) {
+            Produto produto = produtos.get(i);
+
+            catalogo += "\nPRODUTO " + (i + 1) + "\n";
+
+            catalogo += "ID: " + produto.getId() + "\n";
+            catalogo += "Nome: " + produto.getNome() + "\n";
+            catalogo += "Marca: " + produto.getMarca() + "\n";
+            catalogo += "Categoria: " + produto.getCategoria() + "\n";
+            catalogo += "Descrição: " + produto.getDescricao() + "\n";
+
+            catalogo += "Composição nutricional: " + produto.getComposicaoNutricional() + "\n";
+
+            catalogo += "Contém transgênico: " + (produto.isContemTransgenico() ? "Sim" : "Não") + "\n";
+            catalogo += "Contém glúten: " + (produto.isContemGluten() ? "Sim" : "Não") + "\n";
+
+            // Espécies
+            catalogo += "Espécies: ";
+
+            for (int j = 0; j < produto.getEspecies().size(); j++) {
+                catalogo += produto.getEspecies().get(j).getNome() + ", ";
+            }
+
+            catalogo += "\n";
+
+            // Portes
+            catalogo += "Portes: ";
+
+            for (int j = 0; j < produto.getPortes().size(); j++) {
+                catalogo += produto.getPortes().get(j).getNome() + ", ";
+            }
+
+            catalogo += "\n";
+
+            // Faixas etárias
+            catalogo += "Faixas etárias: ";
+
+            for (int j = 0; j < produto.getFaixasEtarias().size(); j++) {
+                catalogo += produto.getFaixasEtarias().get(j).getNome() + ", ";
+            }
+
+            catalogo += "\n";
+
+            // Sabores
+            catalogo += "Sabores: ";
+
+            for (int j = 0; j < produto.getSabores().size(); j++) {
+                catalogo += produto.getSabores().get(j).getNome() + ", ";
+            }
+
+            catalogo += "\n";
+
+            // Informações específicas de cada categoria
+            if (produto instanceof Racao racao) {
+
+                catalogo += "Tipo de ração: " + racao.getTipoRacao().getNome() + "\n";
+                catalogo += "Tamanho do grão: " + racao.getTamanhoGrao().getNome() + "\n";
+
+            } else if (produto instanceof Petisco petisco) {
+
+                catalogo += "Tipo de petisco: " + petisco.getTipoPetisco().getNome() + "\n";
+
+            } else if (produto instanceof Suplemento suplemento) {
+
+                catalogo += "Forma de apresentação: " + suplemento.getFormaApresentacao().getNome() + "\n";
+            }
+
+            // Preços, tamanhos e estoque
+            catalogo += "Variações disponíveis:\n";
+
+            for (int j = 0; j < produto.getVariacoes().size(); j++) {
+
+                VariacaoProduto variacao = produto.getVariacoes().get(j);
+
+                catalogo += "- Tamanho: " + variacao.getTamanho();
+                catalogo += ", Preço: R$ " + variacao.getValorVenda();
+                catalogo += ", Estoque: " + variacao.getEstoqueAtual() + "\n";
+            }
+
+            // Quantidade recomendada
+            catalogo += "Quantidade recomendada:\n";
+
+            for (int j = 0; j < produto.getQuantidadeRecomendada().size(); j++) {
+
+                QuantidadeRecomendada quantidade = produto.getQuantidadeRecomendada().get(j);
+
+                catalogo += "- Peso do animal: " + quantidade.getPesoAnimal();
+                catalogo += ", Quantidade: " + quantidade.getQuantidadeRecomendada() + "\n";
+            }
+
+            catalogo += "------------------------------\n";
+        }
+
+        return catalogo;
+    }
 
 }

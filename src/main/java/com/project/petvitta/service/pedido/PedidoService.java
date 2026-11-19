@@ -1,6 +1,7 @@
 package com.project.petvitta.service.pedido;
 
 import com.project.petvitta.dto.FinalizarCompraDTO;
+import com.project.petvitta.dto.HistoricoCompraDTO;
 import com.project.petvitta.model.carrinho.Carrinho;
 import com.project.petvitta.model.carrinho.ItemCarrinho;
 import com.project.petvitta.model.cliente.Cliente;
@@ -557,4 +558,39 @@ public class PedidoService {
                 TimeUnit.SECONDS
         );
     }
+
+
+    public List<HistoricoCompraDTO> buscarHistoricoCompras(Long clienteId) {
+
+        List<Pedido> pedidos = pedidoRepository.findByClienteId(clienteId);
+
+        List<HistoricoCompraDTO> historico = new ArrayList<>();
+
+        for (int i = 0; i < pedidos.size(); i++) {
+            Pedido pedido = pedidos.get(i);
+
+            List<String> produtos = new ArrayList<>();
+
+            for (int j = 0; j < pedido.getItens().size(); j++) {
+                ItemPedido item = pedido.getItens().get(j);
+
+                String nomeProduto = item.getVariacaoProduto().getProduto().getNome();
+
+                produtos.add(nomeProduto + " - Quantidade: " + item.getQuantidade()
+                );
+            }
+
+            HistoricoCompraDTO dto = new HistoricoCompraDTO(
+                    pedido.getCodigo(),
+                    pedido.getData().toString(),
+                    pedido.getStatusPedido().getDescricao(),
+                    produtos
+            );
+
+            historico.add(dto);
+        }
+
+        return historico;
+    }
+
 }

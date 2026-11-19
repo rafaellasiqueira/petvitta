@@ -2,8 +2,11 @@ package com.project.petvitta.controller;
 
 import com.project.petvitta.model.carrinho.Carrinho;
 import com.project.petvitta.model.carrinho.ItemCarrinho;
+import com.project.petvitta.model.chat.Conversa;
+import com.project.petvitta.model.chat.Mensagem;
 import com.project.petvitta.model.cliente.Cliente;
 import com.project.petvitta.service.CarrinhoService;
+import com.project.petvitta.service.chat.ConversaService;
 import com.project.petvitta.service.cliente.ClienteService;
 import com.project.petvitta.service.cliente.NotificacaoService;
 import jakarta.servlet.http.HttpSession;
@@ -22,11 +25,13 @@ public class CarrinhoController {
     private final CarrinhoService carrinhoService;
     private final ClienteService clienteService;
     private final NotificacaoService notificacaoService;
+    private final ConversaService conversaService;
 
-    public CarrinhoController(CarrinhoService carrinhoService, ClienteService clienteService, NotificacaoService notificacaoService) {
+    public CarrinhoController(CarrinhoService carrinhoService, ClienteService clienteService, NotificacaoService notificacaoService, ConversaService conversaService) {
         this.carrinhoService = carrinhoService;
         this.clienteService = clienteService;
         this.notificacaoService = notificacaoService;
+        this.conversaService = conversaService;
     }
 
     @PostMapping("/cliente/carrinho/adicionar")
@@ -161,9 +166,17 @@ public class CarrinhoController {
             return "redirect:/cliente/login";
         }
 
-        Cliente cliente = clienteService.buscarPorId(1L);
+        Long clienteId = (Long) session.getAttribute("clienteId");
 
-        boolean temNotificacaoNaoLida = notificacaoService.temNotificacaoNaoLida(1l);
+        Cliente cliente = clienteService.buscarPorId(clienteId);
+
+        Conversa conversa = conversaService.buscarOuCriar(clienteId);
+
+        List<Mensagem> mensagens = conversaService.buscarUltimasMensagens(conversa.getId());
+
+        model.addAttribute("mensagens", mensagens);
+
+        boolean temNotificacaoNaoLida = notificacaoService.temNotificacaoNaoLida(clienteId);
         model.addAttribute("temNotificacaoNaoLida", temNotificacaoNaoLida);
 
         Carrinho carrinho = carrinhoService.buscarPorCliente(cliente.getId());
@@ -244,4 +257,3 @@ public class CarrinhoController {
     }
 
 }
-

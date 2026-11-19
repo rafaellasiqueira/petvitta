@@ -10,6 +10,7 @@ import java.util.Optional;
 
 public interface PedidoRepository extends JpaRepository<Pedido, Long> {
     List<Pedido> findByClienteIdOrderByIdDesc(Long clienteId);
+    List<Pedido> findByClienteId(Long clienteId);
     Optional<Pedido> findByCodigo(String codigo);
     List<Pedido> findAllByOrderByIdDesc();
     List<Pedido> findByStatusPedido_Descricao(String descricao);

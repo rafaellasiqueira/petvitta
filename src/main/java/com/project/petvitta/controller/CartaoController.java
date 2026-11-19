@@ -38,6 +38,8 @@ public class CartaoController {
             return "redirect:/cliente/login";
         }
 
+        Long clienteId = (Long) session.getAttribute("clienteId");
+
         if (result.hasErrors()) {
             redirectAttributes.addFlashAttribute(
                     "tipoToast",
@@ -62,7 +64,7 @@ public class CartaoController {
         }
 
         try {
-            cartaoService.adicionar(1L, dto);
+            cartaoService.adicionar(clienteId, dto);
 
             redirectAttributes.addFlashAttribute(
                     "tipoToast",
@@ -123,6 +125,8 @@ public class CartaoController {
             return "redirect:/cliente/login";
         }
 
+        Long clienteId = (Long) session.getAttribute("clienteId");
+
         if (result.hasErrors()) {
             redirectAttributes.addFlashAttribute(
                     "tipoToast",
@@ -138,7 +142,7 @@ public class CartaoController {
         }
 
         try {
-            cartaoService.adicionarTemporario(1L, dto);
+            cartaoService.adicionarTemporario(clienteId, dto);
 
             redirectAttributes.addFlashAttribute(
                     "tipoToast",
@@ -182,8 +186,10 @@ public class CartaoController {
             return "redirect:/cliente/login";
         }
 
+        Long clienteId = (Long) session.getAttribute("clienteId");
+
         try {
-            cartaoService.tornarPreferencial(1L, id);
+            cartaoService.tornarPreferencial(clienteId, id);
             redirectAttributes.addFlashAttribute(
                     "tipoToast",
                     "sucesso"
@@ -219,8 +225,10 @@ public class CartaoController {
             return "redirect:/cliente/login";
         }
 
+        Long clienteId = (Long) session.getAttribute("clienteId");
+
         try {
-            cartaoService.excluirCartao(1L, id);
+            cartaoService.excluirCartao(clienteId, id);
 
             redirectAttributes.addFlashAttribute(
                     "tipoToast",

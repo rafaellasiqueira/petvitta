@@ -1,7 +1,10 @@
 package com.project.petvitta.controller;
 
+import com.project.petvitta.model.chat.Conversa;
+import com.project.petvitta.model.chat.Mensagem;
 import com.project.petvitta.model.produto.Produto;
 import com.project.petvitta.service.CarrinhoService;
+import com.project.petvitta.service.chat.ConversaService;
 import com.project.petvitta.service.cliente.ClienteService;
 import com.project.petvitta.service.cliente.NotificacaoService;
 import com.project.petvitta.service.ProdutoService;
@@ -22,17 +25,19 @@ public class ProdutoController {
     private final ClienteService clienteService;
     private final CarrinhoService carrinhoService;
     private final NotificacaoService notificacaoService;
+    private final ConversaService conversaService;
 
     public ProdutoController(
             ProdutoService produtoService,
             ClienteService clienteService,
             CarrinhoService carrinhoService,
-            NotificacaoService notificacaoService
-            ) {
+            NotificacaoService notificacaoService, ConversaService conversaService
+    ) {
         this.produtoService = produtoService;
         this.clienteService = clienteService;
         this.carrinhoService = carrinhoService;
         this.notificacaoService = notificacaoService;
+        this.conversaService = conversaService;
     }
 
     @GetMapping("/cliente/produtos")
@@ -60,11 +65,19 @@ public class ProdutoController {
             return "redirect:/cliente/login";
         }
 
-        if (!clienteService.clienteAtivo(1L)) {
+        Long clienteId = (Long) session.getAttribute("clienteId");
+
+        if (!clienteService.clienteAtivo(clienteId)) {
             return "redirect:/cliente/inativo";
         }
 
-        boolean temNotificacaoNaoLida = notificacaoService.temNotificacaoNaoLida(1l);
+        Conversa conversa = conversaService.buscarOuCriar(clienteId);
+
+        List<Mensagem> mensagens = conversaService.buscarUltimasMensagens(conversa.getId());
+
+        model.addAttribute("mensagens", mensagens);
+
+        boolean temNotificacaoNaoLida = notificacaoService.temNotificacaoNaoLida(clienteId);
         model.addAttribute("temNotificacaoNaoLida", temNotificacaoNaoLida);
 
         model.addAttribute("tiposRacao", produtoService.listarTiposRacao());
@@ -121,9 +134,17 @@ public class ProdutoController {
             return "redirect:/cliente/login";
         }
 
-        if (!clienteService.clienteAtivo(1L)) {
+        Long clienteId = (Long) session.getAttribute("clienteId");
+
+        if (!clienteService.clienteAtivo(clienteId)) {
             return "redirect:/cliente/inativo";
         }
+
+        Conversa conversa = conversaService.buscarOuCriar(clienteId);
+
+        List<Mensagem> mensagens = conversaService.buscarUltimasMensagens(conversa.getId());
+
+        model.addAttribute("mensagens", mensagens);
 
         Produto produto = produtoService.buscarPorId(id);
 

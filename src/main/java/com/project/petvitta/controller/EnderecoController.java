@@ -39,6 +39,8 @@ public class EnderecoController {
             return "redirect:/cliente/login";
         }
 
+        Long clienteId = (Long) session.getAttribute("clienteId");
+
         if (result.hasErrors()) {
             redirectAttributes.addFlashAttribute(
                     "tipoToast",
@@ -60,7 +62,7 @@ public class EnderecoController {
         }
 
         try {
-            enderecoService.adicionar(1L, dto);
+            enderecoService.adicionar(clienteId, dto);
 
             redirectAttributes.addFlashAttribute(
                     "tipoToast",
@@ -110,6 +112,8 @@ public class EnderecoController {
             return "redirect:/cliente/login";
         }
 
+        Long clienteId = (Long) session.getAttribute("clienteId");
+
         if (result.hasErrors()) {
             redirectAttributes.addFlashAttribute(
                     "tipoToast",
@@ -130,7 +134,7 @@ public class EnderecoController {
         }
 
         try {
-            enderecoService.adicionarTemporario(1L, dto);
+            enderecoService.adicionarTemporario(clienteId, dto);
 
             redirectAttributes.addFlashAttribute(
                     "tipoToast",
@@ -179,6 +183,8 @@ public class EnderecoController {
             return "redirect:/cliente/login";
         }
 
+        Long clienteId = (Long) session.getAttribute("clienteId");
+
         if (result.hasErrors()) {
             redirectAttributes.addFlashAttribute(
                     "tipoToast",
@@ -203,7 +209,7 @@ public class EnderecoController {
         }
 
         try {
-            enderecoService.editar(1L, id, dto);
+            enderecoService.editar(clienteId, id, dto);
 
             redirectAttributes.addFlashAttribute(
                     "tipoToast",
@@ -251,8 +257,10 @@ public class EnderecoController {
             return "redirect:/cliente/login";
         }
 
+        Long clienteId = (Long) session.getAttribute("clienteId");
+
         try {
-            enderecoService.excluir(1L, id);
+            enderecoService.excluir(clienteId, id);
             redirectAttributes.addFlashAttribute(
                     "tipoToast",
                     "sucesso"
@@ -274,9 +282,9 @@ public class EnderecoController {
                     e.getMessage()
             );
         }
+
         return "redirect:/cliente/perfil";
     }
-
 
     @PostMapping("/cliente/finalizar-compra/endereco")
     public String selecionarEndereco(
@@ -344,4 +352,3 @@ public class EnderecoController {
         return "redirect:/cliente/finalizar-compra";
     }
 }
-

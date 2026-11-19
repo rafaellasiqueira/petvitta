@@ -60,7 +60,6 @@ public class PagamentoService {
                     continue;
                 }
 
-                // Deve ser informado somente um tipo de cartão.
                 if (cartaoId == null && cartaoTemporarioId == null) {
                     throw new IllegalArgumentException(
                             "Selecione um cartão válido."

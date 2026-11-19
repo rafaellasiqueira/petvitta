@@ -20,6 +20,9 @@
 
     <!-- Chatbot CSS -->
     <link rel="stylesheet" th:href="@{/css/cliente/chatbot.css}">
+
+    <!-- Modal -->
+    <link rel="stylesheet" th:href="@{/css/cliente/modal.css}">
 </head>
 
 <body>
@@ -57,6 +60,10 @@
         </div>
     </main>
 </div>
+
+<!-- Markedom -->
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
 
 <!-- Chatbot -->
 <div th:replace="~{fragments/cliente/chatbot :: chatbot}"></div>

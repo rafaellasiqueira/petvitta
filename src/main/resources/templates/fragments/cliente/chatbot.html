@@ -22,22 +22,50 @@
                 <p>Assistente virtual</p>
             </div>
 
-            <button type="button" class="btn-fechar-chatbot" id="btnFecharChatbot">&times;</button>
+            <div class="lado-direito-chatbot">
+                <button type="button"
+                        class="btn-limpar-chatbot"
+                        id="btnLimparChatbot">
+                    <i class="fa-regular fa-trash-can"></i>
+                </button>
+
+                <span class="separador"></span>
+
+                <button type="button" class="btn-fechar-chatbot" id="btnFecharChatbot">&times;</button>
+            </div>
         </div>
 
         <!-- Conversa -->
         <div class="chatbot-mensagens" id="chatbotMensagens">
 
-            <!-- Mensagem inicial do chatbot -->
             <div class="mensagem mensagem-bot">
-                <p>
-                    Olá! Seja bem-vindo(a) à PetVitta Club!
+                <p> Olá! Seja bem-vindo(a) à PetVitta Club!
                     Sou sua assistente virtual e estou pronta
                     para ajudar com recomendações de rações,
                     petiscos, suplementos e muito mais.
-                    É só me dizer o que você precisa!
-                </p>
+                    É só me dizer o que você precisa!</p>
             </div>
+
+            <th:block th:each="mensagem : ${mensagens}">
+
+                <div th:if="${mensagem.remetente == 'CLIENTE'}"
+                     class="mensagem mensagem-usuario">
+
+                    <p th:text="${mensagem.conteudo}"></p>
+
+                </div>
+
+                <div th:if="${mensagem.remetente == 'IA'}"
+                     class="mensagem mensagem-bot"
+                     th:attr="data-mensagem-id=${mensagem.id},
+                  data-avaliacao=${mensagem.avaliacao}">
+
+                    <p th:text="${mensagem.conteudo}"></p>
+
+                </div>
+
+            </th:block>
+
         </div>
 
         <!-- Campo de mensagem -->
@@ -63,6 +91,9 @@
             <img th:src="@{/images/logo-icone-chatbot.svg}">
         </div>
     </button>
+
+    <div th:replace="~{fragments/cliente/modais :: modal-confirmar-exclusao-chatbot}"></div>
+
 </div>
 
 </body>
