@@ -4,7 +4,6 @@
     background: #FFFFFF;
     border-radius: 8px;
     padding: 16px 20px;
-    width: 716px;
     height: auto;
     display: flex;
     flex-direction: column;
@@ -13,13 +12,14 @@
 
 .produtos-container {
     min-height: 100vh;
+    min-width: 888px;
 }
 
 .filtro {
     background: #FFFFFF;
     border-radius: 8px;
     padding: 16px 20px;
-    width: auto;
+    width: 300px;
     height: auto;
     display: flex;
     flex-direction: column;
@@ -186,7 +186,7 @@ h1 {
 /* Produtos */
 .produtos-linha {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(5, 1fr);
     gap: 12px;
 }
 

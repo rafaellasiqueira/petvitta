@@ -24,11 +24,6 @@ botaoFechar.addEventListener('click', () => {
 });
 
 
-// Adiciona uma mensagem na conversa
-
-// Adiciona uma mensagem na conversa
-// Adiciona uma mensagem na conversa
-
 // Cria os botões de avaliação
 function adicionarBotoesAvaliacao(mensagem, mensagemId, avaliacaoSalva = null) {
 

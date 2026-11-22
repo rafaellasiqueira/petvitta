@@ -82,33 +82,38 @@
                     <tr>
                         <th>Marca</th>
                         <td th:text="${produto.marca}"></td>
-                    </tr>
+                    <tr>
                         <th>Espécie</th>
                         <td>
-                            <span th:each="especie : ${produto.especies}"
-                                  th:text="${especie.nome + '   '}">
-                            </span>
+                            <div class="lista-especificacoes">
+                                <span th:each="especie : ${produto.especies}"
+                                      th:text="${especie.nome}">
+                                </span>
+                            </div>
                         </td>
                     </tr>
 
                     <tr>
                         <th>Idade</th>
                         <td>
-                            <span th:each="faixa : ${produto.faixasEtarias}"
-                                  th:text="${faixa.nome + '   '}">
-                            </span>
+                            <div class="lista-especificacoes">
+                                <span th:each="faixa : ${produto.faixasEtarias}"
+                                      th:text="${faixa.nome}">
+                                </span>
+                            </div>
                         </td>
                     </tr>
 
                     <tr>
                         <th>Porte indicado</th>
                         <td>
-                            <span th:each="porte : ${produto.portes}"
-                                  th:text="${porte.nome + '   '}">
-                            </span>
+                            <div class="lista-especificacoes">
+                                <span th:each="porte : ${produto.portes}"
+                                      th:text="${porte.nome}">
+                                </span>
+                            </div>
                         </td>
                     </tr>
-
                     <tr>
                         <th>Categoria</th>
                         <td th:text="${produto.categoria}"></td>

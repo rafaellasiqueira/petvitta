@@ -32,7 +32,6 @@ public class ChatController {
 
     @PostMapping("/mensagem")
 
-    // Controla a resposta do navegador
     public ResponseEntity<RespostaChat> enviarMensagem(
             @RequestBody MensagemChat mensagemChat,
             HttpSession session

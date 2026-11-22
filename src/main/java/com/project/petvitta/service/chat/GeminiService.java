@@ -28,9 +28,6 @@ public class GeminiService {
             String produtos
 
     ) {
-
-        long inicio = System.currentTimeMillis();
-
         String historicoCompras = historico.toString();
 
         String historicoConversa = "";
@@ -116,7 +113,7 @@ public class GeminiService {
         - Restrições informadas pelo cliente.
 
         REGRAS:
-        - Recomende sempre no máximo 4 produtos.
+        - Recomende sempre no máximo 3 produtos.
         - Priorize produtos compatíveis com as necessidades do animal.
         - Considere as compras anteriores quando forem relevantes.
         - Recomende somente produtos existentes no catálogo.
@@ -161,7 +158,7 @@ public class GeminiService {
 
         Se o cliente perguntar sobre assuntos sem relação com a loja, responda educadamente:
 
-        "Sou a assistente virtual da PetVitta Club e posso ajudar com dúvidas sobre nossos produtos para cães e gatos, além de informações sobre suas compras. Como posso ajudar?"
+        "Sou a assistente virtual da PetVitta Club! 🐾 Posso ajudar você a encontrar produtos para cães e gatos, como rações, petiscos e suplementos, além de oferecer recomendações de acordo com a espécie, idade e porte do seu pet. Também posso esclarecer dúvidas sobre os produtos da nossa loja. Meu atendimento é voltado aos assuntos relacionados à nossa loja. Como posso ajudar?"
 
         Não tente responder assuntos fora desse contexto.
 
@@ -214,39 +211,21 @@ public class GeminiService {
 
         """ + historicoConversa;
 
-        try {
-
-            System.out.println("Enviando mensagem para Gemini...");
-
-            GenerateContentResponse resposta =
-                    client.models.generateContent(
-                            "gemini-3.5-flash-lite",
-                            prompt,
-                            null
-                    );
-
-            String texto = resposta.text();
-
-            if (texto == null || texto.isBlank()) {
-                throw new IllegalArgumentException(
-                        "O Gemini não retornou uma resposta válida."
+        GenerateContentResponse resposta =
+                client.models.generateContent(
+                        "gemini-3.5-flash-lite",
+                        prompt,
+                        null
                 );
-            }
 
-            long fim = System.currentTimeMillis();
+        String texto = resposta.text();
 
-            System.out.println("Gemini respondeu!");
-            System.out.println("Tempo de resposta: "
-                    + (fim - inicio) + " ms");
-
-            return texto;
-
-        } catch (Exception e) {
-
-            System.out.println("Erro ao consultar Gemini: "
-                    + e.getMessage());
-
-            throw e;
+        if (texto == null || texto.isBlank()) {
+            throw new IllegalArgumentException(
+                    "O Gemini não retornou uma resposta válida."
+            );
         }
+
+        return texto;
     }
 }
