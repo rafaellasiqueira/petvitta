@@ -227,7 +227,7 @@ public class ClienteController {
 
         Conversa conversa = conversaService.buscarOuCriar(clienteId);
 
-        List<Mensagem> mensagens = conversaService.buscarUltimasMensagens(conversa.getId());
+        List<Mensagem> mensagens = conversaService.buscarMensagens(conversa.getId());
 
         Cliente cliente = clienteService.buscarPorId(clienteId);
 
@@ -586,7 +586,7 @@ public class ClienteController {
 
         Conversa conversa = conversaService.buscarOuCriar(clienteId);
 
-        List<Mensagem> mensagens = conversaService.buscarUltimasMensagens(conversa.getId());
+        List<Mensagem> mensagens = conversaService.buscarMensagens(conversa.getId());
 
         model.addAttribute("mensagens", mensagens);
 
@@ -744,8 +744,7 @@ public class ClienteController {
 
         Conversa conversa = conversaService.buscarOuCriar(clienteId);
 
-        List<Mensagem> mensagens = conversaService.buscarUltimasMensagens(conversa.getId());
-
+        List<Mensagem> mensagens = conversaService.buscarMensagens(conversa.getId());
 
         model.addAttribute("mensagens", mensagens);
 

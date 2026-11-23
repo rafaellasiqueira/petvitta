@@ -149,6 +149,23 @@ public class Produto {
         return menor;
     }
 
+    public String getTipoProduto() {
+
+        if (this instanceof Racao) {
+            return ((Racao) this).getTipoRacao().getNome();
+        }
+
+        if (this instanceof Petisco) {
+            return ((Petisco) this).getTipoPetisco().getNome();
+        }
+
+        if (this instanceof Suplemento) {
+            return ((Suplemento) this).getFormaApresentacao().getNome();
+        }
+
+        return null;
+    }
+
     public Produto() {
     }
 }

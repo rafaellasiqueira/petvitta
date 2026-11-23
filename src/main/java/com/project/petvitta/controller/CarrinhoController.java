@@ -49,9 +49,11 @@ public class CarrinhoController {
             return "redirect:/cliente/login";
         }
 
+        Long clienteId = (Long) session.getAttribute("clienteId");
+
         try {
             for (int i = 0; i < variacaoId.size(); i++) {
-                carrinhoService.adicionar(variacaoId.get(i), quantidade.get(i));
+                carrinhoService.adicionar(variacaoId.get(i), quantidade.get(i), clienteId);
             }
 
             redirectAttributes.addFlashAttribute(
@@ -128,8 +130,10 @@ public class CarrinhoController {
             return "redirect:/cliente/login";
         }
 
+        Long clienteId = (Long) session.getAttribute("clienteId");
+
         try {
-            carrinhoService.excluirItem(id);
+            carrinhoService.excluirItem(id, clienteId);
 
             redirectAttributes.addFlashAttribute(
                     "tipoToast",
@@ -172,7 +176,7 @@ public class CarrinhoController {
 
         Conversa conversa = conversaService.buscarOuCriar(clienteId);
 
-        List<Mensagem> mensagens = conversaService.buscarUltimasMensagens(conversa.getId());
+        List<Mensagem> mensagens = conversaService.buscarMensagens(conversa.getId());
 
         model.addAttribute("mensagens", mensagens);
 
@@ -208,8 +212,10 @@ public class CarrinhoController {
             return "redirect:/cliente/login";
         }
 
+        Long clienteId = (Long) session.getAttribute("clienteId");
+
         try {
-            carrinhoService.alterarQuantidade(itemId, quantidade);
+            carrinhoService.alterarQuantidade(itemId, quantidade, clienteId);
 
         } catch (IllegalArgumentException e) {
             redirectAttributes.addFlashAttribute(
@@ -239,8 +245,10 @@ public class CarrinhoController {
             return "redirect:/cliente/login";
         }
 
+        Long clienteId = (Long) session.getAttribute("clienteId");
+
         try {
-            carrinhoService.alterarTamanho(itemId, variacaoId);
+            carrinhoService.alterarTamanho(itemId, variacaoId, clienteId);
         } catch (IllegalArgumentException e) {
             redirectAttributes.addFlashAttribute(
                     "tipoToast",

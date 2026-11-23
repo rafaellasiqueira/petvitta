@@ -59,11 +59,27 @@
             </div>
         </div>
     </main>
+
+    <!-- Toast de erro -->
+    <div id="toast"
+         class="toast ativo"
+         th:if="${mensagemToast}">
+
+        <i th:if="${tipoToast == 'erro'}"
+           class="fa-solid fa-circle-xmark"></i>
+
+        <i th:if="${tipoToast != 'erro'}"
+           class="fa-solid fa-check"></i>
+
+        <p th:text="${mensagemToast}"></p>
+    </div>
 </div>
 
 <!-- Markedom -->
 <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 
+<!-- Toast.js -->
+<script th:src="@{/js/cliente/componentes/toast.js}"></script>
 
 <!-- Chatbot -->
 <div th:replace="~{fragments/cliente/chatbot :: chatbot}"></div>

@@ -7,5 +7,9 @@ import java.util.List;
 
 public interface MensagemRepository extends JpaRepository<Mensagem, Long> {
 
-    List<Mensagem> findTop100ByConversaIdOrderByDataEnvioDesc(Long conversaId);
+    void deleteByConversa_Id(Long conversaId);
+
+    List<Mensagem> findByConversaIdOrderByDataEnvioAsc(Long conversaId);
+
+    List<Mensagem> findByRemetenteAndAvaliacaoIsNotNullOrderByDataEnvioAsc(String remetente);
 }

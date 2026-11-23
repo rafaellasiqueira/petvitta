@@ -14,6 +14,15 @@ public class HistoricoCompraDTO {
     private String status;
     private List<String> produtos;
 
-    public HistoricoCompraDTO(String codigo, String string, String descricao, List<String> produtos) {
+    public HistoricoCompraDTO(
+            String codigo,
+            String data,
+            String status,
+            List<String> produtos) {
+
+        this.codigoPedido = codigo;
+        this.data = data;
+        this.status = status;
+        this.produtos = produtos;
     }
 }

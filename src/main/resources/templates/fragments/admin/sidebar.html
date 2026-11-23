@@ -106,6 +106,20 @@
             <i class="fa-solid fa-book"></i>
             <span>Auditoria</span>
         </a>
+
+        <a th:if="${paginaAtual == 'treinamento'}"
+           th:href="@{/admin/treinamento}"
+           class="menu-item ativo">
+            <i class="fa-solid fa-brain"></i>
+            <span>Treinamento da IA</span>
+        </a>
+
+        <a th:unless="${paginaAtual == 'treinamento'}"
+           th:href="@{/admin/treinamento}"
+           class="menu-item">
+            <i class="fa-solid fa-brain"></i>
+            <span>Treinamento da IA</span>
+        </a>
     </nav>
 
     <div class="menu-espaco"></div>

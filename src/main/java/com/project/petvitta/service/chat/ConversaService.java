@@ -60,11 +60,9 @@ public class ConversaService {
         return mensagemRepository.save(mensagem);
     }
 
-    public List<Mensagem> buscarUltimasMensagens(Long conversaId) {
+    public List<Mensagem> buscarMensagens(Long conversaId) {
 
-        List<Mensagem> mensagens = mensagemRepository.findTop100ByConversaIdOrderByDataEnvioDesc(conversaId);
-
-        Collections.reverse(mensagens);
+        List<Mensagem> mensagens = mensagemRepository.findByConversaIdOrderByDataEnvioAsc(conversaId);
 
         return mensagens;
     }
@@ -72,15 +70,14 @@ public class ConversaService {
     @Transactional
     public void limparMensagens(Long conversaId) {
 
-        // Busca a conversa pelo ID
         Conversa conversa = conversaRepository.findById(conversaId)
                 .orElseThrow(() -> new RuntimeException("Conversa não encontrada."));
 
-        // Exclui todas as mensagens da conversa
-        mensagemRepository.deleteAll(conversa.getMensagens());
+        // Excluir as mensagens da conversa
+        mensagemRepository.deleteByConversa_Id(conversaId);
 
-        // Limpa a lista de mensagens da conversa
-        conversa.getMensagens().clear();
+        // Excluir o registro da conversa
+        conversaRepository.delete(conversa);
     }
 
     @Transactional

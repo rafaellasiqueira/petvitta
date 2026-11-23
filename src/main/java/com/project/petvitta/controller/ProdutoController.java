@@ -73,7 +73,7 @@ public class ProdutoController {
 
         Conversa conversa = conversaService.buscarOuCriar(clienteId);
 
-        List<Mensagem> mensagens = conversaService.buscarUltimasMensagens(conversa.getId());
+        List<Mensagem> mensagens = conversaService.buscarMensagens(conversa.getId());
 
         model.addAttribute("mensagens", mensagens);
 
@@ -142,7 +142,7 @@ public class ProdutoController {
 
         Conversa conversa = conversaService.buscarOuCriar(clienteId);
 
-        List<Mensagem> mensagens = conversaService.buscarUltimasMensagens(conversa.getId());
+        List<Mensagem> mensagens = conversaService.buscarMensagens(conversa.getId());
 
         model.addAttribute("mensagens", mensagens);
 

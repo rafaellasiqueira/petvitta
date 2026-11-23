@@ -57,11 +57,38 @@
 
                 <div th:if="${mensagem.remetente == 'IA'}"
                      class="mensagem mensagem-bot"
-                     th:attr="data-mensagem-id=${mensagem.id},
-                  data-avaliacao=${mensagem.avaliacao}">
+                     th:data-mensagem-id="${mensagem.id}"
+                     th:data-avaliacao="${mensagem.avaliacao}">
 
                     <p th:text="${mensagem.conteudo}"></p>
 
+                    <div class="chatbot-avaliacao">
+                        <div class="opcao-avaliacao">
+                            <button type="button"
+                                    class="botao-avaliacao"
+                                    th:classappend="${mensagem.avaliacao == 'Útil'} ? 'selecionado' : ''"
+                                    th:disabled="${mensagem.avaliacao != null and !mensagem.avaliacao.isEmpty()}">
+
+                                <i class="fa-regular fa-thumbs-up"></i>
+
+                            </button>
+
+                            <span>Útil</span>
+                        </div>
+
+                        <div class="opcao-avaliacao">
+                            <button type="button"
+                                    class="botao-avaliacao"
+                                    th:classappend="${mensagem.avaliacao == 'Não útil'} ? 'selecionado' : ''"
+                                    th:disabled="${mensagem.avaliacao != null and !mensagem.avaliacao.isEmpty()}">
+
+                                <i class="fa-regular fa-thumbs-down"></i>
+
+                            </button>
+
+                            <span>Não útil</span>
+                        </div>
+                    </div>
                 </div>
 
             </th:block>

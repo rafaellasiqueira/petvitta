@@ -42,7 +42,7 @@ public class CarrinhoService {
     }
 
     @Transactional
-    public void adicionar(Long variacaoId, Integer quantidade) {
+    public void adicionar(Long variacaoId, Integer quantidade, Long clienteId) {
         if (variacaoId == null) {
             throw new IllegalArgumentException("Variação do produto não informada.");
         }
@@ -61,7 +61,7 @@ public class CarrinhoService {
             throw new IllegalArgumentException("Quantidade maior que o estoque disponível.");
         }
 
-        Cliente cliente = clienteService.buscarPorId(1L);
+        Cliente cliente = clienteService.buscarPorId(clienteId);
 
         Carrinho carrinho = buscarPorCliente(cliente.getId());
 
@@ -146,12 +146,12 @@ public class CarrinhoService {
     }
 
     @Transactional
-    public void excluirItem(Long itemId) {
+    public void excluirItem(Long itemId, Long clienteId) {
         if (itemId == null) {
             throw new IllegalArgumentException("Item não informado.");
         }
 
-        Cliente cliente = clienteService.buscarPorId(1L);
+        Cliente cliente = clienteService.buscarPorId(clienteId);
 
         Carrinho carrinho = carrinhoRepository
                 .findByClienteId(cliente.getId())
@@ -236,7 +236,7 @@ public class CarrinhoService {
     }
 
     @Transactional
-    public void alterarQuantidade(Long itemId, Integer quantidade) {
+    public void alterarQuantidade(Long itemId, Integer quantidade, Long clienteId) {
 
         if (itemId == null) {
             throw new IllegalArgumentException("Item não informado.");
@@ -248,7 +248,7 @@ public class CarrinhoService {
             );
         }
 
-        Cliente cliente = clienteService.buscarPorId(1L);
+        Cliente cliente = clienteService.buscarPorId(clienteId);
 
         Carrinho carrinho = carrinhoRepository
                 .findByClienteId(cliente.getId())
@@ -291,14 +291,14 @@ public class CarrinhoService {
     }
 
     @Transactional
-    public void alterarTamanho(Long itemId, Long variacaoId) {
+    public void alterarTamanho(Long itemId, Long variacaoId, Long clienteId) {
         if (itemId == null || variacaoId == null) {
             throw new IllegalArgumentException(
                     "Item e variação devem ser informados."
             );
         }
 
-        Cliente cliente = clienteService.buscarPorId(1L);
+        Cliente cliente = clienteService.buscarPorId(clienteId);
 
         Carrinho carrinho = carrinhoRepository
                 .findByClienteId(cliente.getId())

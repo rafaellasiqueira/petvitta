@@ -1,0 +1,150 @@
+/* Descrição */
+.descricao {
+    font-size: 15px;
+    color: #5F7370;
+    line-height: 1.6;
+}
+
+/* Informações do treinamento */
+.treinamento-info {
+    background: #E8EFEE;
+    border-radius: 12px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+h2 {
+    font-family: 'Fredoka', sans-serif;
+    font-size: 20px;
+    font-weight: 500;
+    color: #3A4A48;
+}
+
+.treinamento-info p {
+    font-size: 14px;
+    color: #5F7370;
+    line-height: 1.6;
+}
+
+/* Lista */
+.treinamento-info ul {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 4px;
+}
+
+.treinamento-info li {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 14px;
+    color: #3A4A48;
+}
+
+.treinamento-info li i {
+    color: #1C9B86;
+    font-size: 14px;
+}
+
+/* Área do botão */
+.area-treinamento {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+    margin-top: 8px;
+}
+
+/* Botão treinar */
+.btn-treinar {
+    width: auto;
+    min-width: 210px;
+    height: 42px;
+    padding: 0 18px;
+    border: none;
+    border-radius: 8px;
+    background: #1C9B86;
+    color: #FFFFFF;
+    font-family: 'Fredoka', sans-serif;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    transition: background 0.2s;
+}
+
+.btn-treinar:hover {
+    background: #157363;
+}
+
+.btn-treinar i {
+    font-size: 16px;
+}
+
+/* Mensagem */
+#mensagem {
+    font-size: 14px;
+    color: #5F7370;
+}
+
+#mensagem.erro {
+    color: #EA2B41;
+}
+
+#mensagem.sucesso {
+    color: #1C9B86;
+}
+
+/* Resultado */
+.resultado {
+    display: none;
+    background: #F3F8F6;
+    border-radius: 12px;
+    padding: 20px;
+    flex-direction: column;
+    gap: 16px;
+    margin-top: 8px;
+}
+
+.resultado.ativo {
+    display: flex;
+}
+
+.resultado h2 {
+    color: #1C9B86;
+}
+
+/* Informações da versão */
+.dados-treinamento {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+}
+
+.dado {
+    background: #FFFFFF;
+    border-radius: 8px;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.dado span {
+    font-size: 13px;
+    color: #5F7370;
+}
+
+.dado strong {
+    font-family: 'Fredoka', sans-serif;
+    font-size: 22px;
+    font-weight: 500;
+    color: #1C9B86;
+}

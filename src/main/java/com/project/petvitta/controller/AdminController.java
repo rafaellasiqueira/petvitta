@@ -396,4 +396,12 @@ public class AdminController {
 
         return "redirect:/admin/login";
     }
+
+    @GetMapping("/admin/treinamento")
+    public String treinamento(Model model) {
+
+        model.addAttribute("paginaAtual", "treinamento");
+
+        return "admin/treinamento";
+    }
 }

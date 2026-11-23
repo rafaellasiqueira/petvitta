@@ -1,4 +1,3 @@
-
 const formulario = document.querySelector('#formChatbot');
 const campoMensagem = document.querySelector('#inputChatbot');
 const areaMensagens = document.querySelector('#chatbotMensagens');
@@ -8,6 +7,7 @@ const chatbot = document.querySelector('#chatbot');
 const botaoAbrir = document.querySelector('#btnAbrirChatbot');
 const botaoFechar = document.querySelector('#btnFecharChatbot');
 
+// Permite a formatação Markdown
 document.querySelectorAll('#chatbotMensagens .mensagem-bot p').forEach(paragrafo => {
     paragrafo.innerHTML = marked.parse(paragrafo.textContent);
 });
@@ -24,208 +24,77 @@ botaoFechar.addEventListener('click', () => {
 });
 
 
-// Cria os botões de avaliação
-function adicionarBotoesAvaliacao(mensagem, mensagemId, avaliacaoSalva = null) {
+// Envia a avaliação da resposta
 
-    const avaliacao = document.createElement('div');
-    avaliacao.classList.add('chatbot-avaliacao');
+// Envia a avaliação da resposta
 
-    const opcaoPositiva = document.createElement('div');
-    opcaoPositiva.classList.add('opcao-avaliacao');
+areaMensagens.addEventListener('click', async (evento) => {
 
-    const btnPositivo = document.createElement('button');
-    btnPositivo.type = 'button';
-    btnPositivo.innerHTML = '<i class="fa-regular fa-thumbs-up"></i>';
+    const botao = evento.target.closest('.botao-avaliacao');
 
-    const textoPositivo = document.createElement('span');
-    textoPositivo.textContent = 'Útil';
-
-    opcaoPositiva.appendChild(btnPositivo);
-    opcaoPositiva.appendChild(textoPositivo);
-
-    const opcaoNegativa = document.createElement('div');
-    opcaoNegativa.classList.add('opcao-avaliacao');
-
-    const btnNegativo = document.createElement('button');
-    btnNegativo.type = 'button';
-    btnNegativo.innerHTML = '<i class="fa-regular fa-thumbs-down"></i>';
-
-    const textoNegativo = document.createElement('span');
-    textoNegativo.textContent = 'Não útil';
-
-    opcaoNegativa.appendChild(btnNegativo);
-    opcaoNegativa.appendChild(textoNegativo);
-
-    // Recupera a avaliação salva
-    if (avaliacaoSalva === 'Útil') {
-        btnPositivo.classList.add('selecionado');
+    if (!botao) {
+        return;
     }
 
-    if (avaliacaoSalva === 'Não útil') {
-        btnNegativo.classList.add('selecionado');
+    const mensagem = botao.closest('.mensagem-bot');
+
+    if (!mensagem) {
+        return;
     }
 
-    // Verifica se a mensagem já foi avaliada
-    if (avaliacaoSalva !== null && avaliacaoSalva !== '') {
-        btnPositivo.disabled = true;
-        btnNegativo.disabled = true;
+    const mensagemId = mensagem.dataset.mensagemId;
+
+    if (!mensagemId || mensagemId === 'null' || mensagemId === 'undefined') {
+        mostrarToast('erro', 'Não foi possível identificar a mensagem.');
+        console.error('ID da mensagem não encontrado:', mensagem);
+        return;
     }
 
-    // Envia a avaliação
-    [btnPositivo, btnNegativo].forEach(botao => {
+    const opcao = botao.closest('.opcao-avaliacao');
+    const avaliacao = opcao.querySelector('span').textContent.trim();
 
-        botao.addEventListener('click', async () => {
-
-            let avaliacao;
-
-            if (botao === btnPositivo) {
-                avaliacao = 'Útil';
-            } else {
-                avaliacao = 'Não útil';
-            }
-
-            try {
-
-                const resposta = await fetch('/api/chatbot/avaliacao', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        avaliacao: avaliacao,
-                        mensagemId: mensagemId
-                    })
-                });
-
-                if (!resposta.ok) {
-                    throw new Error('Não foi possível enviar a avaliação.');
-                }
-
-                btnPositivo.classList.remove('selecionado');
-                btnNegativo.classList.remove('selecionado');
-
-                botao.classList.add('selecionado');
-
-                btnPositivo.disabled = true;
-                btnNegativo.disabled = true;
-
-            } catch (erro) {
-
-                console.error('Erro ao enviar avaliação:', erro);
-
-            }
-
-        });
-
-    });
-
-    avaliacao.appendChild(opcaoPositiva);
-    avaliacao.appendChild(opcaoNegativa);
-
-    mensagem.appendChild(avaliacao);
-}
-
-// Recupera os botões das mensagens salvas
-document.querySelectorAll('#chatbotMensagens .mensagem-bot[data-mensagem-id]')
-    .forEach(mensagem => {
-
-        const mensagemId = mensagem.dataset.mensagemId;
-        const avaliacaoSalva = mensagem.dataset.avaliacao;
-
-        adicionarBotoesAvaliacao(
-            mensagem,
-            mensagemId,
-            avaliacaoSalva
-        );
-
-    });
-
-function adicionarMensagem(texto, tipo, mensagemId = null) {
-
-    const mensagem = document.createElement('div');
-    const paragrafo = document.createElement('p');
-
-    mensagem.classList.add('mensagem', tipo);
-
-    if (tipo === 'mensagem-bot') {
-        paragrafo.innerHTML = marked.parse(texto);
-    } else {
-        paragrafo.textContent = texto;
-    }
-
-    mensagem.appendChild(paragrafo);
-
-    // Adiciona os botões de avaliação
-    if (tipo === 'mensagem-bot' && mensagemId) {
-
-        adicionarBotoesAvaliacao(
-            mensagem,
-            mensagemId
-        );
-
-    }
-
-    areaMensagens.appendChild(mensagem);
-
-    areaMensagens.scrollTop = areaMensagens.scrollHeight;
-}
-
-// Envia a mensagem para o Gemini
-async function enviarMensagem(texto) {
+    const botoes = mensagem.querySelectorAll('.botao-avaliacao');
 
     try {
 
-        botaoEnviar.disabled = true;
+        botoes.forEach(b => b.disabled = true);
 
-        const resposta = await fetch('/api/chatbot/mensagem', {
+        const resposta = await fetch('/api/chatbot/avaliacao', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                mensagem: texto
+                mensagemId: Number(mensagemId),
+                avaliacao: avaliacao
             })
         });
 
-        // Converte a resposta do servidor para JSON
-        const dados = await resposta.json();
+        const resultado = await resposta.json();
 
-        // Verifica se o servidor retornou algum erro
         if (!resposta.ok) {
-
-            console.error('Erro retornado pelo servidor:', dados);
-
-            throw new Error(
-                `Erro HTTP ${resposta.status}: ${dados.resposta || 'Falha ao consultar o chatbot.'}`
-            );
+            throw new Error(resultado.mensagem || 'Não foi possível registrar a avaliação.');
         }
 
-        // Exibe a resposta da Gemini
-        adicionarMensagem(
-            dados.resposta,
-            'mensagem-bot',
-            dados.mensagemId
-        );
+        mensagem.dataset.avaliacao = avaliacao;
+
+        botao.classList.add('selecionado');
+
+        mostrarToast('sucesso', resultado.mensagem);
 
     } catch (erro) {
 
-        console.error('Erro no chatbot:', erro);
+        botoes.forEach(b => b.disabled = false);
 
-        adicionarMensagem(
-            'Desculpe, não consegui responder agora. Tente novamente! 🐾',
-            'mensagem-bot'
-        );
+        mostrarToast('erro', erro.message);
 
-    } finally {
-
-        botaoEnviar.disabled = false;
+        console.error('Erro ao registrar avaliação:', erro);
     }
-}
+});
 
 
 // Evento de envio do formulário
 formulario.addEventListener('submit', async (evento) => {
-
     evento.preventDefault();
 
     const texto = campoMensagem.value.trim();
@@ -242,57 +111,152 @@ formulario.addEventListener('submit', async (evento) => {
 });
 
 
+// Adicionar mensagem
+function adicionarMensagem(texto, tipo, mensagemId = null) {
 
+    const mensagem = document.createElement('div');
+    const paragrafo = document.createElement('p');
+
+    // Adiciona o CSS
+    mensagem.classList.add('mensagem', tipo);
+
+    if (tipo === 'mensagem-bot') {
+
+        paragrafo.innerHTML = marked.parse(texto);
+
+        if (mensagemId != null) {
+            mensagem.dataset.mensagemId = mensagemId;
+        }
+        mensagem.dataset.avaliacao = '';
+
+        // Cria a área de avaliação
+        const avaliacao = document.createElement('div');
+        avaliacao.classList.add('chatbot-avaliacao');
+
+        // Botão Útil
+        const opcaoUtil = document.createElement('div');
+        opcaoUtil.classList.add('opcao-avaliacao');
+
+        const botaoUtil = document.createElement('button');
+        botaoUtil.type = 'button';
+        botaoUtil.classList.add('botao-avaliacao');
+
+        botaoUtil.innerHTML = '<i class="fa-regular fa-thumbs-up"></i>';
+
+        const textoUtil = document.createElement('span');
+        textoUtil.textContent = 'Útil';
+
+        opcaoUtil.appendChild(botaoUtil);
+        opcaoUtil.appendChild(textoUtil);
+
+        // Botão Não útil
+        const opcaoNaoUtil = document.createElement('div');
+        opcaoNaoUtil.classList.add('opcao-avaliacao');
+
+        const botaoNaoUtil = document.createElement('button');
+        botaoNaoUtil.type = 'button';
+        botaoNaoUtil.classList.add('botao-avaliacao');
+
+        botaoNaoUtil.innerHTML = '<i class="fa-regular fa-thumbs-down"></i>';
+
+        const textoNaoUtil = document.createElement('span');
+        textoNaoUtil.textContent = 'Não útil';
+
+        opcaoNaoUtil.appendChild(botaoNaoUtil);
+        opcaoNaoUtil.appendChild(textoNaoUtil);
+
+        // Adiciona os botões à avaliação
+        avaliacao.appendChild(opcaoUtil);
+        avaliacao.appendChild(opcaoNaoUtil);
+
+        // Adiciona os elementos à mensagem
+        mensagem.appendChild(paragrafo);
+        mensagem.appendChild(avaliacao);
+
+    } else {
+        paragrafo.textContent = texto;
+        mensagem.appendChild(paragrafo);
+    }
+
+    areaMensagens.appendChild(mensagem);
+
+    areaMensagens.scrollTop = areaMensagens.scrollHeight;
+}
+
+// Envia a mensagem para o Gemini
+async function enviarMensagem(texto) {
+    try {
+        botaoEnviar.disabled = true;
+
+        const resposta = await fetch('/api/chatbot/mensagem', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                mensagem: texto
+            })
+        });
+
+        const dados = await resposta.json();
+
+        if (!resposta.ok) {
+            throw new Error(dados.resposta);
+        }
+
+        adicionarMensagem(
+            dados.resposta,
+            'mensagem-bot',
+            dados.mensagemId
+        );
+
+    } catch (erro) {
+        adicionarMensagem(
+            erro.message, 'mensagem-bot');
+    } finally {
+        botaoEnviar.disabled = false;
+    }
+}
+
+// Limpa a conversa do chatbot
 document.addEventListener("DOMContentLoaded", function () {
+    const btnLimpar = document.getElementById("btnLimparChatbot");
+    const modal = document.getElementById("modalConfirmarExclusaoChatBot");
+    const form = document.getElementById("formExcluirConversa");
 
-    // Elementos do modal
-    const btnLimparChatbot = document.getElementById("btnLimparChatbot");
-    const modalExclusaoChatbot = document.getElementById("modalConfirmarExclusaoChatBot");
-
-    const btnFecharModalExclusao = document.getElementById("btnFecharModalExclusaoChatbot");
-    const btnCancelarExclusao = document.getElementById("btnCancelarExclusaoChatbot");
-
-    const formExcluirConversa = document.getElementById("formExcluirConversa");
-
-    // Abrir modal
-    btnLimparChatbot.addEventListener("click", function () {
-        modalExclusaoChatbot.classList.add("active");
+    btnLimpar.addEventListener("click", function () {
+        modal.classList.add("active");
     });
 
-    // Fechar modal pelo X
-    btnFecharModalExclusao.addEventListener("click", function () {
-        modalExclusaoChatbot.classList.remove("active");
-    });
+    document.getElementById("btnFecharModalExclusaoChatbot")
+        .addEventListener("click", function () {
+            modal.classList.remove("active");
+        });
 
-    // Fechar modal pelo botão cancelar
-    btnCancelarExclusao.addEventListener("click", function () {
-        modalExclusaoChatbot.classList.remove("active");
-    });
+    document.getElementById("btnCancelarExclusaoChatbot")
+        .addEventListener("click", function () {
+            modal.classList.remove("active");
+        });
 
-    // Confirmar exclusão
-    formExcluirConversa.addEventListener("submit", async function (event) {
+    form.addEventListener("submit", async function (event) {
 
         event.preventDefault();
 
-        const btnExcluir = formExcluirConversa.querySelector("button[type='submit']");
-
-        btnExcluir.disabled = true;
-
         try {
-
-            const resposta = await fetch(formExcluirConversa.action, {
+            const resposta = await fetch(form.action, {
                 method: "POST",
-                body: new FormData(formExcluirConversa)
+
+                // Pega os campos preenchidos
+                body: new FormData(form)
             });
 
+            const resultado = await resposta.json();
+
             if (!resposta.ok) {
-                throw new Error("Não foi possível excluir a conversa.");
+                throw new Error(resultado.mensagem);
             }
 
-            // Limpa as mensagens da tela
-            const mensagens = document.getElementById("chatbotMensagens");
-
-            mensagens.innerHTML = `
+            document.getElementById("chatbotMensagens").innerHTML = `
                 <div class="mensagem mensagem-bot">
                     <p>
                         Olá! Seja bem-vindo(a) à PetVitta Club!
@@ -304,18 +268,13 @@ document.addEventListener("DOMContentLoaded", function () {
                 </div>
             `;
 
-            // Fecha o modal
-            modalExclusaoChatbot.classList.remove("active");
+            modal.classList.remove("active");
+
+            mostrarToast("sucesso", resultado.mensagem);
 
         } catch (erro) {
-
-            console.error(erro);
-            alert("Não foi possível excluir a conversa. Tente novamente!");
-
-        } finally {
-
-            btnExcluir.disabled = false;
+            mostrarToast("erro", erro.message);
         }
     });
-
 });
+
