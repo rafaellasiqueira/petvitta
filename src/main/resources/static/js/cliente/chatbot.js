@@ -25,30 +25,11 @@ botaoFechar.addEventListener('click', () => {
 
 
 // Envia a avaliação da resposta
-
-// Envia a avaliação da resposta
-
 areaMensagens.addEventListener('click', async (evento) => {
-
     const botao = evento.target.closest('.botao-avaliacao');
-
-    if (!botao) {
-        return;
-    }
-
     const mensagem = botao.closest('.mensagem-bot');
 
-    if (!mensagem) {
-        return;
-    }
-
     const mensagemId = mensagem.dataset.mensagemId;
-
-    if (!mensagemId || mensagemId === 'null' || mensagemId === 'undefined') {
-        mostrarToast('erro', 'Não foi possível identificar a mensagem.');
-        console.error('ID da mensagem não encontrado:', mensagem);
-        return;
-    }
 
     const opcao = botao.closest('.opcao-avaliacao');
     const avaliacao = opcao.querySelector('span').textContent.trim();
@@ -56,7 +37,6 @@ areaMensagens.addEventListener('click', async (evento) => {
     const botoes = mensagem.querySelectorAll('.botao-avaliacao');
 
     try {
-
         botoes.forEach(b => b.disabled = true);
 
         const resposta = await fetch('/api/chatbot/avaliacao', {
@@ -80,15 +60,8 @@ areaMensagens.addEventListener('click', async (evento) => {
 
         botao.classList.add('selecionado');
 
-        mostrarToast('sucesso', resultado.mensagem);
-
     } catch (erro) {
-
         botoes.forEach(b => b.disabled = false);
-
-        mostrarToast('erro', erro.message);
-
-        console.error('Erro ao registrar avaliação:', erro);
     }
 });
 
@@ -113,7 +86,6 @@ formulario.addEventListener('submit', async (evento) => {
 
 // Adicionar mensagem
 function adicionarMensagem(texto, tipo, mensagemId = null) {
-
     const mensagem = document.createElement('div');
     const paragrafo = document.createElement('p');
 
@@ -121,7 +93,6 @@ function adicionarMensagem(texto, tipo, mensagemId = null) {
     mensagem.classList.add('mensagem', tipo);
 
     if (tipo === 'mensagem-bot') {
-
         paragrafo.innerHTML = marked.parse(texto);
 
         if (mensagemId != null) {
@@ -211,8 +182,7 @@ async function enviarMensagem(texto) {
         );
 
     } catch (erro) {
-        adicionarMensagem(
-            erro.message, 'mensagem-bot');
+        adicionarMensagem(erro.message, 'mensagem-bot');
     } finally {
         botaoEnviar.disabled = false;
     }
@@ -269,9 +239,6 @@ document.addEventListener("DOMContentLoaded", function () {
             `;
 
             modal.classList.remove("active");
-
-            mostrarToast("sucesso", resultado.mensagem);
-
         } catch (erro) {
             mostrarToast("erro", erro.message);
         }

@@ -44,11 +44,9 @@ public class ChatController {
             @RequestBody MensagemChat mensagemChat,
             HttpSession session
     ) {
-
         Long clienteId = (Long) session.getAttribute("clienteId");
 
         try {
-
             // Busca ou cria uma conversa
             Conversa conversa = conversaService.buscarOuCriar(clienteId);
 
@@ -60,19 +58,16 @@ public class ChatController {
             );
 
             // Busca as mensagens da conversa
-            List<Mensagem> mensagens =
-                    conversaService.buscarMensagens(conversa.getId());
+            List<Mensagem> mensagens = conversaService.buscarMensagens(conversa.getId());
 
             // Busca o histórico de compras do cliente
-            List<HistoricoCompraDTO> historico =
-                    pedidoService.buscarHistoricoCompras(clienteId);
+            List<HistoricoCompraDTO> historico = pedidoService.buscarHistoricoCompras(clienteId);
 
             // Identifica as informações da busca utilizando o Gemini
             String[] busca = geminiService.identificarBusca(
                     mensagemChat.mensagem(),
                     mensagens
             );
-
 
             String categoria = busca[0];
             String tipo = busca[1];
@@ -81,30 +76,19 @@ public class ChatController {
             String porte   = busca[4];
             String faixa   = busca[5];
             String gluten  = busca[6];
-
-            System.out.println("========== DADOS DA RECOMENDAÇÃO ==========");
-            System.out.println("Cliente ID: " + clienteId);
-            System.out.println("Categoria: " + categoria);
-            System.out.println("Tipo: " + tipo);
-            System.out.println("Esclarecer: " + esclarecer);
-            System.out.println("Total de mensagens: " + mensagens.size());
+            String produto = busca[7];
 
             String recomendados;
 
-            // Verifica se a categoria foi identificada
-            if ("true".equalsIgnoreCase(esclarecer)) {
+            if (produto != null) {
+                recomendados = "Resultado da busca pelo nome (o cliente procura este produto específico):\n" + recomendacaoService.textoBusca(produto);
 
+            } else if ("true".equalsIgnoreCase(esclarecer)) {
                 recomendados = "A busca do cliente precisa de mais informações.";
 
             } else {
-
-                // Busca as recomendações personalizadas
-                recomendados = recomendacaoService.textoRecomendacoes(
-                        clienteId, 30, categoria, tipo, especie, porte, faixa, gluten);
+                recomendados = recomendacaoService.textoRecomendacoes(clienteId, 30, categoria, tipo, especie, porte, faixa, gluten);
             }
-
-            System.out.println("========== RECOMENDAÇÕES ==========");
-            System.out.println(recomendados);
 
             // Envia as informações para o Gemini
             String resposta = geminiService.enviarMensagem(
@@ -121,12 +105,9 @@ public class ChatController {
                     resposta
             );
 
-            return ResponseEntity.ok(
-                    new RespostaChat(resposta, mensagemSalva.getId())
-            );
+            return ResponseEntity.ok(new RespostaChat(resposta, mensagemSalva.getId()));
 
         } catch (Exception e) {
-
             e.printStackTrace();
 
             return ResponseEntity.internalServerError().body(
@@ -142,21 +123,16 @@ public class ChatController {
     public ResponseEntity<MensagemRequisicao> limparConversa(
             HttpSession session
     ) {
-
         try {
-
             Long clienteId = (Long) session.getAttribute("clienteId");
 
             Conversa conversa = conversaService.buscarOuCriar(clienteId);
 
             conversaService.limparMensagens(conversa.getId());
 
-            return ResponseEntity.ok(
-                    new MensagemRequisicao("Conversa limpa com sucesso!")
-            );
+            return ResponseEntity.ok(new MensagemRequisicao("Conversa limpa com sucesso!"));
 
         } catch (Exception e) {
-
             e.printStackTrace();
 
             return ResponseEntity.internalServerError()
@@ -172,24 +148,19 @@ public class ChatController {
     ) {
 
         try {
-
             conversaService.avaliarMensagem(dto);
 
-            // Incorpora o novo feedback: retreina o modelo
             try {
                 recomendacaoService.treinar();
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
 
-            return ResponseEntity.ok(
-                    new MensagemRequisicao("Avaliação registrada com sucesso!")
-            );
+            return ResponseEntity.ok(new MensagemRequisicao("Avaliação registrada com sucesso!"));
 
         } catch (IllegalArgumentException e) {
 
-            return ResponseEntity.badRequest()
-                    .body(new MensagemRequisicao(e.getMessage()));
+            return ResponseEntity.badRequest().body(new MensagemRequisicao(e.getMessage()));
 
         } catch (Exception e) {
 

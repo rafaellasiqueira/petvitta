@@ -21,15 +21,6 @@ import java.time.LocalDateTime;
 import java.util.*;
 import java.util.regex.*;
 
-/**
- * Modelo de recomendação treinado com as VENDAS e o FEEDBACK do chat.
- *
- * Ideia: "quem comprou A também comprou B".
- *  1) Conta quantas vezes cada par de produtos foi comprado/curtido pelo mesmo cliente.
- *  2) Para cada cliente, produtos que combinam com os que ele já tem ganham pontos.
- *  3) "Útil" no chat soma pontos; "Não útil" tira o produto da lista daquele cliente.
- *  4) Cada treino gera uma NOVA VERSÃO, guardando quantos dados entraram.
- */
 @Service
 public class RecomendacaoService {
 
@@ -57,7 +48,6 @@ public class RecomendacaoService {
         this.recomendacaoRepository = recomendacaoRepository;
     }
 
-    // Treinamento
     @Transactional
     public synchronized ModeloVersao treinar() {
 
@@ -276,12 +266,15 @@ public class RecomendacaoService {
             List<ProdutoPontuacao> ranking = new ArrayList<>();
 
             for (int j = 0; j < produtos.size(); j++) {
+                // Todos produtos ativo
                 Long produtoId = produtos.get(j).getId();
 
+                // Se o produto foi comprado
                 if (comprados != null && comprados.contains(produtoId)) {
                     continue;
                 }
 
+                // Avaliado negativamente
                 if (avaliados != null && avaliados.containsKey(produtoId)
                         && avaliados.get(produtoId) < 0) {
                     continue;
@@ -341,41 +334,112 @@ public class RecomendacaoService {
     }
 
     // Recomendar
-
-
-
     public List<Produto> recomendar(
             Long clienteId,
             int limite,
             String categoria,
             String tipo) {
 
-        ModeloVersao versao = versaoRepository.findTopByOrderByIdDesc()
-                .orElse(null);
+        ModeloVersao versao = versaoRepository.findTopByOrderByIdDesc().orElse(null);
 
         if (versao == null) {
             return new ArrayList<>();
         }
 
-        List<RecomendacaoCliente> recomendacoes =
-                recomendacaoRepository.findByModeloVersaoIdAndClienteIdOrderByScoreDesc(
-                        versao.getId(), clienteId);
+        List<RecomendacaoCliente> recomendacoes = recomendacaoRepository.findByModeloVersaoIdAndClienteIdOrderByScoreDesc(versao.getId(), clienteId);
 
-        List<Produto> resultado = buscarProdutosFiltrados(
-                recomendacoes, limite, categoria, tipo);
+        List<Produto> resultado = buscarProdutosFiltrados(recomendacoes, limite, categoria, tipo);
 
         // Se não encontrou produtos para o cliente, tenta as recomendações gerais
         if (resultado.isEmpty()) {
+            List<RecomendacaoCliente> recomendacoesGerais = recomendacaoRepository.findByModeloVersaoIdAndClienteIdOrderByScoreDesc(versao.getId(), clienteGeral);
 
-            List<RecomendacaoCliente> recomendacoesGerais =
-                    recomendacaoRepository.findByModeloVersaoIdAndClienteIdOrderByScoreDesc(
-                            versao.getId(), clienteGeral);
-
-            resultado = buscarProdutosFiltrados(
-                    recomendacoesGerais, limite, categoria, tipo);
+            resultado = buscarProdutosFiltrados(recomendacoesGerais, limite, categoria, tipo);
         }
 
         return resultado;
+    }
+
+    private List<Produto> buscarProdutosFiltrados(
+            List<RecomendacaoCliente> recomendacoes,
+            int limite,
+            String categoria,
+            String tipo) {
+
+        List<Produto> resultado = new ArrayList<>();
+
+        for (int i = 0; i < recomendacoes.size(); i++) {
+            Long produtoId = recomendacoes.get(i).getProdutoId();
+
+            Produto produto = produtoRepository.findById(produtoId).orElse(null);
+
+            if (produto == null) {
+                continue;
+            }
+
+            if (!produto.isAtivo()) {
+                continue;
+            }
+
+            if (!correspondeCategoria(produto, categoria, tipo)) {
+                continue;
+            }
+
+            resultado.add(produto);
+
+            if (resultado.size() >= limite) {
+                break;
+            }
+        }
+
+        return resultado;
+    }
+
+    private boolean correspondeCategoria(
+            Produto produto,
+            String categoria,
+            String tipo) {
+
+        // Verifica a categoria
+        if (categoria != null && !categoria.isBlank()) {
+            if (produto.getCategoria() == null ||
+                    !normalizar(produto.getCategoria())
+                            .equals(normalizar(categoria))) {
+                return false;
+            }
+        }
+
+        // Se o cliente não informou o tipo, aceita todos os tipos
+        if (tipo == null || tipo.isBlank()) {
+            return true;
+        }
+
+        String tipoProduto = null;
+
+        // Identifica o tipo específico da ração
+        if (produto instanceof Racao racao) {
+
+            if (racao.getTipoRacao() != null) {
+                tipoProduto = racao.getTipoRacao().getNome();
+            }
+
+            // Identifica o tipo específico do petisco
+        } else if (produto instanceof Petisco petisco) {
+
+            if (petisco.getTipoPetisco() != null) {
+                tipoProduto = petisco.getTipoPetisco().getNome();
+            }
+
+            // Identifica a forma de apresentação do suplemento
+        } else if (produto instanceof Suplemento suplemento) {
+
+            if (suplemento.getFormaApresentacao() != null) {
+                tipoProduto = suplemento.getFormaApresentacao().getNome();
+            }
+        }
+
+        return tipoProduto != null &&
+                normalizar(tipoProduto).equals(normalizar(tipo));
     }
 
 
@@ -392,67 +456,10 @@ public class RecomendacaoService {
 
         if ("SEM".equalsIgnoreCase(gluten) && p.isContemGluten()) return false;
 
-        // precisa ter estoque em alguma variação
         return p.getVariacoes().stream().anyMatch(v -> v.getEstoqueAtual() > 0);
     }
 
-    private List<Produto> buscarProdutosFiltrados(
-            List<RecomendacaoCliente> recomendacoes,
-            int limite,
-            String categoria,
-            String tipo) {
-
-        List<Produto> resultado = new ArrayList<>();
-
-        System.out.println("\n===== FILTROS DAS RECOMENDAÇÕES =====");
-        System.out.println("Categoria recebida: " + categoria);
-        System.out.println("Tipo recebido: " + tipo);
-        System.out.println("Quantidade de recomendações: " + recomendacoes.size());
-
-        for (int i = 0; i < recomendacoes.size(); i++) {
-
-            Long produtoId = recomendacoes.get(i).getProdutoId();
-
-            Produto produto = produtoRepository.findById(produtoId).orElse(null);
-
-            if (produto == null) {
-                System.out.println("Produto " + produtoId + " não encontrado.");
-                continue;
-            }
-
-            System.out.println("\nProduto: " + produto.getNome());
-            System.out.println("Ativo: " + produto.isAtivo());
-            System.out.println("Categoria: " + produto.getCategoria());
-
-            if (!produto.isAtivo()) {
-                System.out.println("DESCARTADO: produto inativo.");
-                continue;
-            }
-
-            if (!correspondeCategoria(produto, categoria, tipo)) {
-                System.out.println("DESCARTADO: categoria ou tipo incompatível.");
-                continue;
-            }
-
-            System.out.println("ACEITO!");
-
-            resultado.add(produto);
-
-            if (resultado.size() >= limite) {
-                break;
-            }
-        }
-
-        System.out.println("\nTotal de produtos encontrados: " + resultado.size());
-
-        return resultado;
-    }
-
-
-
-
     // Prepara os produtos recomendados para o Gemini
-
     public String textoRecomendacoes(
             Long clienteId,
             int limite,
@@ -469,7 +476,6 @@ public class RecomendacaoService {
                 .limit(5)
                 .toList();
 
-        // FALLBACK: se o ranking não trouxe nada, busca direto no catálogo
         if (produtos.isEmpty()) {
             produtos = produtoRepository.findByAtivoTrue().stream()
                     .filter(p -> correspondeCategoria(p, categoria, tipo))
@@ -482,6 +488,45 @@ public class RecomendacaoService {
             return "Nenhum produto recomendado disponível para os filtros informados.";
         }
 
+        return montarTexto(produtos);
+    }
+
+    // Busca produtos pelo nome ou marca e prepara o texto para o Gemini
+    public String textoBusca(String termo) {
+
+        String[] palavras = normalizar(termo).split("\\s+");
+
+        List<Produto> produtos = produtoRepository.findByAtivoTrue();
+        List<Produto> encontrados = new ArrayList<>();
+
+        for (int i = 0; i < produtos.size() && encontrados.size() < 5; i++) {
+            Produto produto = produtos.get(i);
+
+            String nomeMarca = normalizar(produto.getNome() + " " + produto.getMarca());
+
+            boolean achou = true;
+
+            for (int j = 0; j < palavras.length; j++) {
+                if (!nomeMarca.contains(palavras[j])) {
+                    achou = false;
+                }
+            }
+
+            if (achou) {
+                encontrados.add(produto);
+            }
+        }
+
+        if (encontrados.isEmpty()) {
+            return "Nenhum produto encontrado com o nome: " + termo;
+        }
+
+        return montarTexto(encontrados);
+    }
+
+
+    // Monta o texto dos produtos
+    private String montarTexto(List<Produto> produtos) {
         String texto = "";
 
         for (int i = 0; i < produtos.size(); i++) {
@@ -575,62 +620,8 @@ public class RecomendacaoService {
 
             texto += "------------------------------\n";
         }
-
         return texto;
     }
-
-
-
-
-    private boolean correspondeCategoria(
-            Produto produto,
-            String categoria,
-            String tipo) {
-
-        // Verifica a categoria
-        if (categoria != null && !categoria.isBlank()) {
-
-            if (produto.getCategoria() == null ||
-                    !normalizar(produto.getCategoria())
-                            .equals(normalizar(categoria))) {
-                return false;
-            }
-        }
-
-        // Se o cliente não informou o tipo, aceita todos os tipos
-        if (tipo == null || tipo.isBlank()) {
-            return true;
-        }
-
-        String tipoProduto = null;
-
-        // Identifica o tipo específico da ração
-        if (produto instanceof Racao racao) {
-
-            if (racao.getTipoRacao() != null) {
-                tipoProduto = racao.getTipoRacao().getNome();
-            }
-
-            // Identifica o tipo específico do petisco
-        } else if (produto instanceof Petisco petisco) {
-
-            if (petisco.getTipoPetisco() != null) {
-                tipoProduto = petisco.getTipoPetisco().getNome();
-            }
-
-            // Identifica a forma de apresentação do suplemento
-        } else if (produto instanceof Suplemento suplemento) {
-
-            if (suplemento.getFormaApresentacao() != null) {
-                tipoProduto = suplemento.getFormaApresentacao().getNome();
-            }
-        }
-
-        return tipoProduto != null &&
-                normalizar(tipoProduto).equals(normalizar(tipo));
-    }
-
-
 
     private String normalizar(String texto) {
 
@@ -639,9 +630,6 @@ public class RecomendacaoService {
                 Normalizer.Form.NFD
         ).replaceAll("\\p{M}", "");
     }
-
-
-
 
     // Identifica os produtos citados nas respostas da IA (pelo link)
     private List<Long> idsCitados(String conteudo) {
@@ -668,9 +656,7 @@ public class RecomendacaoService {
         return ids;
     }
 
-
     private static class ProdutoPontuacao {
-
         Long produtoId;
         double score;
 
