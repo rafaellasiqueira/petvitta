@@ -378,6 +378,24 @@ public class RecomendacaoService {
         return resultado;
     }
 
+
+    private boolean compativel(Produto p, String especie, String porte, String faixa, String gluten) {
+
+        if (especie != null && p.getEspecies().stream()
+                .noneMatch(e -> normalizar(e.getNome()).equals(normalizar(especie)))) return false;
+
+        if (porte != null && p.getPortes().stream()
+                .noneMatch(x -> normalizar(x.getNome()).equals(normalizar(porte)))) return false;
+
+        if (faixa != null && p.getFaixasEtarias().stream()
+                .noneMatch(f -> normalizar(f.getNome()).equals(normalizar(faixa)))) return false;
+
+        if ("SEM".equalsIgnoreCase(gluten) && p.isContemGluten()) return false;
+
+        // precisa ter estoque em alguma variação
+        return p.getVariacoes().stream().anyMatch(v -> v.getEstoqueAtual() > 0);
+    }
+
     private List<Produto> buscarProdutosFiltrados(
             List<RecomendacaoCliente> recomendacoes,
             int limite,
@@ -386,19 +404,37 @@ public class RecomendacaoService {
 
         List<Produto> resultado = new ArrayList<>();
 
+        System.out.println("\n===== FILTROS DAS RECOMENDAÇÕES =====");
+        System.out.println("Categoria recebida: " + categoria);
+        System.out.println("Tipo recebido: " + tipo);
+        System.out.println("Quantidade de recomendações: " + recomendacoes.size());
+
         for (int i = 0; i < recomendacoes.size(); i++) {
 
             Long produtoId = recomendacoes.get(i).getProdutoId();
 
             Produto produto = produtoRepository.findById(produtoId).orElse(null);
 
-            if (produto == null || !produto.isAtivo()) {
+            if (produto == null) {
+                System.out.println("Produto " + produtoId + " não encontrado.");
+                continue;
+            }
+
+            System.out.println("\nProduto: " + produto.getNome());
+            System.out.println("Ativo: " + produto.isAtivo());
+            System.out.println("Categoria: " + produto.getCategoria());
+
+            if (!produto.isAtivo()) {
+                System.out.println("DESCARTADO: produto inativo.");
                 continue;
             }
 
             if (!correspondeCategoria(produto, categoria, tipo)) {
+                System.out.println("DESCARTADO: categoria ou tipo incompatível.");
                 continue;
             }
+
+            System.out.println("ACEITO!");
 
             resultado.add(produto);
 
@@ -407,8 +443,11 @@ public class RecomendacaoService {
             }
         }
 
+        System.out.println("\nTotal de produtos encontrados: " + resultado.size());
+
         return resultado;
     }
+
 
 
 
@@ -418,14 +457,26 @@ public class RecomendacaoService {
             Long clienteId,
             int limite,
             String categoria,
-            String tipo) {
+            String tipo,
+            String especie,
+            String porte,
+            String faixa,
+            String gluten) {
 
-        List<Produto> produtos = recomendar(
-                clienteId,
-                limite,
-                categoria,
-                tipo
-        );
+        List<Produto> produtos = recomendar(clienteId, limite, categoria, tipo)
+                .stream()
+                .filter(p -> compativel(p, especie, porte, faixa, gluten))
+                .limit(5)
+                .toList();
+
+        // FALLBACK: se o ranking não trouxe nada, busca direto no catálogo
+        if (produtos.isEmpty()) {
+            produtos = produtoRepository.findByAtivoTrue().stream()
+                    .filter(p -> correspondeCategoria(p, categoria, tipo))
+                    .filter(p -> compativel(p, especie, porte, faixa, gluten))
+                    .limit(5)
+                    .toList();
+        }
 
         if (produtos.isEmpty()) {
             return "Nenhum produto recomendado disponível para os filtros informados.";

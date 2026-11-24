@@ -69,6 +69,7 @@ public class GeminiService {
         Seu objetivo é ajudar os clientes a encontrar produtos adequados para seus animais.
         
         1. Atendimento
+        - Cumprimente apenas na primeira mensagem da conversa.
         - Responda em português brasileiro.
         - Utilize linguagem simples, educada e simpática.
         - Seja objetiva.
@@ -83,25 +84,17 @@ public class GeminiService {
         
         Recomende somente produtos dessas categorias
         
-       3. Recomendações
-                
-       - O sistema possui um modelo de recomendação que seleciona produtos com base no histórico de compras, na popularidade e nas avaliações dos clientes.
-       - Os produtos enviados na lista de recomendações foram previamente selecionados pelo modelo.
-       - Sua responsabilidade é analisar a compatibilidade desses produtos com as necessidades do animal.
-       - Utilize exclusivamente os produtos enviados na lista de recomendações.
-       - Analise a espécie, idade e porte do animal.
-       - Considere as preferências de marca e sabor.
-       - Verifique as restrições alimentares e os ingredientes dos produtos.
-       - Dê prioridade às restrições alimentares em relação às preferências.
-       - Não interprete automaticamente "não pode comer carne" como "não pode consumir nenhum ingrediente de origem animal".
-       - Quando uma restrição for ambígua, pergunte quais ingredientes ou tipos de carne devem ser evitados.
-       - Não considere um produto compatível quando faltar informação essencial para verificar uma restrição.
-       - Não invente características que não estejam presentes nos dados dos produtos.
-       - Não substitua as recomendações por outros produtos do catálogo.
-       - Recomende no máximo 3 produtos.
-       - Se nenhum dos produtos disponíveis no modelo de recomendação for compatível com as necessidades e restrições do animal, não recomende nenhum produto. Informe claramente ao cliente que não foi encontrada uma opção adequada no catálogo da PetVitta.
-    
-       Explique brevemente por que cada produto foi selecionado.
+3. Recomendações
+- Os produtos da lista "Recomendações selecionadas pelo modelo" já foram filtrados pelo sistema por espécie, porte, faixa etária, glúten e estoque. Não confira esses itens de novo.
+- Todos os produtos da lista já são compatíveis com o pet. Recomende todos eles (no máximo 3), sem descartar nenhum por conta própria, exceto se o cliente informou uma restrição de ingrediente ou sabor.
+- Explique em uma frase por que cada produto combina com o pet.
+- Se o cliente pediu um sabor, confira o campo "Sabores" do produto (não deduza o sabor pela composição nutricional) e recomende só os que tiverem esse sabor.
+- Se o cliente informou uma restrição de ingrediente (ex.: não pode frango), confira a composição e não recomende produtos que o contenham. Se a restrição for ambígua (ex.: "não pode carne"), pergunte quais ingredientes evitar.
+- Se faltar informação para confirmar que um produto é seguro, não o recomende.
+- Nunca invente produtos, características, preços ou IDs.
+- Apresente somente os produtos que você está recomendando. Nunca mencione, comente ou explique produtos que ficaram de fora e não escreva notas, observações ou comentários entre parênteses sobre outros produtos do catálogo. Se o cliente perguntar por que algum produto não foi indicado, diga que as opções já vêm filtradas pelo sistema e ofereça mostrar outras.
+- Se nenhum produto da lista servir, diga que não encontrou uma opção adequada no catálogo da PetVitta.
+- Antes de recomendar, confirme que você já sabe a espécie, a idade, o porte e se o pet tem restrição alimentar. Se faltar algo, pergunte uma coisa por vez e não recomende ainda.
 
        4. Identificação das necessidades
         Quando necessário, pergunte ao cliente:
@@ -112,11 +105,19 @@ public class GeminiService {
         
         Faça perguntas naturalmente, uma de cada vez, aproveitando as respostas anteriores.
         
-       5. Histórico do cliente
-       
-        - tilize o histórico de compras e as avaliações anteriores para compreender o contexto do cliente e adaptar suas respostas.
-        - Não recomende um produto que o cliente já tenha comprado
-        
+5. Histórico do cliente
+- Use o histórico de compras só como indício (ex.: muitas rações de cães sugerem que o cliente tem um cachorro) e confirme com o cliente em caso de dúvida.
+- Identifique, quando possível, as seguintes preferências:
+  - Espécie do animal: cachorro ou gato.
+  - Categoria mais comprada: ração, petisco ou suplemento.
+  - Tipo de produto mais comprado.
+  - Marcas que aparecem com maior frequência.
+  - Sabores mais comprados.
+  - Faixa etária e porte indicados nos produtos adquiridos.
+- Não recomende produtos que o cliente já comprou.
+- Prefira produtos parecidos com os que ele costuma comprar (marca, sabor), mas nunca descarte um produto só por ser de outra marca ou sabor.
+ Se o histórico incluir produtos para condições específicas (obesidade, recuperação, medicamentosa), não recomende produtos que contrariem essa condição (ex.: hipercalórico para quem compra ração de obesidade). Pergunte ao cliente e oriente a consultar o veterinário.
+ 
         6. Orientações sobre saúde
         - Não realize diagnósticos.
         - Não prescreva tratamentos ou medicamentos.
@@ -145,20 +146,17 @@ public class GeminiService {
         - Informe o preço somente quando estiver disponível no catálogo.
         - Inclua um link clicável para a página de detalhes do produto.
         - Utilize o ID real do produto fornecido pelo catálogo.
+        - Termine a resposta apenas com a lista dos produtos e uma pergunta curta. Não escreva "Nota:" nem observações adicionais.
         
         Formato do link:
         [Nome do produto](http://localhost:8080/cliente/detalhes-produto/ID)
         
         Nunca invente nomes, preços, características ou IDs.
         
-        10. Histórico da conversa
-        - Utilize as mensagens anteriores para manter o contexto, compreender respostas curtas e evitar perguntas repetidas.
-        - Guarde e considere as informações sobre o pet fornecidas pelo cliente durante a conversa.
-        - Registre informações como nome, espécie, raça, porte, idade, peso e restrições alimentares.
-        - Utilize essas informações nas próximas interações para personalizar as recomendações de produtos.
-        - Se o cliente informar uma nova característica ou corrigir uma informação, atualize o contexto e considere a informação mais recente.
-        - Não pergunte novamente informações que o cliente já forneceu.
-        
+10. Histórico da conversa
+- Use as mensagens anteriores para manter o contexto e não pergunte de novo o que o cliente já informou.
+- Se o cliente corrigir uma informação, considere a mais recente.
+
         """ + historicoConversa;
 
         System.out.println("\n========== PROMPT ENVIADO AO GEMINI ==========\n");
@@ -185,6 +183,7 @@ public class GeminiService {
         return texto;
     }
 
+
     public String[] identificarBusca(String mensagem, List<Mensagem> mensagens) {
 
         String historico = "";
@@ -195,34 +194,36 @@ public class GeminiService {
         }
 
         String prompt = """
-        REGRAS:
-        
-        1. Analise a mensagem atual junto com o histórico completo.
-        2. Recupere a categoria e o tipo mencionados anteriormente.
-        3. Se o cliente mudar a categoria ou o tipo, considere a nova informação.
-        4. A categoria é obrigatória.
-        5. O tipo é opcional.
-        6. Se o cliente não informar o tipo, retorne TIPO: null.
-        7. Não peça esclarecimentos sobre o tipo quando ele não for informado.
-        8. Se identificar a categoria, retorne ESCLARECER: false.
-        9. Se não identificar a categoria, retorne ESCLARECER: true.
-        10. Não confunda características do pet com categoria ou tipo.
-        
-        Considere também as informações do pet:
-        - Espécie
-        - Raça
-        - Porte
-        - Idade
-        - Peso
-        - Restrições alimentares
-        
-        Essas informações devem ser recuperadas do histórico, mas não devem ser utilizadas como categoria ou tipo.
+    Analise a mensagem atual junto com o histórico completo.
 
-        HISTÓRICO:
-        """ + historico + """
+    REGRAS:
+    1. Identifique a categoria que o cliente deseja consultar.
+    2. Recupere a última categoria informada pelo CLIENTE.
+    3. Se o cliente mudar de categoria, considere a nova.
+    4. Se o cliente apenas informar características do pet, mantenha a categoria anterior.
+    5. As categorias válidas são: Ração, Petisco e Suplemento.
+    6. O tipo é opcional. Se não for informado, retorne null.
+    7. Não peça esclarecimentos sobre o tipo.
+    8. Se encontrar uma categoria no histórico ou na mensagem atual, retorne ESCLARECER: false.
+    9. Se não encontrar nenhuma categoria, retorne CATEGORIA: null e ESCLARECER: true.
+    10. Não confunda espécie, idade, porte ou restrições alimentares com categoria.
+    
 
-        MENSAGEM ATUAL:
-        """ + mensagem;
+
+Retorne exclusivamente neste formato:
+CATEGORIA: valor
+TIPO: valor
+ESCLARECER: valor
+ESPECIE: Cachorro, Gato ou null
+PORTE: Pequeno, Médio, Grande ou null
+FAIXA: Filhote, Adulto, Idoso ou null
+GLUTEN: SEM se o cliente disse que o pet não pode glúten, senão null
+
+    HISTÓRICO:
+    """ + historico + """
+
+    MENSAGEM ATUAL:
+    """ + mensagem;
 
         GenerateContentResponse resposta =
                 client.models.generateContent(
@@ -233,62 +234,96 @@ public class GeminiService {
 
         String texto = resposta.text();
 
-        if (texto == null || texto.isBlank()) {
-            return new String[]{null, null, "true"};
-        }
+        System.out.println("========== IDENTIFICAÇÃO DA BUSCA ==========");
+        System.out.println(texto);
 
         String categoria = null;
         String tipo = null;
-        String esclarecer = "true";
+        String especie = null, porte = null, faixa = null, gluten = null;
 
-        String[] linhas = texto.split("\\R");
+        if (texto != null && !texto.isBlank()) {
 
-        for (int i = 0; i < linhas.length; i++) {
+            String[] linhas = texto.split("\\R");
 
-            int posicao = linhas[i].indexOf(":");
+            for (int i = 0; i < linhas.length; i++) {
 
-            if (posicao == -1) {
-                continue;
-            }
+                int posicao = linhas[i].indexOf(":");
 
-            String campo = linhas[i].substring(0, posicao).trim();
-            String valor = linhas[i].substring(posicao + 1).trim();
+                if (posicao == -1) {
+                    continue;
+                }
 
-            if ("null".equalsIgnoreCase(valor)) {
-                valor = null;
-            }
+                String campo = linhas[i].substring(0, posicao).trim();
+                String valor = linhas[i].substring(posicao + 1).trim();
 
-            if (campo.equalsIgnoreCase("CATEGORIA")) {
-                categoria = valor;
-            }
+                if ("null".equalsIgnoreCase(valor)) {
+                    valor = null;
+                }
 
-            if (campo.equalsIgnoreCase("TIPO")) {
-                tipo = valor;
-            }
+                if (campo.equalsIgnoreCase("CATEGORIA")) {
+                    categoria = valor;
+                }
 
-            if (campo.equalsIgnoreCase("ESCLARECER")) {
-                esclarecer = valor;
+                if (campo.equalsIgnoreCase("TIPO")) {
+                    tipo = valor;
+                }
+
+                if (campo.equalsIgnoreCase("ESPECIE")) especie = valor;
+                if (campo.equalsIgnoreCase("PORTE")) porte = valor;
+                if (campo.equalsIgnoreCase("FAIXA")) faixa = valor;
+                if (campo.equalsIgnoreCase("GLUTEN")) gluten = valor;
+
             }
         }
 
-        // Somente categorias válidas podem realizar a busca.
-        if (categoria == null
-                || (!categoria.equalsIgnoreCase("Ração")
-                && !categoria.equalsIgnoreCase("Petisco")
-                && !categoria.equalsIgnoreCase("Suplemento"))) {
+        // Verifica se a categoria retornada é válida.
+        if (!categoriaValida(categoria)) {
 
-            categoria = null;
-            tipo = null;
-            esclarecer = "true";
+            // Recupera a última categoria informada pelo cliente.
+            for (int i = mensagens.size() - 1; i >= 0; i--) {
 
-        } else {
-            esclarecer = "false";
+                Mensagem msg = mensagens.get(i);
+
+                if (!"CLIENTE".equalsIgnoreCase(msg.getRemetente())) {
+                    continue;
+                }
+
+                String conteudo = msg.getConteudo().toLowerCase();
+
+                if (conteudo.contains("ração")
+                        || conteudo.contains("rações")) {
+
+                    categoria = "Ração";
+                    break;
+
+                } else if (conteudo.contains("petisco")
+                        || conteudo.contains("petiscos")) {
+
+                    categoria = "Petisco";
+                    break;
+
+                } else if (conteudo.contains("suplemento")
+                        || conteudo.contains("suplementos")) {
+
+                    categoria = "Suplemento";
+                    break;
+                }
+            }
         }
 
-        return new String[]{
-                categoria,
-                tipo,
-                esclarecer
-        };
+        if (!categoriaValida(categoria)) {
+            return new String[]{null, null, "true", null, null, null, null};
+        }
+
+        return new String[]{categoria, tipo, "false", especie, porte, faixa, gluten};
     }
+
+    private boolean categoriaValida(String categoria) {
+
+        return categoria != null
+                && (categoria.equalsIgnoreCase("Ração")
+                || categoria.equalsIgnoreCase("Petisco")
+                || categoria.equalsIgnoreCase("Suplemento"));
+    }
+
 }

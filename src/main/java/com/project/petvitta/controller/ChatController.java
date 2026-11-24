@@ -73,14 +73,21 @@ public class ChatController {
                     mensagens
             );
 
+
             String categoria = busca[0];
             String tipo = busca[1];
             String esclarecer = busca[2];
+            String especie = busca[3];
+            String porte   = busca[4];
+            String faixa   = busca[5];
+            String gluten  = busca[6];
 
-            System.out.println("========== BUSCA IDENTIFICADA ==========");
+            System.out.println("========== DADOS DA RECOMENDAÇÃO ==========");
+            System.out.println("Cliente ID: " + clienteId);
             System.out.println("Categoria: " + categoria);
             System.out.println("Tipo: " + tipo);
             System.out.println("Esclarecer: " + esclarecer);
+            System.out.println("Total de mensagens: " + mensagens.size());
 
             String recomendados;
 
@@ -93,11 +100,7 @@ public class ChatController {
 
                 // Busca as recomendações personalizadas
                 recomendados = recomendacaoService.textoRecomendacoes(
-                        clienteId,
-                        20,
-                        categoria,
-                        tipo
-                );
+                        clienteId, 30, categoria, tipo, especie, porte, faixa, gluten);
             }
 
             System.out.println("========== RECOMENDAÇÕES ==========");
